@@ -7,6 +7,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../stylesheets/customerMainStyle.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSCalendar.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
     <title>Calendar Search</title>
 
@@ -24,7 +25,8 @@
 
     <div id="CalendarSearchResults"></div>
     <script>
-        // customer must provide his SDS SDK configuration functions before SDK script executes (SDK executes functions from global configuration object)
+        console.log("$ = " + $.fn.jquery);
+        console.log("jQuery = " + jQuery);
         window.SDS_onload = window.SDS_onload || [];
         SDS_onload.push(function () {
             SDS.init({apiKey: "xxx"});
@@ -35,14 +37,9 @@
                 , lengthOfStay: 7
                 , showDayNumbersPrevAndNextMonth: true
             });
-            SDS.calendar("CalendarSearchResults2", {
-                year: 2015
-                , month: 12
-                , currency: "PLN"
-                , lengthOfStay: 7
-                , showDayNumbersPrevAndNextMonth: true
-            });
         });
+        console.log("$ = " + $.fn.jquery);
+        console.log("jQuery = " + jQuery);
     </script>
     <div><p>rendering continues..</p></div>
     <div id="CalendarSearchResults2"></div>
@@ -50,7 +47,10 @@
 
 <!-- this snippet must be placed after any customer use of SDK. In particular it may be placed immediately after customer configuration,
 may be in the bottom, may be async or deferred.-->
-<!--<script type="text/javascript" src="../src/SabreDevStudioSDK.js"></script>-->
-<script async data-main="../src/SabreDevStudioSDK" src="../src/require.js"></script>
+<script data-main="../src/SabreDevStudioSDK" src="../src/require.js"></script>
+<script>
+    console.log("$ = " + $.fn.jquery);
+    console.log("jQuery = " + jQuery);
+</script>
 </body>
 </html>
