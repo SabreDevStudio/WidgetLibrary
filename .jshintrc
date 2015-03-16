@@ -1,0 +1,14 @@
+{
+  "curly": true,
+  "eqnull": true,
+  "eqeqeq": true,
+  "undef": true,
+  "globals": {
+    "jQuery": true
+  },
+  "maxcomplexity": 2,
+  "maxdepth": 3,
+  "browser": true,
+  "browserify": true,
+  "jquery": true
+}

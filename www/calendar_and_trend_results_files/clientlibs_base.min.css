@@ -1,0 +1,7173 @@
+@charset "UTF-8";
+@font-face {
+    font-family: 'omnesbold';
+    src: url('../../../content/dam/submarino/fonte-omnes/OMNES-SE_3.TTF');
+    src: url('../../../content/dam/submarino/fonte-omnes/OMNES-SE_3.eot') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal
+}
+
+@font-face {
+    font-family: 'omnesbold';
+    src: url('../../../content/dam/submarino/fonte-omnes/OMNES-SE_3.TTF');
+    src: url('../../../content/dam/submarino/fonte-omnes/OMNES-SE_3.eot') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal
+}
+
+@font-face {
+    font-family: Omnes;
+    src: url("../../../content/dam/submarino/fonte-omnes/OMNES-SE_3.eot")
+}
+
+@font-face {
+    font-family: Omnes;
+    src: url("../../../content/dam/submarino/fonte-omnes/OMNES-SE_3.ttf")
+}
+
+* {
+    margin: 0;
+    padding: 0
+}
+
+body {
+    font-size: 62.5%;
+    font-family: arial, verdana, freesans, garuda, helvetica, sans-serif;
+    color: #666;
+    background-color: #fff
+}
+
+img, ul, a, fieldset {
+    border: 0;
+    list-style: none
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none
+}
+
+a:hover {
+    text-decoration: underline
+}
+
+p {
+    padding: 10px 0
+}
+
+h1 {
+    margin: 10px 0
+}
+
+p a {
+    text-decoration: underline;
+    color: #666
+}
+
+hr {
+    display: block;
+    height: 1px;
+    color: #CCC;
+    background: #CCC;
+    border: 0;
+    margin: .5em .2em;
+    display: none
+}
+
+select {
+    font-size: 1em
+}
+
+option {
+    font-size: 1.1em
+}
+
+.root {
+    width: 100%;
+    overflow: hidden
+}
+
+.root .separador-bco {
+    background: url(../../../images/separador-azul-root.gif);
+    height: 8px;
+    clear: both;
+    margin: 20px 5px;
+    width: 100%;
+    text-align: center
+}
+
+.separador-azul {
+    background: url(../../../images/separador-azul-root.gif) repeat-x;
+    height: 8px;
+    clear: both;
+    margin: 20px 0
+}
+
+.dest970x90 {
+    width: 990px;
+    margin: 0 auto
+}
+
+.home .newsletter .btAction, .home .topPassagens .passagens, .home .topPassagens .hoteis, .home .redesSociais .facebook, .home .redesSociais .twitter, .home .redesSociais .googlePlus, .home .destaqueDestino h2, .ciasDestaque ul a span {
+    text-indent: -999em
+}
+
+.pqComprar .item, .pqComprar .item .info, .home .ofertasEspeciais .carro .next, .home .ofertasEspeciais .carro .previous, .topOfertas ul li a small, .topOfertas ul, .home .destaqueDestino h2, .home .destaqueDestino .carro .next, .home .destaqueDestino .carro .previous, .home .destaqueDestino .carro li span .info, .ofertasEspeciais li span .info, .ciasDestaque ul a span {
+    background-image: url(../../../images/sprite-home.png?);
+    background-repeat: no-repeat
+}
+
+.home .newsletter h2, .pqComprar h2, .home .ofertasEspeciais h2, .home .redesSociais h2, .ofertasEspeciais h2, .ciasDestaque h2, .topOfertasPassagens .nacionais h2, .topOfertasPassagens .internacionais h2, .passagens h3 {
+    height: 25px;
+    padding-bottom: 5px;
+    color: #008cba
+}
+
+.home .motorHome h1, {
+    color: #008cba;
+    font-size: 16px
+}
+
+.home .motorHome {
+    width: 585px;
+    height: auto;
+    margin-bottom: 18px
+}
+
+.home .motorHome h2 {
+    color: #008cba;
+    font-size: 16px;
+    margin-bottom: 20px
+}
+
+.home h1 {
+    color: #008cba;
+    font-size: 16px;
+    margin-left: 7px
+}
+
+.home h2 {
+    font-size: 15px
+}
+
+.predicta-topo h1 {
+    color: #008cba;
+    font-size: 16px;
+    margin: 20px auto;
+    width: 970px
+}
+
+.header {
+    background: #00adef;
+    width: 100%;
+    height: 165px
+}
+
+.header .container {
+    width: 990px;
+    overflow: hidden;
+    margin: 0 auto
+}
+
+.header .container .topInfoL {
+    width: 459px;
+    height: 110px;
+    float: left
+}
+
+.header .container .topInfoL .logo {
+    background: url(../../../images/submarino-viagens.png) no-repeat -8px 0;
+    width: 139px;
+    height: 110px;
+    text-indent: -9999px;
+    display: block;
+    float: left
+}
+
+.header .container .topInfoR {
+    width: 520px;
+    height: 110px;
+    float: left
+}
+
+.header .container .topInfoR .topMenuAtend {
+    background: url(../../../images/bgMenu.png) no-repeat 0 top;
+    width: 520px;
+    height: 30px
+}
+
+.header .container .topInfoR .topMenuAtend ul {
+    margin: 5px 0 0 24px;
+    float: left
+}
+
+.header .container .topInfoR .topMenuAtend ul li {
+    color: #FFF;
+    font-size: 12px;
+    float: left;
+    padding: 0;
+    margin: 0
+}
+
+.header .container .topInfoR .topMenuAtend ul li b {
+    font-weight: normal;
+    padding: 0 0 0 5px
+}
+
+.header .container .topInfoR .topMenuAtend ul li a {
+    color: #FFF;
+    font-size: 12px
+}
+
+.header .container .topInfoR .topMenuAtend ul li a:hover {
+    color: #FFF;
+    text-decoration: underline
+}
+
+.header .container .topInfoR .topTelRed {
+    width: 385px;
+    height: 30px;
+    margin: 25px 0 0 137px
+}
+
+.header .container .topInfoR .topTelRed .telSub {
+    background: url(../../../images/sprite-icones.png) no-repeat -13px 0;
+    width: 220px;
+    height: 30px;
+    padding: 9px 0 0 17px;
+    color: #FFF;
+    font-size: 12px;
+    float: left
+}
+
+.header .container .topInfoR .topTelRed .telSub strong {
+    font-weight: bold;
+    font-size: 16px
+}
+
+.header .container .topInfoR .topTelRed .redSub {
+    width: 120px;
+    height: 30px;
+    float: right;
+    position: relative;
+    margin: 10px 10px 0 0
+}
+
+.header .container .topInfoR .topTelRed .redSub ul {
+    display: block;
+    overflow: hidden;
+    margin: 0
+}
+
+.header .container .topInfoR .topTelRed .redSub li {
+    background: url(../../../images/sprite-icones.png) no-repeat;
+    width: 30px;
+    height: 30px;
+    float: left;
+    padding: 0 0 0 10px;
+    cursor: pointer
+}
+
+.header .container .topInfoR .topTelRed .redSub li .link_rede {
+    width: 30px;
+    height: 30px;
+    float: left;
+    text-decoration: none
+}
+
+.header .container .topInfoR .topTelRed .redSub ul li a {
+    display: block;
+    height: 30px
+}
+
+.header .container .topInfoR .topTelRed .redSub .faceSub {
+    background-position: -10px -121px
+}
+
+.header .container .topInfoR .topTelRed .redSub .faceSub #fb-root {
+    width: 120px;
+    margin: 10px 0 0 15px;
+    float: left
+}
+
+.header .container .topInfoR .topTelRed .redSub .faceSub .mRede {
+    display: none;
+    overflow: hidden;
+    width: 134px;
+    padding: 0
+}
+
+.header .container .topInfoR .topTelRed .redSub .faceSub:hover .mRede {
+    background: url(../../../images/bgMenu.png) no-repeat -224px -214px;
+    height: 47px;
+    display: block;
+    position: absolute;
+    margin: -50px 0 0 -60px;
+    z-index: 1
+}
+
+.header .container .topInfoR .topTelRed .redSub .twiSub {
+    background-position: -10px -81px
+}
+
+.header .container .topInfoR .topTelRed .redSub .twiSub .mRede {
+    display: none;
+    overflow: hidden;
+    width: 74px;
+    margin: 0;
+    padding: 0
+}
+
+.header .container .topInfoR .topTelRed .redSub .twiSub:hover .mRede {
+    background: url(../../../images/bgMenu.png) no-repeat -224px -273px;
+    height: 38px;
+    display: block;
+    position: absolute;
+    margin: -50px 0 0 -30px;
+    padding: 10px 0 0 8px;
+    z-index: 1
+}
+
+.header .container .topInfoR .topTelRed .redSub .googSub {
+    background-position: -10px -41px
+}
+
+.header .container .topInfoR .topTelRed .redSub .googSub .mRede {
+    display: none;
+    overflow: hidden;
+    width: 92px;
+    margin: 0;
+    padding: 0
+}
+
+.header .container .topInfoR .topTelRed .redSub .googSub:hover .mRede {
+    background: url(../../../images/bgMenu.png) no-repeat -224px -334px;
+    height: 38px;
+    display: block;
+    position: absolute;
+    margin: -50px 0 0 -50px;
+    padding: 10px 0 0 12px;
+    z-index: 1
+}
+
+.header .container .subMenu {
+    background-color: #5afee5;
+    width: 760px;
+    height: 35px;
+    margin-right: 10px;
+    float: left;
+    position: relative;
+    behavior: url(../../../content/dam/submarino/htc/pie.htc);
+    border-radius: 16px;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px
+}
+
+.header .container .subMenuCont {
+    width: 760px;
+    position: absolute;
+    top: 110px;
+    *right: 270px;
+    margin-right: 10px;
+    float: left
+}
+
+.header .container .subMenuCont ul {
+    float: left
+}
+
+.header .container .subMenuCont ul li {
+    float: left;
+    margin: 10px 0 0 23px
+}
+
+.header .container .subMenu .subMenuCont li a {
+    float: left;
+    padding: 0
+}
+
+.header .container .subMenuCont a {
+    background: 0;
+    display: block;
+    height: 35px
+}
+
+.header .container .subMenuCont .btAereas a {
+    width: 74px;
+    height: 35px;
+    margin: 0 0 0 19px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd
+}
+
+.header .container .subMenuCont .btPacotes a {
+    width: 70px;
+    height: 35px;
+    margin: 0 0 0 15px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd
+}
+
+.header .container .subMenuCont .btHoteis a {
+    width: 50px;
+    height: 35px;
+    margin: 0 5px 0 10px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd
+}
+
+.header .container .subMenuCont .btAtracoes a {
+    width: 62px;
+    height: 35px;
+    margin: 0 0 0 15px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd;
+    display: none
+}
+
+.header .container .subMenuCont .btCruzeiros a {
+    width: 67px;
+    height: 35px;
+    margin: 0 0 0 15px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd
+}
+
+.header .container .subMenuCont .btCarros a {
+    width: 46px;
+    height: 35px;
+    margin: 0 0 0 15px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd
+}
+
+.header .container .subMenuCont .btVale-viagem a {
+    width: 100px;
+    height: 35px;
+    margin: 0 0 0 15px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd
+}
+
+.header .container .subMenuCont .btSeguros a {
+    width: 65px;
+    height: 35px;
+    margin: 0 0 0 15px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #54bbfd
+}
+
+.header .container .subMenuCont .btPromocoes a {
+    width: 80px;
+    height: 35px;
+    margin: 0 0 0 10px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #f7931d
+}
+
+.header .container .subMenu .subMenuCont .btAereas a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btPacotes a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btHoteis a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btAtracoes a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btCruzeiros a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btCarros a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btVale-viagem a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btSeguros a:hover {
+    color: #0082c6;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenu .subMenuCont .btPromocoes a:hover {
+    color: #ffcb04;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.header .container .subMenuCont .btAereas .ativo {
+    width: 137px;
+    height: 35px;
+    margin: 0 0 0 19px
+}
+
+.header .container .subMenuCont .btPacotes .ativo {
+    width: 64px;
+    height: 35px;
+    margin: 0 0 0 15px
+}
+
+.header .container .subMenuCont .btHoteis .ativo {
+    width: 50px;
+    height: 35px;
+    margin: 0
+}
+
+.header .container .subMenuCont .btAtracoes .ativo {
+    width: 72px;
+    height: 35px;
+    margin: 0 0 0 15px
+}
+
+.header .container .subMenuCont .btCruzeiros .ativo {
+    width: 74px;
+    height: 35px;
+    margin: 0 0 0 15px
+}
+
+.header .container .subMenuCont .btCarros .ativo {
+    width: 46px;
+    height: 35px;
+    margin: 0 0 0 15px
+}
+
+.header .container .subMenuCont .btVale-presente .ativo {
+    width: 62px;
+    height: 35px;
+    margin: 0 0 0 15px
+}
+
+.header .container .subMenuCont .btSeguros .ativo {
+    width: 65px;
+    height: 35px;
+    margin: 0 0 0 15px
+}
+
+.header .container .subMenuCont .btPromocoes .ativo {
+    width: 90px;
+    height: 35px;
+    margin: 0 0 0 15px
+}
+
+.header .container .subMenuTemas {
+    width: 195px;
+    overflow: hidden;
+    float: left
+}
+
+.header .container .subMenuTemas ul {
+    display: block;
+    overflow: hidden;
+    margin: 0
+}
+
+.header .container .subMenuTemas ul li {
+    background: url(../../../images/bgMenu.png) no-repeat -11px -178px;
+    height: 35px;
+    float: left
+}
+
+.header .container .subMenuTemas .btTemas {
+    text-indent: -9999em
+}
+
+.header .container .subMenuTemas .btTemas b {
+    width: 195px;
+    display: block
+}
+
+.header .container .subMenuTemas .mTema {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    width: 195px;
+    margin: 0;
+    padding: 0
+}
+
+.header .container .subMenuTemas .mTema ul {
+    display: block;
+    overflow: hidden;
+    margin: 40px 0 0
+}
+
+.header .container .subMenuTemas .mTema ul li {
+    display: block;
+    width: 100%;
+    padding: 0 0 0 25px
+}
+
+.header .container .subMenuTemas .mTema ul li a {
+    color: #FFF;
+    font-size: 12px
+}
+
+.header .container .subMenuTemas .mTema .l1 {
+    height: 31px;
+    padding-top: 3px
+}
+
+.header .container .subMenuTemas .mTema .l2 {
+    height: 29px
+}
+
+.header .container .subMenuTemas .mTema .l3 {
+    height: 31px
+}
+
+.header .container .subMenuTemas .mTema .l4 {
+    height: 30px
+}
+
+.header .container .subMenuTemas .mTema .l5 {
+    height: 35px
+}
+
+.header .container .subMenuTemas:hover ul li {
+    background: 0
+}
+
+.header .container .subMenuTemas:hover .mTema {
+    background: url(../../../images/bgMenu.png) no-repeat -11px -215px;
+    height: auto;
+    display: block;
+    position: absolute;
+    margin: -12px 0 0;
+    z-index: 999
+}
+
+.header .container .subMenuCont .btHoteis ul {
+    display: block;
+    overflow: hidden
+}
+
+.header .container .subMenuCont .btHoteis ul li {
+    display: block;
+    width: 100%
+}
+
+.header .container .subMenuCont .btHoteis ul li a {
+    color: #54bbfd;
+    font-size: 14px;
+    font-weight: bold;
+    text-indent: -13px
+}
+
+.header .container .subMenuCont .btHoteis .l1 {
+    height: 31px;
+    padding-top: 3px
+}
+
+.header .container .subMenuCont .btHoteis .l2 {
+    height: 29px;
+    margin: 10px 0
+}
+
+.header .container .subMenuCont .btHoteis .mHoteis {
+    display: none;
+    width: 50px;
+    behavior: url(http://www.submarinoviagens.com.br/content/dam/submarino/htc/pie.htc);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    -moz-border-bottom-left-radius: 10px;
+    -moz-border-bottom-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px
+}
+
+.header .container .subMenuCont .btHoteis:hover .mHoteis {
+    background: #5afee5;
+    color: #0082c6;
+    display: block;
+    height: 35px;
+    width: 65px;
+    margin: -10px 0 0 0;
+    z-index: 999;
+    border-top: dashed 1.5px #fff;
+    position: relative
+}
+
+.footer .clear {
+    clear: both;
+    height: 1px;
+    display: block
+}
+
+.footer .footer-content .col-left .footer-cartao-submarino .cartao-img, .footer .footer-content .col-left .footer-afiliados > .strong, .footer .footer-content .col-left .footer-cartao-submarino > .strong, .footer .footer-content .col-left .footer-telefones .atendimento, .footer .footer-content .col-left .footer-telefones .compre-pelo-telefone, .footer .footer-content .col-left .footer-compre-viagens > .strong, .footer .footer-content .col-left .footer-submarino-combr > .strong, .footer .footer-content .col-left .footer-servicos > .strong, .footer .footer-content .col-left .footer-corporativo > .strong, .footer .footer-content .col-left .footer-internacional > .strong, .footer .footer-header .footer-awards > .strong, .footer .footer-content .col-right .footer-share-content > .strong, .footer .footer-content .col-left .footer-questions > .strong, .footer .footer-content .col-left .footer-institucional > .strong, .footer .footer-header .payment-ways > .strong, .footer .footer-top-aereas strong, .footer .footer-top-hoteis strong, .footer .footer-top-destinos-pacotes strong, .footer .footer-top-destinos-cruzeiros strong, .footer .footer-content .col-left .footer-parceiros > .strong {
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #00adef
+}
+
+.footer .footer-header {
+    overflow: hidden;
+    padding: 30px 20px 0;
+    margin: 0 auto 15px;
+    width: 990px
+}
+
+.footer .footer-header .payment-ways {
+    float: left;
+    font-size: 12px
+}
+
+.footer .footer-header .payment-ways > .strong {
+    background-position: -43px -268px;
+    height: 12px;
+    margin-bottom: 10px;
+    width: 162px
+}
+
+.footer .footer-header .payment-ways-list {
+    float: left
+}
+
+.footer .footer-header .footer-awards {
+    float: right;
+    width: 191px
+}
+
+.footer .footer-header .footer-awards > .strong {
+    height: 10px;
+    margin-bottom: 10px;
+    width: 100px;
+    margin-left: 80px;
+    font-size: 12px
+}
+
+.footer .footer-header .footer-awards li {
+    float: left;
+    margin-right: 10px
+}
+
+.footer .footer-header .footer-awards li.n-margin {
+    margin-right: 0
+}
+
+.footer .footer-content {
+    clear: both;
+    padding: 25px 20px;
+    margin: 0 auto;
+    width: 990px
+}
+
+.footer .separador-azul {
+    background: url(../../../images/separador-azul.png);
+    height: 8px;
+    clear: both;
+    margin: 10px 3px 10px 0;
+    width: 100%
+}
+
+.footer .footer-content .col-left {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left a {
+    color: #868585;
+    font-size: 11px;
+    outline: medium none
+}
+
+.footer .footer-content .col-left ul {
+    padding-left: 15px
+}
+
+.footer .footer-content .col-left .footer-telefones {
+    overflow: hidden;
+    margin-bottom: 30px
+}
+
+.footer .footer-content .col-left .footer-telefones .atendimento {
+    background-position: -10px -3px;
+    float: left;
+    height: 25px;
+    margin-right: 50px;
+    width: 270px
+}
+
+.footer .footer-content .col-left .footer-telefones .img-telefone {
+    float: left
+}
+
+.footer .footer-content .col-left .footer-telefones .compre-pelo-telefone {
+    float: left;
+    height: 33px;
+    width: 340px;
+    font-size: 16px
+}
+
+.footer .footer-content .col-left .footer-telefones .pas-nac-site {
+    float: left;
+    height: 33px;
+    width: 340px;
+    font-size: 11px;
+    font-weight: 100
+}
+
+.footer .footer-content .col-left .footer-questions {
+    overflow: hidden;
+    margin-bottom: 24px
+}
+
+.footer .footer-content .col-left .footer-questions > .strong {
+    float: left;
+    height: 25px;
+    width: 95px;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-questions ul {
+    overflow: hidden;
+    padding-top: 5px
+}
+
+.footer .footer-content .col-left .footer-questions ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-institucional {
+    overflow: hidden;
+    margin-bottom: 30px
+}
+
+.footer .footer-content .col-left .footer-institucional > .strong {
+    height: 14px;
+    width: 133px;
+    float: left;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-institucional ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-institucional ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-compre-viagens {
+    overflow: hidden;
+    margin-bottom: 30px
+}
+
+.footer .footer-content .col-left .footer-compre-viagens > .strong {
+    height: 13px;
+    width: 180px;
+    float: left;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-compre-viagens ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-compre-viagens ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-submarino-combr {
+    overflow: hidden;
+    margin-bottom: 30px
+}
+
+.footer .footer-content .col-left .footer-submarino-combr > .strong {
+    height: 13px;
+    width: 168px;
+    float: left;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-submarino-combr ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-submarino-combr ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-servicos {
+    overflow: hidden;
+    margin-bottom: 27px
+}
+
+.footer .footer-content .col-left .footer-servicos > .strong {
+    height: 16px;
+    width: 85px;
+    float: left;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-servicos ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-servicos ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-corporativo {
+    overflow: hidden;
+    margin-bottom: 30px;
+    width: 50%;
+    float: left
+}
+
+.footer .footer-content .col-left .footer-corporativo > .strong {
+    float: left;
+    height: 13px;
+    width: 121px;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-corporativo ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-corporativo ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-internacional {
+    overflow: hidden;
+    margin-bottom: 30px;
+    width: 50%;
+    float: left
+}
+
+.footer .footer-content .col-left .footer-internacional > .strong {
+    float: left;
+    height: 13px;
+    width: 130px;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-internacional .img-bandeira {
+    float: left
+}
+
+.footer .footer-content .col-left .footer-internacional ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-internacional ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-afiliados {
+    overflow: hidden;
+    margin-bottom: 15px;
+    width: 50%;
+    float: left
+}
+
+.footer .footer-content .col-left .footer-afiliados > .strong {
+    float: left;
+    height: 13px;
+    width: 90px;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-afiliados ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-afiliados ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-parceiros {
+    overflow: hidden;
+    margin-bottom: 30px;
+    width: 100%;
+    float: left
+}
+
+.footer .footer-content .col-left .footer-parceiros > .strong {
+    float: left;
+    height: 13px;
+    width: 100px;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-parceiros ul {
+    overflow: hidden
+}
+
+.footer .footer-content .col-left .footer-parceiros ul li {
+    display: inline;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-cartao-submarino {
+    display: table;
+    margin-bottom: 15px;
+    width: 50%;
+    float: left
+}
+
+.footer .footer-content .col-left .footer-cartao-submarino > .strong {
+    float: left;
+    height: 17px;
+    width: 260px;
+    font-size: 14px
+}
+
+.footer .footer-content .col-left .footer-cartao-submarino ul {
+    padding-top: 3px
+}
+
+.footer .footer-content .col-left .footer-cartao-submarino ul li {
+    float: left;
+    margin-right: 10px
+}
+
+.footer .footer-content .col-left .footer-cartao-submarino .cartao-img {
+    background-position: -287px -80px;
+    height: 53px;
+    margin: -24px 0 0;
+    width: 93px
+}
+
+.footer .footer-footer {
+    clear: both;
+    background-color: #00adef;
+    padding: 25px 20px 0
+}
+
+.footer .footer-footer .content {
+    width: 990px;
+    overflow: hidden;
+    margin: 0 auto;
+    color: #fff
+}
+
+.footer .footer-footer strong {
+    height: 20px
+}
+
+.footer .footer-footer a {
+    color: #b3e7fa
+}
+
+.footer .footer-footer span {
+    display: block
+}
+
+.footer .footer-footer ul {
+    width: 33.3%;
+    float: left;
+    margin-top: 10px
+}
+
+.footer .footer-footer .footer-top-aereas, .footer .footer-footer .footer-top-hoteis, .footer .footer-footer .footer-top-destinos-pacotes, .footer .footer-footer .footer-top-destinos-cruzeiros {
+    margin-bottom: 30px;
+    float: left
+}
+
+.footer .footer-footer .footer-top-aereas, .footer .footer-footer .footer-top-destinos-pacotes {
+    width: 50%
+}
+
+.footer .footer-footer .footer-top-hoteis, .footer .footer-footer .footer-top-destinos-cruzeiros {
+    width: 50%
+}
+
+.footer .footer-top-aereas strong {
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px
+}
+
+.footer .footer-top-hoteis strong {
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px
+}
+
+.footer .footer-top-destinos-pacotes strong {
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px
+}
+
+.footer .footer-top-destinos-cruzeiros strong {
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px
+}
+
+.footer .anuncios-google {
+    background-color: #00adef;
+    margin-top: 20px
+}
+
+.feedback {
+    background: url(../../../images/sprite-icones.png) no-repeat -10px -156px;
+    width: 50px;
+    height: 35px;
+    top: 60%;
+    bottom: 50%;
+    left: 96%;
+    z-index: 9999;
+    position: fixed;
+    cursor: pointer
+}
+
+.feedback a {
+    width: 50px;
+    height: 35px;
+    text-indent: -9999px;
+    float: left
+}
+
+.feedback-viagens-submarino {
+    width: 100%;
+    overflow: hidden;
+    font-size: 62.5%;
+    font-family: arial, verdana, freesans, garuda, helvetica, sans-serif;
+    color: #666
+}
+
+.feedback-viagens-submarino .geral {
+    width: 534px;
+    margin: 0 auto
+}
+
+.feedback-viagens-submarino .geral .topo {
+    background: url(../../../images/bg-feedback-2014.jpg) no-repeat top center #69cff6;
+    width: 534px;
+    height: 119px
+}
+
+.feedback-viagens-submarino .geral .topo h1 {
+    width: 534px;
+    height: 85px;
+    text-indent: -9999em;
+    margin: 0;
+    padding: 0
+}
+
+.feedback-viagens-submarino .geral .topo h2 {
+    width: 534px;
+    height: 34px;
+    margin: 0;
+    padding: 9px 20px 0;
+    color: #005ca9;
+    font-weight: normal;
+    font-size: 13px
+}
+
+.feedback-viagens-submarino .geral .opinao {
+    width: 510px;
+    margin: 25px 0 0 0;
+    overflow: hidden;
+    font-size: 12px;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .opinao2 {
+    width: 500px;
+    margin-left: 10px;
+    padding-bottom: 10px;
+    margin: 15px 0 0 20px;
+    border-bottom: 1px dotted #73d2f6;
+    float: left;
+    font-size: 12px
+}
+
+.feedback-viagens-submarino .geral .opinao .tituloFeedback {
+    width: 400px;
+    height: 30px;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .opinao .fraseFeedback, .feedback-viagens-submarino .geral .opinao2 .fraseFeedback {
+    width: 180px;
+    height: 54px;
+    margin-left: 20px;
+    float: left;
+    text-align: left
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral, .feedback-viagens-submarino .geral .opinao2 .notaGeral {
+    width: 300px;
+    height: 54px;
+    float: right
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral2 {
+    width: 500px;
+    height: 40px;
+    margin-left: 10px
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral2 ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 400px;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral ul {
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral ul li, .notaGeral2 ul li {
+    width: 60px;
+    height: 54px;
+    text-align: center;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .opinao2 .notaGeral ul li, .notaGeral2 ul li {
+    width: 60px;
+    height: 54px;
+    text-align: center;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral ul li strong {
+    margin: 0
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral ul li input {
+    margin: 5px 0
+}
+
+.feedback-viagens-submarino .geral .opinao .notaGeral ul li span {
+    margin: 0
+}
+
+.feedback-viagens-submarino .geral .comentarios {
+    width: 510px;
+    margin: 20px 0 0 20px;
+    overflow: hidden;
+    font-size: 12px;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .comentarios .fraseComent {
+    width: 500px;
+    height: 20px;
+    padding: 5px 0 0;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .comentarios .fraseComent span {
+    padding: 2px 0 0;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .comentarios .fraseComent a {
+    background: url(../../../images/mais-feedback.jpg) no-repeat;
+    width: 19px;
+    height: 20px;
+    float: left;
+    margin: 0 0 0 10px;
+    padding: 0;
+    text-indent: -9999em
+}
+
+.feedback-viagens-submarino .geral .comentarios .txtMsg {
+    width: 490px;
+    margin: 10px 0 15px;
+    float: left
+}
+
+.feedback-viagens-submarino .geral .comentarios .txtMsg textarea {
+    width: 504px;
+    border: 1px solid #73d2f6
+}
+
+.feedback-viagens-submarino .geral .comentarios .enviar {
+    width: 92px;
+    height: 26px;
+    float: right;
+    margin-right: 20px;
+    text-indent: -9999em
+}
+
+.topOfertas {
+    width: 365px;
+    position: relative;
+    margin-top: 33px
+}
+
+.topOfertas .disclaimer-procon {
+    padding: 26px 0 4px 15px;
+    float: left;
+    width: 350px;
+    background-color: #ededee;
+    border-radius: 10px 10px 0 0
+}
+
+.topOfertas .item1, .topOfertas .item2 {
+    width: 160px;
+    height: 27px;
+    border-radius: 20px;
+    float: left;
+    font-size: 15px;
+    color: #fff;
+    text-align: center
+}
+
+.topOfertas .item1 span, .topOfertas .item2 span {
+    display: block
+}
+
+.topOfertas .item1 {
+    background: #dfdfdf
+}
+
+.topOfertas .item1 strong, .topOfertas .item2 strong {
+    margin-top: 5px;
+    display: block
+}
+
+.topOfertas .item2 {
+    background: #dfdfdf
+}
+
+.topOfertas .item1 .ativo, .topOfertas .item2 .ativo {
+    width: 160px;
+    height: 27px;
+    border-radius: 20px;
+    float: left;
+    background: #0f0
+}
+
+.topOfertas .ofertasBoxs {
+    border-radius: 0 10px 10px 10px;
+    background: #ededee;
+    width: 365px;
+    height: auto
+}
+
+.topOfertas .ofertasBtns {
+    overflow: hidden;
+    position: absolute;
+    top: -15px;
+    background: #dfdfdf;
+    border-radius: 20px
+}
+
+.topOfertas .ofertasBox1, .topOfertas .ofertasBox2 {
+    clear: both;
+    padding-bottom: 4px
+}
+
+.topOfertas .ofertasBox2 {
+    display: none
+}
+
+.topOfertas ul {
+    padding-top: 44px;
+    background-position: 14px -646px
+}
+
+.topOfertas ul li {
+    background-color: #ededee;
+    margin: 0 13px;
+    border-top: 1px dotted #c1c1c1
+}
+
+.topOfertas ul li a {
+    line-height: 34px;
+    overflow: hidden;
+    display: block
+}
+
+.topOfertas ul li a span {
+    float: left;
+    color: #00adef;
+    font-size: 13px;
+    width: 155px
+}
+
+.topOfertas ul li a:hover span, .topOfertas ul li a:hover strong {
+    text-decoration: underline
+}
+
+.topOfertas ul li a small {
+    float: left;
+    color: #9d9d9d;
+    font-size: 11px;
+    margin-left: 5px;
+    background-position: -673px 12px;
+    padding-left: 12px
+}
+
+.topOfertas ul li a strong {
+    float: right;
+    color: #008cba;
+    font-size: 16px
+}
+
+.topOfertas ul li a strong small {
+    float: none;
+    margin-right: 5px;
+    font-weight: normal
+}
+
+.ofertasEspeciais {
+    width: 100%;
+    margin-bottom: 18px;
+    overflow: hidden;
+    margin-top: 15px
+}
+
+.ofertasEspeciais {
+    width: 100%;
+    margin-bottom: 18px;
+    overflow: hidden;
+    margin-top: 15px
+}
+
+.ofertasEspeciais h2 {
+    background-position: 0 -185px;
+    height: 25px;
+    width: 295px
+}
+
+.home .ofertasEspeciais ul {
+    margin-top: 0
+}
+
+.ofertasEspeciais ul {
+    margin-top: 10px
+}
+
+.ofertasEspeciais li a {
+    display: block;
+    overflow: hidden
+}
+
+.ofertasEspeciais li img {
+    float: left
+}
+
+.ofertasEspeciais li span {
+    float: left;
+    width: 300px;
+    position: relative;
+    height: 140px;
+    color: #666;
+    font-size: 1.2em;
+    margin-left: 10px
+}
+
+.home .ofertasEspeciais li span {
+    width: 200px
+}
+
+.ofertasEspeciais li span strong {
+    margin-bottom: 20px;
+    float: left;
+    color: #000;
+    width: 100%;
+    font-size: 1.4em
+}
+
+.ofertasEspeciais li span .info {
+    border-top: 1px dotted #c1c1c1;
+    border-bottom: 1px dotted #c1c1c1;
+    padding: 0 0 0 15px;
+    height: 55px;
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-weight: bold;
+    color: #00adef;
+    line-height: 1.3em;
+    background-position: -693px -129px
+}
+
+.ofertasEspeciais li span .info small {
+    float: left;
+    color: #9d9d9d;
+    font-weight: normal
+}
+
+.ofertasEspeciais li span .info strong {
+    margin-bottom: 0;
+    color: #008cba;
+    font-size: 1.4em;
+    margin-left: 5px;
+    width: auto
+}
+
+.home .ofertasEspeciais .carro .previous {
+    background-position: -618px 69px;
+    text-indent: -999em;
+    margin-left: -8px
+}
+
+.home .ofertasEspeciais .carro .next {
+    margin-top: -150px;
+    background-position: -639px 69px;
+    text-indent: -999em;
+    margin-left: 564px
+}
+
+.ofertasEspeciais .carro {
+    margin: 0 8px
+}
+
+.ofertasEspeciais .carro .previous, .home .ofertasEspeciais .carro .next {
+    position: relative;
+    width: 13px;
+    height: 150px;
+    z-index: 2;
+    background-color: #fff;
+    text-indent: -999em;
+    border: 0;
+    cursor: pointer;
+    float: left
+}
+
+.ofertasEspeciais .carro ul {
+    overflow: hidden;
+    margin-top: 0
+}
+
+.ofertasEspeciais .carro li {
+    width: 585px;
+    height: 150px;
+    float: left;
+    position: relative
+}
+
+.ofertasEspeciais .carro li a {
+    width: 180px;
+    height: 150px;
+    float: left;
+    margin: 0 3px 0 2px
+}
+
+.ofertasEspeciais .carro li img {
+    top: 0;
+    left: 0
+}
+
+.ofertasEspeciais .carro li span {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    height: 50px;
+    background: url(../../../images/carrtxtBg.png);
+    color: #fff;
+    width: 179px;
+    margin-left: 0
+}
+
+.ofertasEspeciais .carro li span p {
+    margin: 0 3px 0 7px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 21px;
+    padding-top: 5px
+}
+
+.ofertasEspeciais .carro li span p small {
+    font-weight: bold;
+    font-size: 10px;
+    float: left
+}
+
+.ofertasEspeciais .carro li span p strong {
+    color: #0f0;
+    font-size: 23px;
+    float: left;
+    margin-left: 4px;
+    width: auto
+}
+
+.pqComprar {
+    width: 585px;
+    height: 138px;
+    overflow: hidden;
+    margin: 28px 0;
+    position: relative
+}
+
+.pqComprar h2 {
+    background-position: -1px -113px
+}
+
+.pqComprar .item {
+    width: 57px;
+    height: 45px;
+    margin-right: 1px;
+    float: left
+}
+
+.pqComprar .it1 {
+    background-position: 0 0
+}
+
+.pqComprar .it2 {
+    background-position: -61px 0
+}
+
+.pqComprar .it3 {
+    background-position: -120px 0
+}
+
+.pqComprar .it4 {
+    background-position: -180px 0
+}
+
+.pqComprar .it5 {
+    background-position: -240px 0
+}
+
+.pqComprar .it6 {
+    background-position: -300px 0
+}
+
+.pqComprar .it7 {
+    background-position: -360px 0
+}
+
+.pqComprar .it8 {
+    background-position: -420px 0
+}
+
+.pqComprar .it9 {
+    background-position: -480px 0
+}
+
+.pqComprar .it10 {
+    background-position: -540px 0
+}
+
+.pqComprar .item .info {
+    width: 585px;
+    height: 49px;
+    text-indent: -999em;
+    display: none;
+    margin-top: 45px;
+    position: absolute;
+    left: 0
+}
+
+.pqComprar .it1 .info {
+    background-position: 0 -47px;
+    display: block
+}
+
+.pqComprar .it2 .info {
+    background-position: 0 -97px
+}
+
+.pqComprar .it3 .info {
+    background-position: 0 -147px
+}
+
+.pqComprar .it4 .info {
+    background-position: 0 -197px
+}
+
+.pqComprar .it5 .info {
+    background-position: 0 -247px
+}
+
+.pqComprar .it6 .info {
+    background-position: 0 -297px
+}
+
+.pqComprar .it7 .info {
+    background-position: 0 -347px
+}
+
+.pqComprar .it8 .info {
+    background-position: 0 -397px
+}
+
+.pqComprar .it9 .info {
+    background-position: 0 -447px
+}
+
+.pqComprar .it10 .info {
+    background-position: 0 -497px
+}
+
+.home {
+    padding: 20px 0 0 0
+}
+
+.home .container {
+    width: 970px;
+    overflow: hidden;
+    margin: 0 auto
+}
+
+.home .colLeft {
+    float: left;
+    width: 585px
+}
+
+.home .colRight {
+    float: right;
+    width: 365px
+}
+
+.home .disclaimer-procon-home {
+    padding: 5px 20px;
+    width: 500px
+}
+
+.ofertasEspeciais-home-home {
+    width: 100%;
+    margin-bottom: 18px;
+    overflow: hidden;
+    margin-top: 15px
+}
+
+.ofertasEspeciais-home-home {
+    width: 100%;
+    margin-bottom: 18px;
+    overflow: hidden;
+    margin-top: 15px
+}
+
+.ofertasEspeciais-home h2 {
+    background-position: 0 -185px;
+    height: 25px;
+    width: 295px
+}
+
+.home .ofertasEspeciais-home ul {
+    margin-top: 0
+}
+
+.ofertasEspeciais-home ul {
+    margin-top: 10px
+}
+
+.ofertasEspeciais-home li a {
+    display: block;
+    overflow: hidden
+}
+
+.ofertasEspeciais-home li img {
+    float: left
+}
+
+.ofertasEspeciais-home li span {
+    float: left;
+    width: 300px;
+    position: relative;
+    height: 140px;
+    color: #666;
+    font-size: 1.2em;
+    margin-left: 10px
+}
+
+.home .ofertasEspeciais-home li span {
+    width: 200px
+}
+
+.ofertasEspeciais-home li span strong {
+    margin-bottom: 20px;
+    float: left;
+    color: #000;
+    width: 100%;
+    font-size: 1.4em
+}
+
+.ofertasEspeciais-home li span .info {
+    border-top: 1px dotted #c1c1c1;
+    border-bottom: 1px dotted #c1c1c1;
+    padding: 0 0 0 15px;
+    height: 55px;
+    margin: 0;
+    position: inherit;
+    bottom: 0;
+    left: 0;
+    font-weight: bold;
+    color: #00adef;
+    line-height: 1.3em;
+    background-position: -693px -129px
+}
+
+.ofertasEspeciais-home li span .info small {
+    float: left;
+    color: #9d9d9d;
+    font-weight: normal
+}
+
+.ofertasEspeciais-home li span .info strong {
+    margin-bottom: 0;
+    color: #008cba;
+    font-size: 1.4em;
+    margin-left: 5px;
+    width: auto
+}
+
+.home .sliderDestaque {
+    width: 365px;
+    height: 325px;
+    margin-bottom: 18px
+}
+
+.home .newsletter {
+    width: 365px;
+    margin-bottom: 18px;
+    height: 102px
+}
+
+.home .newsletter .container {
+    width: 365px;
+    height: 102px;
+    background: url(../../../images/bg-box-news.png) no-repeat bottom center
+}
+
+.home .newsletter h2 {
+    background-position: -1px -78px
+}
+
+.home .newsletter .input {
+    border: 1px solid #d4d4d4;
+    padding: 5px;
+    margin: 0 0 10px 10px;
+    width: 91%
+}
+
+.home .newsletter input {
+    border: 0;
+    color: #bcbec0;
+    width: 100%
+}
+
+.home .newsletter .newsEmail {
+    margin-right: 115px;
+    width: 60%
+}
+
+.home .newsletter .newsEmail input {
+    width: 100%
+}
+
+.home .newsletter .btAction {
+    float: right;
+    background: url(../../../images/btcadastrar.png);
+    width: 110px;
+    height: 26px;
+    margin: -39px 12px 0 0;
+    cursor: pointer
+}
+
+.home .destaqueDestino {
+    width: 970px;
+    margin: -40px auto 0;
+    overflow: hidden
+}
+
+.home .destaqueDestino h2 {
+    background-position: 0 -760px;
+    width: 227px;
+    height: 30px
+}
+
+.home .destaqueDestino .dest1 {
+    width: 615px;
+    float: left
+}
+
+.home .colRight .dest2 {
+    width: 330px;
+    margin: 18px auto 0 auto;
+    text-align: center
+}
+
+.home .destaqueDestino .carro2 {
+    position: relative;
+    margin-top: 20px
+}
+
+.home .destaqueDestino .carro2 .previous, .home .destaqueDestino .carro2 .next {
+    position: absolute;
+    width: 20px;
+    height: 200px;
+    z-index: 2;
+    background-color: transparent;
+    border: 0;
+    text-indent: -999em
+}
+
+.home .destaqueDestino .carro2 .previous {
+    top: 0;
+    left: 0;
+    background-position: -616px -40px
+}
+
+.home .destaqueDestino .carro2 .next {
+    top: 0;
+    right: 225px;
+    background-position: -649px -40px
+}
+
+.home .destaqueDestino .carro2 li {
+    width: 615px;
+    float: left
+}
+
+.home .destaqueDestino .carro2 li a {
+    display: block;
+    overflow: hidden
+}
+
+.home .destaqueDestino .carro2 li img {
+    float: left;
+    margin-left: 10px
+}
+
+.home .destaqueDestino .carro2 li span {
+    float: right;
+    width: 210px;
+    position: relative;
+    height: 200px;
+    color: #666;
+    font-size: 1.2em
+}
+
+.home .destaqueDestino .carro2 li span strong {
+    margin-bottom: 8px;
+    float: left;
+    color: #000
+}
+
+.home .destaqueDestino .carro2 li span .info {
+    border-top: 1px dotted #c1c1c1;
+    border-bottom: 1px dotted #c1c1c1;
+    padding: 5px 0 5px 5%;
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 92%;
+    font-weight: bold;
+    color: #00adef;
+    line-height: 1.3em;
+    background-position: -693px -129px
+}
+
+.home .destaqueDestino .carro2 li span .info small {
+    float: left;
+    color: #9d9d9d;
+    font-weight: normal
+}
+
+.home .destaqueDestino .carro2 li span .info strong {
+    margin-bottom: 0;
+    color: #008cba;
+    font-size: 1.4em;
+    margin-left: 5px
+}
+
+.home .bnrFooter {
+    width: 970px;
+    height: auto;
+    margin: 0 auto;
+    text-align: center
+}
+
+.redesSociais {
+    width: 585px;
+    margin-bottom: 38px;
+    overflow: hidden
+}
+
+.redesSociais h2 {
+    background-position: -1px -149px
+}
+
+.redesSociais .facebook, .redesSociais .twitter, .redesSociais .googlePlus {
+    float: left;
+    width: 179px;
+    height: 150px;
+    margin-right: 24px;
+    display: block
+}
+
+.redesSociais .facebook {
+    background: url(../../../images/rede-facebook.png)
+}
+
+.redesSociais .twitter {
+    background: url(../../../images/rede-twitter.png)
+}
+
+.redesSociais .googlePlus {
+    background: url(../../../images/rede-google-plus.png);
+    margin-right: 0
+}
+
+.redesSociais .socialgame {
+    background: url(../../../images/rede-social-game.jpg);
+    margin-right: 0;
+    width: 179px;
+    height: 150px;
+    display: block;
+    float: left;
+    text-indent: -500px
+}
+
+.redesSociais .appofertas {
+    background: url(http://www.submarinoviagens.com.br/images/slider-app-ofertas.jpg?fh=9ea32287-9679-1d44-2b4a-e41a76af0060);
+    margin-right: 0;
+    width: 179px;
+    height: 150px;
+    display: block;
+    float: left;
+    text-indent: -500px
+}
+
+.home .topOfertasPassagens {
+    width: 585px;
+    margin-bottom: 18px
+}
+
+.home .topOfertasPassagens .disclaimer-procon {
+    float: left;
+    margin: 19px 0 0 -303px;
+    width: 150px
+}
+
+.home .topOfertasPassagens .internacionais h2 {
+    float: left;
+    width: 303px;
+    margin-left: 7px background-position : 0 - 281 px
+}
+
+.home .topOfertasPassagens .nacionais h2 {
+    float: left;
+    width: 303px;
+    margin-left: 7px;
+    background-position: 0 -315px
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBox1 {
+    background: url(../../../images/passagenstopboxtop2.png) top no-repeat;
+    padding-top: 10px;
+    border: 1px solid #ed1c24;
+    border-radius: 10px
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBox2 {
+    background: url(../../../images/passagenstopboxtop5.png) top no-repeat;
+    padding-top: 10px;
+    border: 1px solid #002d5b;
+    border-radius: 10px;
+    -webkit-border-radius: 10px
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBox3 {
+    background: url(../../../images/passagenstopboxtop3.png) top no-repeat;
+    padding-top: 10px;
+    border: 1px solid #b72026;
+    border-radius: 10px;
+    -webkit-border-radius: 10px
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBox1 {
+    background: url(../../../images/passagenstopboxtop4.png) top no-repeat;
+    padding-top: 10px;
+    border: 1px solid #ed1c24;
+    border-radius: 10px
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBox2 {
+    background: url(../../../images/passagenstopboxtop6.png) top no-repeat;
+    padding-top: 10px;
+    border: 1px solid #1486c4;
+    border-radius: 10px
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBox3 {
+    background: url(../../../images/passagenstopboxtop1.png) top no-repeat;
+    padding-top: 10px;
+    border: 1px solid #0e457c;
+    border-radius: 10px
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBox1 {
+    background: url(../../../images/passagenstopboxtop2-ie.png) top top no-repeat \0/
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBox2 {
+    background: url(../../../images/passagenstopboxtop5-ie.png) top top no-repeat \0/
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBox3 {
+    background: url(../../../images/passagenstopboxtop3-ie.png) top top no-repeat \0/
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBox1 {
+    background: url(../../../images/passagenstopboxtop4-ie.png) top no-repeat \0/
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBox2 {
+    background: url(../../../images/passagenstopboxtop6-ie.png) top no-repeat \0/
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBox3 {
+    background: url(../../../images/passagenstopboxtop1-ie.png) top no-repeat \0/
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBtns a {
+    float: left;
+    margin-left: 5px;
+    background-image: url(../../../images/passagensofertasbts1.png)
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBtns a {
+    float: left;
+    margin-left: 5px;
+    background-image: url(../../../images/passagensofertasbts2.png)
+}
+
+.home .topOfertasPassagens .ofertasBtns a span {
+    float: left;
+    width: 82px;
+    height: 35px;
+    text-indent: -999em
+}
+
+.home .topOfertasPassagens .internacionais .ofertasBtns a span.ativo {
+    background-image: url(../../../images/passagensofertasbts1.png)
+}
+
+.home .topOfertasPassagens .nacionais .ofertasBtns a span.ativo {
+    background-image: url(../../../images/passagensofertasbts2.png)
+}
+
+.home .topOfertasPassagens .ofertasBtns {
+    overflow: hidden
+}
+
+.home .topOfertasPassagens .ofertasBtns .item1 {
+    background-position: 0 0
+}
+
+.home .topOfertasPassagens .ofertasBtns .item2 {
+    background-position: -92px 0
+}
+
+.home .topOfertasPassagens .ofertasBtns .item3 {
+    background-position: -180px 0
+}
+
+.home .topOfertasPassagens .ofertasBtns .item4 {
+    background-position: -272px 0
+}
+
+.home .topOfertasPassagens .ofertasBtns .item1 .ativo {
+    background-position: 0 -43px
+}
+
+.home .topOfertasPassagens .ofertasBtns .item2 .ativo {
+    background-position: -92px -43px
+}
+
+.home .topOfertasPassagens .ofertasBtns .item3 .ativo {
+    background-position: -180px -43px
+}
+
+.home .topOfertasPassagens .ofertasBtns .item4 .ativo {
+    background-position: -272px -43px
+}
+
+.home .topOfertasPassagens .esq {
+    width: 194px;
+    float: left
+}
+
+.home .topOfertasPassagens .centro {
+    width: 194px;
+    float: left;
+    background: #f1f2f2
+}
+
+.home .topOfertasPassagens .direita {
+    width: 194px;
+    float: right
+}
+
+.home .topOfertasPassagens .esq ul, .home .topOfertasPassagens .centro ul, .home .topOfertasPassagens .direita ul {
+    margin-top: 8px
+}
+
+.home .topOfertasPassagens .esq li, .home .topOfertasPassagens .centro li, .home .topOfertasPassagens .direita li {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #00adef
+}
+
+.home .topOfertasPassagens .preco {
+    font-size: 10px;
+    color: #9d9d9d;
+    margin-left: 17px
+}
+
+.home .topOfertasPassagens .valor {
+    font-size: 16px;
+    color: #008cba;
+    margin-left: 3px
+}
+
+.topOfertasPassagens .internacionais .ofertasBox1, .topOfertasPassagens .internacionais .ofertasBox2, .topOfertasPassagens .internacionais .ofertasBox3, .topOfertasPassagens .internacionais .ofertasBox4 {
+    overflow: hidden;
+    display: none
+}
+
+.topOfertasPassagens .nacionais .ofertasBox1, .topOfertasPassagens .nacionais .ofertasBox2, .topOfertasPassagens .nacionais .ofertasBox3, .topOfertasPassagens .nacionais .ofertasBox4 {
+    overflow: hidden;
+    display: none
+}
+
+.topOfertasPassagens .internacionais .ofertasBox1, .topOfertasPassagens .nacionais .ofertasBox1 {
+    display: block
+}
+
+.topOfertasPassagens .nacionais ul {
+    background-position: -344px -646px;
+    margin: 0 5px
+}
+
+.topOfertasPassagens .nacionais ul li {
+    border-top: 1px dotted #c1c1c1
+}
+
+.topOfertasPassagens .nacionais ul li a {
+    line-height: 34px;
+    overflow: hidden;
+    display: block
+}
+
+.topOfertasPassagens .nacionais ul li a span {
+    float: left;
+    color: #00adef;
+    font-size: 13px;
+    width: 110px
+}
+
+.topOfertasPassagens .nacionais ul li a:hover span, .topOfertasPassagens .nacionais ul li a:hover strong {
+    text-decoration: underline
+}
+
+.topOfertasPassagens .nacionais ul li a small {
+    float: left;
+    color: #9d9d9d;
+    font-size: 11px;
+    margin-left: 5px;
+    background-position: -673px 12px;
+    padding-left: 12px
+}
+
+.topOfertasPassagens .nacionais ul li a strong {
+    float: right;
+    color: #008cba;
+    font-size: 16px
+}
+
+.topOfertasPassagens .nacionais ul li a strong small {
+    float: none;
+    margin-right: 5px;
+    font-weight: normal
+}
+
+.topOfertasPassagens .internacionais ul {
+    background-position: -344px -646px;
+    margin: 0 5px
+}
+
+.topOfertasPassagens .internacionais ul li {
+    border-top: 1px dotted #c1c1c1
+}
+
+.topOfertasPassagens .internacionais ul li a {
+    line-height: 34px;
+    overflow: hidden;
+    display: block
+}
+
+.topOfertasPassagens .internacionais ul li a span {
+    float: left;
+    color: #00adef;
+    font-size: 13px;
+    width: 80px
+}
+
+.topOfertasPassagens .internacionais ul li a:hover span, .topOfertasPassagens .internacionais ul li a:hover strong {
+    text-decoration: underline
+}
+
+.topOfertasPassagens .internacionais ul li a small {
+    float: left;
+    color: #9d9d9d;
+    font-size: 11px;
+    margin-left: 5px;
+    background-position: -673px 12px;
+    padding-left: 12px
+}
+
+.topOfertasPassagens .internacionais ul li a strong {
+    float: right;
+    color: #008cba;
+    font-size: 16px
+}
+
+.topOfertasPassagens .internacionais ul li a strong small {
+    float: none;
+    margin-right: 5px;
+    font-weight: normal
+}
+
+.ciasDestaque {
+    margin-bottom: 18px
+}
+
+.ciasDestaque h2 {
+    width: 227px;
+    height: 25px
+}
+
+.ciasDestaque ul {
+    overflow: hidden;
+    width: 100%
+}
+
+.ciasDestaque ul li {
+    float: left;
+    margin-right: 10px;
+    position: relative;
+    padding-bottom: 10px
+}
+
+.ciasDestaque ul a span {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 21px;
+    width: 95px;
+    height: 28px;
+    background-position: 0 -822px
+}
+
+.atracoes .topOfertas ul {
+    background-position: -703px -646px
+}
+
+.atracoes .topOfertas ul li a span {
+    color: #00adef;
+    float: left;
+    font-size: 13px;
+    width: 239px
+}
+
+.cruzeiros .topOfertasLp ul li span {
+    float: left;
+    color: #00adef;
+    font-size: 13px;
+    width: 336px
+}
+
+.cruzeiros .topOfertasLp .item1, .cruzeiros .topOfertasLp .item1 span {
+    background-position: -1439px -597px;
+    width: 143px
+}
+
+.cruzeiros .topOfertasLp ul {
+    padding-top: 44px;
+    background-position: -342px -646px
+}
+
+.cruzeiros .topOfertasLp ul li {
+    line-height: 28px;
+    overflow: hidden;
+    display: block
+}
+
+.home .motorHomeCruzeiros {
+    width: 585px;
+    min-height: 330px;
+    margin-bottom: 18px
+}
+
+.home .seguraDestaques {
+    width: 990px;
+    height: auto;
+    margin-bottom: 20px
+}
+
+.home .seguraDestaques h3 {
+    background: url(../../../images/tit-navios-destaque.png) no-repeat;
+    height: 16px;
+    text-indent: -999em
+}
+
+.home .seguraDestaques ul {
+    list-style: none;
+    overflow: hidden;
+    margin-top: 30px
+}
+
+.home .seguraDestaques li {
+    float: left;
+    margin: 0 25px 0 30px;
+    padding-bottom: 10px;
+    position: relative;
+    width: 270px
+}
+
+.home .seguraDestaques li span {
+    color: #666;
+    float: left;
+    font-size: 1.2em;
+    height: 145px;
+    margin: 10px 0 20px 10px;
+    position: relative;
+    width: 270px
+}
+
+.home .seguraDestaques li span strong {
+    color: #000;
+    float: left;
+    font-size: 1.4em;
+    width: 100%;
+    margin-bottom: 20px
+}
+
+.home .seguraDestaques li span .valor2 {
+    color: #9d9d9d;
+    float: left;
+    font-weight: normal;
+    font-size: .9em
+}
+
+.home .seguraDestaques li span .valor2 .valor {
+    color: #00adef;
+    font-size: 1.8em
+}
+
+.home .seguraDestaques .btn {
+    background: url(../../../images/sprite-home.png?fh=b047283d-bfc4-5e3f-e581-78bd4237ca3a) no-repeat 0 -1007px;
+    display: block;
+    float: left;
+    width: 260px;
+    height: 75px;
+    background-position: 0 -1007px
+}
+
+.home .seguraDestaques .separador-dot {
+    background: url(../../../images/separador-dot.png) repeat-y top center;
+    margin: 0 30px;
+    width: 10px;
+    height: 350px;
+    float: left
+}
+
+.home .seguraDestaques .faixa-transfer {
+    background: url(../../../images/faixa-transfer-cruzeiros.png) no-repeat top center;
+    margin: 30px auto;
+    width: 922px;
+    height: 60px;
+    text-indent: -999em
+}
+
+.home .seguraDestaques .faixa-tel {
+    background: url(../../../images/faixa-tel-cruzeiros.gif) no-repeat;
+    margin: -20px 0;
+    width: 585px;
+    height: 80px;
+    text-indent: -999em
+}
+
+.cotacao {
+    width: 585px;
+    height: 393px
+}
+
+.sliderDestaque2 {
+    width: 365px;
+    height: 326px
+}
+
+.mondial_seg {
+    background: url(../../../images/mondial_03.jpg) no-repeat;
+    width: 584px;
+    height: 371px;
+    margin-top: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #000
+}
+
+.mondial_seg p {
+    width: 551px;
+    margin-left: 16px;
+    padding: 0 0 10px 0
+}
+
+.mondial_seg .tit_seg, .tit_seg2 {
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-top: 10px
+}
+
+.text_especificacoes p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #939598;
+    width: 354px
+}
+
+.especificacoesBox1 {
+    background: url(../../../images/especificacoes_03.jpg);
+    width: 364px;
+    height: 22px;
+    margin-top: 18px
+}
+
+.promocao {
+    width: 100%;
+    height: auto
+}
+
+.home .promocao {
+    float: none;
+    overflow: hidden
+}
+
+.promocao .ofertasEspeciais {
+    width: 970px;
+    margin: 20px 0
+}
+
+.promocao .ofertasEspeciais h2 {
+    background-image: none;
+    text-indent: inherit;
+    font: 14px Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #008cba;
+    margin-bottom: 15px;
+    width: 780px;
+    float: left
+}
+
+.promocao .h2-ofertas-listas {
+    font: 14px Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #008cba;
+    margin: 15px 0 0 0;
+    width: 780px
+}
+
+.promocao .ofertasEspeciais .disclaimer-procon {
+    padding: 5px 17px;
+    float: right;
+    color: #666;
+    font-size: 10px;
+    margin-right: 7px
+}
+
+.promocao .ofertasEspeciais ul {
+    margin: 0 auto;
+    width: 970px
+}
+
+.promocao .ofertasEspeciais li {
+    width: 180px;
+    margin: 0 7px;
+    height: 150px;
+    float: left;
+    position: relative
+}
+
+.promocao .ofertasEspeciais li .box {
+    width: 180px;
+    height: 150px;
+    float: left;
+    margin: 0 3px 0 2px
+}
+
+.promocao .ofertasEspeciais li img {
+    top: 0;
+    left: 0
+}
+
+.promocao .ofertasEspeciais li span {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    height: 50px;
+    background: url(../../../images/carrtxtBg.png);
+    color: #fff;
+    width: 179px;
+    margin-left: 0
+}
+
+.promocao .ofertasEspeciais li span p {
+    margin: 0 3px 0 7px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 21px;
+    padding-top: 5px
+}
+
+.promocao .ofertasEspeciais li span p small {
+    font-weight: bold;
+    font-size: 10px;
+    float: left
+}
+
+.promocao .ofertasEspeciais li span p strong {
+    width: auto;
+    color: #0f0;
+    font-size: 23px;
+    float: left;
+    margin-left: 4px
+}
+
+.sliders-promocao {
+    width: 970px;
+    margin: 0 auto 20px auto
+}
+
+.sliders-promocao #banner {
+    width: 970px;
+    height: 395px;
+    margin: 0 auto
+}
+
+.sliders-promocao #imagens {
+    width: 970px;
+    height: 395px
+}
+
+.sliders-promocao #acoes {
+    text-align: right;
+    float: right;
+    margin-right: 5px;
+    position: static
+}
+
+.sliders-promocao #botoes {
+    float: right;
+    position: static
+}
+
+.sliders-promocao #banner2 {
+    width: 970px;
+    height: 395px
+}
+
+.sliders-promocao #imagens2 {
+    width: 970px;
+    height: 395px
+}
+
+.promocao .ofertasEspeciaisListas2 {
+    width: 100%;
+    margin-bottom: 18px;
+    float: left;
+    overflow: hidden;
+    margin-top: 15px;
+    display: block
+}
+
+.promocao .ofertasEspeciaisListas2 h2 {
+    color: #008cba;
+    margin-bottom: 15px;
+    text-indent: inherit
+}
+
+.promocao .ofertasEspeciaisListas2 .box {
+    width: 308px;
+    float: left;
+    height: auto;
+    margin-right: 15px
+}
+
+.promocao .ofertasEspeciaisListas2 .box .disclaimer-procon {
+    float: left;
+    height: 30px;
+    margin-left: 7px;
+    width: 150px
+}
+
+.promocao .ofertasEspeciaisListas2 .titulo {
+    width: 276px;
+    height: 34px
+}
+
+.promocao .ofertasEspeciaisListas2 .titulo .produtos {
+    width: 180px;
+    height: 30px;
+    border-radius: 20px;
+    background: #008cba;
+    font-size: 14px;
+    color: #fff;
+    float: left;
+    text-align: left
+}
+
+.promocao .ofertasEspeciaisListas2 .titulo .produtos strong {
+    margin-top: 7px;
+    display: block;
+    margin-left: 15px
+}
+
+.homeTemas .promocao .ofertasEspeciaisListas2 .titulo .produtos strong {
+    margin-top: 7px;
+    display: block;
+    margin-left: 0
+}
+
+.promocao .ofertasEspeciaisListas2 .titulo .apartir {
+    float: right;
+    margin-top: 10px;
+    margin-right: 15px
+}
+
+.promocao .ofertasEspeciaisListas2 ul {
+    padding-top: 20px;
+    width: 308px;
+    list-style: none
+}
+
+.promocao .ofertasEspeciaisListas2 li {
+    border-bottom: 1px dotted #c1c1c1;
+    line-height: 1.3em;
+    padding: 10px 5px 0 0;
+    width: 300px;
+    height: 20px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.promocao .ofertasEspeciaisListas2 li a {
+    text-decoration: none
+}
+
+.promocao .ofertasEspeciaisListas2 li a span {
+    color: #00adef;
+    font-weight: bold;
+    font-size: 12px;
+    width: 150px;
+    float: left;
+    padding-left: 6px
+}
+
+.promocao .ofertasEspeciaisListas2 li a small {
+    color: #9d9d9d;
+    padding-left: 12px;
+    font-size: 11px;
+    float: left
+}
+
+.promocao .ofertasEspeciaisListas2 li a strong {
+    color: #008cba;
+    font-size: 16px;
+    float: right;
+    padding: 0 12px
+}
+
+.promocao .ofertasEspeciaisListas2 li a:hover span, .ofertasEspeciaisListas2 li a:hover small, .ofertasEspeciaisListas2 li a:hover strong {
+    text-decoration: underline
+}
+
+.cruzeiros .ContaiterItinerario {
+    width: 970px;
+    text-align: center
+}
+
+.cruzeiros table {
+    width: 930px;
+    background: #f9f9f9;
+    padding: 20px
+}
+
+.cruzeiros td {
+    height: 30px;
+    text-align: center;
+    font-size: 11px;
+    border-bottom: 1px solid #00adef
+}
+
+.cruzeiros table h2 {
+    font-size: 12px
+}
+
+.cruzeiros .tituloItinerario {
+    width: 100%;
+    height: 30px;
+    color: #00adef;
+    padding-left: 20px;
+    text-align: left
+}
+
+.cruzeiros .holdContainer {
+    width: 970px;
+    height: auto;
+    overflow: hidden
+}
+
+.site-tit-noticias-imprensa {
+    background-image: url("../../../images/cias-aereas/tit-box-noticias.jpg");
+    float: left;
+    height: 28px;
+    width: 209px
+}
+
+Impresa .site-bloco-internas-meio-esquerda {
+    float: left;
+    height: auto;
+    width: auto
+}
+
+.site-menuDir-imprensa {
+    height: auto;
+    width: 210px;
+    float: left;
+    margin: 50px 0 25px 2px
+}
+
+.site-menuDir-item-imprensa {
+    background-color: #f5f5f5;
+    float: left;
+    height: 70px;
+    margin: 2px 0;
+    width: 209px
+}
+
+.site-texto-imprensa {
+    color: #646464;
+    float: left;
+    font: 11px 'Verdana', 'Arial', 'Helvetica', sans-serif;
+    margin: -1px 5px 10px 10px;
+    text-align: left
+}
+
+.site-texto-imprensa a {
+    color: #0082d7;
+    text-decoration: none
+}
+
+.site-texto-imprensa a:hover, .site-texto-imprensa a:visited {
+    color: #646464;
+    text-decoration: none
+}
+
+.men_notImprensa {
+    height: auto;
+    overflow: hidden;
+    width: 380px
+}
+
+.container-men_notImprensa {
+    float: left;
+    height: auto;
+    width: 380px
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa {
+    margin: 20px 0 0
+}
+
+.men_notImprensa .menuImprensa ul {
+    margin: 0
+}
+
+.men_notImprensa .menuImprensa ul li {
+    margin: 0
+}
+
+.men_notImprensa .menuImprensa ul li span {
+    background: url("../../../images/sprite-internos.png") no-repeat scroll 0 0 transparent;
+    float: left;
+    height: 33px;
+    margin: 0;
+    text-indent: -9999px;
+    width: 365px
+}
+
+.men_notImprensa .menuImprensa ul li .sobreImprensa {
+    background-position: 0 -195px
+}
+
+.men_notImprensa .menuImprensa ul li .redesImprensa {
+    background-position: 0 -267px
+}
+
+.men_notImprensa .menuImprensa ul li .releasesImprensa {
+    background-position: 0 -301px
+}
+
+.men_notImprensa .menuImprensa ul li .sugestoesImprensa {
+    background-position: 0 -337px
+}
+
+.men_notImprensa .menuImprensa ul li .contatoImprensa {
+    background-position: 0 -373px
+}
+
+.men_notImprensa .ultnotImprensa {
+    float: left;
+    margin: 10px 0 0;
+    width: 365px
+}
+
+.men_notImprensa .ultnotImprensa .topboxImprensa {
+    background: url("../../../images/bginternos.png") no-repeat scroll -325px 0 transparent;
+    height: 16px;
+    width: 365px
+}
+
+.men_notImprensa .ultnotImprensa .mboxImprensa {
+    background: none repeat scroll 0 0 #ededee;
+    width: 365px
+}
+
+.men_notImprensa .ultnotImprensa .mboxImprensa h2 {
+    color: #008cba;
+    font-size: 18px;
+    padding: 0 0 0 20px
+}
+
+.men_notImprensa .ultnotImprensa .mboxImprensa ul {
+    color: #6d6e71;
+    margin: 0
+}
+
+.men_notImprensa .ultnotImprensa .mboxImprensa ul li {
+    height: 56px;
+    padding: 0 0 0 20px
+}
+
+.men_notImprensa .ultnotImprensa .mboxImprensa ul li p {
+    background: url("../../../images/linha-ponto.gif") repeat-x scroll 0 0 transparent;
+    float: left;
+    font-size: 12px;
+    padding: 15px 0 0;
+    width: 327px
+}
+
+.men_notImprensa .ultnotImprensa .mboxImprensa ul li a {
+    color: #008cba;
+    text-decoration: none
+}
+
+.men_notImprensa .ultnotImprensa .mboxImprensa ul li a:hover {
+    text-decoration: underline
+}
+
+.men_notImprensa .ultnotImprensa .fotboxImprensa {
+    background: url("../../../images/bginternos.png") no-repeat scroll -325px -30px transparent;
+    height: 16px;
+    width: 365px
+}
+
+.homeImprensa {
+    overflow: hidden
+}
+
+.homeImprensa .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeImprensa .container .men_notImprensa {
+    width: 380px;
+    height: auto
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa {
+    float: left;
+    margin: 20px 0 0
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul {
+    margin: 0
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li {
+    margin: 0
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li span {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 0;
+    width: 365px;
+    height: 33px;
+    float: left;
+    margin: 0;
+    text-indent: -9999px
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li .sobreImprensa {
+    background-position: 0 -195px
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li .diferenciaisImprensa {
+    background-position: 0 -230px
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li .redesImprensa {
+    background-position: 0 -267px
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li .releasesImprensa {
+    background-position: 0 -301px
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li .sugestoesImprensa {
+    background-position: 0 -337px
+}
+
+.homeImprensa .container .men_notImprensa .menuImprensa ul li .contatoImprensa {
+    background-position: 0 -373px
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa {
+    width: 365px;
+    margin: 10px 0 0
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .topboxImprensa {
+    background: #ededee;
+    border-radius: 10px 10px 0 0;
+    width: 365px;
+    height: 16px
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .mboxImprensa {
+    background: #ededee;
+    width: 365px
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .mboxImprensa h2 {
+    color: #008cba;
+    padding: 0 0 0 20px;
+    font-size: 18px
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .mboxImprensa ul {
+    margin: 0;
+    color: #6d6e71
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .mboxImprensa ul li {
+    padding: 0 0 0 20px;
+    height: 65px
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .mboxImprensa ul li p {
+    background: url(../../../images/linha-ponto.gif) repeat-x;
+    width: 327px;
+    padding: 15px 0 0;
+    float: left;
+    font-size: 12px
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .mboxImprensa ul li a {
+    color: #008cba;
+    text-decoration: none
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .mboxImprensa ul li a:hover {
+    text-decoration: underline
+}
+
+.homeImprensa .container .men_notImprensa .ultnotImprensa .fotboxImprensa {
+    background: #ededee;
+    border-radius: 0 0 10px 10px;
+    width: 365px;
+    height: 16px
+}
+
+.homeImprensa .container .contatoImprensa {
+    width: 590px;
+    height: auto;
+    float: left;
+    margin-bottom: 20px
+}
+
+.homeImprensa .container .contatoImprensa h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -414px;
+    width: 590px;
+    height: 25px;
+    text-indent: -9999px
+}
+
+.homeImprensa .container .contatoDiferenciais p {
+    color: #808285;
+    font-size: 12px;
+    padding: 0 0 0 8px
+}
+
+.homeImprensa .container .contatoDiferenciais {
+    width: 590px;
+    height: 586px;
+    float: left
+}
+
+.homeImprensa .container .contatoDiferenciais h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -1746px;
+    width: 590px;
+    height: 25px;
+    text-indent: -9999px
+}
+
+.homeImprensa .container .contatoSobre p {
+    color: #808285;
+    font-size: 12px;
+    padding: 0 0 0 8px
+}
+
+.homeImprensa .container .contatoSobre {
+    width: 590px;
+    height: 586px;
+    float: left
+}
+
+.homeImprensa .container .contatoSobre h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -1784px;
+    width: 590px;
+    height: 25px;
+    text-indent: -9999px
+}
+
+.homeImprensa .container .contatoReleases p {
+    color: #808285;
+    font-size: 12px;
+    padding: 0 0 0 8px
+}
+
+.homeImprensa .container .contatoReleases {
+    width: 590px;
+    height: 586px
+}
+
+.homeImprensa .container .contatoReleases h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -1824px;
+    width: 590px;
+    height: 25px;
+    text-indent: -9999px
+}
+
+.homeImprensa .container .contatoSugestoes p {
+    color: #808285;
+    font-size: 12px;
+    padding: 0 0 0 8px
+}
+
+.homeImprensa .container .contatoSugestoes {
+    width: 590px;
+    height: 586px;
+    float: left
+}
+
+.homeImprensa .container .contatoSugestoes h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -1862px;
+    width: 590px;
+    height: 25px;
+    text-indent: -9999px
+}
+
+.homeImprensa .container .contatoImprensa p {
+    color: #808285;
+    font-size: 12px;
+    padding: 10px 0 0 8px
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa {
+    width: 584px;
+    margin: 20px 0 0
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .topboxImprensa {
+    background: #ededee;
+    border-radius: 10px 10px 0 0;
+    width: 585px;
+    height: 16px
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .mboxImprensa {
+    background: #ededee;
+    width: 585px;
+    height: 249px
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .mboxImprensa h2 {
+    color: #008cba;
+    padding: 0 0 0 20px;
+    font-size: 18px
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .mboxImprensa h3 {
+    padding: 10px 0 10px 20px;
+    color: #000
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .mboxImprensa p {
+    padding: 0 0 0 20px;
+    font-size: 12px
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .mboxImprensa p strong {
+    color: #000
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .mboxImprensa p span {
+    color: #008cba
+}
+
+.homeImprensa .container .contatoImprensa .cont_asImprensa .fotboxImprensa {
+    background: #ededee;
+    border-radius: 0 0 10px 10px;
+    width: 585px;
+    height: 16px
+}
+
+.homeImprensa .container .contatoImprensa .redesImprensa {
+    width: 585px;
+    overflow: hidden;
+    margin: 15px 0 0;
+    *margin: 45px 0 0;
+    margin-bottom: 20px
+}
+
+.homeImprensa .container .contatoImprensa .redesImprensa h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -444px;
+    width: 585px;
+    height: 25px;
+    text-indent: -9999px
+}
+
+.homeImprensa .container .contatoImprensa .redesImprensa .faceImprensa {
+    background: url(../../../images/imprensa/facebook.jpg) no-repeat;
+    width: 179px;
+    height: 150px;
+    margin: 0 23px 0 0;
+    float: left
+}
+
+.homeImprensa .container .contatoImprensa .redesImprensa .twitImprensa {
+    background: url(../../../images/imprensa/twitter.jpg) no-repeat;
+    width: 179px;
+    height: 150px;
+    margin: 0 23px 0 0;
+    float: left
+}
+
+.homeImprensa .container .contatoImprensa .redesImprensa .gooImprensa {
+    background: url(../../../images/imprensa/google.jpg) no-repeat;
+    width: 179px;
+    height: 150px;
+    float: left
+}
+
+.homeImprensa .container .contatoImprensa .redesImprensa .botRedes {
+    width: 72px;
+    height: 29px;
+    margin: 106px 0 0 52px;
+    padding: 0
+}
+
+.sitemap-hoteis {
+    color: #939598;
+    font-size: 12px
+}
+
+.sitemap-hoteis a:active, a:visited, a:hover, a:link {
+    color: #939598;
+    font-size: 11px
+}
+
+.sitemap-hoteis h2 {
+    color: #008cba;
+    font-size: 16px;
+    display: inline;
+    float: left;
+    width: 90%;
+    margin-top: 20px;
+    border-bottom: 3px dotted #008cba
+}
+
+.sitemap-hoteis li {
+    float: left;
+    width: 180px;
+    margin-right: 15px
+}
+
+.homeMapaSite {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeMapaSite .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeMapaSite .container h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -615px;
+    width: 345px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeMapaSite .container h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat;
+    width: 300px;
+    height: 23px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px
+}
+
+.homeMapaSite .container .ciaM {
+    background-position: -5px -648px
+}
+
+.homeMapaSite .container .pasD {
+    background-position: -5px -715px
+}
+
+.homeMapaSite .container .hotM {
+    background-position: -5px -667px
+}
+
+.homeMapaSite .container .cruM {
+    background-position: -5px -738px
+}
+
+.homeMapaSite .container .resM {
+    background-position: -5px -689px
+}
+
+.homeMapaSite .container .menM {
+    background-position: -5px -766px;
+    margin: 20px 0 10px
+}
+
+.homeMapaSite .container .temM {
+    background-position: -5px -790px
+}
+
+.homeMapaSite .container .desM {
+    background-position: -5px -815px
+}
+
+.homeMapaSite .container .serM {
+    background-position: -5px -840px
+}
+
+.homeMapaSite .container .impM {
+    background-position: -5px -860px
+}
+
+.homeMapaSite .container h3 {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 10px 0 20px
+}
+
+.homeMapaSite .container ul {
+    margin: 0 0 20px
+}
+
+.homeMapaSite .container ul li a {
+    color: #939598;
+    font-size: 12px;
+    text-decoration: none
+}
+
+.homeMapaSite .container a {
+    color: #939598;
+    font-size: 12px;
+    text-decoration: underline
+}
+
+.homeMapaSite .container .colunaA {
+    width: 323px;
+    overflow: hidden;
+    float: left
+}
+
+.homeMapaSite .container .colunaB {
+    width: 328px;
+    overflow: hidden;
+    float: left
+}
+
+.homeMapaSite .container .colunaC {
+    width: 319px;
+    overflow: hidden;
+    float: left
+}
+
+.homeMelhorPreco {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px;
+    margin-top: 20px
+}
+
+.homeMelhorPreco .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeMelhorPreco .container h1 {
+    text-indent: -9999px
+}
+
+.homeMelhorPreco .container .condicoes {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -888px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px
+}
+
+.homeMelhorPreco .container h3 {
+    font-weight: bold;
+    color: #000;
+    font-size: 12px;
+    padding: 0;
+    margin: 0
+}
+
+.homeMelhorPreco .container .colunaA {
+    width: 604px;
+    overflow: hidden;
+    float: left
+}
+
+.homeMelhorPreco .container .colunaA .motA {
+    width: 604px;
+    min-height: 385px
+}
+
+.homeMelhorPreco .container .colunaA .textoM {
+    width: 604px;
+    height: 318px
+}
+
+.homeMelhorPreco .container .tit-melhor-preco {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -922px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px
+}
+
+.homeMelhorPreco .container .colunaB {
+    width: 371px;
+    overflow: hidden;
+    float: left
+}
+
+.homeMelhorPreco .container .colunaB .destM {
+    width: 371px;
+    height: 325px;
+    padding: 0 0 0 5px
+}
+
+.homeMelhorPreco .container .textoCondicoes .textoM {
+    width: 100%;
+    height: auto
+}
+
+.homeMelhorPreco .container .textoCondicoes {
+    width: 100%;
+    height: auto;
+    float: left
+}
+
+.homeSeguranca {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeSeguranca .container {
+    background: url(../../../images/certising-seguranca.jpg) no-repeat 736px 30px;
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeSeguranca .container h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -475px;
+    width: 125px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeSeguranca .container h2 {
+    font-weight: bold;
+    color: #000;
+    font-size: 12px;
+    padding: 0
+}
+
+.homeSeguranca .container .parMedio {
+    width: 65%
+}
+
+.homeRegulamento {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeRegulamento .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeRegulamento .container h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -1710px;
+    width: 230px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeRegulamento .container h2 {
+    font-weight: bold;
+    color: #000;
+    font-size: 12px;
+    padding: 0
+}
+
+.homeRegulamento .container .parMedio {
+    width: 65%
+}
+
+.homeEmpresa {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeEmpresa h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -505px;
+    width: 990px;
+    height: 23px;
+    padding: 0;
+    margin: 20px auto 0;
+    text-indent: -9999px
+}
+
+.homeEmpresa .container {
+    width: 990px;
+    margin: 0 auto;
+    position: relative
+}
+
+.homeEmpresa .container h2 {
+    font-weight: bold;
+    color: #000;
+    font-size: 12px;
+    padding: 0
+}
+
+.homeEmpresa .container .parMedio {
+    width: 45%
+}
+
+.homeEmpresa .container .sub {
+    background: url(../../../images/submarino-viagens-empresa.png) no-repeat;
+    width: 466px;
+    height: 296px;
+    margin: -58px 0 0 510px;
+    position: absolute;
+    z-index: 1
+}
+
+.homeEmpresa .container .pAzul {
+    color: #00adef
+}
+
+.homeEmpresa .container .pAzul strong {
+    font-size: 14px
+}
+
+.homePrivacidade {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homePrivacidade .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homePrivacidade .container h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -558px;
+    width: 260px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homePrivacidade .container h2 {
+    font-weight: bold;
+    color: #008cba;
+    font-size: 14px;
+    padding: 0;
+    margin: 30px 0 20px
+}
+
+.homePrivacidade .container span {
+    color: #008cba
+}
+
+.homeRedeSocial {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeRedeSocial .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeRedeSocial .container h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -588px;
+    width: 345px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeRedeSocial .container .boxRedeSocial {
+    width: 229px;
+    height: 265px;
+    float: left;
+    margin: 0 20px 0 0
+}
+
+.homeRedeSocial .container .last_boxRedeSocial {
+    margin: 0
+}
+
+.homeRedeSocial .container .boxRedeSocial .logoRedeSocial {
+    width: 229px;
+    height: 101px
+}
+
+.homeRedeSocial .container .boxRedeSocial .txtRedeSocial {
+    width: 229px;
+    height: 164px
+}
+
+.homeRedeSocial .container .boxRedeSocial .txtRedeSocial p {
+    background: url(../../../images/sprite-icones.png) no-repeat -12px -208px;
+    padding: 0 20px;
+    height: 80px
+}
+
+.homeRedeSocial .container .boxRedeSocial .txtRedeSocial .botRedeSocial {
+    width: 229px;
+    height: 29px;
+    margin: 0;
+    padding: 0 20px
+}
+
+.homeVantagens {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeVantagens .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeVantagens .container h1 {
+    text-indent: -9999px
+}
+
+.homeVantagens .container h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -888px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px
+}
+
+.homeVantagens .container h3 {
+    font-weight: bold;
+    color: #000;
+    font-size: 12px;
+    padding: 0;
+    margin: 0
+}
+
+.homeVantagens .container .colunaA {
+    width: 604px;
+    overflow: hidden;
+    margin: 0 0 20px;
+    float: left
+}
+
+.homeVantagens .container .colunaA .motA {
+    width: 604px;
+    min-height: 320px
+}
+
+.homeVantagens .container .colunaB {
+    width: 371px;
+    margin: 0 0 20px;
+    overflow: hidden;
+    float: left
+}
+
+.homeVantagens .container .colunaB .destM {
+    width: 371px;
+    height: 325px;
+    padding: 0 0 0 5px
+}
+
+.homeVantagens .container .itens_vantagens {
+    width: 990px;
+    overflow: hidden
+}
+
+.homeVantagens .container .itens_vantagens h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -949px;
+    height: 23px;
+    padding: 0;
+    margin: 0 0 20px;
+    text-indent: -9999px
+}
+
+.homeVantagens .container .itens_vantagens .accordionA {
+    width: 477px;
+    float: left
+}
+
+.homeVantagens .container .itens_vantagens .accordionB {
+    width: 485px;
+    margin: 0 0 0 23px;
+    float: left
+}
+
+.homeVantagens .container .itens_vantagens ul li {
+    margin: 0 0 10px
+}
+
+.homeVantagens .container .itens_vantagens h3 {
+    background: url(../../../images/sprite-vantagens1.png) no-repeat;
+    width: 476px;
+    height: 43px;
+    cursor: pointer
+}
+
+.homeVantagens .container .itens_vantagens h3 a {
+    background: url(../../../images/sprite-icones.png) no-repeat 445px -315px;
+    width: 476px;
+    height: 43px;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeVantagens .container .itens_vantagens .aberto h3 a {
+    background: url(../../../images/sprite-icones.png) no-repeat 445px -283px
+}
+
+.homeVantagens .container .itens_vantagens .acd {
+    display: none
+}
+
+.homeVantagens .container .itens_vantagens .aberto .acd {
+    display: block
+}
+
+.homeVantagens .container .itens_vantagens .vant1 {
+    background-position: 0 0
+}
+
+.homeVantagens .container .itens_vantagens .vant2 {
+    background-position: 0 -54px
+}
+
+.homeVantagens .container .itens_vantagens .vant3 {
+    background-position: 0 -100px
+}
+
+.homeVantagens .container .itens_vantagens .vant4 {
+    background-position: 0 -150px
+}
+
+.homeVantagens .container .itens_vantagens .vant5 {
+    background-position: 0 -200px
+}
+
+.homeVantagens .container .itens_vantagens .vant6 {
+    background-position: 0 -250px
+}
+
+.homeVantagens .container .itens_vantagens .vant7 {
+    background-position: -501px 0
+}
+
+.homeVantagens .container .itens_vantagens .vant8 {
+    background-position: -501px -50px
+}
+
+.homeVantagens .container .itens_vantagens .vant9 {
+    background-position: -501px -100px
+}
+
+.homeVantagens .container .itens_vantagens .vant10 {
+    background-position: -501px -150px
+}
+
+.homeVantagens .container .itens_vantagens .vant11 {
+    background-position: -501px -200px
+}
+
+.homeCorporativo {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeCorporativo .container {
+    width: 990px;
+    margin: 0 auto;
+    position: relative
+}
+
+.homeCorporativo .container .topoCorporativo {
+    width: 990px;
+    overflow: hidden;
+    margin: 0
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA {
+    width: 552px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1105px;
+    width: 552px;
+    height: 23px;
+    padding: 0;
+    margin: 50px 0 0;
+    text-indent: -9999px
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs {
+    width: 540px;
+    margin: 0
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxA {
+    width: 172px;
+    height: 234px;
+    border-right: 1px dotted #939598;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxA h3 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1140px;
+    width: 172px;
+    height: 23px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999 p
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxA .img_txt {
+    width: 154px;
+    margin: 10px 0 0;
+    padding: 0;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxA .img_txt .veja_mais {
+    background: url(../../../images/sprite-internos.png) no-repeat -8px -1208px;
+    width: 154px;
+    height: 23px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxB {
+    width: 187px;
+    height: 234px;
+    border-right: 1px dotted #939598;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxB h3 {
+    background: url(../../../images/sprite-internos.png) no-repeat 20px -1160px;
+    width: 172px;
+    height: 23px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999 p
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxB .img_txt {
+    width: 154px;
+    margin: 10px 0 0 20px;
+    padding: 0;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxB .img_txt p {
+    padding-right: 5px
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxB .img_txt .veja_mais {
+    background: url(../../../images/sprite-internos.png) no-repeat -8px -1208px;
+    width: 154px;
+    height: 23px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxC {
+    width: 173px;
+    height: 234px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxC h3 {
+    background: url(../../../images/sprite-internos.png) no-repeat 20px -1180px;
+    width: 172px;
+    height: 23px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999 p
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxC .img_txt {
+    width: 154px;
+    margin: 10px 0 0 20px;
+    padding: 0;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaA .boxs .boxC .img_txt .veja_mais {
+    background: url(../../../images/sprite-internos.png) no-repeat -8px -1208px;
+    width: 154px;
+    height: 23px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaB {
+    background: url(../../../images/corporativo/corporativo-bg.jpg) no-repeat 0 45px;
+    width: 422px;
+    height: 350px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaB .boxA {
+    width: 332px;
+    height: 97px;
+    margin: 330px 0 0 77px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaB .boxA h3 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1245px;
+    width: 332px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaB .boxA p {
+    width: 107px;
+    float: left
+}
+
+.homeCorporativo .container .topoCorporativo .colunaB .boxA .telCorp {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1288px;
+    width: 195px;
+    height: 24px;
+    padding: 0;
+    margin: 15px 0 0;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeCorporativo .CorpForm {
+    width: 990px;
+    overflow: hidden;
+    margin: 0 auto
+}
+
+.homeCorporativo .CorpForm .colunaA {
+    width: 552px;
+    overflow: hidden;
+    float: left
+}
+
+.homeCorporativo .CorpForm .colunaA .boxA .fidelidade {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1337px;
+    width: 100%;
+    height: 24px;
+    padding: 0;
+    margin: 0 0 20px;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeCorporativo .CorpForm .colunaA .boxA .vale {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1372px;
+    width: 100%;
+    height: 24px;
+    padding: 0;
+    margin: 0 0 20px;
+    text-indent: -9999px;
+    float: left
+}
+
+.homeCorporativo .CorpForm .colunaA .boxA .viagens {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1408px;
+    width: 100%;
+    height: 24px;
+    padding: 0;
+    margin: 0 0 20px;
+    text-indent: -9999px;
+    float: lef
+}
+
+.homeCorporativo .CorpForm .colunaA .boxA p {
+    padding-left: 5px
+}
+
+.homeCorporativo .CorpForm .colunaA .boxA ul {
+    margin: 15px 0 0;
+    padding-left: 5px
+}
+
+.homeCorporativo .CorpForm .colunaA .boxA ul li {
+    background: url(../../../images/sprite-icones.png) no-repeat -17px -207px;
+    padding: 0 0 5px 10px
+}
+
+.homeCorporativo .CorpForm .colunaA .boxA p strong {
+    color: #008cba
+}
+
+.homeCorporativo .CorpForm .colunaB {
+    background: url(../../../images/corporativo/corporativo-bg-form.jpg) no-repeat;
+    width: 438px;
+    overflow: hidden;
+    float: left
+}
+
+.homeCorporativo .CorpForm .colunaB .boxA {
+    overflow: hidden;
+    margin: 42px 0 0
+}
+
+.homeCorporativo .CorpForm .colunaB .boxA input {
+    background: 0;
+    width: 186px;
+    height: 26px;
+    font-size: 11px;
+    color: #939598;
+    border: 0;
+    margin: 0 0 12px 12px;
+    padding: 0 0 0 4px
+}
+
+.homeCorporativo .CorpForm .colunaB .boxA textarea {
+    background: 0;
+    width: 392px;
+    font-size: 11px;
+    color: #939598;
+    border: 0;
+    margin: 0 0 0 11px;
+    padding: 0 0 0 4px
+}
+
+.homeCorporativo .CorpForm .colunaB .boxA .btEnviar {
+    background: url(../../../images/sprite-internos.png) no-repeat -271px -134px;
+    width: 98px;
+    height: 33px;
+    margin: 0 20px 0 0;
+    float: right;
+    text-indent: -9999px
+}
+
+.homeCorporativo .CorpForm .colunaB .btVoltar {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1450px;
+    width: 110px;
+    height: 20px;
+    margin: 27px 20px 0 0;
+    float: right;
+    text-indent: -9999px
+}
+
+.homeCorporativo .CorpForm .colunaB .last {
+    margin-top: 70px
+}
+
+.separador-azulCorp {
+    background: url(../../../images/separador-azul-root.gif) repeat-x;
+    height: 8px;
+    clear: both;
+    margin: 0 0 20px
+}
+
+.homeFormas {
+    overflow: hidden;
+    color: #939598;
+    font-size: 12px
+}
+
+.homeFormas .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeFormas .container h1 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1481px;
+    width: 360px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeFormas .menuFormas {
+    overflow: hidden
+}
+
+.homeFormas .menuFormas ul li {
+    margin: 0 18px 0 0;
+    float: left
+}
+
+.homeFormas .cartao_img {
+    margin: 10px 0 0
+}
+
+.homeFormas .btVoltar {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1450px;
+    width: 110px;
+    height: 20px;
+    margin: 0 20px 0 0;
+    float: right;
+    text-indent: -9999px
+}
+
+.homeFormas .containerAtracoes {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeFormas .containerAtracoes h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1669px;
+    width: 360px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeFormas .containerAtracoes h3 {
+    background: url(../../../images/sprite-icones.png) no-repeat -17px -208px;
+    color: #008cba;
+    font-size: 14px;
+    padding: 0 0 5px 10px
+}
+
+.homeFormas .containerHoteis {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeFormas .containerHoteis h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1629px;
+    width: 360px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeFormas .containerHoteis h3 {
+    background: url(../../../images/sprite-icones.png) no-repeat -17px -208px;
+    color: #008cba;
+    font-size: 14px;
+    padding: 0 0 5px 10px
+}
+
+.homeFormas .containerHoteis .contas {
+    border-top: 1px dotted #939598;
+    overflow: hidden;
+    margin: 10px 0
+}
+
+.homeFormas .containerHoteis .contas ul {
+    margin: 10px 0 0
+}
+
+.homeFormas .containerHoteis .contas ul li {
+    float: left;
+    width: 219px
+}
+
+.homeFormas .containerHoteis .contas ul li strong {
+    color: #000
+}
+
+.homeFormas .containerHoteis .contas li img {
+    float: left;
+    margin: 0 10px 0 0
+}
+
+.homeFormas .containerHoteis .contas .dd_banco {
+    overflow: hidden;
+    float: left
+}
+
+.homeFormas .containerPacotes {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeFormas .containerPacotes h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1589px;
+    width: 360px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPacotes h3 {
+    background: url(../../../images/sprite-icones.png) no-repeat -17px -208px;
+    color: #008cba;
+    font-size: 14px;
+    padding: 0 0 5px 10px
+}
+
+.homeFormas .containerPacotes .contas {
+    border-top: 1px dotted #939598;
+    overflow: hidden;
+    margin: 10px 0
+}
+
+.homeFormas .containerPacotes a {
+    color: #008cba;
+    text-decoration: underline
+}
+
+.homeFormas .containerPacotes .contas ul {
+    margin: 10px 0 0
+}
+
+.homeFormas .containerPacotes .contas ul li {
+    float: left;
+    width: 219px
+}
+
+.homeFormas .containerPacotes .contas ul li strong {
+    color: #000
+}
+
+.homeFormas .containerPacotes .contas li img {
+    float: left;
+    margin: 0 10px 0 0
+}
+
+.homeFormas .containerPacotes .contas .dd_banco {
+    overflow: hidden;
+    float: left
+}
+
+.homeFormas .containerCruzeiros {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeFormas .containerCruzeiros h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1550px;
+    width: 360px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeFormas .containerCruzeiros h3 {
+    color: #000;
+    font-size: 12px
+}
+
+.homeFormas .containerCruzeiros .tipo_pg {
+    display: none;
+    margin: 20px 0 0
+}
+
+.homeFormas .containerCruzeiros .tipo_pg a {
+    color: #008cba;
+    text-decoration: underline
+}
+
+.homeFormas .containerCruzeiros ul li {
+    float: left;
+    width: 100%
+}
+
+.homeFormas .containerCruzeiros .menCruz1 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerCruzeiros .menCruz1 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerCruzeiros .menCruz1 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerCruzeiros .norwegian {
+    background: url(../../../images/formas-pagamento/norwegian-cruise-line.jpg) no-repeat;
+    width: 127px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .msc-cruzeiros {
+    background: url(../../../images/formas-pagamento/msc-cruzeiros.jpg) no-repeat;
+    width: 143px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .ibero-cruzeiros {
+    background: url(../../../images/formas-pagamento/ibero-cruzeiros.jpg) no-repeat;
+    width: 142px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .costa {
+    background: url(../../../images/formas-pagamento/costa.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .celebrity-cruises {
+    background: url(../../../images/formas-pagamento/celebrity-cruises.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .azamara-cruises {
+    background: url(../../../images/formas-pagamento/azamara-cruises.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .royal-caribbcan {
+    background: url(../../../images/formas-pagamento/royal-caribbcan.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .menCruz2 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerCruzeiros .menCruz2 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerCruzeiros .menCruz2 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerCruzeiros .princess {
+    background: url(../../../images/formas-pagamento/princes-cruises.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .holland {
+    background: url(../../../images/formas-pagamento/holland-america-line.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerCruzeiros .carnival {
+    background: url(../../../images/formas-pagamento/carnival-the-fun-ships.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeFormas .containerPassagens h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat -5px -1515px;
+    width: 360px;
+    height: 23px;
+    padding: 0;
+    margin: 20px 0;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPassagens h3 {
+    background: url(../../../images/sprite-icones.png) no-repeat -17px -208px;
+    color: #008cba;
+    font-size: 14px;
+    padding: 0 0 5px 10px
+}
+
+.homeFormas .containerPassagens .tipo_pg {
+    display: none;
+    margin: 20px 0 0
+}
+
+.homeFormas .containerPassagens .tipo_pg a {
+    color: #008cba;
+    text-decoration: underline
+}
+
+.homeFormas .containerPassagens ul li {
+    float: left;
+    width: 100%
+}
+
+#aero1, #aero2, #aero3, #aero4, #aero5, #aero6, #aero7 {
+    float: left;
+    width: 990px
+}
+
+.homeFormas .containerPassagens .menAero1 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerPassagens .menAero1 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPassagens .menAero1 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerPassagens .avianca {
+    background: url(../../../images/formas-pagamento/avianca.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .azul {
+    background: url(../../../images/formas-pagamento/azul.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .gol {
+    background: url(../../../images/formas-pagamento/gol.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .passaredo {
+    background: url(../../../images/formas-pagamento/passaredo.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .tam {
+    background: url(../../../images/formas-pagamento/tam.jpg) no-repeat;
+    width: 142px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .trip {
+    background: url(../../../images/formas-pagamento/trip.jpg) no-repeat;
+    width: 143px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .webjet {
+    background: url(../../../images/formas-pagamento/webjet.jpg) no-repeat;
+    width: 127px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .menAero2 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerPassagens .menAero2 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPassagens .menAero2 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerPassagens .aerolineas-argentinas {
+    background: url(../../../images/formas-pagamento/aerolineas-argentinas.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .aero-mexico {
+    background: url(../../../images/formas-pagamento/aero-mexico.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .aero-sur {
+    background: url(../../../images/formas-pagamento/aero-sur.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .air-canada {
+    background: url(../../../images/formas-pagamento/air-canada.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .air-china {
+    background: url(../../../images/formas-pagamento/air-china.jpg) no-repeat;
+    width: 142px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .air-europa {
+    background: url(../../../images/formas-pagamento/air-europa.jpg) no-repeat;
+    width: 143px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .air-france {
+    background: url(../../../images/formas-pagamento/air-france.jpg) no-repeat;
+    width: 127px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .menAero3 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerPassagens .menAero3 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPassagens .menAero3 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerPassagens .alitalia {
+    background: url(../../../images/formas-pagamento/alitalia.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .american-airlines {
+    background: url(../../../images/formas-pagamento/american-airlines.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .avianca-2 {
+    background: url(../../../images/formas-pagamento/avianca-2.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .british-airways {
+    background: url(../../../images/formas-pagamento/british-airways.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .continental-airlines {
+    background: url(../../../images/formas-pagamento/continental-airlines.jpg) no-repeat;
+    width: 142px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .copa-airlines {
+    background: url(../../../images/formas-pagamento/copa-airlines.jpg) no-repeat;
+    width: 143px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .delta {
+    background: url(../../../images/formas-pagamento/delta.jpg) no-repeat;
+    width: 127px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .menAero4 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerPassagens .menAero4 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPassagens .menAero4 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerPassagens .el-al {
+    background: url(../../../images/formas-pagamento/el-al.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .emirates {
+    background: url(../../../images/formas-pagamento/emirates.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .hahn-air {
+    background: url(../../../images/formas-pagamento/hahn-air.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .iberia {
+    background: url(../../../images/formas-pagamento/iberia.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .klm {
+    background: url(../../../images/formas-pagamento/klm.jpg) no-repeat;
+    width: 142px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .korean-air {
+    background: url(../../../images/formas-pagamento/korean-air.jpg) no-repeat;
+    width: 143px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .lan {
+    background: url(../../../images/formas-pagamento/lan.jpg) no-repeat;
+    width: 127px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .menAero5 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerPassagens .menAero5 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPassagens .menAero5 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerPassagens .lufthansa {
+    background: url(../../../images/formas-pagamento/lufthansa.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .pluna {
+    background: url(../../../images/formas-pagamento/pluna.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .qantas {
+    background: url(../../../images/formas-pagamento/qantas.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .qatar {
+    background: url(../../../images/formas-pagamento/qatar.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .singapore-airlins {
+    background: url(../../../images/formas-pagamento/singapore-airlins.jpg) no-repeat;
+    width: 142px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .south-african {
+    background: url(../../../images/formas-pagamento/south-african.jpg) no-repeat;
+    width: 143px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .swiss {
+    background: url(../../../images/formas-pagamento/swiss.jpg) no-repeat;
+    width: 127px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .menAero6 {
+    width: 100%;
+    display: block
+}
+
+.homeFormas .containerPassagens .menAero6 a {
+    display: block;
+    height: 72px;
+    text-indent: -9999px
+}
+
+.homeFormas .containerPassagens .menAero6 .selected a {
+    background: url(../../../images/formas-pagamento/seta-formas.png) no-repeat center bottom
+}
+
+.homeFormas .containerPassagens .taag {
+    background: url(../../../images/formas-pagamento/taag.jpg) no-repeat;
+    width: 132px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .taca {
+    background: url(../../../images/formas-pagamento/taca.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .tam {
+    background: url(../../../images/formas-pagamento/tam.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .tap-portugal {
+    background: url(../../../images/formas-pagamento/tap-portugal.jpg) no-repeat;
+    width: 141px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .turkish-airlines {
+    background: url(../../../images/formas-pagamento/turkish-airlines.jpg) no-repeat;
+    width: 142px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .united {
+    background: url(../../../images/formas-pagamento/united.jpg) no-repeat;
+    width: 143px;
+    height: 72px
+}
+
+.homeFormas .containerPassagens .us-airways {
+    background: url(../../../images/formas-pagamento/us-airways.jpg) no-repeat;
+    width: 127px;
+    height: 72px
+}
+
+.site-segura-nome-destino {
+    float: left;
+    height: 70px;
+    width: 958px
+}
+
+.miolo-lp-principal {
+    overflow: hidden;
+    width: 970px;
+    margin: 0 auto
+}
+
+.site-segundoBlocoPassagens {
+    height: 135px !important
+}
+
+.site-controlaImgAviaoLP {
+    width: 700px;
+    height: 100px;
+    float: left
+}
+
+#site-ImgAviaoLP-02 {
+    position: relative;
+    width: 160px;
+    height: 80px;
+    padding: 0 5px
+}
+
+#site-ImgAviaoPromoLP-02 {
+    position: relative;
+    width: 320px;
+    height: 80px;
+    padding: 0 5px
+}
+
+#conteudo_lp_tam {
+    float: left;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    text-align: left;
+    width: 720px
+}
+
+#conteudo_lp_tam h1 {
+    border-bottom: 1px solid #CCC;
+    color: #0082d7;
+    float: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    width: 700px;
+    margin-bottom: 10px
+}
+
+#conteudo_lp_tam h2, #conteudo_lp_tam h3 {
+    color: #707070;
+    float: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    width: 700px;
+    margin: 5px 0 8px
+}
+
+#conteudo_lp_tam p {
+    color: #666;
+    float: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: justify;
+    width: 700px;
+    padding-top: 10px
+}
+
+#conteudo_lp_tam a {
+    color: #0082d7;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-style: normal
+}
+
+#conteudo_lp_tam strong {
+    font-style: normal
+}
+
+#conteudo_lp_tam em {
+    font-style: normal
+}
+
+.passagens .ContentLp {
+    width: 585px;
+    margin-bottom: 18px;
+    float: left
+}
+
+.passagens .ContentLp h1 {
+    border-bottom: 1px solid #ccc;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0082d7;
+    width: 585px
+}
+
+.passagens .ContentLp h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0
+}
+
+.passagens h3 {
+    background-position: -1px -78px
+}
+
+.passagens .ContentLp p {
+    font-size: 12px;
+    padding-top: 10px;
+    text-align: justify
+}
+
+.home .motorHome .motorLpGol {
+    background: url(../../../images/motores/sprite-titulo-motor-lp-cia.png) no-repeat -10px -10px;
+    height: 25px;
+    padding-bottom: 5px;
+    text-indent: -999em
+}
+
+.home .motorHome .motorLpTam {
+    background: url(../../../images/motores/sprite-titulo-motor-lp-cia.png) no-repeat -10px -35px;
+    height: 25px;
+    padding-bottom: 5px;
+    text-indent: -999em
+}
+
+.passagens .ContaiterItinerario {
+    width: 970px;
+    float: left;
+    background: #f9f9f9;
+    padding: 20px;
+    text-align: center
+}
+
+.passagens table {
+    width: 930px
+}
+
+.passagens td {
+    height: 30px;
+    text-align: center;
+    font-size: 11px;
+    border-bottom: 1px solid #00adef
+}
+
+.passagens table h2 {
+    font-size: 12px
+}
+
+.passagens .tituloItinerario {
+    width: 100%;
+    height: 30px;
+    color: #00adef;
+    padding-left: 20px;
+    float: left
+}
+
+.passagens .ContentLp, .cruzeiros .ContentLp {
+    width: 585px;
+    margin-bottom: 18px
+}
+
+.passagens .ContentLp h1, .cruzeiros .ContentLp h1 {
+    border-bottom: 1px solid #ccc;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0082d7;
+    width: 585px
+}
+
+.passagens .ContentLp h2, .cruzeiros .ContentLp h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0
+}
+
+.passagens h3, .cruzeiros, h3 {
+    background-position: -1px -78px
+}
+
+.passagens .ContentLp p, .cruzeiros .ContentLp p {
+    font-size: 12px;
+    padding-top: 10px;
+    text-align: justify
+}
+
+.home .motorHome .motorLpGol {
+    background: url(../../../images/motores/sprite-titulo-motor-lp-cia.png) no-repeat -10px -10px;
+    height: 25px;
+    padding-bottom: 5px;
+    text-indent: -999em
+}
+
+.home .motorHome .motorLpTam {
+    background: url(../../../images/motores/sprite-titulo-motor-lp-cia.png) no-repeat -10px -35px;
+    height: 25px;
+    padding-bottom: 5px;
+    text-indent: -999em
+}
+
+.passagens .titOfertasLp {
+    background: url(../../../images/sprite-titulos.png) no-repeat -1px -377px;
+    height: 25px;
+    padding-bottom: 5px;
+    text-indent: -999em
+}
+
+.topOfertasLp {
+    width: 365px
+}
+
+.topOfertasLp .disclaimer-procon {
+    padding: 5px 17px;
+    float: left;
+    width: 349px;
+    background-color: #ededee
+}
+
+.topOfertasLp .item1, .topOfertasLp .item2 {
+    float: left
+}
+
+.topOfertasLp .item1 span, .topOfertasLp .item2 span {
+    height: 34px;
+    display: block
+}
+
+.topOfertasLp .item1, .topOfertasLp .item1 span {
+    background-position: -1439px -597px;
+    width: 143px
+}
+
+.topOfertasLp .item2, .topOfertasLp .item2 span {
+    background-position: -140px -560px;
+    width: 130px
+}
+
+.topOfertasLp .item1 .ativo {
+    background-position: 0 -597px
+}
+
+.topOfertasLp.item2 .ativo {
+    background-position: -143px -597px
+}
+
+.topOfertasLp .ofertasBtns {
+    overflow: hidden;
+    background: url(../../../images/passagensbox.png) center 13px no-repeat
+}
+
+.topOfertasLp .ofertasBox1, .topOfertas .ofertasBox2 {
+    clear: both;
+    background: url(../../../images/passagensbox.png) center bottom;
+    padding-bottom: 4px
+}
+
+.topOfertasLp .ofertasBox2 {
+    display: none
+}
+
+.topOfertasLp ul {
+    padding-top: 44px;
+    background-position: -1423px -646px
+}
+
+.topOfertasLp ul li {
+    background-color: #ededee;
+    margin: 0 15px;
+    border-top: 1px dotted #c1c1c1
+}
+
+.topOfertasLp ul li a {
+    line-height: 34px;
+    overflow: hidden;
+    display: block
+}
+
+.topOfertasLp ul li a span {
+    float: left;
+    color: #00adef;
+    font-size: 13px;
+    width: 175px
+}
+
+.topOfertasLp ul li a:hover span, .topOfertasLp ul li a:hover strong {
+    text-decoration: underline
+}
+
+.topOfertasLp ul li a small {
+    float: left;
+    color: #9d9d9d;
+    font-size: 11px;
+    margin-left: 5px;
+    background-position: -673px 12px;
+    padding-left: 12px
+}
+
+.topOfertasLp ul li a strong {
+    float: right;
+    color: #008cba;
+    font-size: 16px
+}
+
+.topOfertasLp ul li a strong small {
+    float: none;
+    margin-right: 5px;
+    font-weight: normal
+}
+
+.passagens .vazioLp {
+    width: 100%;
+    height: 30px
+}
+
+.site-segundoBlocoPassagens {
+    height: 170px !important
+}
+
+.site-duplaRadioPassagens {
+    margin: 10px 0 15px 6px !important
+}
+
+.site-terceiroBlocoPassagens {
+    height: 100px !important
+}
+
+#breadcrumb-pas li {
+    color: #008cba;
+    font-weight: bold;
+    float: left;
+    margin-right: 10px
+}
+
+#breadcrumb-pas a {
+    color: #008cba
+}
+
+.sliders #botoes div span, .sliders #acoes div {
+    background: url(../../../images/sprite-bar.png) no-repeat;
+    cursor: pointer
+}
+
+.sliders #banner {
+    width: 365px;
+    height: 325px;
+    margin: 0 auto 18px;
+    position: relative
+}
+
+.sliders #imagens {
+    width: 365px;
+    height: 325px;
+    overflow: hidden;
+    float: left
+}
+
+.sliders #imagens img {
+    position: absolute;
+    z-index: 1
+}
+
+.sliders #imagens .img {
+    position: absolute;
+    z-index: 1
+}
+
+.sliders #botoes {
+    position: absolute;
+    bottom: 0;
+    left: 25px;
+    padding: 5px;
+    z-index: 2
+}
+
+.sliders #botoes div {
+    float: left
+}
+
+.sliders #botoes div span {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right: 5px;
+    text-indent: -999em;
+    background-position: -65px 0
+}
+
+.sliders #botoes div .destaque {
+    background-position: 0 0
+}
+
+.sliders #botoes .select span {
+    background-position: -65px -26px
+}
+
+.sliders #botoes .select .destaque {
+    background-position: 0 -26px
+}
+
+.sliders #acoes {
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 5px;
+    z-index: 2
+}
+
+.sliders #acoes .play {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    float: left;
+    cursor: pointer;
+    display: none;
+    background-position: -94px 0
+}
+
+.sliders #acoes .pause {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    float: left;
+    cursor: pointer;
+    background-position: -35px 0
+}
+
+.homeTemas {
+    overflow: hidden
+}
+
+.promocao h1 {
+    height: 15px;
+    padding: 0;
+    color: #008cba;
+    font-size: 16px
+}
+
+.promocao .topoTemas {
+    width: 100%;
+    height: 424px
+}
+
+.promocao .topoTemas .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.promocao .topoTemas .container .txtTema {
+    width: 320px;
+    height: 424px;
+    float: right;
+    margin: 100px 60px 0 0;
+    color: #939598;
+    font-size: 11px
+}
+
+.promocao .temaAventura {
+    background: url(../../../images/temas/bg-temas-aventura.jpg) no-repeat top center;
+    width: 990px
+}
+
+.promocao .temaFamilia {
+    background: url(../../../images/temas/bg-temas-familia.jpg) no-repeat top center;
+    width: 990px
+}
+
+.promocao .temaFeriados {
+    background: url(../../../images/temas/bg-temas-feriados.jpg) no-repeat top center;
+    width: 990px
+}
+
+.promocao .temaNeve {
+    background: url(../../../images/temas/bg-temas-neve.jpg) no-repeat top center;
+    width: 990px
+}
+
+.promocao .temaPraia {
+    background: url(../../../images/temas/bg-temas-praia.jpg) no-repeat top center;
+    width: 990px
+}
+
+.promocao .temaRomantico {
+    background: url(../../../images/temas/bg-temas-romantico.jpg) no-repeat top center;
+    width: 990px
+}
+
+.homeTemas .ofertasTemas .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeTemas .ofertasTemas .container h2 {
+    background: url(../../../images/sprite-internos.png) no-repeat 0 -172px;
+    width: 450px;
+    height: 15px;
+    text-indent: -9999px
+}
+
+.homeTemas .ofertasTemas .container .ofertas {
+    background: url(../../../images/temas/box-oferta-padrao.jpg) no-repeat;
+    width: 180px;
+    height: 150px;
+    margin: 15px 17px 15px 0;
+    float: left
+}
+
+.homeTemas .ofertasTemas .container .ofertas .tit_ofertas {
+    width: 179px;
+    height: 50px;
+    color: #FFF;
+    float: left;
+    margin: 99px 0 0
+}
+
+.homeTemas .ofertasTemas .container .ofertas .tit_ofertas p {
+    padding: 0 10px;
+    float: left
+}
+
+.homeTemas .ofertasTemas .container .ofertas .tit_ofertas .fn {
+    font-size: 20px
+}
+
+.homeTemas .ofertasTemas .container .ofertas .tit_ofertas .price {
+    font-size: 22px;
+    color: #0f0
+}
+
+.homeTemas .ofertasTemas .container .last {
+    margin-right: 0
+}
+
+.homeTemas .destTemas {
+    overflow: hidden
+}
+
+.homeTemas .destTemas .container {
+    width: 990px;
+    margin: 0 auto
+}
+
+.homeTemas .destTemas .container .ofertas {
+    width: 990px;
+    height: 90px;
+    margin: 10px 0;
+    float: left
+}
+
+.feriados {
+    color: #008cba;
+    margin-bottom: 15px;
+    margin-left: 17px;
+    float: left
+}
+
+.boxFeriados {
+    width: 450px;
+    float: left;
+    margin: 0 17px 50px 17px
+}
+
+.boxFeriados .imagem {
+    width: 392px;
+    height: 151px;
+    float: left
+}
+
+.boxFeriados .titulo {
+    width: 392px;
+    height: 20px;
+    float: left;
+    margin: 10px 0 0 0
+}
+
+.boxFeriados .destino {
+    color: #008cba;
+    font-size: 13px;
+    font-weight: bold;
+    width: 155px;
+    float: left;
+    margin-right: 135px
+}
+
+.boxFeriados .valor {
+    color: #9d9d9d;
+    float: left;
+    font-size: 11px
+}
+
+.boxFeriados .boxFeriados ul {
+    float: left;
+    margin-top: 20px;
+    list-style: none;
+    width: 392px
+}
+
+.boxFeriados li {
+    height: 25px;
+    border-bottom: 1px dotted #c1c1c1;
+    padding-top: 5px;
+    float: left
+}
+
+.boxFeriados ul li a span {
+    color: #00adef;
+    float: left;
+    font-size: 13px;
+    width: 150px;
+    padding-top: 3px
+}
+
+.boxFeriados ul li a .descricao {
+    color: #9d9d9d;
+    float: left;
+    font-size: 11px;
+    margin-left: 5px;
+    padding: 3px 0 0 12px;
+    width: 105px
+}
+
+.boxFeriados ul li a small {
+    color: #9d9d9d;
+    float: left;
+    font-size: 11px;
+    margin-left: 5px;
+    padding-left: 12px;
+    padding-top: 3px;
+    width: 70px
+}
+
+.boxFeriados ul li a strong {
+    color: #008cba;
+    float: left;
+    font-size: 16px
+}
+
+.text-seo-2012 {
+    width: 100%;
+    margin-bottom: 20px
+}
+
+.text-seo-2012 h1 {
+    color: #0082d7;
+    margin: 10px 0 0 0
+}
+
+.text-seo-2012 p {
+    padding: 0;
+    font-size: 12px;
+    text-align: justify
+}
+
+.btn-social-miner {
+    width: 408px;
+    height: 37px;
+    margin: 0 0 10px 0
+}
+
+;
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #666;
+    margin: 0
+}
+
+body #container {
+    overflow: hidden;
+    height: auto;
+    padding-bottom: 40px
+}
+
+.homeTemas #container {
+    padding-bottom: 0 !important
+}
+
+body input, body select {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-color: #acd6ee;
+    font: 11px Arial
+}
+
+body label {
+    width: 100%
+}
+
+body label input {
+    width: 100%
+}
+
+body label input.radio {
+    display: inline-block;
+    width: 13px
+}
+
+body label input.chkNonStop {
+    display: inline-block;
+    width: 13px
+}
+
+body .bold {
+    font-weight: 700
+}
+
+body .bottom {
+    height: 10px
+}
+
+body .clear {
+    clear: both;
+    float: none !important
+}
+
+body .invalid {
+    border-bottom-color: red
+}
+
+body .hide {
+    display: none
+}
+
+body span.question {
+    background-image: url(../../../passagens/styles/images/submarino/ico_ajuda.png);
+    cursor: pointer;
+    float: left;
+    height: 13px;
+    padding-left: 14px;
+    margin-right: 5px
+}
+
+body .search-engine-manager {
+    width: 555px;
+    background-color: #199bcc;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 0 15px;
+    margin: 0
+}
+
+body .search-engine-manager li {
+    list-style: none;
+    display: inline-block;
+    width: 100px;
+    font-size: 16px;
+    color: #55b6db;
+    line-height: 26px;
+    vertical-align: text-top;
+    padding-left: 7px;
+    padding-top: 10px
+}
+
+body .search-engine-manager li:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+body .search-engine-manager li.active {
+    color: #fff
+}
+
+body .search-engine-manager li.active span {
+    background-position: 0 -24px
+}
+
+body .search-engine-manager li span {
+    background-image: url(../../../passagens/styles/images/submarino/menu-motores.png);
+    background-repeat: no-repeat;
+    height: 13px;
+    padding-left: 18px;
+    padding-top: 2px;
+    margin-right: 5px
+}
+
+body .search-engine-manager li div.selo-motor {
+    width: 113px;
+    height: 81px;
+    background: url(../../../images/selo-motor-500.png) left top no-repeat;
+    position: absolute;
+    margin-left: 450px;
+    margin-top: -3px
+}
+
+body .search-engine {
+    background-color: #00adef;
+    width: 545px;
+    height: auto;
+    color: #fff;
+    font-size: 12px;
+    padding: 30px 20px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    margin: 0;
+    float: left
+}
+
+body .search-engine.package {
+    min-height: 321px
+}
+
+body .search-engine.border-top {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px
+}
+
+body .search-engine .bold {
+    font-weight: 100
+}
+
+body .search-engine .search-engine-header {
+    margin-top: -20px;
+    padding: 20px 0
+}
+
+body .search-engine .search-engine-header.hotel {
+    display: none
+}
+
+body .search-engine .search-engine-header h4 {
+    font-size: 16px
+}
+
+body .search-engine.lp .search-engine-header {
+    padding: 0
+}
+
+body .search-engine .errors {
+    border: 0;
+    color: #FFF;
+    width: 430px;
+    margin-bottom: 10px
+}
+
+body .search-engine .errors p {
+    text-align: left;
+    margin: 0;
+    padding: 0
+}
+
+body .search-engine .search-engine-body {
+    position: relative
+}
+
+body .search-engine .search-engine-body input, body .search-engine .search-engine-body select {
+    color: #008cba
+}
+
+body .search-engine .search-engine-body input {
+    font-size: 15px
+}
+
+body .search-engine .search-engine-body select {
+    font-size: 14px
+}
+
+body .search-engine .search-engine-body .oneway-roundtrip {
+    position: absolute;
+    top: -36px;
+    left: 134px
+}
+
+body .search-engine .search-engine-body .oneway-roundtrip .no-stop input {
+    width: initial
+}
+
+body .search-engine .search-engine-body div.extreme-search {
+    background-color: #33bdf2;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 0 5px 10px
+}
+
+body .search-engine .search-engine-body div.extreme-search span.spn-economize {
+    color: #fff200
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine {
+    margin: 10px 0
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line {
+    margin-top: 5px
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line .first {
+    display: inline-block;
+    width: 303px
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line .first.from select {
+    margin-left: 23px
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line .first.to select {
+    margin-left: 13px
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line .first select {
+    width: 241px
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line .second select {
+    width: 106px;
+    font-size: 13px
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line .second.month select {
+    margin-left: 28px
+}
+
+body .search-engine .search-engine-body div.extreme-search-engine .line select {
+    display: inline-block
+}
+
+body .search-engine .search-engine-body div.from {
+    padding: 10px 0
+}
+
+body .search-engine .search-engine-body div label.origin, body .search-engine .search-engine-body div label.destination {
+    display: inline-block;
+    width: 280px
+}
+
+body .search-engine .search-engine-body div label.origin input {
+    margin-left: 25px
+}
+
+body .search-engine .search-engine-body div label.destination input {
+    margin-left: 14px
+}
+
+body .search-engine .search-engine-body div label.lblInboundDate {
+    padding: 0 0 0 58px
+}
+
+body .search-engine .search-engine-body.attraction label.lblInboundDate {
+    padding: 0 0 0 4px
+}
+
+body .search-engine .search-engine-body div label.lblInboundDate input {
+    margin-left: 20px
+}
+
+body .search-engine .search-engine-body div label.lblOutboundDate {
+    padding: 0 0 0 56px;
+    display: inline-block;
+    width: 197px
+}
+
+body .search-engine .search-engine-body div label.lblOutboundDate input {
+    margin-left: 11px
+}
+
+body .search-engine .search-engine-body div label input.txtOrigin, body .search-engine .search-engine-body div label input.txtDestination {
+    width: 212px
+}
+
+body .search-engine .search-engine-body div label input.txtOrigin {
+    display: inline-block;
+    margin-bottom: 10px
+}
+
+body .search-engine .search-engine-body div label select {
+    display: block
+}
+
+body .search-engine .search-engine-body div input {
+    display: inline-block;
+    border: 0;
+    padding: 11px
+}
+
+body .search-engine .search-engine-body div input.radio, body .search-engine .search-engine-body div input.chkNonStop {
+    padding: 5px 2px
+}
+
+body .search-engine .search-engine-body div input.txtInboundDate, body .search-engine .search-engine-body div input.txtOutboundDate {
+    width: 133px;
+    background: #fff url(../../../images/motores/calendario.jpg) no-repeat 95% center
+}
+
+body .search-engine .search-engine-body div select {
+    padding: 11px
+}
+
+body .search-engine .search-engine-body div.passengers-quantity {
+    padding-top: 20px;
+    width: 280px;
+    float: left
+}
+
+.homeTemas .search-engine .search-engine-body div.passengers-quantity .passenger_p {
+    margin-top: 0 !important
+}
+
+body .search-engine .search-engine-body div.passengers-quantity .passenger_p {
+    width: 80px;
+    float: left;
+    margin-top: 20px
+}
+
+body .search-engine .search-engine-body div.passengers-quantity .passenger-quantity {
+    font-size: 10px;
+    width: 57px;
+    float: left
+}
+
+body .search-engine .search-engine-body div.passengers-quantity .passenger-quantity select {
+    padding: 5px 2px
+}
+
+body .search-engine .search-engine-body div.passengers-quantity .passenger-quantity p {
+    font-size: 9px;
+    width: 50px;
+    text-align: center
+}
+
+body .search-engine .search-engine-body div.date {
+    width: 230px
+}
+
+body .search-engine .search-engine-body div.date.first input {
+    margin-left: 25px;
+    background: #fff url(../../../images/motores/calendario.jpg) no-repeat 95% center
+}
+
+body .search-engine .search-engine-body div.date.second input {
+    margin-left: 14px;
+    background: #fff url(../../../images/motores/calendario.jpg) no-repeat 95% center
+}
+
+body .search-engine .search-engine-body div.advanced-search-components {
+    margin-top: 10px;
+    padding: 10px 0;
+    border-top: 1px dotted #0082d6;
+    border-bottom: 1px dotted #0082d6
+}
+
+body .search-engine .search-engine-body.package .other-period {
+    width: 100%;
+    float: left;
+    border-bottom: 1px dotted #0082d6
+}
+
+body .search-engine_div .air-search-engine {
+    position: relative
+}
+
+body .search-engine .search-engine-body div.advanced-search-components div {
+    float: left;
+    padding: 2px 0
+}
+
+body .search-engine .search-engine-body div.advanced-search-components div.outboundDateDiv {
+    padding: 0 0 0 60px
+}
+
+body .search-engine .search-engine-body div.advanced-search-components div.cabinDiv {
+    padding-left: 51px
+}
+
+body .search-engine .search-engine-body.package div.advanced-search-components div.cabinDiv {
+    padding-left: 39px
+}
+
+body .search-engine .search-engine-body div.advanced-search-components div label.ciaCodelbl {
+    padding-left: 12px
+}
+
+body .search-engine .search-engine-body .advanced-search {
+    float: right;
+    width: 125px;
+    height: 23px;
+    margin: 0;
+    background: url(../../../images/motores/bt-busca-avancada.png) no-repeat;
+    position: relative;
+    top: 138px;
+    cursor: pointer
+}
+
+body .search-engine .search-engine-body.package .advanced-search {
+    top: 95px
+}
+
+.homeTemas .search-engine.lp .search-engine_div .search-engine-body .search {
+    margin-top: 10px !important;
+    float: left !important;
+    margin-left: 35px
+}
+
+body .search-engine .search-engine-body .search {
+    display: inline-block;
+    width: 220px;
+    height: 41px;
+    background: url(../../../passagens/styles/images/submarino/bt-pesquisar.png) no-repeat;
+    cursor: pointer;
+    float: right;
+    margin-top: 33px
+}
+
+body .search-engine .search-engine-body .search.inline {
+    display: none
+}
+
+body .search-engine .search-engine-body.hotel label.destination {
+    display: block;
+    position: initial
+}
+
+body .search-engine .search-engine-body.hotel label.destination input {
+    width: 432px;
+    margin-left: 0;
+    margin-top: 10px;
+    border: 0;
+    padding: 11px
+}
+
+body .search-engine .search-engine-body.hotel div.date {
+    float: left;
+    width: 242px;
+    padding-top: 10px
+}
+
+body .search-engine .search-engine-body.hotel div.date.first {
+    position: initial
+}
+
+body .search-engine .search-engine-body.hotel div.date.first input {
+    background: #fff url(../../../images/motores/calendario.jpg) no-repeat 95% center
+}
+
+body .search-engine .search-engine-body.hotel div.date.second {
+    position: initial
+}
+
+body .search-engine .search-engine-body.hotel div.date.second input {
+    background: #fff url(../../../images/motores/calendario.jpg) no-repeat 95% center
+}
+
+body .search-engine .search-engine-body.hotel div.date input {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 133px
+}
+
+body .search-engine .search-engine-body.hotel div select {
+    margin-top: 10px
+}
+
+body .search-engine .search-engine-body.hotel .rooms-quantity {
+    position: absolute;
+    top: 76px;
+    left: 442px;
+    width: 105px
+}
+
+body .search-engine .search-engine-body.hotel .rooms {
+    padding: 17px 0 0
+}
+
+body .search-engine .search-engine-body.hotel .rooms li {
+    list-style: none
+}
+
+body .search-engine .search-engine-body.hotel .rooms li.header {
+    margin-left: 47px;
+    height: 15px;
+    width: 80%
+}
+
+body .search-engine .search-engine-body.hotel .rooms li.header span {
+    font-size: 10px;
+    margin-left: 7px
+}
+
+body .search-engine .search-engine-body.hotel .rooms li.header span.children {
+    padding: 0 10px
+}
+
+body .search-engine .search-engine-body.hotel .rooms li.room select {
+    padding: 5px;
+    margin: 3px
+}
+
+body .search-engine .search-engine-body.hotel .rooms li.room span.childrenAge {
+    margin-left: 4px
+}
+
+body .search-engine .search-engine-body.hotel .search {
+    margin-top: -35px
+}
+
+body .search-engine .search-engine-body.cruise .search {
+    margin-top: 50px
+}
+
+body .search-engine .search-engine-body.package select {
+    padding: 11px
+}
+
+body .search-engine .search-engine-body.package .rooms-quantity {
+    float: left;
+    padding-top: 25px
+}
+
+body .search-engine .search-engine-body.package ul li {
+    list-style: none
+}
+
+body .search-engine .search-engine-body.package ul li.header {
+    font-size: 10px;
+    margin-left: 194px;
+    width: 65%;
+    height: 10px;
+    margin-top: 13px
+}
+
+body .search-engine .search-engine-body.package ul li.room {
+    margin-left: 140px
+}
+
+body .search-engine .search-engine-body.package ul li.room select {
+    margin: 3px
+}
+
+body .search-engine .search-engine-body.package ul li.room .childrenAge select {
+    margin: 3px
+}
+
+body .search-engine .search-engine-body.package .other-period div {
+    float: left
+}
+
+body .search-engine .search-engine-body.package .other-period div input.txtCheckIn, body .search-engine .search-engine-body.package .other-period div input.txtCheckOut {
+    width: 99px;
+    background: #fff url(../../../images/motores/calendario.jpg) no-repeat 95% center
+}
+
+body .search-engine .search-engine-body.package .other-period div.first, body .search-engine .search-engine-body.package .other-period div.second {
+    display: inline-block;
+    float: left;
+    padding: 15px 0
+}
+
+body .search-engine .search-engine-body.package .other-period div.first label, body .search-engine .search-engine-body.package .other-period div.second label {
+    display: inline-block;
+    width: 122px
+}
+
+body .search-engine .search-engine-body.package .other-period div.first label input, body .search-engine .search-engine-body.package .other-period div.second label input {
+    margin-top: 10px
+}
+
+body .search-engine .search-engine-body.package .other-period div.first .hotel-other-city_p {
+    width: 196px
+}
+
+body .search-engine .search-engine-body.package .other-period div.second {
+    width: 260px;
+    margin-left: 63px
+}
+
+body .search-engine .search-engine-body.package .rooms .header .children {
+    margin-left: 30px
+}
+
+body .search-engine .search-engine-body.package .rooms .header .childrenAgeHeader {
+    margin-left: 21px
+}
+
+body .search-engine.lp .search-engine-body.package .search {
+    margin-right: 15px !important
+}
+
+body .search-engine.lp .errors {
+    width: 100%
+}
+
+body .search-engine .search-engine-body.package .search {
+    margin-right: -120px;
+    margin-top: 20px
+}
+
+body .search-engine .search-engine-body.extreme-search-engine .search {
+    margin-right: 0;
+    margin-top: 64px
+}
+
+body .search-engine .search-engine-body.attraction select {
+    padding: 11px;
+    width: 270px
+}
+
+body .search-engine .search-engine-body.attraction ul {
+    background-color: #199bcc;
+    padding: 10px
+}
+
+body .search-engine .search-engine-body.attraction ul li {
+    list-style: none;
+    display: inline-block;
+    width: 120px;
+    padding: 5px 0
+}
+
+body .search-engine .search-engine-body.attraction ul input {
+    margin-right: 5px
+}
+
+body .search-engine .search-engine-body.attraction div.search-engine-header {
+    margin-top: 0
+}
+
+body .search-engine .search-engine-body.attraction a.search {
+    margin-top: -41px
+}
+
+body .search-engine .search-engine-body.cruise select {
+    padding: 15px;
+    width: 100%;
+    margin-top: 10px
+}
+
+body .search-engine .search-engine-body.cruise label {
+    display: inline-block;
+    width: 80%;
+    padding-bottom: 20px;
+    font-size: 15px;
+    font-weight: 700
+}
+
+body .search-engine .search-engine-body.resort p {
+    font-size: 15px;
+    font-weight: 700
+}
+
+body .search-engine .search-engine-body.resort div {
+    padding: 10px 0
+}
+
+body .search-engine .search-engine-body.resort div label {
+    display: inline-block;
+    width: 45%
+}
+
+body .search-engine .search-engine-body.resort div label select {
+    margin-left: 5px;
+    display: inline-block;
+    width: 155px
+}
+
+body .search-engine .search-engine-body.resort div label.nordeste {
+    margin-left: 23px
+}
+
+body .search-engine .search-engine-body.resort div label.norte {
+    margin-left: 70px;
+    width: 37%
+}
+
+body .search-engine .search-engine-body.resort div label.sul {
+    width: 35%;
+    margin-left: 56px
+}
+
+body .search-engine .search-engine-body.resort div label.sudeste {
+    width: 40%;
+    margin-left: 75px
+}
+
+body .search-engine .search-engine-body.resort .search {
+    top: 172px;
+    float: right;
+    margin-top: -20px
+}
+
+.homeTemas .search-engine.lp {
+    width: 277px !important
+}
+
+body .search-engine.lp {
+    background-color: #0099ec;
+    padding: 0 10px 30px;
+    width: 231px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-header {
+    margin: 0
+}
+
+.homeTemas .search-engine.lp .search-engine_div .search-engine-header h2 {
+    width: 251px !important;
+    text-align: left;
+    padding-left: 46px !important;
+    font-size: 19px !important
+}
+
+body .search-engine.lp .search-engine_div .search-engine-header h2 {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    margin: 0;
+    margin-left: -10px;
+    padding: 11px 0 13px 30px;
+    background: url(http://www.submarinoviagens.com.br/images/motores/motores-tematicas/icon-tit-motor.png) no-repeat 9px 6px #0182c6;
+    text-align: left;
+    width: 206px;
+    font-size: 16px;
+    font-weight: bold;
+    padding-left: 45px;
+    color: #fff
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body {
+    margin-top: 10px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel .date {
+    float: none
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel .date input {
+    width: 86%
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel span {
+    font-weight: 700
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel label {
+    font-weight: 700
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel label.destination input {
+    width: 90%
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel .rooms-quantity {
+    position: static
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel div select {
+    padding: 6px 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel .rooms .room .childrenAge .drpChildAge {
+    margin: 5px 2px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel .rooms .room .childrenAge .childrenAgeHeader {
+    font-size: 10px;
+    width: 48px;
+    float: left;
+    height: 35px;
+    margin: 4px 5px 0 0;
+    text-align: right
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.hotel .rooms .header {
+    background-color: #0099ec
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package select {
+    padding: 5px 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package .rooms-quantity {
+    float: none
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package .rooms {
+    padding: 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package .rooms li {
+    margin: 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package .rooms li.header {
+    margin-left: 52px;
+    background-color: #0099ec;
+    margin-top: 10px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package .rooms li.header .children {
+    margin-left: 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package .rooms .room .childrenAge .drpChildAge {
+    margin: 5px 2px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body.package .rooms .room .childrenAge .childrenAgeHeader {
+    font-size: 10px;
+    width: 48px;
+    float: left;
+    height: 23px;
+    margin: 4px 5px 0 0;
+    text-align: right
+}
+
+.homeTemas .search-engine.lp .search-engine_div .search-engine-body div label {
+    width: 255px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div label {
+    width: 209px
+}
+
+.homeTemas .search-engine.lp .search-engine_div .search-engine-body div label input.txtOrigin, .homeTemas .search-engine.lp .search-engine_div .search-engine-body div label input.txtDestination {
+    margin: 5px 0 !important
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div label input.txtOrigin, body .search-engine.lp .search-engine_div .search-engine-body div label input.txtDestination {
+    width: 100%;
+    margin: 5px 0 15px 0
+}
+
+.homeTemas .search-engine.lp .search-engine_div .search-engine-body div label input.txtInboundDate, .homeTemas .search-engine.lp .search-engine_div .search-engine-body div label input.txtOutboundDate {
+    width: 108px !important;
+    margin-left: 0 !important
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div label input.txtInboundDate, body .search-engine.lp .search-engine_div .search-engine-body div label input.txtOutboundDate {
+    width: 167px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div label.origin, body .search-engine.lp .search-engine_div .search-engine-body div label.destination {
+    font-weight: 700
+}
+
+.homeTemas .search-engine.lp .search-engine_div .search-engine-body div label.lblInboundDate, .homeTemas .search-engine.lp .search-engine_div .search-engine-body div label.lblOutboundDate {
+    width: 137px !important;
+    float: left;
+    margin: 0 0 10px 0 !important
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div label.lblInboundDate, body .search-engine.lp .search-engine_div .search-engine-body div label.lblOutboundDate {
+    font-weight: 700;
+    width: 100%;
+    padding: 0 0 0 1px;
+    margin: 10px 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div label.lblOutboundDate input {
+    margin-left: 8px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div.from {
+    padding-bottom: 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div.to {
+    margin-bottom: 10px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div.passengers-quantity {
+    padding-top: 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body div.passengers-quantity .passenger_p {
+    font-weight: 700;
+    float: none
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body .oneway-roundtrip {
+    font-size: 11px;
+    position: static;
+    margin-bottom: 10px
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body .oneway-roundtrip label input {
+    padding: 0;
+    margin: 0
+}
+
+body .search-engine.lp .search-engine_div .search-engine-body .search {
+    margin-left: 4px;
+    margin-top: 15px !important
+}
+
+#motorAeroExtreme .calendar {
+    float: left;
+    margin-top: 15px
+}
+
+#motorAeroExtreme .calendar-container, #motorAeroExtreme .calendar-loading {
+    width: 355px;
+    border-radius: 10px;
+    float: left;
+    background-color: #fff;
+    height: 284px;
+    padding: 10px 9px
+}
+
+#motorAeroExtreme .calendar-loading img {
+    position: relative;
+    top: 30%;
+    left: 35%
+}
+
+#motorAeroExtreme .calendar table {
+    width: 352px !important
+}
+
+#motorAeroExtreme .calendar table td {
+    width: auto;
+    height: auto;
+    border: 0
+}
+
+#motorAeroExtreme .calendar .tbMonthList {
+    border-bottom: 2px dashed #afeaff;
+    width: 352px !important;
+    margin-top: 5px
+}
+
+#motorAeroExtreme .calendar table td.calendarMonth {
+    width: 20px;
+    text-align: center
+}
+
+#motorAeroExtreme .calendar table td.monthPrevious {
+    background: url(../../../images/motores/aereo/seta-anterior-mes.png) no-repeat scroll left center transparent
+}
+
+#motorAeroExtreme .calendar table td.monthNext {
+    background: url(../../../images/motores/aereo/seta-proximo-mes.png) no-repeat scroll right center transparent
+}
+
+#motorAeroExtreme .calendar table td.clicavel {
+    cursor: pointer
+}
+
+#motorAeroExtreme .calendar table td.selecionado {
+    background: url(../../../images/motores/aereo/bg-calendario-selecinado.png) no-repeat
+}
+
+#motorAeroExtreme .calendar .stayDurationDay .calendarValue {
+    visibility: hidden
+}
+
+#motorAeroExtreme .calendar table td.selectedDay .calendarValue {
+    margin-left: 5px !important
+}
+
+#motorAeroExtreme .calendar table td.selectedDay .calendarDay {
+    margin-top: 4px !important;
+    height: 12px !important
+}
+
+#motorAeroExtreme .calendar table td.dayOfWeek {
+    width: 48px;
+    height: 36px;
+    background-image: url(../../../images/motores/aereo/bg-day-of-week.png)
+}
+
+#motorAeroExtreme .calendar table td.dayOfWeek.selectedDay {
+    background-image: url(../../../images/motores/aereo/bg-departure.png) !important
+}
+
+#motorAeroExtreme .calendar table td.stayDurationDay {
+    background-image: url(../../../images/motores/aereo/bg-selected-day.png)
+}
+
+#motorAeroExtreme .calendar table td.dayOfWeek.endDate {
+    background-image: url(../../../images/motores/aereo/bg-arrival.png) !important
+}
+
+#motorAeroExtreme .calendar table td.dayOfWeek.endDate .calendarDay {
+    margin-right: 6px
+}
+
+#motorAeroExtreme .calendar .tbMonthAno {
+    font: 700 15px Arial;
+    color: #FFF;
+    display: block;
+    margin: -10px 0 11px 0;
+    *position: relative
+}
+
+#motorAeroExtreme .calendar .tbMonthMes {
+    font: 700 17px Arial;
+    color: #c7e39a;
+    display: block
+}
+
+#motorAeroExtreme .calendar .tbMonthValor {
+    font: 17px Arial;
+    color: #c7e39a;
+    display: block
+}
+
+#motorAeroExtreme .calendar table .departure, #motorAeroExtreme .calendar table .arrival {
+    width: 47px;
+    height: 22px;
+    position: absolute;
+    top: 0
+}
+
+#motorAeroExtreme .calendar table .departure {
+    left: 0;
+    background-image: url(../../../images/motores/aereo/seta-ida.png)
+}
+
+#motorAeroExtreme .calendar table .arrival {
+    right: 0;
+    background-image: url(../../../images/motores/aereo/seta-volta.png)
+}
+
+#motorAeroExtreme .calendar .calendarDay {
+    color: #09C;
+    float: right;
+    font: 10px Arial;
+    height: 14px;
+    margin-right: 4px
+}
+
+#motorAeroExtreme .calendar .calendarValue {
+    font: 700 9px Arial;
+    color: #00adef;
+    height: 20px;
+    clear: both;
+    text-align: center;
+    margin-left: 1px
+}
+
+#motorAeroExtreme .calendar .tit-mes {
+    color: #299fc7;
+    font: 700 10px Arial
+}
+
+#motorAeroExtreme .calendar span.spnMonthName {
+    color: #7ca40f;
+    display: block;
+    font: bolder 13px Arial;
+    text-align: center
+}
+
+#motorAeroExtreme .calendar #divMonthSummary {
+    font: 14px Arial;
+    height: 274px;
+    width: 155px;
+    float: left;
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #33bdf2
+}
+
+#motorAeroExtreme .calendar #divMonthSummaryDates {
+    border-top: 1px solid #09c;
+    border-bottom: 1px solid #09c;
+    float: left;
+    width: 145px;
+    padding: 5px;
+    margin-top: 5px
+}
+
+#motorAeroExtreme .calendar .month-summary-price {
+    float: left;
+    padding: 5px
+}
+
+#motorAeroExtreme .calendar .summary-label {
+    font-weight: 700
+}
+
+#motorAeroExtreme .calendar .month-summary-header {
+    font-size: 15px;
+    text-align: center;
+    color: #ff3;
+    font-weight: 700
+}
+
+#motorAeroExtreme .calendar .taxas-inclusas {
+    font-size: 12px
+}
+
+#motorAeroExtreme .calendar .pesq-month-calendar {
+    background: url(../../../images/motores/aereo/btPesquisar-extreme.png) no-repeat scroll 0 0 transparent;
+    cursor: pointer;
+    float: left;
+    height: 28px;
+    margin-top: 20px;
+    text-indent: -9999px;
+    width: 145px
+}
+
+#motorAeroExtreme .jqplot-target {
+    position: relative;
+    color: #666;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1em
+}
+
+.jqplot-axis {
+    font-size: .75em
+}
+
+.jqplot-xaxis {
+    margin-top: 10px
+}
+
+.jqplot-x2axis {
+    margin-bottom: 10px
+}
+
+.jqplot-yaxis {
+    margin-right: 10px
+}
+
+.jqplot-y2axis, .jqplot-y3axis, .jqplot-y4axis, .jqplot-y5axis, .jqplot-y6axis, .jqplot-y7axis, .jqplot-y8axis, .jqplot-y9axis {
+    margin-left: 10px;
+    margin-right: 10px
+}
+
+.jqplot-axis-tick, .jqplot-xaxis-tick, .jqplot-yaxis-tick, .jqplot-x2axis-tick, .jqplot-y2axis-tick, .jqplot-y3axis-tick, .jqplot-y4axis-tick, .jqplot-y5axis-tick, .jqplot-y6axis-tick, .jqplot-y7axis-tick, .jqplot-y8axis-tick, .jqplot-y9axis-tick {
+    position: absolute
+}
+
+.jqplot-xaxis-tick {
+    top: 0;
+    left: 15px;
+    vertical-align: top
+}
+
+.jqplot-x2axis-tick {
+    bottom: 0;
+    left: 15px;
+    vertical-align: bottom
+}
+
+.jqplot-yaxis-tick {
+    right: 0;
+    top: 15px;
+    text-align: right
+}
+
+.jqplot-yaxis-tick.jqplot-breakTick {
+    right: -20px;
+    margin-right: 0;
+    padding: 1px 5px;
+    z-index: 2;
+    font-size: 1.5em
+}
+
+.jqplot-y2axis-tick, .jqplot-y3axis-tick, .jqplot-y4axis-tick, .jqplot-y5axis-tick, .jqplot-y6axis-tick, .jqplot-y7axis-tick, .jqplot-y8axis-tick, .jqplot-y9axis-tick {
+    left: 0;
+    top: 15px;
+    text-align: left
+}
+
+.jqplot-meterGauge-tick {
+    font-size: .75em;
+    color: #999
+}
+
+.jqplot-meterGauge-label {
+    font-size: 1em;
+    color: #999
+}
+
+.jqplot-xaxis-label {
+    margin-top: 10px;
+    font-size: 11pt;
+    position: absolute
+}
+
+.jqplot-x2axis-label {
+    margin-bottom: 10px;
+    font-size: 11pt;
+    position: absolute
+}
+
+.jqplot-yaxis-label {
+    margin-right: 10px;
+    font-size: 11pt;
+    position: absolute
+}
+
+.jqplot-y2axis-label, .jqplot-y3axis-label, .jqplot-y4axis-label, .jqplot-y5axis-label, .jqplot-y6axis-label, .jqplot-y7axis-label, .jqplot-y8axis-label, .jqplot-y9axis-label {
+    font-size: 11pt;
+    position: absolute
+}
+
+table.jqplot-table-legend {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-left: 12px;
+    margin-right: 12px
+}
+
+table.jqplot-table-legend, table.jqplot-cursor-legend {
+    background-color: rgba(255, 255, 255, .6);
+    border: 1px solid #ccc;
+    position: absolute;
+    font-size: .75em
+}
+
+td.jqplot-table-legend {
+    vertical-align: middle
+}
+
+td.jqplot-seriesToggle:hover, td.jqplot-seriesToggle:active {
+    cursor: pointer
+}
+
+td.jqplot-table-legend > div {
+    border: 1px solid #ccc;
+    padding: 1px
+}
+
+div.jqplot-table-legend-swatch {
+    width: 0;
+    height: 0;
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 6px;
+    border-right-width: 6px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-right-style: solid
+}
+
+.jqplot-title {
+    top: 0;
+    left: 0;
+    padding-bottom: .5em;
+    font-size: 1.2em
+}
+
+table.jqplot-cursor-tooltip {
+    border: 1px solid #ccc;
+    font-size: .75em
+}
+
+.jqplot-cursor-tooltip {
+    border: 1px solid #ccc;
+    font-size: .75em;
+    white-space: nowrap;
+    background: rgba(208, 208, 208, .5);
+    padding: 1px
+}
+
+.jqplot-highlighter-tooltip {
+    border: 1px solid #ccc;
+    font-size: .75em;
+    white-space: nowrap;
+    background: rgba(208, 208, 208, .5);
+    padding: 1px
+}
+
+.jqplot-point-label {
+    font-size: .75em;
+    z-index: 2
+}
+
+td.jqplot-cursor-legend-swatch {
+    vertical-align: middle;
+    text-align: center
+}
+
+div.jqplot-cursor-legend-swatch {
+    width: 1.2em;
+    height: .7em
+}
+
+.jqplot-error {
+    text-align: center
+}
+
+.jqplot-error-message {
+    position: relative;
+    top: 46%;
+    display: inline-block
+}
+
+div.jqplot-bubble-label {
+    font-size: .8em;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: #333
+}
+
+div.jqplot-bubble-label.jqplot-bubble-label-highlight {
+    background: rgba(230, 230, 230, .7)
+}
+
+div.jqplot-noData-container {
+    text-align: center;
+    background-color: rgba(245, 245, 245, .3)
+}
+
+#motorAeroExtreme .containerMonthPlot .jqplot-point-label {
+    background: #009bd7;
+    color: #fff;
+    padding: 2px;
+    font-size: 11px
+}
+
+#motorAeroExtreme .containerMonthPlot .jqplot-yaxis {
+    font-size: 11px
+}
+
+#motorAeroExtreme .containerMonthPlot .jqplot-xaxis-tick {
+    color: #11a2da
+}
+
+#motorAeroExtreme .containerMonthPlot .jqplot-xaxis-tick-selected {
+    height: 34px;
+    background: url(../../../images/motores/aereo/seta-tarifa.png) no-repeat scroll 50% 100%
+}
+
+#motorAeroExtreme .containerMonthPlot .jqplot-yaxis-tick {
+    color: #247475;
+    right: 0
+}
+
+#motorAeroExtreme .containerMonthPlot .jqplot-xaxis-tick, #motorAeroExtreme .containerMonthPlot .jqplot-point-label {
+    font: 11px Arial
+}
+
+#motorAeroExtreme .containerMonthPlot .jqplot-event-canvas {
+    cursor: pointer
+}
+
+#motorAeroExtreme .containerMonthPlot .bodyMonthPlot {
+    background-color: #FFF;
+    float: left;
+    height: 250px;
+    margin-top: 10px;
+    width: 555px;
+    padding-top: 20px
+}
+
+#motorAeroExtreme .containerMonthPlot {
+    clear: both
+}
+
+#motorAeroExtreme .containerMonthPlot .headerMonthPlot {
+    background-color: #009bd7;
+    height: 25px;
+    padding-top: 5px;
+    margin-top: 20px;
+    float: left;
+    width: 555px
+}
+
+#motorAeroExtreme .containerMonthPlot .titleMonthPlot {
+    font-size: 18px
+}
+
+#motorAeroExtreme .containerMonthPlot .spnShowMonthPlot {
+    background: url(../../../images/motores/aereo/arrow-plot-down.png) no-repeat;
+    cursor: pointer;
+    height: 19px;
+    margin-left: 10px;
+    position: absolute;
+    width: 19px
+}
+
+#motorAeroExtreme .containerMonthPlot .spnHideMonthPlot {
+    background: url(../../../images/motores/aereo/arrow-plot-up.png) no-repeat;
+    cursor: pointer;
+    height: 19px;
+    margin-left: 10px;
+    position: absolute;
+    width: 19px
+}
+
+#motorAeroExtreme .containerMonthPlot div#ContainerDestino {
+    width: 425px;
+    height: 30px;
+    background-color: #FFF;
+    border: 1px solid #009bd7;
+    margin-top: 20px
+}
+
+#motorAeroExtreme .containerMonthPlot div.Box {
+    float: left
+}
+
+#motorAeroExtreme .containerMonthPlot div.Box p {
+    width: 100%;
+    padding: 0
+}
+
+#motorAeroExtreme .containerMonthPlot div.Primeiro {
+    background-color: #009bd7;
+    height: 30px;
+    margin: 0 auto;
+    width: 155px;
+    float: left
+}
+
+#motorAeroExtreme .containerMonthPlot div.Primeiro img {
+    float: left;
+    margin-top: 10px;
+    margin-right: 3px;
+    margin-left: 7px
+}
+
+#motorAeroExtreme .containerMonthPlot div.Primeiro p {
+    color: #FFF;
+    float: left;
+    font-family: Arial;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 6px;
+    width: 125px
+}
+
+#motorAeroExtreme .containerMonthPlot div.Segundo span, #motorAeroExtreme .containerMonthPlot div.Terceiro p {
+    color: #009bd7;
+    font-family: Arial
+}
+
+#motorAeroExtreme .containerMonthPlot div.Segundo span {
+    text-align: center;
+    margin-top: -4px;
+    font-weight: 700;
+    font-size: 16px
+}
+
+#motorAeroExtreme .containerMonthPlot div.Segundo span.spnMonthPlotIataBanner {
+    font-size: 10px;
+    display: block
+}
+
+#motorAeroExtreme .containerMonthPlot div.Segundo {
+    border-right: 1px solid #009bd7;
+    height: 28px;
+    margin-top: 1px;
+    width: 100px;
+    float: left
+}
+
+#motorAeroExtreme .containerMonthPlot div.Terceiro {
+    width: 165px;
+    height: 28px;
+    margin: 0 auto;
+    padding-top: 3px
+}
+
+#motorAeroExtreme .containerMonthPlot div.Terceiro p {
+    text-align: left;
+    margin-left: 5px;
+    font-weight: 700
+}
+
+#motorAeroExtreme .containerMonthPlot div.Terceiro p, #motorAeroExtreme .containerMonthPlot div.Terceiro p span {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    margin: 0 5px
+}
+
+#motorAeroExtreme .containerMonthPlot div.Terceiro p span {
+    color: #009bd7
+}
+
+#motorAeroExtreme .btn-extreme input {
+    float: right
+}
+
+.ui-widget-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .7;
+    filter: alpha(opacity=70)
+}
+
+.dialog-passengers {
+    background: 0;
+    border: 0
+}
+
+.dialog-passengers .ui-widget-content {
+    height: 250px !important;
+    width: 550px !important;
+    background-color: #fff;
+    overflow: hidden;
+    padding: 20px;
+    border: 5px solid #009bd7;
+    -moz-border-radius: 10px !important;
+    -webkit-border-radius: 10px !important;
+    -khtml-border-radius: 10px !important;
+    border-radius: 10px !important;
+    color: #009bd7
+}
+
+.dialog-passengers .modal-title {
+    background-color: #f2fafd;
+    font-size: 18px;
+    height: 28px;
+    width: 550px;
+    float: left;
+    padding-top: 4px;
+    font-weight: 700
+}
+
+.dialog-passengers .passenger-container {
+    float: left;
+    margin-top: 40px
+}
+
+.dialog-passengers .box-passenger {
+    float: left;
+    height: 100px;
+    width: 180px
+}
+
+.dialog-passengers .box-passenger .passenger-text {
+    float: left;
+    width: 180px;
+    height: 20px;
+    font-size: 16px;
+    font-weight: 700
+}
+
+.dialog-passengers .box-passenger .passenger-description {
+    font-size: 14px;
+    float: left;
+    width: 180px
+}
+
+.dialog-passengers .box-passenger .passenger-select {
+    float: left;
+    width: 180px;
+    margin-top: 10px
+}
+
+.dialog-passengers .box-passenger .passenger-select select {
+    padding: 7px 15px;
+    width: 112px;
+    font-size: 14px;
+    height: 35px
+}
+
+.dialog-passengers .pesq-extreme-search {
+    background: url(../../../images/motores/aereo/btcontinuar-extreme.png) no-repeat scroll 0 0 transparent;
+    float: right;
+    height: 31px;
+    margin-top: 35px;
+    width: 163px
+}
+
+.dialog-passengers .ui-dialog-titlebar {
+    display: none !important
+}
+
+.ac_results {
+    padding: 0;
+    border: 1px solid black;
+    background-color: white;
+    overflow: hidden;
+    z-index: 9999
+}
+
+.ac_results ul {
+    list-style-position: outside;
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+.ac_results li {
+    margin: 0;
+    padding: 2px 5px;
+    cursor: hand;
+    display: block;
+    text-align: left !important;
+    font: menu;
+    font-size: 12px;
+    line-height: 16px;
+    overflow: hidden
+}
+
+.ac_over {
+    background-color: #0A246A;
+    color: white;

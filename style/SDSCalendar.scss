@@ -1,0 +1,79 @@
+@import "compass/css3";
+
+
+$calendarBorderRadius: 0.4em;
+$calendarMinWidth: 30em;
+$calendarMaxWidth: 40em;
+
+$cellBackgroundColor: #C6E746;
+$cellBackgroundColorFocus: #C6C700;
+$cellBackgroundPrevNextMonth: #d3d3d3;
+
+.calendar {
+  font-size: 0.5em;
+  width: 100%;
+  table-layout: fixed;
+  min-width: $calendarMinWidth;
+  min-height: $calendarMinWidth * 5 / 7;
+  max-width: $calendarMaxWidth;
+  border: 1px solid #cecfd5;
+  @include border-bottom-radius($calendarBorderRadius);
+  border-collapse: separate;
+  border-spacing: 0.15em;
+
+  caption {
+    @include border-top-radius($calendarBorderRadius);
+  }
+
+  caption, thead {
+    background-color: #0040D0;
+  }
+
+  caption, thead th {
+    text-align: center;
+  }
+}
+
+.calendarCell {
+  background-color: $cellBackgroundColor;
+  font-size: 1em;
+  padding: 0.3em;
+  vertical-align: top;
+  cursor: pointer;
+
+  &.highlight {
+    background-color: $cellBackgroundColorFocus;
+  };
+  &.prevNextMonth {
+    background-color: $cellBackgroundPrevNextMonth;
+  }
+  &.prevNextMonth.highlight {
+    background-color: $cellBackgroundColorFocus;
+  }
+}
+
+.tmp {
+  height: 100%;
+}
+
+.calendarDateNumber {
+  text-align: right;
+  float: right;
+}
+
+.calendarCellPrice {
+  clear: both;
+  white-space: nowrap;
+  //vertical-align: middle;
+  text-align: right;
+
+  position: relative;
+  top: 50%;
+  @include translateY(-50%);
+
+  p {
+    position: absolute;
+    top: 50%;
+    @include translateY(-50%);
+  }
+}

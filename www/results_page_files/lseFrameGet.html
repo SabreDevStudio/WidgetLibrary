@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://t.publicidees.com//p/topi/lseFrameGet -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<script type="text/javascript">function handleRequest(event) {
+    var data = JSON.parse(event.data);
+    switch (data.key) {
+        case"getWULSE":
+            event.source.postMessage(JSON.stringify({
+                id: data.id,
+                key: data.key,
+                value: localStorage.getItem('WUC')
+            }), event.origin);
+            break;
+        case"setWULSE":
+            localStorage.setItem('WUC', data.value);
+            event.source.postMessage(JSON.stringify({
+                id: data.id,
+                key: data.key,
+                value: localStorage.getItem('WUC')
+            }), event.origin);
+            break;
+        default:
+            break;
+    }
+}
+if (window.addEventListener) {
+    window.addEventListener("message", handleRequest, false);
+} else if (window.attachEvent) {
+    window.attachEvent("onmessage", handleRequest);
+}</script>
+
+</body>
+</html>

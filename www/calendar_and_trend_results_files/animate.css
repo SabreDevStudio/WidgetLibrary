@@ -1,0 +1,578 @@
+/*240x400animate.css*/
+.offers {
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    -o-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.timeout .offers {
+    -webkit-animation-iteration-count: 1;
+    -moz-animation-iteration-count: 1;
+    -o-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+    animation-delay: 5s;
+    -o-animation-delay: 5s;
+    -moz-animation-delay: 5s;
+    -webkit-animation-delay: 5s;
+    -webkit-animation-duration: 60s;
+    -moz-animation-duration: 60s;
+    -o-animation-duration: 60s;
+    animation-duration: 60s;
+
+}
+
+.rollon .offers {
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    -o-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    animation-delay: 5s;
+    -o-animation-delay: 5s;
+    -moz-animation-delay: 5s;
+    -webkit-animation-delay: 5s;
+
+}
+
+.offers.hinge {
+    -webkit-animation-duration: 5s;
+    -moz-animation-duration: 5s;
+    -o-animation-duration: 5s;
+    animation-duration: 5s;
+}
+
+/*Animacja Flash */
+.offers {
+    -webkit-animation-duration: 30s;
+    -moz-animation-duration: 30s;
+    -o-animation-duration: 30s;
+    animation-duration: 30s;
+}
+
+#offer1 {
+    -webkit-animation-name: flashone;
+    -moz-animation-name: flashone;
+    -o-animation-name: flashone;
+    animation-name: flashone;
+}
+
+#offer2 {
+    -webkit-animation-name: flashsec;
+    -moz-animation-name: flashsec;
+    -o-animation-name: flashsec;
+    animation-name: flashsec;
+}
+
+#offer3 {
+    -webkit-animation-name: flashth;
+    -moz-animation-name: flashth;
+    -o-animation-name: flashth;
+    animation-name: flashth;
+}
+
+.rollon #offer4 {
+    -webkit-animation-name: flashfor;
+    -moz-animation-name: flashfor;
+    -o-animation-name: flashfor;
+    animation-name: flashfor;
+}
+
+.rollon #offer5 {
+    -webkit-animation-name: flashfif;
+    -moz-animation-name: flashfif;
+    -o-animation-name: flashfif;
+    animation-name: flashfif;
+}
+
+.rollon #offer6 {
+    -webkit-animation-name: flashsxth;
+    -moz-animation-name: flashsxth;
+    -o-animation-name: flashsxth;
+    animation-name: flashsxth;
+}
+
+@keyframes flashone {
+    0%, 4%, 8%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    2%, 6% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@keyframes flashsec {
+    0%, 16%, 20%, 24%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    18%, 22% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@keyframes flashth {
+    0%, 32%, 36%, 40%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    34%, 38% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@keyframes flashfor {
+    0%, 48%, 52%, 56%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    50%, 54% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@keyframes flashfif {
+    0%, 64%, 68%, 72%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    66%, 70% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@keyframes flashsxth {
+    0%, 80%, 84%, 88%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    82%, 86% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes flashone {
+    0%, 4%, 8%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    2%, 6% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes flashsec {
+    0%, 16%, 20%, 24%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    18%, 22% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes flashth {
+    0%, 32%, 36%, 40%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    34%, 38% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes flashfor {
+    0%, 48%, 52%, 56%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    50%, 54% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes flashfif {
+    0%, 64%, 68%, 72%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    66%, 70% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes flashsxth {
+    0%, 80%, 84%, 88%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    82%, 86% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes flashone {
+    0%, 4%, 8%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    2%, 6% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes flashsec {
+    0%, 16%, 20%, 24%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    18%, 22% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes flashth {
+    0%, 32%, 36%, 40%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    34%, 38% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes flashfor {
+    0%, 48%, 52%, 56%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    50%, 54% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes flashfif {
+    0%, 64%, 68%, 72%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    66%, 70% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes flashsxth {
+    0%, 80%, 84%, 88%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    82%, 86% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-o-keyframes flashone {
+    0%, 4%, 8%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    2%, 6% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-o-keyframes flashsec {
+    0%, 16%, 20%, 24%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    18%, 22% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-o-keyframes flashth {
+    0%, 32%, 36%, 40%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    34%, 38% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-o-keyframes flashfor {
+    0%, 48%, 52%, 56%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    50%, 54% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-o-keyframes flashfif {
+    0%, 64%, 68%, 72%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    66%, 70% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+@-o-keyframes flashsxth {
+    0%, 80%, 84%, 88%, 100% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    82%, 86% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+}
+
+.rollon .logo {
+    -webkit-animation: subnone 30s linear infinite;
+    -moz-animation: subnone 30s linear infinite;
+    -o-animation: subnone 30s linear infinite;
+    animation: subnone 30s linear infinite;
+
+}
+
+.timeout .logo {
+    -webkit-animation: subnone 30s linear 1;
+    -moz-animation: subnone 30s linear 1;
+    -o-animation: subnone 30s linear 1;
+    animation: subnone 30s linear 1;
+
+}
+
+.rollon .logoPromotion {
+    -webkit-animation: none 30s linear infinite;
+    -moz-animation: none 30s linear infinite;
+    -o-animation: none 30s linear infinite;
+    animation: none 30s linear infinite;
+    -webkit-border-bottom-right-radius: 0px !important;
+    -webkit-border-bottom-left-radius: 0px !important;
+    -moz-border-radius-bottomright: 0px !important;
+    -moz-border-radius-bottomleft: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    border-radius: 0px 0px 0px 0px;
+    border-radius: 0px 0px 0px 0px;
+}
+
+.timeout .logoPromotion {
+    -webkit-animation: none 30s linear 1;
+    -moz-animation: none 30s linear 1;
+    -o-animation: none 30s linear 1;
+    animation: none 30s linear 1;
+    -webkit-border-bottom-right-radius: 0px !important;
+    -webkit-border-bottom-left-radius: 0px !important;
+    -moz-border-radius-bottomright: 0px !important;
+    -moz-border-radius-bottomleft: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    border-radius: 0px 0px 0px 0px;
+    border-radius: 0px 0px 0px 0px;
+}
+
+@keyframes subpromologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
+
+@-webkit-keyframes subpromologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
+
+@-moz-keyframes subpromologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
+
+@-o-keyframes subpromologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
+
+@keyframes promologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
+
+@-webkit-keyframes promologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
+
+@-moz-keyframes promologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        -moz-transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        -moz-transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
+
+@-o-keyframes promologo {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% {
+        zoom: 1;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        -o-transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+    11%, 19%, 31%, 39%, 51%, 59%, 71%, 79%, 91%, 99% {
+        zoom: 1;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        -o-transform: rotate(0deg) scale(1) skew(0deg) translate(0px);
+    }
+}
