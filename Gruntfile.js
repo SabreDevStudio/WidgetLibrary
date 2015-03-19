@@ -1,19 +1,18 @@
 module.exports = function(grunt) {
 
-  // Project configuration.
   grunt.initConfig({
+
     pkg: grunt.file.readJSON('package.json'),
+
+    clean: ['dist/'],
 
 	jshint: {
       options: {
         jshintrc: '.jshintrc'
       },
       prod: {
-        src: ['src/**/*.js']
-      },
-      test: {
-        src: ['test/**/*.js']
-      },
+        src: ['src/*.js', 'src/util/*.js', 'src-test/*.js']
+      }
     },
 
     compass: {
@@ -23,30 +22,47 @@ module.exports = function(grunt) {
         }
       }
     },
-	
-	browserify: {
+
+    browserify: {
+      'dist/src/SabreDevStudioSDK_bundle.js': ['js/SabreDevStudioSDK.js']
+    },
+
+    copy: {
       main: {
-        src: 'src/calendar.js',
-        dest: 'dist/js/bundle.js'
+        expand: true,
+        src: ['stylesheets/*.css', 'www/CalendarSearch*'],
+        dest: 'dist/',
+        options: {
+          nonull: true,
+          process: function (content, srcpath) {
+            return content.replace(/SabreDevStudioSDK/g,"SabreDevStudioSDK_bundle.js");
+          }
+        }
       }
     },
 
-    //jstestdriver: {
-    //  options: {
-    //    canFail: true,
-    //    verbose: true
-    //  },
-    //  files: ["jsTestDriver.conf"]
-    //},
-
-    //jasmine: {
-    //  all: ['test/runner.html']
-    //},
-
     karma: {
-      unit: {
+      'unit all browsers' : {
         configFile: 'karma.conf.js',
-        autoWatch: true
+        singleRun: true,
+        browsers: ['Chrome', 'IE', 'IE9', 'Firefox', 'Safari'],
+        logLevel: 'ERROR',
+        customLaunchers: {
+          IE9: {
+            base: 'IE',
+            'x-ua-compatible': 'IE=EmulateIE9'
+          },
+          IE8: {
+            base: 'IE',
+            'x-ua-compatible': 'IE=EmulateIE8'
+          }
+        }
+      },
+      'unit Safari': {
+        configFile: 'karma.conf.js',
+        singleRun: true,
+        browsers: ['Safari'],
+        logLevel: 'ERROR'
       }
     },
 	
@@ -55,31 +71,34 @@ module.exports = function(grunt) {
 		files: ['src/**/*.js'],
 		tasks: ['browserify'],
 		options: {
-		  spawn: false,
-		},
+		  spawn: false
+		}
 	  },
       compass: {
         files: ['style/*.scss'],
         tasks: ['compass'],
         options: {
-          spawn: false,
-        },
+          spawn: false
+        }
       }
-	},
+	}
   });
 
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  //grunt.loadNpmTasks('grunt-jstestdriver');
-
   grunt.loadNpmTasks('grunt-contrib-requirejs');
-  //grunt.loadNpmTasks('grunt-jasmine-task');
+
   grunt.loadNpmTasks('grunt-karma');
 
-  // Default task(s).
-  grunt.registerTask('default', ['watch']);
+  grunt.loadNpmTasks('grunt-contrib-copy');
+
+  grunt.registerTask('watch', ['watch']);
+
   grunt.registerTask('test', 'karma');
+
+  grunt.registerTask('default', ['clean', 'jshint', 'karma', 'compass', 'browserify', 'copy']);
 
 };

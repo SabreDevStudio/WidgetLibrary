@@ -1,14 +1,23 @@
 require.config({
     paths: {
-        jquery: "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min"
+        jquery: "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min",
+        // for loading mustache text templates as AMD
+        templates: 'templates',
+        mustache: 'lib/mustache',
+        text: 'lib/text',
+        stache: 'lib/stache'
     },
     map: {
         '*': { 'jquery': 'util/jquery-loader' },
         'util/jquery-loader': { 'jquery': 'jquery' }
+    },
+    stache: {
+        extension: '.mst'
+        //path: 'templates/'
     }
 });
 
-require(["jquery", "calendar"], function($, calendar) {
+require(["jquery", "Calendar"], function($, Calendar) {
     "use strict";
 
     function runCustomerCode() {
@@ -41,7 +50,7 @@ require(["jquery", "calendar"], function($, calendar) {
             if (!SDS.initializedSuccessful) {
                 throw new Error("You have to initialize Sabre Dev Studio first, call init");
             }
-            var calendarNode = calendar.createCalendar(options);
+            var calendarNode = (new Calendar(options)).render();
             $("#" + targetDomElementId).append(calendarNode);
         };
 
@@ -52,8 +61,3 @@ require(["jquery", "calendar"], function($, calendar) {
     runCustomerCode();
 
 });
-
-
-
-
-

@@ -4,11 +4,19 @@
   "eqeqeq": true,
   "undef": true,
   "globals": {
-    "jQuery": true
+    "jQuery": true,
+    // for requirejs
+    "define": false,
+    // jasmine
+    "spyOn": false,
+    "spyOnEvent": false,
+    "xit": false,
+    "xdescribe": false
   },
-  "maxcomplexity": 2,
+  "maxcomplexity": 10,
   "maxdepth": 3,
   "browser": true,
   "browserify": true,
-  "jquery": true
+  "jquery": true,
+  "jasmine": true
 }

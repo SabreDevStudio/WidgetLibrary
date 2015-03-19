@@ -44,15 +44,18 @@ $cellBackgroundPrevNextMonth: #d3d3d3;
   &.highlight {
     background-color: $cellBackgroundColorFocus;
   };
-  &.prevNextMonth {
+  &.prevOrNextMonthDay {
     background-color: $cellBackgroundPrevNextMonth;
+    &.hidden {
+      visibility: hidden;
+    }
   }
-  &.prevNextMonth.highlight {
+  &.prevOrNextMonthDay.highlight {
     background-color: $cellBackgroundColorFocus;
   }
 }
 
-.tmp {
+.cellWrapper {
   height: 100%;
 }
 

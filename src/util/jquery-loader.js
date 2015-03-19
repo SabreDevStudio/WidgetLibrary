@@ -9,7 +9,7 @@
 
     var REQUIRED_JQUERY_VERSION = '1.11.2';
 
-    if ((window.jQuery) && (window.jQuery.fn.jquery == REQUIRED_JQUERY_VERSION)) {
+    if ((window.jQuery) && (window.jQuery.fn.jquery === REQUIRED_JQUERY_VERSION)) {
         // console.log("required jQuery already loaded, window.jQuery version = " + window.jQuery.fn.jquery);
         define(function () {
             return window.jQuery;
