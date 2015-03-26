@@ -1,0 +1,104 @@
+{
+   "OTA_AirLowFareSearchRQ" :
+      {
+         "OriginDestinationInformation" :
+            [
+               {
+                  "DepartureDates" :
+                     {
+                       "dayOrDaysRange": [
+                         {
+                           "DaysRange": {
+                             "FromDate": "{{fromDate}}",
+                             "ToDate": "{{toDate}}"
+                           }
+                         }
+                       ]
+                     },
+                  "DestinationLocation" :
+                     {
+                        "LocationCode" : "{{destination}}"
+                     },
+                  "OriginLocation" :
+                     {
+                        "LocationCode" : "{{origin}}"
+                     },
+                  "RPH" : 1
+               },
+               {
+                  "DepartureDates" :
+                     {
+                       "lengthOfStayOrLengthOfStayRange": [
+                         {
+                           "LengthOfStayRange": {
+                             "MinDays": "{{lengthOfStay}}",
+                             "MaxDays": "{{lengthOfStay}}"
+                           }
+                         }
+                       ]
+                     },
+                  "DestinationLocation" :
+                     {
+                        "LocationCode" : "{{origin}}"
+                     },
+                  "OriginLocation" :
+                     {
+                        "LocationCode" : "{{destination}}"
+                     },
+                  "RPH" : 2
+               }
+            ],
+         "POS" :
+            {
+               "Source" :
+                  [
+                     {
+                        "RequestorID" :
+                           {
+                              "CompanyName" :
+                                 {
+                                    "Code" : "TN"
+                                 },
+                              "ID" : "REQ.ID",
+                              "Type" : "0.AAA.X"
+                           }
+                     }
+                  ]
+            },
+         "TPA_Extensions" :
+            {
+               "IntelliSellTransaction" :
+                  {
+                     "RequestType" :
+                        {
+                           "Name" : "ADC1000"
+                        }
+                  }
+            },
+         "TravelPreferences" :
+            {
+               "TPA_Extensions" :
+                  {
+                    "NumTrips": {
+                      "PerDateMin": 0,
+                      "PerDateMax": "{{optionsPerDay}}"
+                    }
+                  }
+            },
+         "TravelerInfoSummary" :
+            {
+               "AirTravelerAvail" :
+                  [
+                     {
+                        "PassengerTypeQuantity" :
+                           [
+                              {
+                                 "Code" : "ADT",
+                                 "Quantity" : 1
+                              }
+                           ]
+                     }
+                  ]
+            }
+      }
+}

@@ -1,10 +1,13 @@
 .idea/
 .sass-cache/
+dist/
 node_modules/
 rqrs/
 stylesheets/
 target/
 tmp*/
+www/
 # *.iml
 TODO
+www-customer-page-downloaded
 config.rb

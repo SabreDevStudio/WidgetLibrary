@@ -1,42 +1,52 @@
 @import "compass/css3";
 
-
 $calendarBorderRadius: 0.4em;
-$calendarMinWidth: 30em;
+$calendarMinWidth: 20em;
 $calendarMaxWidth: 40em;
 
-$cellBackgroundColor: #C6E746;
+$cellBackgroundColor: white;
 $cellBackgroundColorFocus: #C6C700;
 $cellBackgroundPrevNextMonth: #d3d3d3;
+$headerColor: #0040D0;
+
+$cellPriceColorTier1: red;
+$cellPriceColorTier2: #E8AB0F;
 
 .calendar {
-  font-size: 0.5em;
+  box-sizing: border-box;
+  font-size: 1em;
+  font-weight: bold;
   width: 100%;
   table-layout: fixed;
   min-width: $calendarMinWidth;
   min-height: $calendarMinWidth * 5 / 7;
   max-width: $calendarMaxWidth;
-  border: 1px solid #cecfd5;
   @include border-bottom-radius($calendarBorderRadius);
   border-collapse: separate;
   border-spacing: 0.15em;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
 
   caption {
     @include border-top-radius($calendarBorderRadius);
   }
 
   caption, thead {
-    background-color: #0040D0;
+    background-color: $headerColor;
   }
 
   caption, thead th {
     text-align: center;
+    padding: 0.25em;
+  }
+
+  tbody {
+    border: 1px solid $headerColor;
   }
 }
 
 .calendarCell {
   background-color: $cellBackgroundColor;
-  font-size: 1em;
   padding: 0.3em;
   vertical-align: top;
   cursor: pointer;
@@ -60,6 +70,7 @@ $cellBackgroundPrevNextMonth: #d3d3d3;
 }
 
 .calendarDateNumber {
+  font-size: 0.8em;
   text-align: right;
   float: right;
 }
@@ -78,5 +89,12 @@ $cellBackgroundPrevNextMonth: #d3d3d3;
     position: absolute;
     top: 50%;
     @include translateY(-50%);
+  }
+
+  &.tier-1 p {
+    color: $cellPriceColorTier1;
+  }
+  &.tier-2 p {
+    color: $cellPriceColorTier2;
   }
 }

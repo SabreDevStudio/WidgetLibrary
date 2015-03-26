@@ -15,19 +15,24 @@ requirejs.config({
     paths: {
         jquery: "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min",
         'jasmine-jquery': '../src-test/lib/jasmine-jquery',
-        templates: 'templates',
         mustache: 'lib/mustache',
         text: 'lib/text',
-        stache: 'lib/stache'
+        stache: 'lib/stache',
+        moment: 'lib/moment-with-locales',
+        validator: "util/validator",
+        validator_lib: '../node_modules/validator/validator',
+        lodash: 'lib/lodash'
     },
     shim: {
         'jasmine-jquery': {
             deps: ['jquery']
         }
+        //lodash: {
+        //    exports: '_' // TODO: will loadash be loaded into customer global namespace?
+        //}
     },
     stache: {
         extension: '.mst'
-        //path: 'templates/'
     },
     //map: {
     //    '*': { 'jquery': 'util/jquery-loader' },

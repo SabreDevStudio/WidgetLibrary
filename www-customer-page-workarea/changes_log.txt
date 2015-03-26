@@ -1,0 +1,18 @@
+- after downloading customer page:
+    remove all scripts and all iframes:
+    <script([\s\S]*?)</script>
+    <iframe([\s\S]*?)</iframe>
+
+    comment out this:
+                        <!--PREDICTA SUBMARINO -->
+                            <!-- submarinoviagens_passagens_masterprice_753x43_faixasuperior -->
+                            <div id="div-gpt-ad-1360005912156-0" style="width:750px; height:80px;">
+
+                            <div id="google_ads_iframe_/20143362/submarinoviagens_passagens_masterprice_753x43_faixasuperior_0__container__" style="border: 0pt none;"></div></div>
+                        <!--PREDICTA SUBMARINO -->
+
+- remove all id's from divs wrapping my widget
+
+- add my styles
+<link rel="stylesheet" type="text/css" href="../stylesheets/SDSCalendar.css">
+- and overrides for customer style (their page wrappers, not the calendar itself)

@@ -6,45 +6,80 @@
  * WARN: Script uses Date.prototype.toLocaleString(), which implementation varies across platforms.
  * In the script I patch one IE problem with formatting. You will probably replace this formatting by array of strings for days of week and month names.
  */
-define(['jquery', 'util/exceptions', 'mustache', 'stache!templates/calendar', 'util/feature_detection'], function ($, ex, Mustache, calendarTemplate, browser_features_package) {
+define(['WidgetBase', 'validator' ,'jquery', 'lodash',
+    'mustache',
+    'stache!view-templates/calendar.html',
+    'stache!request-templates/AdvancedCalendarRequest.json',
+    'util/feature_detection',
+    'lib/commWrapper',
+    'moment',
+    'util/CurrencyFormatter',
+    'util/PriceClassifier'
+    ], function (WidgetBase, v, $, _, Mustache, calendarTemplate, requestTemplate, browser_features_package, comm, moment, CurrencyFormatter, PriceClassifier) {
     "use strict";
 
     /**
-     * Creates DOM node structure for HTML table, representing calendar for one month
+     * Widget representing the Calendar of options. Every cell presents a price for travel originating on that day, with requested length of stay (LoS)
      *
-     * @method createCalendar
-     * @param {int} month number of month, 1 for January to 12 for December
-     * @param {int} year year in yyyy format
      */
-    return function Calendar(options) {
+    function Calendar() {
 
-        validateOptions(options);
+        WidgetBase.apply(this, arguments);
+
+        var that = this;
+
+        /**
+         * Function to fetch data from web service. By default this widget fetches from Advanced Calendar REST service.
+         * This function must take two arguments:
+         *  1. request, as string  function (err, data)
+         *  2. callback function, and pass to it two arguments: error and response data.
+         *  For example:
+         *  var otherDataSourceFunction = function(request, callback) {
+         *      ...
+         *      callback(err, data);
+         *  }
+         */
+        Calendar.prototype.dataSourceFetchFn = comm.advanced_calendar_search;
+
+        validateOptions(this.options);
+
         setOptionsDefaults();
 
-        function setOptionsDefaults() {
-            options.locale = options.locale || window.navigator.language; // for example "en-US"
-        }
-
-        options.browser_features = (options.browser_features)? options.browser_features: browser_features_package; // dependency injection for testing
-
         function validateOptions(options) {
-            if (typeof options === 'undefined') {
-                throw new ex.IllegalArgumentException("You have to specify options");
-            }
-            if (typeof options.lengthOfStay === 'undefined') { // TODO: for one ways request you will not have LoS
-                throw new ex.IllegalArgumentException("You have to specify lengthOfStay");
-            }
-            if (typeof options.currency === 'undefined' || !(/[A-Z]{3}/.test(options.currency))) {
-                throw new ex.IllegalArgumentException("You have to specify currency, and options.currency must be valid 3 letter currency code, for example USD");
-            }
+            v.notEmpty(options, "You have to specify options");
+
+            v.onlyOneDefined(options.lengthOfStay, options.arrivalDate, "You have to specify lengthOfStay or arrivalDate (and not both)"); // TODO: for one ways request you will not have LoS
+
+            v.currencySymbol(options.currency, "You have to specify currency, and options.currency must be valid 3 letter currency code, for example USD");
+
             // if you do not provide failsafes, then on browsers not supporting localized Date.toLocaleString it will not display month name and week day names in calendar header
-            if(options.localizedMonthNamesFailsafe && options.localizedMonthNamesFailsafe.length !== 12) {
-                throw new ex.IllegalArgumentException("When providing fail safe for localized month names, you have to provide names for all 12 months..");
+            if (v.isDefined(options.localizedMonthNamesFailsafe)) {
+                v.arrayHasLength(options.localizedMonthNamesFailsafe, 12, "When providing fail safe for localized month names, you have to provide names for all 12 months..");
             }
-            if(options.localizedWeekDayNamesFailsafe && options.localizedWeekDayNamesFailsafe.length !== 7) {
-                throw new ex.IllegalArgumentException("When providing fail safe for localized names of days of week, you have to provide all 7 of them..");
+
+            if (v.isDefined(options.localizedWeekDayNamesFailsafe)) {
+                v.arrayHasLength(options.localizedWeekDayNamesFailsafe, 7, "When providing fail safe for localized names of days of week, you have to provide all 7 of them..");
             }
+
+            v.airportCode(options.origin, "You have to specify origin location, and it must be valid 3 letter airport or city code, for example LAX");
+
+            v.airportCode(options.destination, "You have to specify destination location, and it must be valid 3 letter airport or city code, for example LAX");
+
+            v.year(options.year, "you have to specify valid travel year and month. Year in YYYY format, and month in MM format");
+            v.month(options.month, "you have to specify valid travel year and month. Year in YYYY format, and month in MM format. Month numbers start from 1, not from 0");
         }
+
+        function setOptionsDefaults() {
+            that.options.locale = that.options.locale || window.navigator.language; // for example "en-US"
+            // if length of stay is not explicitly provided then it is calculated from departure data and arrival date
+            that.options.lengthOfStay = that.options.lengthOfStay || (function () {
+                var departureDate = moment(that.options.departureDate, 'YYYY-M-D');
+                var arrivalDate = moment(that.options.arrivalDate, 'YYYY-M-D');
+                return arrivalDate.diff(departureDate, 'days');
+            })();
+            that.options.browser_features = that.options.browser_features || browser_features_package; // dependency injection for unit testing
+        }
+
 
         /**
          * Returns object representing number of days in the specified month, and two arrays: one representing the days of
@@ -60,27 +95,25 @@ define(['jquery', 'util/exceptions', 'mustache', 'stache!templates/calendar', 'u
             // next month days of its first week. If this month ends on Friday, then it is Saturday, Sunday.
             var nextMonthDaysOfFirstWeek = [];
 
-            var monthStartDay = new Date(options.year, options.month - 1);
-            var monthEndDate = new Date(monthStartDay.getFullYear(), monthStartDay.getMonth() + 1, 0);
+            var monthStartDate = moment({year: that.options.year, month: (that.options.month - 1)});
+            var monthEndDate   = monthStartDate.clone().endOf('month');
 
             // number of days this month has
-            var monthNumberOfDays = monthEndDate.getDate();
+            var monthNumberOfDays = monthStartDate.daysInMonth();
 
-            var monthStartDayOfWeek = monthStartDay.getDay();
+            var monthStartDayOfWeek = monthStartDate.day();
 
             // convert 0 representing Sunday into 7
             monthStartDayOfWeek = (monthStartDayOfWeek===0) ? 7 : monthStartDayOfWeek;
 
-            var prevMonthEndDate = new Date(options.year, options.month - 1);
-            prevMonthEndDate.setDate(monthStartDay.getDate() - 1);
-            var prevMonthEndDay = prevMonthEndDate.getDate();
+            var prevMonthNumberOfDays = monthStartDate.clone().subtract(1, 'day').daysInMonth();
 
             // push previous month day numbers to its last week
             for (var i = monthStartDayOfWeek - 2; i >= 0; i--) {
-                prevMonthDaysOfLastWeek.push(prevMonthEndDay - i);
+                prevMonthDaysOfLastWeek.push(prevMonthNumberOfDays - i);
             }
 
-            var monthEndDayOfWeek = monthEndDate.getDay();
+            var monthEndDayOfWeek = monthEndDate.day();
             // convert 0 representing Sunday into 7
             monthEndDayOfWeek = (monthEndDayOfWeek===0) ? 7 : monthEndDayOfWeek;
 
@@ -89,31 +122,33 @@ define(['jquery', 'util/exceptions', 'mustache', 'stache!templates/calendar', 'u
             }
 
             return {
+                monthStartDate: monthStartDate,
+                monthEndDate: monthEndDate,
                 prevMonthDaysOfLastWeek: prevMonthDaysOfLastWeek,
                 nextMonthDaysOfFirstWeek: nextMonthDaysOfFirstWeek,
                 monthNumberOfDays: monthNumberOfDays,
                 monthStartDayOfWeek: monthStartDayOfWeek
             };
-        }
+        };
 
-        function createModelData() {
-            var monthStartDay = new Date(options.year, options.month - 1);
+        var bounds = getBounds();
+
+        function createModelData(prices) {
+            var monthStartDate = bounds.monthStartDate.toDate();
 
             var monthName;
-            if (options.browser_features.localizedToLocaleStringSupported()) {
-                monthName = monthStartDay.toLocaleString(options.locale, { month: "long" });
+            if (that.options.browser_features.localizedToLocaleStringSupported()) {
+                monthName = monthStartDate.toLocaleString(that.options.locale, { month: "long" });
                 // Remove the left-to-right marks that IE puts in the output of toLocaleString(). Only IE behaviour
-                if (options.browser_features.isIE()) {
+                if (that.options.browser_features.isIE()) {
                     monthName = monthName.replace(/\u200E/g, '');
                 }
-            } else if (options.localizedMonthNamesFailsafe) {
-                monthName = (options.localizedMonthNamesFailsafe)[options.month - 1]; // if this option is not defined then month name will nto be shown
+            } else if (that.options.localizedMonthNamesFailsafe) {
+                monthName = (that.options.localizedMonthNamesFailsafe)[that.options.month - 1]; // if this option is not defined then month name will nto be shown
             }
 
             var allWeeks = [];
             var currentWeek = {week: []};
-
-            var bounds = getBounds();
 
             // 1. add days of last week of previous month (in the same week as the 1st day of current month)
             bounds.prevMonthDaysOfLastWeek.forEach(function (dayNumber) {
@@ -121,27 +156,44 @@ define(['jquery', 'util/exceptions', 'mustache', 'stache!templates/calendar', 'u
                     {
                         dayNumber: dayNumber,
                         isPrevOrNextMonthDay: true,
-                        hidden: !(options.showDayNumbersPrevAndNextMonth)
+                        hidden: !(that.options.showDayNumbersPrevAndNextMonth)
                     }
                 );
             });
 
-            // 2. add this month all days
-            for (var dayNumber = 1; dayNumber <= bounds.monthNumberOfDays; dayNumber++) {
-                currentWeek.week.push({'dayNumber': dayNumber});
-                if ((bounds.monthStartDayOfWeek + dayNumber - 1) % 7 === 0) {
+            var currencyFormatter = new CurrencyFormatter(that.options.locale, that.options.currency);
+
+            // classifier will be needed to assign prices per day into price tiers (cheapest, second cheapest, and so on).
+            var priceClassifier = new PriceClassifier(_.values(prices));
+
+            // 2. add this month all days and prices
+            var dayCellData = {};
+            var currentDayOfMonth = bounds.monthStartDate.clone();
+            var currPrice;
+            while (currentDayOfMonth.isBefore(bounds.monthEndDate) || currentDayOfMonth.isSame(bounds.monthEndDate)) {
+                dayCellData = {};
+                dayCellData.dayNumber = currentDayOfMonth.date();
+                if (prices[currentDayOfMonth]) {
+                    currPrice = prices[currentDayOfMonth];
+                    dayCellData.price = currencyFormatter.format(currPrice);
+                    dayCellData.priceTier = priceClassifier.tier(currPrice);
+                }
+                currentWeek.week.push(dayCellData);
+                if (currentWeek.week.length === 7) {
                     allWeeks.push(currentWeek);
                     currentWeek = {week: []};
                 }
+                // increment loop counter
+                currentDayOfMonth.add(1, 'day');
             }
-            if ((bounds.monthStartDayOfWeek + dayNumber) % 7 !== 0) {
+            if (currentWeek.week.length < 7) {
                 // 3. add days of first week of next month
                 bounds.nextMonthDaysOfFirstWeek.forEach(function (dayNumber) {
                     currentWeek.week.push(
                         {
                             dayNumber: dayNumber,
                             isPrevOrNextMonthDay: true,
-                            hidden: !(options.showDayNumbersPrevAndNextMonth)
+                            hidden: !(that.options.showDayNumbersPrevAndNextMonth)
                         }
                     );
                 });
@@ -163,18 +215,18 @@ define(['jquery', 'util/exceptions', 'mustache', 'stache!templates/calendar', 'u
             var mondayDate = new Date(2015, 5, 1); // 1 June 2015 is Mon
             var currentWeekDay = mondayDate;
 
-            if (options.browser_features.localizedToLocaleStringSupported()) {
+            if (that.options.browser_features.localizedToLocaleStringSupported()) {
                 for(var i = 0; i < 7; i++) {
-                    var weekLocalizedStr = currentWeekDay.toLocaleString(options.locale, {weekday: 'short'});
+                    var weekLocalizedStr = currentWeekDay.toLocaleString(that.options.locale, {weekday: 'short'});
                     // Remove the left-to-right marks that IE puts in the output of toLocaleString()
-                    if (options.browser_features.isIE()) {
+                    if (that.options.browser_features.isIE()) {
                         weekLocalizedStr = weekLocalizedStr.replace(/\u200E/g, '');
                     }
                     localizedWeekDayNames.push(weekLocalizedStr);
                     currentWeekDay.setDate(currentWeekDay.getDate() + 1);
                 }
             } else {
-                localizedWeekDayNames = options.localizedWeekDayNamesFailsafe; // if not provided then week day names in header will not be displayed
+                localizedWeekDayNames = that.options.localizedWeekDayNamesFailsafe; // if not provided then week day names in header will not be displayed
             }
             return localizedWeekDayNames;
         }
@@ -219,20 +271,76 @@ define(['jquery', 'util/exceptions', 'mustache', 'stache!templates/calendar', 'u
             });
         }
 
-        function addEventHandlers(dom) {
+        function addInternalEventHandlers(dom) {
             // by default we trace customer pointer, as it goes over calendar cells, highlighting all cells within customer specified LoS
-            if ((typeof options.traceCustomerPointer === 'undefined') || (options.traceCustomerPointer === true)) {
-                addTraceCustomerPointer(dom, options.lengthOfStay);
+            if ((typeof that.options.traceCustomerPointer === 'undefined') || (that.options.traceCustomerPointer === true)) {
+                addTraceCustomerPointer(dom, that.options.lengthOfStay);
             }
         }
 
-        this.render = function () {
-            var data = createModelData();
+        this.createWebServiceRequest = function() { // privileged for unit testing
+            var requestOptions = {};
+            var keys = ['origin', 'destination', 'lengthOfStay', 'optionsPerDay'];
+            keys.forEach(function (key) {
+                requestOptions[key] = that.options[key];
+            });
+            requestOptions.fromDate = bounds.monthStartDate.format('YYYY-MM-DD');
+            requestOptions.toDate = bounds.monthEndDate.format('YYYY-MM-DD');
+            return requestTemplate(requestOptions);
+        };
+
+        function createCalendarDom(prices) {
+            var data = createModelData(prices);
             var calendarHTML = calendarTemplate(data);
             var calendarDOM = $(calendarHTML);
-            addEventHandlers(calendarDOM);
+            addInternalEventHandlers(calendarDOM);
             return calendarDOM;
+        }
+
+        function getLowestPricesPerDay(responseData) {
+            var rs = JSON.parse(responseData);
+            // TODO parse total fare currency?
+            return rs.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary.reduce(function (acc, next) {
+                var departureDate = moment(next.AirItinerary.OriginDestinationOptions.OriginDestinationOption[0].FlightSegment[0].DepartureDateTime).startOf('day');
+                var totalPrice    = Number(next.AirItineraryPricingInfo[0].ItinTotalFare.TotalFare.Amount); //TODO: why AirItineraryPricingInfo is array? of one element always?
+                if (acc[departureDate]) {
+                    if (totalPrice < acc[departureDate]) {
+                        acc[departureDate] = totalPrice;
+                    }
+                } else {
+                    acc[departureDate] = totalPrice;
+                }
+                return acc;
+            }, {});
+        }
+
+        /**
+         * Creates actual calendar jquery object and passes it to client callback.
+         * Client, in their callback, will typically append that calendar object to their DOM.
+         *
+         * Typically the second argument (prices) is not provided and the widget does call to the web service for prices.
+         * If sedond argument is provided (for example while testing), then web service call is not done and prices from the second argument are used.
+         *
+         * @param clientCallback
+         * @param prices: optional: object representing prices per day. Keys are moment library dates, values are numbers
+         */
+        Calendar.prototype.render = function (clientCallback, prices) {
+            if (prices) {
+                var calendarDom = createCalendarDom(prices);
+                clientCallback(calendarDom);
+            } else {
+                var request = this.createWebServiceRequest();
+                this.dataSourceFetchFn(request, function (err, data) {
+                    var prices = getLowestPricesPerDay(data);
+                    calendarDom = createCalendarDom(prices);
+                    clientCallback(calendarDom);
+                });
+            }
         };
     };
 
+    Calendar.prototype = Object.create(WidgetBase.prototype);
+    Calendar.prototype.constructor = Calendar;
+
+    return Calendar;
 });
