@@ -8,6 +8,7 @@ require.config({
         moment: 'lib/moment-with-locales',
         validator: "util/validator",
         validator_lib: '../node_modules/validator/validator',
+        async: '../node_modules/async/lib/async',
         lodash: 'lib/lodash'
     },
     map: {
@@ -16,10 +17,15 @@ require.config({
     },
     stache: {
         extension: '.mst'
+    },
+    config: {
+        moment: {
+            noGlobal: true
+        }
     }
 });
 
-require(["jquery", "Calendar", 'moment'], function($, Calendar, moment) {
+require(["jquery", "Calendar", 'moment', 'util/CalendarTestPricesGenerator'], function($, Calendar, moment, testPricesGenerator) {
     "use strict";
 
     function runCustomerCode() {
@@ -34,12 +40,15 @@ require(["jquery", "Calendar", 'moment'], function($, Calendar, moment) {
     }
 
     function initializeSDK() {
-        var SDS = {};
-        SDS.initializedSuccessful = false;
-
         if (window.SDS) {
             return;
         }
+
+        var SDS = {};
+
+        SDS.initializedSuccessful = false;
+
+        var globalCache = {};
 
         SDS.init = function (options) {
             if (typeof options.apiKey === 'undefined') {
@@ -53,27 +62,28 @@ require(["jquery", "Calendar", 'moment'], function($, Calendar, moment) {
                 throw new Error("You have to initialize Sabre Dev Studio first, call init");
             }
 
-            function generatePricesForTest(year, month) {
-                var prices = {};
-                var currentDay = moment({year: year, month: month - 1});
-                var endOfMonthDay = currentDay.clone().endOf('month');
-                while(currentDay.isBefore(endOfMonthDay) || currentDay.isSame(endOfMonthDay)) {
-                    prices[currentDay] = currentDay.date() * 100 + 0.05;
-                    currentDay.add(1, 'day');
-                }
-                return prices;
-            }
+            options.globalPriceCache = globalCache;
 
             var clientCallback = function (calendarNode) {
-                $("#" + targetDomElementId).append(calendarNode);
+                $("#" + targetDomElementId).empty().append(calendarNode);
             };
 
             var calendar = new Calendar(options);
+
             if (doNotCallWebServiceAndUseFakePrices) {
-                calendar.render(clientCallback, generatePricesForTest(options.year, options.month));
-            } else {
-                calendar.render(clientCallback);
+                var monthSpecifications = (function () {
+                    var specs = [];
+                    var currMonth = moment({year: calendar.options.year, month: calendar.options.month - 1});
+                    for (var i = 0; i < calendar.options.numberOfMonths; i++) {
+                        specs.push({year: currMonth.year(), month: currMonth.month()});
+                        currMonth.add(1, 'month');
+                    }
+                    return specs;
+                })();
+                calendar.options.testPrices = testPricesGenerator.generatePrices(monthSpecifications);
             }
+
+            calendar.render(clientCallback);
         };
 
         window.SDS = SDS;

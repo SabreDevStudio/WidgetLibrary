@@ -23537,7 +23537,8 @@ exports.OAuth2.prototype._chooseHttpLibrary= function( parsedUrl ) {
 
 exports.OAuth2.prototype._request= function(method, url, headers, post_body, access_token, callback) {
 
-    var parsedUrl= URL.parse( url, true );
+  
+  var parsedUrl= URL.parse( url, true );
   if( parsedUrl.protocol == "https:" && !parsedUrl.port ) {
     parsedUrl.port= 443;
   }
@@ -24165,7 +24166,7 @@ define(function () {
         client_id:     'V1:pe6myrbaa021f2br:DEVCENTER:EXT',
         client_secret: 'DUaEf51f',
         uri:           'https://api.test.sabre.com',
-        loglevel: 'fatal'
+        loglevel: 'fatal' // TODO: maybe better remove all calls to logger with strip_code?
     });
 
     return {

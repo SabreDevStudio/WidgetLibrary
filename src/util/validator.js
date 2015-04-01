@@ -37,9 +37,6 @@ define(['util/exceptions', 'validator_lib', 'moment'], function (ex, v, moment) 
         notEmpty: notEmpty,
         defined: defined,
         definedAndMatches: definedAndMatches,
-        isDefined: function (arg, err) {
-            return (typeof arg !== 'undefined');
-        },
         /**
          * one and only one must be defined, not both
          */
@@ -78,6 +75,24 @@ define(['util/exceptions', 'validator_lib', 'moment'], function (ex, v, moment) 
                 throw new ex.IllegalArgumentException(err);
             }
             return true;
+        },
+        validDate: function (date, format) {
+            if (!moment(date, format).isValid()) {
+                throw new ex.IllegalArgumentException("invalid date for date format '" + format + "'");
+            }
+        },
+        // takes two date arguments and date format. validates that first date is not after the second date
+        notAfter: function (firstDate, secondDate, dateFormat, firstDateName, secondDateName) {
+            var first = moment(firstDate, dateFormat);
+            var second = moment(secondDate, dateFormat);
+            if (first.isAfter(second)) {
+                throw new ex.IllegalArgumentException(firstDateName + "='" + first.format(dateFormat) + "' cannot be after " + secondDateName + "='" +second.format(dateFormat) + "'");
+            }
+        },
+        notGreaterThan: function(first, second, firstName, secondName) {
+            if (first > second) {
+                throw new ex.IllegalArgumentException(firstName + ": " + first + " cannot be greater than " + secondName + ": " + second);
+            }
         }
     };
 });
