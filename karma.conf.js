@@ -24,7 +24,8 @@ module.exports = function(config) {
       {pattern: 'src/view-templates/*.*', included: false},
       {pattern: 'src/request-templates/*.*', included: false},
       {pattern: 'src-test/fixtures/*', included: false},
-      {pattern: 'node_modules/validator/validator.js', included: false}
+      {pattern: 'node_modules/validator/validator.js', included: false},
+      {pattern: 'node_modules/async/lib/async.js', included: false}
     ],
 
 
@@ -66,7 +67,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'PhantomJS', 'IE', 'Firefox', 'Safari'], // 'IE8', 'IE9',
+    browsers: ['Chrome', 'IE', 'Firefox', 'Safari'], // 'IE8', 'IE9', 'PhantomJS'
 
     customLaunchers: {
       IE9: {

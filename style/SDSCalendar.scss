@@ -1,8 +1,11 @@
 @import "compass/css3";
+@import "compass/css3/images";
 
 $calendarBorderRadius: 0.4em;
 $calendarMinWidth: 20em;
 $calendarMaxWidth: 40em;
+
+$marginForNavigationArrows: 0.1em;
 
 $cellBackgroundColor: white;
 $cellBackgroundColorFocus: #C6C700;
@@ -11,6 +14,10 @@ $headerColor: #0040D0;
 
 $cellPriceColorTier1: red;
 $cellPriceColorTier2: #E8AB0F;
+
+.calendarSlot {
+  display: inline-block; //TODO: add responsive styling: (analogous to number of columns in RWD)
+}
 
 .calendar {
   box-sizing: border-box;
@@ -31,13 +38,39 @@ $cellPriceColorTier2: #E8AB0F;
     @include border-top-radius($calendarBorderRadius);
   }
 
+  caption .monthNavigationLink {
+    $iconPrev: "../img/prev-arrows-16.png";
+    $iconNext: "../img/next-arrows-16.png";
+    display: inline-block;
+    background-repeat: no-repeat;
+    height: image-height($iconPrev);
+    width: image-width($iconPrev);
+    & span {
+      visibility: hidden;
+    }
+    &.prev {
+      float: left;
+      margin-left: $marginForNavigationArrows;
+      @include background-image(url($iconPrev));
+    }
+    &.next {
+      float: right;
+      margin-right: $marginForNavigationArrows;
+      @include background-image(url($iconNext));
+    }
+  }
+
   caption, thead {
     background-color: $headerColor;
   }
 
-  caption, thead th {
+  caption {
     text-align: center;
     padding: 0.25em;
+  }
+
+  thead th {
+    text-align: center;
   }
 
   tbody {
@@ -97,4 +130,8 @@ $cellPriceColorTier2: #E8AB0F;
   &.tier-2 p {
     color: $cellPriceColorTier2;
   }
+}
+
+.inactive {
+  @include opacity(0.35);
 }

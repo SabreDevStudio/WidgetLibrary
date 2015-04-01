@@ -3,6 +3,7 @@
   "eqnull": true,
   "eqeqeq": true,
   "undef": true,
+  "laxcomma": true,
   "globals": {
     "jQuery": true,
     // for requirejs
@@ -13,7 +14,7 @@
     "xit": false,
     "xdescribe": false
   },
-  "maxcomplexity": 10,
+  "maxcomplexity": 7,
   "maxdepth": 3,
   "browser": true,
   "browserify": true,

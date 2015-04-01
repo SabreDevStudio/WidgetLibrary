@@ -35,7 +35,8 @@ module.exports = function(grunt) {
          *
          * This variable is not used anyway, and object creation does not have side effects for our use.
          **/
-        pattern: /var\s+creds\s*=\s*crypto.createCredentials\(\{\s*\}\);\n/g
+        pattern: /var\s+creds\s*=\s*crypto.createCredentials\(\{\s*\}\);/
+        //pattern: /var\s+creds\s*=\s*crypto.createCredentials/
       },
       strip_thirdParty : {
         src: 'src/lib/commWrapper.js'
@@ -87,13 +88,13 @@ module.exports = function(grunt) {
     },
 	
 	watch: {
-	  js: {
-		files: ['src/**/*.js'],
-		tasks: ['browserify'],
-		options: {
-		  spawn: false
-		}
-	  },
+	  //js: {
+		//files: ['src/lib/commWrapperSrc.js'],
+		//tasks: ['browserify', 'strip_code'],
+		//options: {
+		//  spawn: false
+		//}
+	  //},
       compass: {
         files: ['style/*.scss'],
         tasks: ['compass'],
@@ -128,6 +129,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', 'karma');
 
-  grunt.registerTask('default', ['clean', 'jshint', 'karma', 'compass', 'csslint', 'browserify', 'copy']);
+  grunt.registerTask('default', ['clean', 'jshint', 'karma', 'compass', 'csslint', 'copy']);
 
 };

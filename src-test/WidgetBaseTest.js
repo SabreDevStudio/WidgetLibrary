@@ -18,6 +18,6 @@ define(['WidgetBase'], function (WidgetBase) {
             var widget = new WidgetBase(objDefaults, objOberrides);
             expect(widget.getOptions()).toEqual({size: 20, uuid: -1});
         });
-    })
+    });
 
-})
+});

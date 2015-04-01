@@ -2,11 +2,27 @@
     padding-top: 0;
 }
 
+.calendar {
+    max-width: 360px;
+}
+
+.calendarCellPrice {
+    font-size: 0.8em;
+}
+
+.calendarCell.prevOrNextMonthDay {
+    background-color: white;
+}
+
 .calendar caption, .calendar thead {
     font-size: 12px;
     color: #fff;
     background-color: #0082d7;
     border-color: #0082d7;
+}
+
+.ui-datepicker {
+    position: relative; z-index: 10000;
 }
 
 

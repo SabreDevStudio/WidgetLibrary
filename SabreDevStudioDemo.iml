@@ -7,7 +7,13 @@
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/www-customer-page-downloaded" />
+      <excludeFolder url="file://$MODULE_DIR$/www-customer-page-workarea" />
+      <excludeFolder url="file://$MODULE_DIR$/www/calendar_and_trend_results_files" />
+      <excludeFolder url="file://$MODULE_DIR$/www/results_page_files" />
+      <excludeFolder url="file://$MODULE_DIR$/www/start_page_files" />
+    </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="JsTestDriver Assertion Framework" level="application" />
     <orderEntry type="library" name="SabreDevStudioDemo node_modules" level="project" />

@@ -21,6 +21,7 @@ requirejs.config({
         moment: 'lib/moment-with-locales',
         validator: "util/validator",
         validator_lib: '../node_modules/validator/validator',
+        async: '../node_modules/async/lib/async',
         lodash: 'lib/lodash'
     },
     shim: {
@@ -33,6 +34,11 @@ requirejs.config({
     },
     stache: {
         extension: '.mst'
+    },
+    config: {
+        moment: {
+            noGlobal: true
+        }
     },
     //map: {
     //    '*': { 'jquery': 'util/jquery-loader' },
