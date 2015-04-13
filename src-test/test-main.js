@@ -14,11 +14,13 @@ requirejs.config({
 
     paths: {
         jquery: "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min",
+        'jquery-ui': 'http://code.jquery.com/ui/1.11.4/jquery-ui',
         'jasmine-jquery': '../src-test/lib/jasmine-jquery',
         mustache: 'lib/mustache',
         text: 'lib/text',
         stache: 'lib/stache',
         moment: 'lib/moment-with-locales',
+        moment_range: '../node_modules/moment-range/lib/moment-range',
         validator: "util/validator",
         validator_lib: '../node_modules/validator/validator',
         async: '../node_modules/async/lib/async',
@@ -28,12 +30,12 @@ requirejs.config({
         'jasmine-jquery': {
             deps: ['jquery']
         }
-        //lodash: {
-        //    exports: '_' // TODO: will loadash be loaded into customer global namespace?
-        //}
     },
     stache: {
         extension: '.mst'
+    },
+    'jquery-ui': {
+        deps: ['jquery']
     },
     config: {
         moment: {

@@ -1,0 +1,78 @@
+@import "SDSCommon";
+@import "SDSPriceTiered";
+
+$calendarMinWidth: 20em;
+// $calendarMaxWidth: 40em;
+
+div.SDSCalendarContainer {
+  font-size: 0;
+  @extend %SDSWidget;
+}
+
+div.SDSCalendarSlot {
+  display: inline-block; //TODO: add responsive styling: (analogous to number of columns in RWD)
+  vertical-align: top; // we align to top because two adjacent calendar can have different height. Default alignment to bottom ugly: calendar headers not in line then
+}
+
+div.SDSCalendarSlot:not(.SDSCalendarTab) { // we present months in columns only without tabs. For tabs not needed
+  &[data-totalMonths='2'] {
+    @include oneOfNColumns(2);
+  }
+  &[data-totalMonths='3'] {
+    @include oneOfNColumns(3);
+  }
+  &[data-totalMonths='4'] {
+    @include oneOfNColumns(4);
+  }
+}
+
+.SDSCalendarContainer .SDSCalendarTabHeaders {
+  @extend %SDSHeaderData;
+}
+
+table.SDSCalendar {
+  width: 100%;
+  table-layout: fixed;
+  min-width: $calendarMinWidth;
+  //max-width: $calendarMaxWidth; max width not needed - it will stretch to whole containing element, client to determine width of that element
+  border-collapse: separate;
+  border-spacing: 0.15em;
+
+  caption, th {
+    @extend %SDSHeaderData;
+  }
+
+  caption {
+    @extend %SDSHeader;
+    padding: 0.25em;
+    position: relative; // for absolute positioning of navigation links
+    height: 16px; // TODO: hardcode, caption does not grow with content. It it the image-height($iconPrev);
+  }
+  /* styling calendar cells itself */
+  .SDSCalendarCell {
+    @extend %SDSData;
+    height: ($primaryDataFontSize + $secondaryDataFontSize) * 1.5; // 50% more for vertical margins space between day number and price
+    padding: 0.3em;
+    position: relative; // relative, for absolute positioning of children
+
+    &.SDSCalendarPrevOrNextMonthDay {
+      @extend %SDSInactiveData;
+    }
+  }
+
+  .SDSCalendarDateNumber {
+    font-size: $secondaryDataFontSize;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 0.15em;
+    margin-right: 0.15em;
+  }
+
+  .SDSCalendarCellPrice {
+    @extend %SDSPriceTiered;
+    white-space: nowrap;
+  }
+}
+
+

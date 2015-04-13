@@ -1,0 +1,34 @@
+<div class="SDSItinerariesList" id="SDSItinerariesList_{{uuid}}">
+    <ol>
+    {{#itineraries}}
+        <li>
+            <div class="SDSFlightList">
+                    <ul>
+                    {{#legs}}
+                        <li class="SDSFlightLeg">
+                            <div>{{getLegDepartureTime}}</div>
+                            <ol>
+                                {{#segments}}
+                                    <li>
+                                        <div class="SDSDepartureTime">{{getTravelDateShort}}</div>
+                                        <div class="SDSDepartureAirport">{{departureAirport}}</div>
+                                        <div class="SDSArrivalAirport">{{arrivalAirport}}</div>
+                                    </li>
+
+                                {{/segments}}
+                            </ol>
+                        </li>
+                    {{/legs}}
+                    </ul>
+            </div>
+
+            <div class="SDSPriceDetails">
+                {{totalFareAmount}} {{totalFareCurrency}}
+                {{baseFareAmount}} {{baseFareCurrency}}
+                {{totalTaxAmount}} {{totalFareCurrency}}
+            </div>
+
+        </li>
+    {{/itineraries}}
+    </ol>
+</div>

@@ -1,0 +1,5 @@
+// reset styles for all SDS widgets:
+@import "compass/reset/utilities";
+.SDSWidget {
+  @include nested-reset;
+}

@@ -1,0 +1,109 @@
+@import "compass/css3";
+@import "compass/css3/images";
+
+/* Color palette for all widgets */
+$dataBackgroundColor: white;
+
+/* inactive data are for example Shopping options that cannot be booked, sold out, past dates, not shoppable for any other reason. They will be presented on shaded background  */
+$dataInactiveBackgroundColor: #d3d3d3;
+
+$dataHighlightedBackgroundColor: #C6C700;
+
+$headerBackgroundColor: #0040D0;
+
+$headerFontColor: white;
+
+/* structural constants for all widgets */
+/* all widgets will have rounded corners */
+$borderRadius: 0.4em;
+
+/* fonts constants */
+$fontStack: 'Lato', Helvetica Neue, Helvetica, Arial, sans-serif;
+$headerFontSize: 0.55rem;
+$primaryDataFontSize: $headerFontSize;
+$secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and / 10, to get rounding to 0.1 of em
+
+/* main placeholder, that all widgets must inherit from */
+%SDSWidget {
+  box-sizing: border-box;
+  border-radius: $borderRadius;
+  box-shadow: 4px 4px 1px #888888;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  border: 1px solid $headerBackgroundColor;
+  font-family: $fontStack;
+  font-size: $primaryDataFontSize;
+  font-weight: bold;
+}
+
+/* placeholder to apply to headers of all widgets */
+%SDSHeader {
+  @include border-top-radius($borderRadius);
+}
+
+/* placeholder to apply to all data elements (captions, list headers, table headers) of all widget headers */
+%SDSHeaderData {
+  background-color: $headerBackgroundColor;
+  color: $headerFontColor;
+  text-align: center;
+  font-size: $headerFontSize;
+}
+
+/* placeholder to apply to all, primary and secondary data presented by widgets (which are not header) */
+%SDSData {
+  background-color: $dataBackgroundColor;
+  cursor: pointer;
+  font-size: $primaryDataFontSize;
+  /* highlighted data are data under mouse hoover, or highlighted to draw user attention */
+  &.SDSHighlight {
+    background-color: $dataHighlightedBackgroundColor;
+  }
+}
+
+/* to apply to all inactive (primary and secondary) data of all widgets */
+%SDSInactiveData {
+  @extend %SDSData;
+  background-color: $dataInactiveBackgroundColor;
+  &.SDSHighlight {
+    background-color: $dataHighlightedBackgroundColor;
+  }
+}
+
+/* navigation links (for now prev and next arrows) */
+.SDSNavigationLink {
+  $iconPrev: "../img/prev-arrows-16.png";
+  $iconNext: "../img/next-arrows-16.png";
+  $marginForNavigationArrows: 0.1em;
+  //background-repeat: no-repeat;
+  height: image-height($iconPrev);
+  width: image-width($iconPrev);
+  position: absolute;
+  & span {
+    visibility: hidden;
+  }
+  &.SDSPrev {
+    left: 0;
+    margin-left: $marginForNavigationArrows;
+    @include background-image(url($iconPrev));
+  }
+  &.SDSNext {
+    right: 0;
+    margin-right: $marginForNavigationArrows;
+    @include background-image(url($iconNext));
+  }
+}
+
+/* general class to add to all for all inactive/deactivated elements */
+.SDSInactive {
+  @include opacity(0.35);
+}
+
+/* helper class, for use in javascript, to hide elements */
+.SDSHidden {
+  visibility: hidden;
+}
+
+/* very simple grid system */
+@mixin oneOfNColumns($columnsCount) {
+  width: (1 / $columnsCount) * 100%;
+}

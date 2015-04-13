@@ -16,16 +16,16 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'src-test/test-main.js',
-      {pattern: 'src/*.js', included: false},
-      {pattern: 'src/util/*.js', included: false},
+      {pattern: 'src/**/*.js', included: false},
       {pattern: 'src-test/*.js', included: false},
+      {pattern: 'src-test/util/*.js', included: false},
       {pattern: 'src-test/lib/*.js', included: false},
-      {pattern: 'src/lib/*.js', included: false},
       {pattern: 'src/view-templates/*.*', included: false},
       {pattern: 'src/request-templates/*.*', included: false},
       {pattern: 'src-test/fixtures/*', included: false},
       {pattern: 'node_modules/validator/validator.js', included: false},
-      {pattern: 'node_modules/async/lib/async.js', included: false}
+      {pattern: 'node_modules/async/lib/async.js', included: false},
+      {pattern: 'node_modules/moment-range/lib/moment-range.js', included: false}
     ],
 
 

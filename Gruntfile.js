@@ -23,6 +23,23 @@ module.exports = function(grunt) {
       }
     },
 
+    csslint: {
+      options: {
+        csslintrc: '.csslintrc'
+      },
+      src: ['stylesheets/**/*.css', '!stylesheets/reset.css'] // do not css lint reset as it is machine generated and fine
+    },
+
+    autoprefixer: {
+      options: {
+        browsers: ['> 1%'] // more codenames at https://github.com/ai/autoprefixer#browsers
+      },
+      css: {
+        src: 'stylesheets/**/*.css'
+      }
+    },
+
+
     strip_code: {
       options: {
         /** we have to comment out one line of outh2 module: unused variable is initialized by function which is not implemented yet for other library:
@@ -101,15 +118,15 @@ module.exports = function(grunt) {
         options: {
           spawn: false
         }
-      }
-	},
-
-    csslint: {
-      options: {
-        csslintrc: '.csslintrc'
       },
-      src: ['stylesheets/**/*.css']
-    }
+      'css-pipeline': {
+        files: ['style/*.scss'],
+        tasks: ['css-pipeline'],
+        options: {
+          spawn: false
+        }
+      }
+	}
 
   });
 
@@ -120,15 +137,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-strip-code');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
-
+  grunt.loadNpmTasks('grunt-autoprefixer');
   grunt.loadNpmTasks('grunt-karma');
-
   grunt.loadNpmTasks('grunt-contrib-copy');
-
   grunt.loadNpmTasks('grunt-contrib-csslint');
 
   grunt.registerTask('test', 'karma');
 
-  grunt.registerTask('default', ['clean', 'jshint', 'karma', 'compass', 'csslint', 'copy']);
+  grunt.registerTask('css-pipeline', ['compass', 'csslint', 'autoprefixer']);
+
+  grunt.registerTask('default', ['clean', 'jshint', 'karma', 'compass', 'csslint', 'autoprefixer', 'copy']);
 
 };

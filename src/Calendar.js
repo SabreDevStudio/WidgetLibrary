@@ -1,22 +1,26 @@
 /**
  * We assume that first day of week is Monday
- * We assume that months are indexed from 1, not from 0 (to have January use 1, not 0).
- * by LoS we refer to length of stay
+ * Months are indexed from 0, not from 1 (like Javascript Date object, or moment library).
+ * Days are indexed from 1
+ * By LoS we refer to length of stay
  *
- * WARN: Script uses Date.prototype.toLocaleString(), which implementation varies across platforms.
- * In the script I patch one IE problem with formatting. You will probably replace this formatting by array of strings for days of week and month names.
  */
-define(['WidgetBase', 'validator' ,'jquery', 'lodash',
+define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
     'mustache',
     'stache!view-templates/Calendar.html',
     'stache!request-templates/AdvancedCalendarRequest.json',
     'util/feature_detection',
     'lib/commWrapper',
     'moment',
+    'moment_range',
     'util/CurrencyFormatter',
+    'util/DateFormatter',
     'util/PriceClassifier',
-    "async"
-    ], function (WidgetBase, v, $, _, Mustache, calendarTemplate, requestTemplate, browser_features_package, comm, moment, CurrencyFormatter, PriceClassifier, async) {
+    "async",
+    'util/exceptions',
+    'datamodel/ShoppingData',
+    'parsers/AdvancedCalendarResponseParser'
+    ], function (WidgetBase, v, $, jqueryUIDummy, _, Mustache, calendarTemplate, requestTemplate, browser_features_package, comm, moment, moment_range, CurrencyFormatter, DateFormatter, PriceClassifier, async, ex, ShoppingData, AdvancedCalendarResponseParser) {
     "use strict";
 
     /**
@@ -26,7 +30,18 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
     function Calendar() {
 
         var DEFAULT_DATE_FORMAT = 'YYYY-M-D';
-        var MAX_CALENDAR_DAYS_IN_CACHE = 192;
+
+        Calendar.prototype.MAX_CALENDAR_DAYS_IN_CACHE = 192;
+
+        var lastTravelDateAvailableInWebService = moment().add(this.MAX_CALENDAR_DAYS_IN_CACHE, 'days');
+
+        this.dateFormatter = (window.SDS)? window.SDS.dateFormatter() : new DateFormatter(); //TODO: this is mandatory dependency, should be in contructor? But also very often default implementation is fine, rarely need to overrirde
+
+        this.setDateFormatter = function(dateFormatter) {
+            this.dateFormatter = dateFormatter;
+        };
+
+        var responseParser = new AdvancedCalendarResponseParser();
 
         WidgetBase.apply(this, arguments);
 
@@ -34,9 +49,6 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
 
         var monthBoundsCache = {};
 
-        var currentDomRepresentation;
-
-        var firstMonthCurrentlyShown;
 
         /**
          * Function to fetch data from web service. By default this widget fetches from Advanced Calendar REST service.
@@ -59,9 +71,17 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
 
         validateOptions(this.options);
 
+        var currencyFormatter = (window.SDS)? window.SDS.currencyFormatter() : new CurrencyFormatter({currency: this.options.currency}); //TODO: this is mandatory dependency, should be in contructor? But also very often default implementation is fine, rarely need to overrirde
+
+        var searchCriteria = {
+            origin: this.options.origin,
+            destination: this.options.destination,
+            lengthOfStay: this.lengthOfStay,
+            currency: currencyFormatter.getCurrency()
+        };
+
         function setOptionsDefaults() {
             /*jshint maxcomplexity: 25 */
-            that.options.locale = that.options.locale || window.navigator.language; // for example "en-US"
             // if length of stay is not explicitly provided then it is calculated from departure data and arrival date
             var dateFormat = that.options.dateFormat || DEFAULT_DATE_FORMAT;
 
@@ -82,16 +102,16 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
             })();
             that.options.month = that.options.month || (function () {
                 if (that.options.departureDate) {
-                    return moment(that.options.departureDate).month() + 1;
+                    return moment(that.options.departureDate).month();
                 }
             })();
             that.options.optionsPerDay = that.options.optionsPerDay || 1;
             that.options.numberOfMonths = that.options.numberOfMonths || 1;
-            that.options.globalPriceCache = that.options.globalPriceCache || {}; // if external common cache reference is not provided then we will use cache local to widget instance
+            that.options.globalOptionsCache = that.options.globalOptionsCache || new ShoppingData(); // if external common cache reference is not provided then we will use cache local to widget instance
             that.options.traceCustomerPointer = that.options.traceCustomerPointer || true;
 
             that.options.minDate = (that.options.minDate)? moment(that.options.minDate, dateFormat) : moment(); //TODO filter within calendar cells if we can show this date
-            that.options.maxDate = (that.options.maxDate)? moment(that.options.maxDate, dateFormat) : moment().add(MAX_CALENDAR_DAYS_IN_CACHE, 'days');
+            that.options.maxDate = (that.options.maxDate)? moment(that.options.maxDate, dateFormat) : lastTravelDateAvailableInWebService;
             that.minDateStartOfMonth = that.options.minDate.clone().startOf('month');
             that.maxDateEndOfMonth = that.options.maxDate.clone().endOf('month');
             that.maxDateStartOfMonth = that.options.maxDate.clone().startOf('month');
@@ -102,7 +122,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
             var dateFormat = options.dateFormat || DEFAULT_DATE_FORMAT;
 
             if (options.year && options.month) {
-                that.userRequestedCalendarStartMonth = moment({year: options.year, month: options.month-1});
+                that.userRequestedCalendarStartMonth = moment({year: options.year, month: options.month});
             }
 
             v.onlyOneDefined(options.lengthOfStay, options.arrivalDate, "You have to specify lengthOfStay or arrivalDate (and not both)"); // TODO: for one ways request you will not have LoS
@@ -119,17 +139,6 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                 v.notAfter(options.departureDate, options.arrivalDate, dateFormat, "departure date", "arrival date");
             }
 
-            v.currencySymbol(options.currency, "You have to specify currency, and options.currency must be valid 3 letter currency code, for example USD");
-
-            // if you do not provide failsafes, then on browsers not supporting localized Date.toLocaleString it will not display month name and week day names in calendar header
-            if (options.localizedMonthNamesFailsafe) {
-                v.arrayHasLength(options.localizedMonthNamesFailsafe, 12, "When providing fail safe for localized month names, you have to provide names for all 12 months..");
-            }
-
-            if (options.localizedWeekDayNamesFailsafe) {
-                v.arrayHasLength(options.localizedWeekDayNamesFailsafe, 7, "When providing fail safe for localized names of days of week, you have to provide all 7 of them..");
-            }
-
             v.airportCode(options.origin, "You have to specify origin location, and it must be valid 3 letter airport or city code, for example LAX");
 
             v.airportCode(options.destination, "You have to specify destination location, and it must be valid 3 letter airport or city code, for example LAX");
@@ -140,6 +149,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
             }
 
             if (options.minDate) {
+                v.notAfter(options.minDate, moment(), dateFormat, "minimum date", "current date");
                 if (options.departureDate) {
                     v.notAfter(options.minDate, options.departureDate, dateFormat, "calendar min date", "departure date");
                 }
@@ -148,6 +158,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                 }
             }
             if (options.maxDate) {
+                v.notAfter(options.maxDate, lastTravelDateAvailableInWebService, dateFormat, "maximum date", "maximum date that there are data in the web service, which is 192 days from now");
                 if (options.departureDate) {
                     v.notAfter(options.departureDate, options.maxDate, dateFormat, " departure date", "calendar max date");
                 }
@@ -162,9 +173,15 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                     v.notGreaterThan(options.numberOfMonths, maxNumberOfMonthsFromMinAndMaxDates);
                 }
             }
+            if (options.tabs) {
+                if (options.tabs <= 0) {
+                    throw new ex.IllegalArgumentException("tabs option must be greater than 0");
+                }
+                if (options.numberOfMonths > 1) {
+                    throw new ex.IllegalArgumentException("You can use tabbed presentation only with one month presented (numberOfMonths must be 1)");
+                }
+            }
         }
-
-    //TODO: deep copy all options in base constructor
 
         /**
          * Returns object representing number of days in the specified month, and two arrays: one representing the days of
@@ -172,7 +189,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
          * and one representing days of the first week of the next month.
          * @returns {{prevMonthDaysOfLastWeek: Array, nextMonthDaysOfFirstWeek: Array, monthNumberOfDays: number, monthStartDayOfWeek: number}}
          */
-        this.getMonthBounds = function(monthStartDate) {
+        function getMonthBounds(monthStartDate) {
             // days in the last week of the previous month. For example if this month (specified in argument) starts with Wednesday, then previous month days of last week are Mon and Thu
             // size of this array also determines the day of week that this month starts
             // this array holds day numbers (like [29, 30, 31])
@@ -213,24 +230,10 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                 monthNumberOfDays: monthNumberOfDays,
                 monthStartDayOfWeek: monthStartDayOfWeek
             };
-        };
+        }
 
-        function createModelData(prices, bounds, isTheFirstMonthShown, isTheLastMonthShown) {
-            var noPricesFound = (Object.keys(prices).length === 0);
-
-            var monthStartDate = bounds.monthStartDate.toDate();
-
-            var monthName;
-            if (that.options.browser_features.localizedToLocaleStringSupported()) {
-                monthName = monthStartDate.toLocaleString(that.options.locale, { month: "long" });
-                // Remove the left-to-right marks that IE puts in the output of toLocaleString(). Only IE behaviour
-                if (that.options.browser_features.isIE()) {
-                    monthName = monthName.replace(/\u200E/g, '');
-                }
-            } else if (that.options.localizedMonthNamesFailsafe) {
-                monthName = (that.options.localizedMonthNamesFailsafe)[that.options.month - 1]; // if this option is not defined then month name will nto be shown
-            }
-
+        function createModelData(prices, bounds, monthSeqNumber, totalMonths) {
+            /*jshint maxcomplexity: 10 */
             var allWeeks = [];
             var currentWeek = {week: []};
 
@@ -245,20 +248,17 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                 );
             });
 
-            var currencyFormatter = new CurrencyFormatter(that.options.locale, that.options.currency);
-
             // classifier will be needed to assign prices per day into price tiers (cheapest, second cheapest, and so on).
-            var priceClassifier = new PriceClassifier(_.values(prices));
+            if (prices) {
+                var priceClassifier = new PriceClassifier(_.values(prices));
+            }
 
             // 2. add this month all days and prices
-            var dayCellData = {};
-            var currentDayOfMonth = bounds.monthStartDate.clone();
-            var currPrice;
-            while (currentDayOfMonth.isBefore(bounds.monthEndDate) || currentDayOfMonth.isSame(bounds.monthEndDate)) {
-                dayCellData = {};
-                dayCellData.dayNumber = currentDayOfMonth.date();
-                if (prices[currentDayOfMonth]) {
-                    currPrice = prices[currentDayOfMonth];
+            moment().range(bounds.monthStartDate, bounds.monthEndDate).by('days', function (day) {
+                var dayCellData = {};
+                dayCellData.dayNumber = day.date();
+                if (prices && prices[day]) {
+                    var currPrice = prices[day];
                     dayCellData.price = currencyFormatter.format(currPrice);
                     dayCellData.priceTier = priceClassifier.tier(currPrice);
                 }
@@ -267,9 +267,8 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                     allWeeks.push(currentWeek);
                     currentWeek = {week: []};
                 }
-                // increment loop counter
-                currentDayOfMonth.add(1, 'day');
-            }
+            });
+
             if (currentWeek.week.length < 7) {
                 // 3. add days of first week of next month
                 bounds.nextMonthDaysOfFirstWeek.forEach(function (dayNumber) {
@@ -284,40 +283,29 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                 allWeeks.push(currentWeek);
             }
 
+            var noPricesFound = ((typeof prices === 'undefined') || (Object.keys(prices).length === 0) );
+
+            var monthName = that.dateFormatter.getMonthLocalizedName(bounds.monthStartDate);
+
             return {
                 noPricesFound: noPricesFound,
+                monthSeqNumber: monthSeqNumber,
+                month: bounds.monthStartDate.month(),
+                year: bounds.monthStartDate.year(),
                 monthName: monthName,
-                isTheFirstMonthShown: isTheFirstMonthShown,
+                monthLeadPrice:  (prices)? getMinimumObjectValue(prices): undefined,
+                isTheFirstMonthShown: (monthSeqNumber === 1),
                 prevInactive: (noPricesFound || (bounds.monthStartDate.isSame(that.minDateStartOfMonth) || bounds.monthStartDate.isBefore(that.minDateStartOfMonth))),
-                isTheLastMonthShown: isTheLastMonthShown,
+                isTheLastMonthShown: (monthSeqNumber === totalMonths),
                 nextInactive: (noPricesFound || (bounds.monthEndDate.isSame(that.maxDateEndOfMonth) || (bounds.monthEndDate.isAfter(that.maxDateEndOfMonth)))),
-                dayOfWeekNames: getLocalizedWeekDayNames(),
+                dayOfWeekNames: that.dateFormatter.getLocalizedWeekDayNames(),
                 weeks: allWeeks
             };
         }
 
-        /**
-         * @return {Array} Array of localized strings representing days of week
-         */
-        function getLocalizedWeekDayNames() {
-            var localizedWeekDayNames = [];
-            var mondayDate = new Date(2015, 5, 1); // 1 June 2015 is Mon
-            var currentWeekDay = mondayDate;
-
-            if (that.options.browser_features.localizedToLocaleStringSupported()) {
-                for(var i = 0; i < 7; i++) {
-                    var weekLocalizedStr = currentWeekDay.toLocaleString(that.options.locale, {weekday: 'short'});
-                    // Remove the left-to-right marks that IE puts in the output of toLocaleString()
-                    if (that.options.browser_features.isIE()) {
-                        weekLocalizedStr = weekLocalizedStr.replace(/\u200E/g, '');
-                    }
-                    localizedWeekDayNames.push(weekLocalizedStr);
-                    currentWeekDay.setDate(currentWeekDay.getDate() + 1);
-                }
-            } else {
-                localizedWeekDayNames = that.options.localizedWeekDayNamesFailsafe; // if not provided then week day names in header will not be displayed
-            }
-            return localizedWeekDayNames;
+        function getMinimumObjectValue(object) {
+            var allValues = Object.keys( object ).map(function ( key ) { return object [key]; });
+            return Math.min.apply( null, allValues);
         }
 
         function getLosDays(thisDay, lengthOfStay) {
@@ -343,19 +331,19 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
          */
         function addTraceCustomerPointer(calendarNode, lengthOfStay) {
 
-            var calendarCells = $(calendarNode).find("td.calendarCell");
+            var calendarCells = $(calendarNode).find("td.SDSCalendarCell");
 
             calendarCells.mouseenter(function () {
                 var allLoSdays = getLosDays($(this), lengthOfStay);
                 for (var i = 0; i < allLoSdays.length; i++) {
-                    $(allLoSdays[i]).addClass("highlight");
+                    $(allLoSdays[i]).addClass("SDSHighlight");
                 }
             });
 
             calendarCells.mouseleave(function () {
                 var allLoSdays = getLosDays($(this), lengthOfStay);
                 for (var i = 0; i < allLoSdays.length; i++) {
-                    $(allLoSdays[i]).removeClass("highlight");
+                    $(allLoSdays[i]).removeClass("SDSHighlight");
                 }
             });
         }
@@ -366,57 +354,51 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
                 addTraceCustomerPointer(dom, that.lengthOfStay);
             }
             // listeners on prev and next month links
-            var prevLink = $(dom).find('caption > .monthNavigationLink.prev:not(.inactive)');
+            var prevLink = $(dom).find('caption > .SDSNavigationLink.SDSPrev:not(.SDSInactive)');
             prevLink.click(function () {
                 // on click inactivate the link (till results are loaded), and disable click handler on this link
-                $(this).addClass('inactive');
+                $(this).addClass('SDSInactive');
                 $(this).off('click');
                 that.render(null, -1);
             });
-            var nextLink = $(dom).find('caption > .monthNavigationLink.next:not(.inactive)');
+            var nextLink = $(dom).find('caption > .SDSNavigationLink.SDSNext:not(.SDSInactive)');
             nextLink.click(function () {
-                $(this).addClass('inactive');
+                $(this).addClass('SDSInactive');
                 $(this).off('click');
                 that.render(null, 1);
             });
-
         }
 
-        this.createWebServiceRequest = function(bounds) { // privileged for unit testing
+        function setUpExternalListenableEvents(dom) {
+            var allCalendarCells = $(dom).find('.SDSCalendarCell:has(> .SDSCalendarCellPrice)');
+            allCalendarCells.click(function () {
+                var dayOfMonth = $(this).children('.SDSCalendarDateNumber').html();
+                var month = $(this).closest('.SDSCalendar').data('month');
+                var year  = $(this).closest('.SDSCalendar').data('year');
+                var thisDay = moment({year: year, month:month, day: dayOfMonth});
+                var calendarDayItineraries = that.options.globalOptionsCache.getItineraries(searchCriteria, thisDay);
+                that.trigger('calendarCellClicked', calendarDayItineraries);
+            });
+        }
+
+        function addTabs(dom, numberOfTabs) {
+            return $(dom).tabs({
+                heightStyle:"content",
+                active: Math.floor(numberOfTabs / 2)
+            });
+        }
+
+        Calendar.prototype.createWebServiceRequest = function(startDate, endDate) { // public for unit testing
             var requestOptions = {};
             var keys = ['origin', 'destination', 'optionsPerDay'];
             keys.forEach(function (key) {
                 requestOptions[key] = that.options[key];
             });
-            requestOptions.fromDate = bounds.monthStartDate.format('YYYY-MM-DD');
-            requestOptions.toDate = bounds.monthEndDate.format('YYYY-MM-DD');
+            requestOptions.fromDate = startDate.format('YYYY-MM-DD');
+            requestOptions.toDate = endDate.format('YYYY-MM-DD');
             requestOptions.lengthOfStay = that.lengthOfStay;
             return requestTemplate(requestOptions);
         };
-
-
-        function getLowestPricesPerDay(responseData) {
-            if (typeof responseData === 'undefined') {
-                return {}; // if no prices found return empty prices object
-            }
-            var rs = JSON.parse(responseData);
-            if (typeof rs.OTA_AirLowFareSearchRS === 'undefined' || typeof rs.OTA_AirLowFareSearchRS.Success === 'undefined') {
-                return {}; // if no prices found return empty prices object
-            }
-            return rs.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary.reduce(function (acc, next) {
-                var departureDate = moment(next.AirItinerary.OriginDestinationOptions.OriginDestinationOption[0].FlightSegment[0].DepartureDateTime).startOf('day');
-                var totalPrice = Number(next.AirItineraryPricingInfo[0].ItinTotalFare.TotalFare.Amount); //TODO: why AirItineraryPricingInfo is array? of one element always?
-                // TODO parse also total fare currency?
-                if (acc[departureDate]) {
-                    if (totalPrice < acc[departureDate]) {
-                        acc[departureDate] = totalPrice;
-                    }
-                } else {
-                    acc[departureDate] = totalPrice;
-                }
-                return acc;
-            }, {});
-        }
 
         /**
          * Creates actual calendar jquery object and passes it to client callback.
@@ -429,19 +411,37 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
          */
         Calendar.prototype.render = function(clientCallback, offsetMonths) {
             var startMonth = this.firstMonthCurrentlyShown || this.userRequestedCalendarStartMonth;
+            var endMonth;
             startMonth.add(offsetMonths, 'months');
-            var endMonth = startMonth.clone().add(this.options.numberOfMonths - 1, 'month');
+            if (this.options.tabs && this.options.tabs > 1) {
+                var adjacentMonths = this.generateAdjacentMonths(startMonth, this.options.tabs - 1);
+                startMonth = adjacentMonths.startMonth;
+                endMonth = adjacentMonths.endMonth;
+            } else {
+                endMonth = startMonth.clone().add(this.options.numberOfMonths - 1, 'month');
+            }
 
             var monthsToRender = generateMonths(startMonth, endMonth);
 
-            if (this.options.maxDate) {
+            if (this.options.minDate || this.options.maxDate) {
                 monthsToRender = adjustToMinMaxDates(monthsToRender);
             }
 
             async.concatSeries(monthsToRender, renderOneMonth, function (err, allMonthsData) {
-                    var calendarHTML = calendarTemplate({slots: allMonthsData});
+                    var calendarHTML = calendarTemplate({
+                        uuid: that.uuid,
+                        origin: allMonthsData[0].origin,
+                        tabsUsed: (that.options.tabs > 1),
+                        totalMonths: monthsToRender.length,
+                        slots: allMonthsData
+                    });
                     var calendarDOM = $(calendarHTML);
+
+                    if (that.options.tabs && that.options.tabs > 1) {
+                        calendarDOM = addTabs(calendarDOM, that.options.tabs);
+                    }
                     addInternalEventHandlers(calendarDOM);
+                    setUpExternalListenableEvents(calendarDOM);
                     that.firstMonthCurrentlyShown = startMonth;
                     if (clientCallback) {
                         that.currentDomRepresentation = calendarDOM;
@@ -455,40 +455,69 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
 
         function renderOneMonth(monthObject, callback) {
             var month = monthObject.month;
-            var isTheFirstMonthShown = monthObject.isTheFirstMonthShown;
-            var isTheLastMonthShown = monthObject.isTheLastMonthShown;
+            var totalMonths = monthObject.totalMonths;
+            var monthSeqNumber = monthObject.monthSeqNumber;
 
             // 1. make sure we have bounds in bounds cache for every month to be displayed:
             if (!monthBoundsCache[month]) {
-                monthBoundsCache[month] = that.getMonthBounds(month);
+                monthBoundsCache[month] = getMonthBounds(month);
             }
 
             // 2. for every month to be displayed:
             //    if there are data for this month in global cache, get data from cache and render
             //    if no data in global cache then create web service request and pass callback to render this month to the data source fetch function
-            var cacheKey = [that.options.origin, that.options.destination, month, that.lengthOfStay, that.options.currency];
-            var calendarDom;
+            var calendarModelData;
             if (that.options.testPrices && that.options.testPrices[month]) {
-                calendarDom = createModelData(that.options.testPrices[month], monthBoundsCache[month], isTheFirstMonthShown, isTheLastMonthShown);
-                callback(null, calendarDom);
+                calendarModelData = createModelData(that.options.testPrices[month], monthBoundsCache[month], monthSeqNumber, totalMonths, searchCriteria);
+                callback(null, calendarModelData);
             }
-            else if (that.options.globalPriceCache[cacheKey]) {
-                var prices = that.options.globalPriceCache[cacheKey];
-                calendarDom = createModelData(prices, monthBoundsCache[month], isTheFirstMonthShown, isTheLastMonthShown);
-                callback(null, calendarDom);
+            else if (that.options.globalOptionsCache.contains(searchCriteria, month)) {
+                var pricesForWholeMonth = that.options.globalOptionsCache.getLeadPrices(searchCriteria, month);
+                calendarModelData = createModelData(pricesForWholeMonth, monthBoundsCache[month], monthSeqNumber, totalMonths, searchCriteria);
+                callback(null, calendarModelData);
             } else {
-                var request = that.createWebServiceRequest(monthBoundsCache[month]);
+                var requestStartDate = moment();
+                var requestEndDate = lastTravelDateAvailableInWebService;
+                var request = that.createWebServiceRequest(requestStartDate, requestEndDate); //TODO: filter out from request the months that we already have.
                 that.dataSourceFetchFn(request, function (err, data) {
                     if (err && err.status !== 404) { // 404 is not error but valid business response
                         callback(err);
                     }
-                    var prices = getLowestPricesPerDay(data);
-                    calendarDom = createModelData(prices, monthBoundsCache[month], isTheFirstMonthShown, isTheLastMonthShown);
-                    // update cache:
-                    that.options.globalPriceCache[cacheKey] = prices;
-                    callback(null, calendarDom);
+                    var shoppingData = responseParser.parseResponse(data, requestStartDate, requestEndDate, searchCriteria);
+                    calendarModelData = createModelData(shoppingData.getLeadPrices(searchCriteria, month), monthBoundsCache[month], monthSeqNumber, totalMonths, searchCriteria);
+
+                    // update cache for all months that we requested
+                    getMonthsStartDates(requestStartDate, requestEndDate).forEach(function (monthStart) {
+                        that.options.globalOptionsCache.addUpdate(shoppingData);
+                    });
+                    callback(null, calendarModelData);
                 });
             }
+        }
+
+        /*
+            generates bounds for adjacent months by adding months around the central month.
+            It starts adding on the right of the central month, adds one month, then adds another to the left of central month, and then loops again
+            Returns leftmost month and rightmost month
+         */
+        this.generateAdjacentMonths = function(centralMonth, monthsToAdd) { // privileged for unit testing
+            if (monthsToAdd < 1) {
+                throw new ex.IllegalArgumentException("at least one month to add as adjacent is needed");
+            }
+            var numberToAddPerSide = Math.floor(monthsToAdd / 2);
+            var numberToAddToTheRight = monthsToAdd % 2;
+            return {
+                startMonth: centralMonth.clone().subtract(numberToAddPerSide, 'month'),
+                endMonth:   centralMonth.clone().add(numberToAddPerSide + numberToAddToTheRight, 'month')
+            };
+        };
+
+        function getMonthsStartDates(startDate, endDate) {
+            var monthsStartDates = [];
+            moment().range(startDate.clone().startOf('month'), endDate).by('months', function (monthStart) {
+                monthsStartDates.push(monthStart);
+            });
+            return monthsStartDates;
         }
 
         function generateMonths(startMonth, endMonth) {
@@ -497,26 +526,54 @@ define(['WidgetBase', 'validator' ,'jquery', 'lodash',
             for (var idx = 0; idx < numberOfMonths; idx++) {
                 months.push({
                     month: startMonth.clone().add(idx, 'months'),
-                    isTheFirstMonthShown: (idx === 0),
-                    isTheLastMonthShown: (idx === numberOfMonths-1)
+                    monthSeqNumber: idx + 1,
+                    totalMonths: numberOfMonths
                 });
             }
             return months;
         }
 
-        // check if months to render validate min and max dates, if not then shift. We should have enough space (which is validated earlier, in options validation)
-        function adjustToMinMaxDates(months) {
-            // start month of (argument) months array should not be lower than min date month (object invariant)
-            // calculate number of months that the last month to render is greater than max date month - then array will be shifted back by this number
-            var lastMonthInArray = months[months.length - 1].month;
-            var monthsLeftTillHittingDateMax = that.maxDateStartOfMonth.diff(lastMonthInArray, 'months');
-            if (monthsLeftTillHittingDateMax >= 0) {
-                return months;
+        // check if months to render validate min and max dates, if not then shift and trim.
+        function adjustToMinMaxDates(monthDescriptors) {
+            var requestedRange = moment().range(monthDescriptors[0].month, monthDescriptors[monthDescriptors.length - 1].month);
+            var allowedRange   = moment().range(that.minDateStartOfMonth, that.maxDateStartOfMonth);
+
+            // 1. if requested moth range fulls fully within allowed range then do not change anything:
+            if (requestedRange.start.within(allowedRange) && requestedRange.end.within(allowedRange)) {
+                return monthDescriptors;
             }
-            months.forEach(function(month) {
-                month.month.subtract(1, 'months');
+            // 2. if length of requested range is not greater than the length of allowed range then shift requested range into the allowed range:
+            if (requestedRange <= allowedRange) { // this compares range lengths in millis, documentation: https://github.com/gf3/moment-range
+                var difference;
+                if (requestedRange.start.isBefore(allowedRange.start)) {
+                    difference = allowedRange.start.diff(requestedRange.start, 'months');
+                    monthDescriptors.forEach(function(monthDescriptor) {
+                        monthDescriptor.month.add(difference, 'months');
+                    });
+                    return monthDescriptors;
+                }
+                if (requestedRange.end.isAfter(allowedRange.end)) {
+                    difference = requestedRange.end.diff(allowedRange.end, 'months');
+                    monthDescriptors.forEach(function(monthDescriptor) {
+                        monthDescriptor.month.subtract(difference, 'months');
+                    });
+                    return monthDescriptors;
+                }
+            }
+
+            //3. otherwise, we have to shift into allowed range and then trim what stands out
+            // Calculate the difference, in months, between min date and first requested date.
+            // If first requested date is less than min date than this number will be positive - we will then shift to right by this number of months
+            var diff = allowedRange.start.diff(requestedRange.start, 'months');
+            if (diff > 0) {
+                monthDescriptors.forEach(function(monthDescriptor) {
+                    monthDescriptor.month.add(diff, 'months');
+                });
+            }
+            // trim all months that are over max allowed date:
+            return monthDescriptors.filter(function (monthDescriptor) {
+                return (monthDescriptor.month.isBefore(allowedRange.end) || monthDescriptor.month.isSame(allowedRange.end));
             });
-            return months;
         }
     }
 
