@@ -1,4 +1,5 @@
-define(['moment'], function (moment) {
+define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], function (moment, ItinerariesList, __) {
+    //TODO: lodash also available thru global object..
     "use strict";
 
     function ShoppingData() {
@@ -19,58 +20,61 @@ define(['moment'], function (moment) {
         };
 
         ShoppingData.prototype.contains = function(key, month) {
-            return (data[key] && data[key][month]);
+            return _.has(data, key, month);
         };
 
         // merges new shopping data (the same type of object) into the current object.
         // if there are data under the same keys (days), then new data override old data: meaning all new itineraries will override all old ones (no old one will remain)
         ShoppingData.prototype.addUpdate = function(newData) {
-            Object.keys(newData).forEach(function (key) {
-                if (!newData[key]) {
+            _.each(newData, function (dataForKey, key) {
+                if(_.isUndefined(dataForKey)) {
                     return;
                 }
-                Object.keys(newData[key]).forEach(function (month) {
-                    addUpdateForMonth(key, newData[key][month]);
+                _.each(dataForKey, function (monthData) {
+                    if(_.isUndefined(dataForKey)) {
+                        return;
+                    }
+                    addUpdateForMonth(key, monthData);
                 });
                 that.updateLeadPrices(key);
             });
         };
 
         function addUpdateForMonth(key, addedMonthData) {
-            if (!addedMonthData) {
+            if (_.isUndefined(addedMonthData)) {
                 return;
             }
-            Object.keys(addedMonthData).forEach(function (day) {
-                if (!addedMonthData[day]) {
-                    return;
+            _.each(addedMonthData, function (dayData, day) {
+                if (_.isUndefined(dayData)) {
+                   return;
                 }
-                addedMonthData[day].itineraries.forEach(function (itin) {
+                _.each(dayData.itinerariesList, function (itin) {
                     this.addItinerary(key, itin, day);
                 });
             });
         }
 
         ShoppingData.prototype.addItinerary = function (key, itinerary, date) {
-            date = date || itinerary.getTravelDate();
+            date = date || itinerary.getOutboundDepartureDateTime();
             var month = date.clone().startOf('month');
             var day = date.clone().startOf('day');
             initKeyEntries(data, key, month, day);
 
-            data[key][month][day].itineraries.push(itinerary);
+            data[key][month][day].itinerariesList.add(itinerary);
         };
 
-        ShoppingData.prototype.getItineraries = function (key, day) {
+        ShoppingData.prototype.getItinerariesList = function (key, day) {
             var month = day.clone().startOf('month');
-            if (!data[key] || !data[key][month] || !data[key][month][day]) {
-                return [];
+            if (_.has(data, key, month, day)) {
+                return data[key][month][day].itinerariesList;
             }
-            return data[key][month][day].itineraries;
+            return [];
         };
 
 
         ShoppingData.prototype.getLeadPrices = function (key, month) {
             var leadPrices = {};
-            if (data[key] && data[key][month]) {
+            if (_.has(data, key, month)) {
                 Object.keys(data[key][month]).forEach(function (day) {
                     leadPrices[day] = data[key][month][day].leadPrice;
                 });
@@ -82,22 +86,23 @@ define(['moment'], function (moment) {
          * iterates all data months and finds lead price for each day of each month
          */
         ShoppingData.prototype.updateLeadPrices = function (key) {
-            if (!data[key]) {
+            if (!_.has(data, key)) {
                 return;
             }
-            Object.keys(data[key]).forEach(function (month) {
-                if (!data[key][month]) {
+            _.each(data[key], function (monthData) {
+                if (_.isUndefined(monthData)) {
                     return;
                 }
-                Object.keys(data[key][month]).forEach(function (day) {
-                    var leadPrice = _.min(data[key][month][day].itineraries, 'totalFareAmount').totalFareAmount;
-                    data[key][month][day].leadPrice = leadPrice;
+                _.each(monthData, function (dayData, day) {
+                    var leadPrice = dayData.itinerariesList.getLeadPrice();
+                    monthData[day].leadPrice = leadPrice;
                 });
-            });
+            })
         };
 
+        //TODO this is lodash 3.7 _.set function, other problems with new lodash 3.7 now, refactor later
         function initKeyEntries(data, key, month, day) {
-            if (!data) {
+            if (_.isUndefined(data)) {
                 data = {}
             }
             if (!data[key]) {
@@ -108,11 +113,10 @@ define(['moment'], function (moment) {
             }
             if (day && !data[key][month][day]) {
                 data[key][month][day] = {
-                    itineraries: []
+                    itinerariesList: new ItinerariesList()
                 };
             }
         }
-
     }
 
     return ShoppingData;

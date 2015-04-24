@@ -58,17 +58,31 @@ $(document).ready(function () {
         var departureDate = pseudoFormWrapper.nextAll('div.campo-data-ida').find('#txtDataIda').val();
         var returnDate = pseudoFormWrapper.nextAll('div.campo-data-volta').find('#txtDataVolta').val();
 
-        SDS.calendar("CalendarSearchResults", {
+        SDS.init({apiKey: "xxx"
+            , alwaysUseLocalizedFailsafes: true
+            , localizedMonthNamesFailsafe: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+            , localizedWeekDayNamesFailsafe: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
+            , currency: "BRL"
+        });
+
+
+        var calendarWidget = SDS.calendar("CalendarSearchResults", {
              origin: origin
             , destination: destination
             , departureDate: departureDate
             , arrivalDate: returnDate
             , currency: "BRL"
+            , optionsPerDay: 60
+            // , tabs: 8
             , numberOfMonths: 2
             , showDayNumbersPrevAndNextMonth: true
-            , maxDate: "2018-01-01"
             , localizedMonthNamesFailsafe: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
             , localizedWeekDayNamesFailsafe: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
+        });
+
+        calendarWidget.bind('calendarCellClicked', function (itins) {
+            var itinerariesListWidget = SDS.itinerariesList("ItinerariesList");
+            itinerariesListWidget.update(itins);
         });
 
     });

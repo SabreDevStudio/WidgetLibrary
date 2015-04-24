@@ -1,34 +1,62 @@
-<div class="SDSItinerariesList" id="SDSItinerariesList_{{uuid}}">
-    <ol>
-    {{#itineraries}}
-        <li>
-            <div class="SDSFlightList">
-                    <ul>
+<div class="SDSItinerariesListWidget SDSWidget" id="SDSItinerariesList_{{uuid}}">
+    <div class="SDSItinerariesListHeader">
+        {{itineraries.size}} options found
+    </div>
+    <ul class="SDSItinerariesList SDSTopLevelList" data-totalitineraries="{{itineraries.size}}">
+        {{#itineraries.getItineraries}}
+            {{^filteredOut}}
+            <li class="SDSItinerary">
+                <ul class="SDSLegList">
                     {{#legs}}
-                        <li class="SDSFlightLeg">
-                            <div>{{getLegDepartureTime}}</div>
-                            <ol>
-                                {{#segments}}
-                                    <li>
-                                        <div class="SDSDepartureTime">{{getTravelDateShort}}</div>
-                                        <div class="SDSDepartureAirport">{{departureAirport}}</div>
-                                        <div class="SDSArrivalAirport">{{arrivalAirport}}</div>
-                                    </li>
+                        <li class="SDSLeg">
+                            <ul class="SDSLegSummary">
+                                <li class="SDSTravelDate">{{departureDateFormatted}}</li>
 
+                                <li class="SDSAirport SDSDepartureAirport">{{departureAirport}}</li>
+                                <li class="SDSTime SDSDepartureTime">{{departureTime}}</li>
+                                <li class="SDSIconAirplaneArrow"></li>
+                                <li class="SDSAirport SDSArrivalAirport">{{arrivalAirport}}</li>
+                                <li class="SDSTime SDSArrivalTime">{{arrivalTime}}</li>
+                                <li class="SDSFlightDetailsLink"><a class="SDSShowDetailsLink" href="#">Flight
+                                    Details</a></li>
+                            </ul>
+                            <ul class="SDSLegDetails">
+                                {{#segments}}
+                                    <li class="SDSFlight">
+                                        <ul class="SDSFlightDetails">
+                                            <li class="SDSAirlineAndFlightNumberLong">
+                                                <img class="SDSAirlineLogo"
+                                                     src="../img/airlineLogos/{{marketingAirline}}.PNG" onerror="if (this.src != '../img/airlineLogos/generic_airline.PNG') this.src = '../img/airlineLogos/generic_airline.PNG';"><!-- on error handler needed to present the generic airline logo, when the airline logo file was not found -->
+                                                {{marketingAirline}} {{marketingFlightNumber}} {{marketingAirlineName}}
+                                            </li>
+                                            <li class="SDSDepartureArrivalDetails">
+                                                <div class="SDSFlightTimeLong">Depart: {{departureTime}}</div>
+                                                <div class="SDSAirport SDSDepartureAirport">{{departureAirport}}</div>
+                                                <div>{{departureAirportName}}</div>
+                                            </li>
+                                            <li class="SDSDepartureArrivalDetails">
+                                                <div class="SDSFlightTimeLong">Arrive: {{arrivalTime}}</div>
+                                                <div class="SDSAirport SDSArrivalAirport">{{arrivalAirport}}</div>
+                                                <div>{{arrivalAirportName}}</div>
+                                            </li>
+                                        </ul>
+
+                                    </li>
                                 {{/segments}}
-                            </ol>
+                            </ul>
                         </li>
                     {{/legs}}
+                </ul><!--
+             --><div class="SDSPriceSummary">
+                    <ul>
+                        <li>Total price: <strong class="SDSTopLevelPrice SDSTotalPrice">{{totalFareAmount}} {{totalFareCurrency}}</strong></li>
+                        <li class="SDSPriceDetailItem SDSBaseFarePrice">Base fare: {{baseFareAmount}} {{baseFareCurrency}}</li>
+                        <li class="SDSPriceDetailItem SDSTotalTaxesPrice">Taxes: {{totalTaxAmount}} {{totalFareCurrency}}</li>
+                        <li><a class="SDSShowDetailsLink" href="#">Price Details</a></li>
                     </ul>
-            </div>
-
-            <div class="SDSPriceDetails">
-                {{totalFareAmount}} {{totalFareCurrency}}
-                {{baseFareAmount}} {{baseFareCurrency}}
-                {{totalTaxAmount}} {{totalFareCurrency}}
-            </div>
-
-        </li>
-    {{/itineraries}}
-    </ol>
+                </div>
+            </li>
+            {{/filteredOut}}
+        {{/itineraries.getItineraries}}
+    </ul>
 </div>

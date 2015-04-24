@@ -17,11 +17,10 @@ module.exports = function(config) {
     files: [
       'src-test/test-main.js',
       {pattern: 'src/**/*.js', included: false},
-      {pattern: 'src-test/*.js', included: false},
-      {pattern: 'src-test/util/*.js', included: false},
-      {pattern: 'src-test/lib/*.js', included: false},
+      {pattern: 'src-test/**/*.js', included: false},
       {pattern: 'src/view-templates/*.*', included: false},
       {pattern: 'src/request-templates/*.*', included: false},
+      {pattern: 'src/dictionaries/*.*', included: false},
       {pattern: 'src-test/fixtures/*', included: false},
       {pattern: 'node_modules/validator/validator.js', included: false},
       {pattern: 'node_modules/async/lib/async.js', included: false},

@@ -123,7 +123,8 @@ module.exports = function(grunt) {
         files: ['style/*.scss'],
         tasks: ['css-pipeline'],
         options: {
-          spawn: false
+          spawn: false,
+          livereload: true
         }
       }
 	}

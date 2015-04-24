@@ -20,7 +20,8 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery',
         arrivalDate: '2015-05-06',
         optionsPerDay: 1,
         currency: "USD",
-        locale: "en-US"
+        locale: "en-US",
+        currentDate: '2015-01-01'
     };
 
     describe('integration test:', function (done) {
@@ -29,27 +30,6 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery',
             var calendar = new Calendar(defaultOptions);
             calendar.dataSourceFetchFn = function (request, responseProcessingFn) {
                 responseProcessingFn(undefined, responseFixtureOK);
-            };
-
-            calendar.render(function (dom) {
-                expect(dom.find('tbody > tr:nth-child(1) > td:nth-child(3) div.SDSCalendarDateNumber')).toContainText('1');
-                expect(dom.find('tbody > tr:nth-child(1) > td:nth-child(3) div.SDSCalendarCellPrice')).toContainText('226.2');
-
-                expect(dom.find('tbody > tr:nth-child(1) > td:nth-child(7) div.SDSCalendarDateNumber')).toContainText('5');
-                expect(dom.find('tbody > tr:nth-child(1) > td:nth-child(7) div.SDSCalendarCellPrice')).toContainText('206.2');
-
-                expect(dom.find('tbody > tr:nth-child(5) > td:nth-child(4) div.SDSCalendarDateNumber')).toContainText('30');
-                expect(dom.find('tbody > tr:nth-child(5) > td:nth-child(4) div.SDSCalendarCellPrice')).toContainText('186.2');
-                done();
-            });
-        });
-
-        it('prices extracted from web service and presented on every cell: simulate time to fetch data', function (done) { // to spot errors on not proper async communication handling
-            var calendar = new Calendar(defaultOptions);
-            calendar.dataSourceFetchFn = function (request, responseProcessingFn) {
-                setTimeout(function () {
-                    responseProcessingFn(undefined, responseFixtureOK);
-                }, 100);
             };
 
             calendar.render(function (dom) {
@@ -75,9 +55,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery',
                 expect(dom.find('table.SDSCalendar.SDSNoPrices').size()).toBe(1);
                 done();
             });
-
         });
-
     });
 
     describe('multiple month SDSCalendar, for one month there are no options from web service', function (done) {
@@ -90,6 +68,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery',
 
             calendar.render(function (dom) {
                 // Apr: options present
+
                 expect(dom.find('div.SDSCalendarSlot:first-child')).not.toContainElement('table.SDSCalendar.SDSNoPrices');
                 expect(dom.find('div.SDSCalendarSlot:first-child')).toContainElement('table.SDSCalendar:not(.SDSNoPrices)');
                 // May: no options
@@ -142,7 +121,8 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery',
                 origin: 'DFW',
                 destination: 'LAX',
                 lengthOfStay: 1,
-                currency: 'USD'
+                currency: 'USD',
+                currentDate: '2015-01-01'
             });
             calendar.dataSourceFetchFn = function (request, responseProcessingFn) {
                 responseProcessingFn(undefined, responseFixtureOK);
@@ -161,9 +141,10 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery',
                 // Then: expect event handler to be called, and passed itinerary
                 expect(eventHandlerSpy).toHaveBeenCalled();
                 var argsPassedToEventHandler = eventHandlerSpy.calls.mostRecent().args;
-                expect(argsPassedToEventHandler.length).toBe(1); // only one itineraries array passed
-                expect(argsPassedToEventHandler[0].length).toBe(1); // the itinerary array passed is one element array
-                expect(argsPassedToEventHandler[0][0].totalFareAmount).toBeDefined(); // check passed itinerary contains any property defined for itinerary
+                expect(argsPassedToEventHandler.length).toBe(1); // only one ItinerariesList passed
+                var itinerariesListPassed = argsPassedToEventHandler[0];
+                expect(itinerariesListPassed.size()).toBe(1); // the ItinerariesList passed has one element
+                expect(itinerariesListPassed.getItineraries()[0].totalFareAmount).toBeDefined(); // check passed itinerary contains any property defined for itinerary
                 done();
             });
         });

@@ -1,4 +1,4 @@
-define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection', 'moment', 'util/CurrencyFormatter', 'util/DateFormatter', 'util/CalendarTestPricesGenerator', 'datamodel/ShoppingData'],
+define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection', 'moment', 'util/currencyFormatter', 'util/DateFormatter', 'util/CalendarTestPricesGenerator', 'datamodel/ShoppingData'],
     function (Calendar, ex, JasmineJqueryDummy, browser_features, moment, CurrencyFormatter, DateFormatter, testPricesGenerator, ShoppingData) {
         "use strict";
 
@@ -10,11 +10,11 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
             origin: "LAX",
             destination: 'NYC',
             globalOptionsCache: new ShoppingData(), //TODO: exposing this in interface?!
-            minDate: "2015-01-01" // freeze min date because otherwise it will point to now.
+            currentDate: "2015-01-01" // freeze current date so that test are not dependent on current time
         };
 
 
-        //TODO how to make sure globally any UT does not make calls to real web service? regardless how any calendar is setup
+        //TODO make sure globally that UT does not make calls to real web service: mock communication function and make it report errors when called
 
         // helper function, to run all expectations for a month commonly used. Extracted as function not to repeat the same assertions
         function verifyMarch2015renderedCorrectly(dom) {
@@ -126,6 +126,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                     , departureDate: '2015-04-15'
                     , arrivalDate: '2015-04-17'
                     , currency: "BRL"
+                    , currentDate: '2015-01-01'
                 }); // no exception thrown
                 expect(calendar).toBeDefined();
             });
@@ -137,6 +138,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                             , destination: 'NYC'
                             , departureDate: '2015-04-15'
                             , arrivalDate: '2015-04-14' // <--- 14 Apr before 15 Apr
+                            , currentDate: '2015-01-01'
                             , currency: "BRL"
                         }
                     );
@@ -171,15 +173,16 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                     expect(spyMouseEnterEvent).toHaveBeenTriggered();
 
                     // verify highlighted
+                    // the length of stay is 14 days, and the rule is that we highlight departure date + length od stay days (including return date): so the number of highlighted days is the length of stay + 1
                     expect(cellFor2ndMarch).toHaveClass('SDSHighlight');
                     expect(cellFor2ndMarch.next()).toHaveClass('SDSHighlight');
 
                     // verify last cell to highlight is highlighted
-                    var cellFor15March = cellFor2ndMarch.parent().parent().find('tr:nth-child(3) td').last();
-                    expect(cellFor15March).toHaveClass('SDSHighlight');
+                    var cellFor16March = cellFor2ndMarch.parent().parent().find('tr:nth-child(4) td:first-child()');
+                    expect(cellFor16March).toHaveClass('SDSHighlight');
                     // but not the next one after the last
-                    var cellFor16March = cellFor2ndMarch.parent().parent().find('tr:nth-child(4) td').first();
-                    expect(cellFor16March).not.toHaveClass('SDSHighlight');
+                    var cellFor17March = cellFor2ndMarch.parent().parent().find('tr:nth-child(4) td:nth-child(2)');
+                    expect(cellFor17March).not.toHaveClass('SDSHighlight');
                 });
             });
         });
@@ -193,7 +196,8 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                     destination: 'NYC',
                     lengthOfStay: 14,
                     currency: "USD",
-                    locale: "en-US"
+                    locale: "en-US",
+                    currentDate: '2015-01-01'
                 };
                 var calendar = new Calendar(options);
                 calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 3}]);
@@ -244,7 +248,8 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                     currency: "USD",
                     locale: "en-US",
                     origin: 'LAX',
-                    destination: 'NYC'
+                    destination: 'NYC',
+                    currentDate: '2015-01-01'
                 };
                 var cal = new Calendar(options);
                 expect(cal.lengthOfStay).toEqual(2);
@@ -348,7 +353,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                 //When: we create calendar with min date at beginning of March
                 var calendar = new Calendar(defaultOptions, {
                     minDate: "2015-03-01",
-                    maxDate: "2015-09-15",
+                    maxDate: "2015-06-15",
                     numberOfMonths: 2
                 });
                 calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}, {
@@ -426,7 +431,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                     verifyApril2015renderedCorrectly(dom.find('table.SDSCalendar'));
                     verifyPrevAndNextNavLinksPresentedCorrectly(dom);
 
-                    // additionally verify after the click HTML structure is still fine - bug with wrapping div.SDSCalendarContainer into another one
+                    // additionally verify after the click HTML structure is still fine - the bug with wrapping div.SDSCalendarContainer into another one
                     expect(dom.find('div.SDSCalendarContainer').addBack().size()).toBe(1);
 
                     // now, after another click calendar should present May 2015.

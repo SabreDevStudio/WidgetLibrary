@@ -1,0 +1,8 @@
+<div class="SDSRangeFilter" data-filterablepropertyname="{{filterablePropertyName}}">
+    <h3 class="SDSFilterLabel SDSCollapsible">{{headerText}}</h3>
+    <div class="SDSRangeFilterCurrentValuesContainer">
+        <div class="SDSRangeFilterCurrentValueMin">{{min}}</div>
+        <div class="SDSRangeFilterCurrentValueMax">{{max}}</div>
+    </div>
+    <div class="SDSRangeFilterSlider"></div>
+</div>

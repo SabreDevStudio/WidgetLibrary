@@ -1,4 +1,4 @@
-<div class="SDSCalendarContainer" id="SDSCalendar_{{uuid}}">
+<div class="SDSCalendarContainer SDSWidget" id="SDSCalendar_{{uuid}}">
     {{#tabsUsed}}
         <ol class="SDSCalendarTabHeaders">
         {{#slots}}
@@ -13,39 +13,39 @@
         </ol>
     {{/tabsUsed}}
     {{#slots}}
-    <div class="SDSCalendarSlot{{#tabsUsed}} SDSCalendarTab{{/tabsUsed}}" data-totalmonths="{{totalMonths}}" id="SDSCalendar_{{uuid}}_Slot_{{monthSeqNumber}}_of_{{totalMonths}}">
-            <table class='SDSCalendar{{#noPricesFound}} SDSNoPrices{{/noPricesFound}}' data-month="{{month}}" data-year="{{year}}">
+        {{^isTheFirstMonthShown}}-->{{/isTheFirstMonthShown}}<div class="SDSCalendarSlot{{#tabsUsed}} SDSCalendarTab{{/tabsUsed}}" data-totalmonths="{{totalMonths}}" id="SDSCalendar_{{uuid}}_Slot_{{monthSeqNumber}}_of_{{totalMonths}}">
+                <table class='SDSCalendar{{#noPricesFound}} SDSNoPrices{{/noPricesFound}}' data-month="{{month}}" data-year="{{year}}">
 
-                {{^tabsUsed}}
-                    <caption>
-                            {{#isTheFirstMonthShown}}<a class="SDSNavigationLink SDSPrev{{#prevInactive}} SDSInactive{{/prevInactive}}" title="Prev month"><span>Prev</span></a>{{/isTheFirstMonthShown}}
-                                <span class="SDSCalendarMonthName">{{monthName}}</span>
-                            {{#isTheLastMonthShown}}<a class="SDSNavigationLink SDSNext{{#nextInactive}} SDSInactive{{/nextInactive}}" title="Next month"><span>Next</span></a>{{/isTheLastMonthShown}}
-                    </caption>
-                {{/tabsUsed}}
+                    {{^tabsUsed}}
+                        <caption>
+                                {{#isTheFirstMonthShown}}<a class="SDSNavigationLink SDSPrev{{#prevInactive}} SDSInactive{{/prevInactive}}" title="Prev month"><span>Prev</span></a>{{/isTheFirstMonthShown}}
+                                    <span class="SDSCalendarMonthName">{{monthName}}</span>
+                                {{#isTheLastMonthShown}}<a class="SDSNavigationLink SDSNext{{#nextInactive}} SDSInactive{{/nextInactive}}" title="Next month"><span>Next</span></a>{{/isTheLastMonthShown}}
+                        </caption>
+                    {{/tabsUsed}}
 
-                <thead>
-                    <tr>
-                        {{#dayOfWeekNames}}
-                            <th>{{.}}</th>
-                        {{/dayOfWeekNames}}
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {{#weeks}}
+                    <thead>
                         <tr>
-                            {{#week}}
-                                <td class='SDSCalendarCell{{#isPrevOrNextMonthDay}} SDSCalendarPrevOrNextMonthDay{{/isPrevOrNextMonthDay}}{{#hidden}} SDSHidden{{/hidden}}'>
-                                        <div class='SDSCalendarDateNumber'>{{dayNumber}}</div>
-                                        {{#price}}<div class='SDSCalendarCellPrice SDSPriceTier-{{priceTier}}'>{{price}}</div>{{/price}}
-                                </td>
-                            {{/week}}
+                            {{#dayOfWeekNames}}
+                                <th>{{.}}</th>
+                            {{/dayOfWeekNames}}
                         </tr>
-                    {{/weeks}}
-                </tbody>
+                    </thead>
 
-            </table>
-    </div>
+                    <tbody>
+                        {{#weeks}}
+                            <tr>
+                                {{#week}}
+                                    <td class='SDSCalendarCell{{#isPrevOrNextMonthDay}} SDSCalendarPrevOrNextMonthDay{{/isPrevOrNextMonthDay}}{{#hidden}} SDSHidden{{/hidden}}'>
+                                            <div class='SDSCalendarDateNumber'>{{dayNumber}}</div>
+                                            {{#price}}<div class='SDSCalendarCellPrice SDSPriceTier-{{priceTier}}'>{{price}}</div>{{/price}}
+                                    </td>
+                                {{/week}}
+                            </tr>
+                        {{/weeks}}
+                    </tbody>
+
+                </table>
+        </div>{{^isTheLastMonthShown}}<!--{{/isTheLastMonthShown}}
     {{/slots}}
 </div>

@@ -4,7 +4,7 @@
  Use: call validator.validateIsSomething(arg, 'error message'); If this is not true, then exception (IllegalArgumentException) will be thrown will the specified error message.
  If validation is true, then true will be also returned (but the concept is that we rely on exception to be thrown, not on return value)
  **/
-define(['util/exceptions', 'validator_lib', 'moment'], function (ex, v, moment) {
+define(['util/exceptions', 'validator_lib', 'moment', 'lodash'], function (ex, v, moment, _) {
     "use strict";
 
     var CURRENCY_REGEX = new RegExp("^[A-Z]{3}$");
@@ -92,6 +92,16 @@ define(['util/exceptions', 'validator_lib', 'moment'], function (ex, v, moment) 
         notGreaterThan: function(first, second, firstName, secondName) {
             if (first > second) {
                 throw new ex.IllegalArgumentException(firstName + ": " + first + " cannot be greater than " + secondName + ": " + second);
+            }
+        },
+        function: function (arg) {
+            if (!_.isFunction(arg)) {
+                throw new ex.IllegalArgumentException('Provided argument ' + arg + ' is not a function. Function required');
+            }
+        },
+        notLowerThan: function (first, second) {
+            if (first < second) {
+                throw new ex.IllegalArgumentException(first + ' cannot be lower than ' + second);
             }
         }
     };

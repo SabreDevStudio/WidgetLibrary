@@ -15,13 +15,13 @@ requirejs.config({
     paths: {
         jquery: "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min",
         'jquery-ui': 'http://code.jquery.com/ui/1.11.4/jquery-ui',
+        //'jquery-mobile': 'https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min',
         'jasmine-jquery': '../src-test/lib/jasmine-jquery',
         mustache: 'lib/mustache',
         text: 'lib/text',
         stache: 'lib/stache',
         moment: 'lib/moment-with-locales',
         moment_range: '../node_modules/moment-range/lib/moment-range',
-        validator: "util/validator",
         validator_lib: '../node_modules/validator/validator',
         async: '../node_modules/async/lib/async',
         lodash: 'lib/lodash'

@@ -5,7 +5,7 @@
  * By LoS we refer to length of stay
  *
  */
-define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
+define(['WidgetBase', 'util/validator' ,'jquery', 'jquery-ui', 'lodash',
     'mustache',
     'stache!view-templates/Calendar.html',
     'stache!request-templates/AdvancedCalendarRequest.json',
@@ -13,7 +13,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
     'lib/commWrapper',
     'moment',
     'moment_range',
-    'util/CurrencyFormatter',
+    'util/currencyFormatter',
     'util/DateFormatter',
     'util/PriceClassifier',
     "async",
@@ -31,16 +31,14 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
 
         var DEFAULT_DATE_FORMAT = 'YYYY-M-D';
 
-        Calendar.prototype.MAX_CALENDAR_DAYS_IN_CACHE = 192;
-
-        var lastTravelDateAvailableInWebService = moment().add(this.MAX_CALENDAR_DAYS_IN_CACHE, 'days');
+        Calendar.MAX_CALENDAR_DAYS_IN_CACHE = 192;
 
         this.dateFormatter = (window.SDS)? window.SDS.dateFormatter() : new DateFormatter(); //TODO: this is mandatory dependency, should be in contructor? But also very often default implementation is fine, rarely need to overrirde
+
 
         this.setDateFormatter = function(dateFormatter) {
             this.dateFormatter = dateFormatter;
         };
-
         var responseParser = new AdvancedCalendarResponseParser();
 
         WidgetBase.apply(this, arguments);
@@ -49,22 +47,9 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
 
         var monthBoundsCache = {};
 
-
-        /**
-         * Function to fetch data from web service. By default this widget fetches from Advanced Calendar REST service.
-         * This function must take two arguments:
-         *  1. request, as string  function (err, data)
-         *  2. callback function, and pass to it two arguments: error and response data.
-         *  For example:
-         *  var otherDataSourceFunction = function(request, callback) {
-         *      ...
-         *      callback(err, data);
-         *  }
-         */
-        Calendar.prototype.dataSourceFetchFn = comm.advanced_calendar_search;
-
         // we check if options exists at all, then then first we set defaults for options that have defaults, and only than we validate all options
         // we validate options after applying defauls as we are also checking relations between some options (like dates), so defaults must be already assigned
+
         v.notEmpty(this.options, "You have to specify options");
 
         setOptionsDefaults();
@@ -108,10 +93,15 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
             that.options.optionsPerDay = that.options.optionsPerDay || 1;
             that.options.numberOfMonths = that.options.numberOfMonths || 1;
             that.options.globalOptionsCache = that.options.globalOptionsCache || new ShoppingData(); // if external common cache reference is not provided then we will use cache local to widget instance
+
             that.options.traceCustomerPointer = that.options.traceCustomerPointer || true;
 
-            that.options.minDate = (that.options.minDate)? moment(that.options.minDate, dateFormat) : moment(); //TODO filter within calendar cells if we can show this date
-            that.options.maxDate = (that.options.maxDate)? moment(that.options.maxDate, dateFormat) : lastTravelDateAvailableInWebService;
+            that.options.currentDate = (that.options.currentDate)? moment(that.options.currentDate, dateFormat): moment(); // for (unit) testing: exposing dependency on current time, which is used to determine start and end dates for call to the web service. See lastTravelDateAvailableInWebService
+
+            that.lastTravelDateAvailableInWebService = that.options.currentDate.clone().add(Calendar.MAX_CALENDAR_DAYS_IN_CACHE, 'days');
+
+            that.options.minDate = (that.options.minDate)? moment(that.options.minDate, dateFormat) : that.options.currentDate; //TODO filter within calendar cells if we can show this date
+            that.options.maxDate = (that.options.maxDate)? moment(that.options.maxDate, dateFormat) : that.lastTravelDateAvailableInWebService;
             that.minDateStartOfMonth = that.options.minDate.clone().startOf('month');
             that.maxDateEndOfMonth = that.options.maxDate.clone().endOf('month');
             that.maxDateStartOfMonth = that.options.maxDate.clone().startOf('month');
@@ -149,7 +139,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
             }
 
             if (options.minDate) {
-                v.notAfter(options.minDate, moment(), dateFormat, "minimum date", "current date");
+                v.notAfter(that.options.currentDate, options.minDate, dateFormat, "minimum date", "current date");
                 if (options.departureDate) {
                     v.notAfter(options.minDate, options.departureDate, dateFormat, "calendar min date", "departure date");
                 }
@@ -158,7 +148,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
                 }
             }
             if (options.maxDate) {
-                v.notAfter(options.maxDate, lastTravelDateAvailableInWebService, dateFormat, "maximum date", "maximum date that there are data in the web service, which is 192 days from now");
+                v.notAfter(options.maxDate, that.lastTravelDateAvailableInWebService, dateFormat, "maximum date", "maximum date that there are data in the web service, which is 192 days from now");
                 if (options.departureDate) {
                     v.notAfter(options.departureDate, options.maxDate, dateFormat, " departure date", "calendar max date");
                 }
@@ -237,16 +227,16 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
             var allWeeks = [];
             var currentWeek = {week: []};
 
+            var createDataForPrevNextMonthDays = function (dayNumber) {
+                return {
+                    dayNumber: dayNumber,
+                    isPrevOrNextMonthDay: true,
+                    hidden: !(that.options.showDayNumbersPrevAndNextMonth)
+                };
+            };
+
             // 1. add days of last week of previous month (in the same week as the 1st day of current month)
-            bounds.prevMonthDaysOfLastWeek.forEach(function (dayNumber) {
-                currentWeek.week.push(
-                    {
-                        dayNumber: dayNumber,
-                        isPrevOrNextMonthDay: true,
-                        hidden: !(that.options.showDayNumbersPrevAndNextMonth)
-                    }
-                );
-            });
+            currentWeek.week = bounds.prevMonthDaysOfLastWeek.map(createDataForPrevNextMonthDays);
 
             // classifier will be needed to assign prices per day into price tiers (cheapest, second cheapest, and so on).
             if (prices) {
@@ -271,15 +261,9 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
 
             if (currentWeek.week.length < 7) {
                 // 3. add days of first week of next month
-                bounds.nextMonthDaysOfFirstWeek.forEach(function (dayNumber) {
-                    currentWeek.week.push(
-                        {
-                            dayNumber: dayNumber,
-                            isPrevOrNextMonthDay: true,
-                            hidden: !(that.options.showDayNumbersPrevAndNextMonth)
-                        }
-                    );
-                });
+                currentWeek.week = currentWeek.week.concat(
+                    bounds.nextMonthDaysOfFirstWeek.map(createDataForPrevNextMonthDays)
+                );
                 allWeeks.push(currentWeek);
             }
 
@@ -314,14 +298,10 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
             var allNextWeeksSameMonth = thisDay.parent().nextAll();
 
             // then add to it also all days from all next weeks, till the end of the month
-            nextDaysSameWeek = nextDaysSameWeek.concat(allNextWeeksSameMonth.children().toArray());
+            var thisAndNextDaysSameMonth = thisDay.toArray().concat(nextDaysSameWeek).concat(allNextWeeksSameMonth.children().toArray());
 
-            var allLoSDays = thisDay.toArray();
-            // highlight all next days till LoS
-            for (var i = 0; (i < nextDaysSameWeek.length) && (i < lengthOfStay - 1); i++) {
-                allLoSDays.push(nextDaysSameWeek[i]);
-            }
-            return allLoSDays;
+            // get all next days within LoS
+            return _.take(thisAndNextDaysSameMonth, lengthOfStay + 1); // in LoS we include both arrival day and departure day
         }
 
         /**
@@ -335,16 +315,16 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
 
             calendarCells.mouseenter(function () {
                 var allLoSdays = getLosDays($(this), lengthOfStay);
-                for (var i = 0; i < allLoSdays.length; i++) {
-                    $(allLoSdays[i]).addClass("SDSHighlight");
-                }
+                allLoSdays.forEach(function (cell) {
+                    $(cell).addClass("SDSHighlight");
+                });
             });
 
             calendarCells.mouseleave(function () {
                 var allLoSdays = getLosDays($(this), lengthOfStay);
-                for (var i = 0; i < allLoSdays.length; i++) {
-                    $(allLoSdays[i]).removeClass("SDSHighlight");
-                }
+                allLoSdays.forEach(function (cell) {
+                    $(cell).removeClass("SDSHighlight");
+                });
             });
         }
 
@@ -376,7 +356,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
                 var month = $(this).closest('.SDSCalendar').data('month');
                 var year  = $(this).closest('.SDSCalendar').data('year');
                 var thisDay = moment({year: year, month:month, day: dayOfMonth});
-                var calendarDayItineraries = that.options.globalOptionsCache.getItineraries(searchCriteria, thisDay);
+                var calendarDayItineraries = that.options.globalOptionsCache.getItinerariesList(searchCriteria, thisDay);
                 that.trigger('calendarCellClicked', calendarDayItineraries);
             });
         }
@@ -388,7 +368,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
             });
         }
 
-        Calendar.prototype.createWebServiceRequest = function(startDate, endDate) { // public for unit testing
+        this.createWebServiceRequest = function(startDate, endDate) { // public for unit testing
             var requestOptions = {};
             var keys = ['origin', 'destination', 'optionsPerDay'];
             keys.forEach(function (key) {
@@ -409,7 +389,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
          *
          * @param clientCallback
          */
-        Calendar.prototype.render = function(clientCallback, offsetMonths) {
+        this.render = function(clientCallback, offsetMonths) {
             var startMonth = this.firstMonthCurrentlyShown || this.userRequestedCalendarStartMonth;
             var endMonth;
             startMonth.add(offsetMonths, 'months');
@@ -476,8 +456,8 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
                 calendarModelData = createModelData(pricesForWholeMonth, monthBoundsCache[month], monthSeqNumber, totalMonths, searchCriteria);
                 callback(null, calendarModelData);
             } else {
-                var requestStartDate = moment();
-                var requestEndDate = lastTravelDateAvailableInWebService;
+                var requestStartDate = that.options.currentDate;
+                var requestEndDate = that.lastTravelDateAvailableInWebService;
                 var request = that.createWebServiceRequest(requestStartDate, requestEndDate); //TODO: filter out from request the months that we already have.
                 that.dataSourceFetchFn(request, function (err, data) {
                     if (err && err.status !== 404) { // 404 is not error but valid business response
@@ -487,9 +467,7 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
                     calendarModelData = createModelData(shoppingData.getLeadPrices(searchCriteria, month), monthBoundsCache[month], monthSeqNumber, totalMonths, searchCriteria);
 
                     // update cache for all months that we requested
-                    getMonthsStartDates(requestStartDate, requestEndDate).forEach(function (monthStart) {
-                        that.options.globalOptionsCache.addUpdate(shoppingData);
-                    });
+                    that.options.globalOptionsCache.addUpdate(shoppingData);
                     callback(null, calendarModelData);
                 });
             }
@@ -512,25 +490,18 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
             };
         };
 
-        function getMonthsStartDates(startDate, endDate) {
-            var monthsStartDates = [];
-            moment().range(startDate.clone().startOf('month'), endDate).by('months', function (monthStart) {
-                monthsStartDates.push(monthStart);
-            });
-            return monthsStartDates;
-        }
-
         function generateMonths(startMonth, endMonth) {
-            var months = [];
-            var numberOfMonths = endMonth.diff(startMonth, 'months') + 1;
-            for (var idx = 0; idx < numberOfMonths; idx++) {
-                months.push({
-                    month: startMonth.clone().add(idx, 'months'),
+            var monthsArray = [];
+            moment().range(startMonth, endMonth).by('months', function (month) {
+                monthsArray.push(month);
+            });
+            return monthsArray.map(function (month, idx, array) {
+                return {
+                    month: month,
                     monthSeqNumber: idx + 1,
-                    totalMonths: numberOfMonths
-                });
-            }
-            return months;
+                    totalMonths: array.length
+                };
+            });
         }
 
         // check if months to render validate min and max dates, if not then shift and trim.
@@ -579,6 +550,19 @@ define(['WidgetBase', 'validator' ,'jquery', 'jquery-ui', 'lodash',
 
     Calendar.prototype = Object.create(WidgetBase.prototype);
     Calendar.prototype.constructor = Calendar;
+
+    /**
+     * Function to fetch data from web service. By default this widget fetches from Advanced Calendar REST service.
+     * This function must take two arguments:
+     *  1. request, as string  function (err, data)
+     *  2. callback function, and pass to it two arguments: error and response data.
+     *  For example:
+     *  var otherDataSourceFunction = function(request, callback) {
+         *      ...
+         *      callback(err, data);
+         *  }
+     */
+    Calendar.prototype.dataSourceFetchFn = comm.advanced_calendar_search;
 
     return Calendar;
 });

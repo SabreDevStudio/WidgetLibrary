@@ -1,0 +1,121 @@
+@import "SDSCommon";
+
+.SDSItinerariesListWidget {
+
+  .SDSItinerariesListHeader {
+    @extend %SDSHeaderDataPrimary;
+  }
+
+  .SDSItinerariesList {
+    @extend %SDSData;
+  }
+
+  ol, ul {
+    list-style-type: none;
+  }
+
+  .SDSLegSummary > li {
+    display: inline-block;
+  }
+
+  .SDSItinerary {
+    > .SDSLegList, > .SDSPriceSummary {
+      display: inline-block;
+      vertical-align: top;
+    }
+    > .SDSLegList {
+      width: 70%;
+    }
+    .SDSPriceSummary {
+      @include childToRight('ul');
+      width: 30%;
+
+      ul > li:not(:last-child) {
+        margin-bottom: 3px;
+      }
+
+      // initially hide price details
+      .SDSPriceDetailItem {
+        display: none;
+      }
+
+      > :first-child {
+        margin-top: 3px;
+        margin-right: 3px;
+      }
+      .SDSShowDetailsLink {
+        vertical-align: bottom;
+      }
+    }
+  }
+
+  .SDSLegSummary {
+    > .SDSTravelDate {
+      padding-left: 5px;
+      padding-right: 4px;
+    }
+    > .SDSIconAirplaneArrow {
+      background: url("../img/sabre.png") -109px -161px no-repeat;
+      width: 4px;
+      height: 14px;
+      vertical-align: middle;
+      margin-left: 10px;
+      margin-right: 5px;
+    }
+    > .SDSFlightDetailsLink {
+      float: right;
+      padding-right: 5px;
+    }
+  }
+
+  .SDSLegList {
+    border-right: $itemsSeparatingLineStyle;
+    box-sizing: border-box;
+    > li {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+    > li:not(:last-child) {
+      border-bottom: dotted $itemsSeparatingLineColor 1px;
+    }
+    // hide flight details links on legs other than the first one
+    .SDSLeg:not(:first-child) .SDSFlightDetailsLink {
+      display: none;
+    }
+
+  }
+
+  .SDSLegDetails {
+    display: none;   // initially hide leg details
+    box-sizing: border-box;
+    background-color: white;
+    padding: 6px 10px;
+    margin: 5px 8px 3px 8px;
+    border-radius: 3px;
+
+    > li:not(:last-child) {
+      margin-bottom: 14px;
+    }
+
+    .SDSFlightDetails {
+      > li {
+        margin-bottom: 3px;
+      }
+      > .SDSAirlineAndFlightNumberLong {
+        font-weight: bolder;
+      }
+      > .SDSDepartureArrivalDetails > div {
+        display: inline-block;
+      }
+    }
+  }
+
+  .SDSFlightTimeLong {
+    width: 4.5rem; // not less or otherwise not all dates will fit into width and will cause
+  }
+
+  .SDSShowDetailsLink {
+    @extend %SDSLink;
+  }
+
+}

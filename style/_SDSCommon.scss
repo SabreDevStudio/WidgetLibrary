@@ -13,18 +13,38 @@ $headerBackgroundColor: #0040D0;
 
 $headerFontColor: white;
 
+$itemsSeparatingLineColor: #D2DDE4;
+$itemsSeparatingLineStyle: solid #D2DDE4 1px;
+
+
 /* structural constants for all widgets */
 /* all widgets will have rounded corners */
 $borderRadius: 0.4em;
 
 /* fonts constants */
 $fontStack: 'Lato', Helvetica Neue, Helvetica, Arial, sans-serif;
-$headerFontSize: 0.55rem;
-$primaryDataFontSize: $headerFontSize;
+
+$secondaryHeaderFontSize: 0.65rem;
+$primaryHeaderFontSize: 0.8rem;
+
+$primaryDataFontSize: $secondaryHeaderFontSize;
 $secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and / 10, to get rounding to 0.1 of em
 
-/* main placeholder, that all widgets must inherit from */
-%SDSWidget {
+$focusPointDataFontSize: 1.5 * $primaryDataFontSize;
+
+%InheritRoundedBottomCorners {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+%InheritRoundedTopCorners {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+/* main placeholder, that all widgets must have this class: you have to put this class to the main element of any widget */
+// this is not a placeholder (and all widgets extending it), because we have to have some class to qualify the CSS resets anyway.
+.SDSWidget {
   box-sizing: border-box;
   border-radius: $borderRadius;
   box-shadow: 4px 4px 1px #888888;
@@ -34,11 +54,28 @@ $secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and
   font-family: $fontStack;
   font-size: $primaryDataFontSize;
   font-weight: bold;
-}
 
-/* placeholder to apply to headers of all widgets */
-%SDSHeader {
-  @include border-top-radius($borderRadius);
+  /* inherit bottom borders for all last children, recursively */
+  > :last-child {
+    @extend %InheritRoundedBottomCorners;
+    > :last-child {
+      @extend %InheritRoundedBottomCorners; // WARN it may unnecessarily round also bottom left corner when this child is not at the bottom but in bottom right corner, and similar problems
+      > :last-child {
+        @extend %InheritRoundedBottomCorners;
+      }
+    }
+  }
+
+  > :first-child {
+    @extend %InheritRoundedTopCorners;
+    > :first-child {
+      @extend %InheritRoundedTopCorners;
+      > :first-child {
+        @extend %InheritRoundedTopCorners;
+      }
+    }
+  }
+
 }
 
 /* placeholder to apply to all data elements (captions, list headers, table headers) of all widget headers */
@@ -46,7 +83,17 @@ $secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and
   background-color: $headerBackgroundColor;
   color: $headerFontColor;
   text-align: center;
-  font-size: $headerFontSize;
+}
+
+%SDSHeaderDataPrimary {
+  @extend %SDSHeaderData;
+  font-size: $primaryHeaderFontSize;
+  padding: 4px 2px;
+}
+
+%SDSHeaderDataSecondary {
+  @extend %SDSHeaderData;
+  font-size: $secondaryHeaderFontSize;
 }
 
 /* placeholder to apply to all, primary and secondary data presented by widgets (which are not header) */
@@ -54,6 +101,12 @@ $secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and
   background-color: $dataBackgroundColor;
   cursor: pointer;
   font-size: $primaryDataFontSize;
+
+  .SDSTopLevelPrice {
+    font-weight: bold;
+    font-size: $focusPointDataFontSize;
+  }
+
   /* highlighted data are data under mouse hoover, or highlighted to draw user attention */
   &.SDSHighlight {
     background-color: $dataHighlightedBackgroundColor;
@@ -93,6 +146,43 @@ $secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and
   }
 }
 
+.SDSTopLevelList > li  {
+  border-bottom: solid #D2DDE4 1px;
+  &:nth-child(odd) {
+    background-color: #F2F2F2;
+  }
+  &:hover {
+    background-color: #E2F0FF;
+  }
+}
+
+.SDSWidget .SDSAirport {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  margin-right: 3px;
+  background-color: #3a87ad;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-weight: bold;
+  color: #ffffff;
+  white-space: nowrap;
+  width: 22px;
+}
+
+.SDSWidget {
+  .SDSAirlineLogo {
+    border: none;
+    width: 22px;
+    height: 15px;
+    overflow: hidden;
+  }
+}
+
+%SDSLink {
+  font-size: 10px;
+  text-decoration: none;
+  color: rgb(0, 136, 204);
+}
+
 /* general class to add to all for all inactive/deactivated elements */
 .SDSInactive {
   @include opacity(0.35);
@@ -106,4 +196,45 @@ $secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and
 /* very simple grid system */
 @mixin oneOfNColumns($columnsCount) {
   width: (1 / $columnsCount) * 100%;
+}
+
+/* moves specified child to the right within the parent element
+also sets left and right child to inline block */
+@mixin childrenToLeftAndRight($childToLeft, $childToRight) {
+    position: relative;
+    > #{$childToLeft}, > #{$childToRight} {
+      position: absolute;
+      display: inline-block;
+    }
+    > #{$childToRight} {
+      right: 0;
+    }
+}
+
+@mixin childToRight($childToRight) {
+  position: relative;
+  > #{$childToRight} {
+    position: absolute;
+    display: inline-block;
+    right: 0;
+  }
+}
+
+.SDSWidget {
+  $expandIcon: '../img/expand.gif';
+  $collapseIcon: '../img/collapse.gif';
+
+  .SDSExpandableFlip, .SDSCollapsibleFlip {
+    background-repeat: no-repeat;
+    padding-left: image-width($expandIcon) + 2px;
+    cursor: pointer;
+  }
+
+  .SDSExpandableFlip {
+    @include background-image(url($expandIcon));
+  }
+
+  .SDSCollapsibleFlip {
+    @include background-image(url($collapseIcon));
+  }
 }

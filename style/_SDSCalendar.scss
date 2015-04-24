@@ -2,12 +2,6 @@
 @import "SDSPriceTiered";
 
 $calendarMinWidth: 20em;
-// $calendarMaxWidth: 40em;
-
-div.SDSCalendarContainer {
-  font-size: 0;
-  @extend %SDSWidget;
-}
 
 div.SDSCalendarSlot {
   display: inline-block; //TODO: add responsive styling: (analogous to number of columns in RWD)
@@ -27,7 +21,7 @@ div.SDSCalendarSlot:not(.SDSCalendarTab) { // we present months in columns only 
 }
 
 .SDSCalendarContainer .SDSCalendarTabHeaders {
-  @extend %SDSHeaderData;
+  @extend %SDSHeaderDataSecondary;
 }
 
 table.SDSCalendar {
@@ -43,7 +37,7 @@ table.SDSCalendar {
   }
 
   caption {
-    @extend %SDSHeader;
+    //@extend %SDSHeader;
     padding: 0.25em;
     position: relative; // for absolute positioning of navigation links
     height: 16px; // TODO: hardcode, caption does not grow with content. It it the image-height($iconPrev);

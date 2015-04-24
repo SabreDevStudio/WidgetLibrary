@@ -26,7 +26,6 @@ define(['datamodel/ShoppingData', 'datamodel/Itinerary', 'moment'], function (Sh
         };
 
         this.parseItinerary = function (itin) {
-            //var itinerary = {legs: []};
             var itinerary = new Itinerary();
             itin.AirItinerary.OriginDestinationOptions.OriginDestinationOption.forEach(function (leg) {
                 itinerary.addLeg(parseLeg(leg));
@@ -36,9 +35,7 @@ define(['datamodel/ShoppingData', 'datamodel/Itinerary', 'moment'], function (Sh
             }
             itin.AirItineraryPricingInfo[0].FareInfos.FareInfo.forEach(function (fareInfo, index) {
                 itinerary.setCabin(index, fareInfo.TPA_Extensions.Cabin.Cabin);
-                // legs[legAndSegmentIdx.legIdx].segments[legAndSegmentIdx.segmentIdx].cabin = fareInfo.TPA_Extensions.Cabin.Cabin;
                 itinerary.setSeatsRemaining(index, fareInfo.TPA_Extensions.SeatsRemaining.Number);
-                //itinerary.legs[legAndSegmentIdx.legIdx].segments[legAndSegmentIdx.segmentIdx].seatsRemaining = fareInfo.TPA_Extensions.SeatsRemaining.Number;
             });
             itinerary.baseFareAmount = itin.AirItineraryPricingInfo[0].ItinTotalFare.BaseFare.Amount;
             itinerary.baseFareCurrency = itin.AirItineraryPricingInfo[0].ItinTotalFare.BaseFare.CurrencyCode;
@@ -52,23 +49,23 @@ define(['datamodel/ShoppingData', 'datamodel/Itinerary', 'moment'], function (Sh
         }
 
         function parseLeg(leg) {
-            var legObj = {segments: []}; // leg is array of segments
-            leg.FlightSegment.forEach(function (segment) {
+            var legObj = {}; // leg is array of segments
+            legObj.segments = leg.FlightSegment.map(function (segment) {
                 if (segment.Equipment.length > 1) {
-                    throw new Error('parser unsupported');
+                    throw new Error('parser unsupported'); //TODO: UT on complex responses
                 }
-                legObj.segments.push({
+                return {
                     departureAirport: segment.DepartureAirport.LocationCode,
-                    departureTime: moment(segment.DepartureDateTime),
+                    departureDateTime: moment(segment.DepartureDateTime),
                     arrivalAirport: segment.ArrivalAirport.LocationCode,
-                    arrivalTime: moment(segment.ArrivalDateTime),
+                    arrivalDateTime: moment(segment.ArrivalDateTime),
                     elapsedTime: segment.ElapsedTime,
                     equipment: segment.Equipment[0].AirEquipType,
                     marketingFlightNumber: segment.FlightNumber,
                     marketingAirline: segment.MarketingAirline.Code,
                     operatingFlightNumber: segment.OperatingAirline.FlightNumber,
                     operatingAirline: segment.OperatingAirline.Code
-                });
+                };
             });
             return legObj;
         }
