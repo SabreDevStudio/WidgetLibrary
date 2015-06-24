@@ -1,22 +1,35 @@
-define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection', 'moment', 'util/currencyFormatter', 'util/DateFormatter', 'util/CalendarTestPricesGenerator', 'datamodel/ShoppingData'],
+define(['widgets/calendar/CalendarWidget', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection', 'moment', 'util/currencyFormatter', 'util/DateFormatter', 'util/CalendarTestPricesGenerator', 'datamodel/ShoppingData'],
     function (Calendar, ex, JasmineJqueryDummy, browser_features, moment, CurrencyFormatter, DateFormatter, testPricesGenerator, ShoppingData) {
         "use strict";
 
         var defaultOptions = {
-            year: 2015,
-            month: 2, // March
             lengthOfStay: 14,
             currency: "USD",
-            origin: "LAX",
-            destination: 'NYC',
-            globalOptionsCache: new ShoppingData(), //TODO: exposing this in interface?!
+            globalOptionsCache: new ShoppingData(), //TODO: exposing this in interface?
             currentDate: "2015-01-01" // freeze current date so that test are not dependent on current time
         };
 
+        var defaultCustomerSearchCriteria = {
+            origin: 'DFW',
+            destination: 'LAX',
+            departureDate: '2015-03-05',
+            lengthOfStay: 14
+        };
+        
+        var January = {year: 2015, month: 0};
+        var February = {year: 2015, month: 1};
+        var March = {year: 2015, month: 2};
+        var April = {year: 2015, month: 3};
+        var May = {year: 2015, month: 4};
 
-        //TODO make sure globally that UT does not make calls to real web service: mock communication function and make it report errors when called
+        //TODO make sure globally that UT does not make calls to real web service: mock communication function and make it report errors when called: spy on options.webService?
 
         // helper function, to run all expectations for a month commonly used. Extracted as function not to repeat the same assertions
+
+        function verifyOnlyOneMonthShown(dom) {
+            expect(dom.find('table.SDSCalendar').size()).toBe(1);
+        }
+
         function verifyMarch2015renderedCorrectly(dom) {
 
             expect(dom.find('td.SDSCalendarCell > div.SDSCalendarDateNumber').size()).toBe(42); // 31 days in moth + preceding and next months days in same weeks
@@ -65,10 +78,11 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
         var en_localizedMonthNames = ['Jan', 'Feb', 'March', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         describe('calendar days calculation logic', function () {
+
             it('days of last week of previous month set correctly', function () {
                 var calendar = new Calendar(defaultOptions);
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}]);
-                calendar.render(function (dom) {
+                calendar.options.testPrices = testPricesGenerator.generatePrices([March]);
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     // toEqual([ 23, 24, 25, 26, 27, 28]);
                     expect(dom.find('div.SDSCalendarSlot:first-child tr:first-child > td.SDSCalendarCell.SDSCalendarPrevOrNextMonthDay.SDSHidden').size()).toBe(6);
                     expect(dom.find('tr:first-child > td.SDSCalendarCell.SDSCalendarPrevOrNextMonthDay.SDSHidden:first-child > div.SDSCalendarDateNumber')).toContainText('23');
@@ -76,20 +90,22 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                 });
             });
 
-            it('days of first week of next month set correctly', function () {
+            it('days of first week of next month set correctly', function (done) {
                 var calendar = new Calendar(defaultOptions);
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}]);
-                calendar.render(function (dom) {
+                calendar.options.testPrices = testPricesGenerator.generatePrices([March]);
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     expect(dom.find('tr:nth-child(6) > td.SDSCalendarCell.SDSCalendarPrevOrNextMonthDay.SDSHidden').size()).toBe(5);
                     expect(dom.find('tr:nth-child(6) > td.SDSCalendarCell.SDSCalendarPrevOrNextMonthDay.SDSHidden:nth-child(3) > div.SDSCalendarDateNumber')).toContainText('1');
                     expect(dom.find('tr:nth-child(6) > td.SDSCalendarCell.SDSCalendarPrevOrNextMonthDay.SDSHidden:last-child > div.SDSCalendarDateNumber')).toContainText('5');
+                    done();
                 });
             });
 
             it('number of days in month is correct', function () {
                 var calendar = new Calendar(defaultOptions, {month: 1});
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 1}]);
-                calendar.render(function (dom) {
+                calendar.options.testPrices = testPricesGenerator.generatePrices([February]);
+                var searchCriteria = _.extend({}, defaultCustomerSearchCriteria, {departureDate: '2015-02-05'});
+                calendar.newSearch(searchCriteria, function (dom) {
                     expect(dom.find('td.SDSCalendarCell:not(.SDSCalendarPrevOrNextMonthDay) > div.SDSCalendarDateNumber').size()).toBe(28);
                 });
             });
@@ -104,8 +120,6 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
 
             it('invalid options: bad currency specification', function () {
                 var options = {
-                    year: 2015,
-                    month: 2,
                     lengthOfStay: 14,
                     currency: "US" // <-- should be USD to be correct
                 };
@@ -118,53 +132,27 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                 var calendar = new Calendar(defaultOptions);
                 expect(calendar).not.toBeNull();
             });
-
-            it('calendar created when year and month not provided, but departureDate provided', function () {
-                var calendar = new Calendar({
-                    origin: 'LAX'
-                    , destination: 'NYC'
-                    , departureDate: '2015-04-15'
-                    , arrivalDate: '2015-04-17'
-                    , currency: "BRL"
-                    , currentDate: '2015-01-01'
-                }); // no exception thrown
-                expect(calendar).toBeDefined();
-            });
-
-            it('arrivalDate cannot be before departure date', function () {
-                expect(function () {
-                    new Calendar({
-                            origin: 'LAX'
-                            , destination: 'NYC'
-                            , departureDate: '2015-04-15'
-                            , arrivalDate: '2015-04-14' // <--- 14 Apr before 15 Apr
-                            , currentDate: '2015-01-01'
-                            , currency: "BRL"
-                        }
-                    );
-                }).toThrow();
-            });
-
         });
 
         describe('calendar rendering:', function () {
 
-            it('HTML structure displayed correctly', function () {
+            it('HTML structure displayed correctly', function (done) {
                 var calendar = new Calendar(defaultOptions);
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}]);
-                calendar.render(function (dom) {
+                calendar.options.testPrices = testPricesGenerator.generatePrices([March]);
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     expect(dom).toContainElement('caption');
                     expect(dom.find('table.SDSCalendar').data('month')).toEqual(2);
                     expect(dom.find('table.SDSCalendar').data('year')).toEqual(2015);
                     verifyMarch2015renderedCorrectly(dom);
+                    done();
                 });
             });
 
 
             it("when customer points with mouse at the cell, then (if not disabled in options) we highlight this cell and next cells within LoS. Highlight is done by adding class", function () {
                 var calendar = new Calendar(defaultOptions);
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}]);
-                calendar.render(function (dom) {
+                calendar.options.testPrices = testPricesGenerator.generatePrices([March]);
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     var cellFor2ndMarch = dom.find('tbody > tr:nth-child(2) > td:first-child');
 
                     var spyMouseEnterEvent = spyOnEvent(cellFor2ndMarch, 'mouseenter');
@@ -188,105 +176,46 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
         });
 
         describe('presenting prices:', function () {
-            it('prices are presented on every cell', function () {
-                var options = {
-                    year: 2015,
-                    month: 3,
-                    origin: 'LAX',
-                    destination: 'NYC',
-                    lengthOfStay: 14,
-                    currency: "USD",
-                    locale: "en-US",
-                    currentDate: '2015-01-01'
-                };
-                var calendar = new Calendar(options);
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 3}]);
-                calendar.render(function (dom) {
+            it('prices are presented on every cell', function (done) {
+                var calendar = new Calendar(defaultOptions);
+                calendar.options.testPrices = testPricesGenerator.generatePrices([April]);
+                var searchCriteria = _.extend({}, defaultCustomerSearchCriteria, {departureDate: '2015-04-05'});
+                calendar.newSearch(searchCriteria, function (dom) {
                     var price6Apr = dom.find('tbody tr:nth-child(2) td:first-child div.SDSCalendarCellPrice');
-                    var formatter = new CurrencyFormatter({locale: options.locale, currency: options.currency});
+                    var formatter = new CurrencyFormatter({locale: "en-US", currency: defaultOptions.currency});
                     expect(price6Apr).toContainText(formatter.format(600.05));
 
                     var price30Apr = dom.find('tbody tr:nth-child(5) td:nth-child(4) div.SDSCalendarCellPrice');
                     expect(price30Apr).toContainText(formatter.format('3000.05'));
+                    done();
                 });
             });
         });
 
-        describe('create request from template:', function () {
-            it('actual request arguments present', function () {
+        describe('creating request model from user search criteria', function () {
+            it('when LoS not specified explicitly it is calculated from travel dates', function () { //TODO
                 var options = {
-                    year: 2015,
-                    month: 3,
-                    origin: 'DFW',
-                    destination: 'LAX',
-                    lengthOfStay: 14,
-                    optionsPerDay: 1,
-                    currency: "USD",
-                    locale: "en-US"
-                };
-
-                var calendar = new Calendar(defaultOptions, options);
-                var thisMonth = moment({year: options.year, month: options.month});
-                var rqJson = JSON.parse(calendar.createWebServiceRequest(thisMonth, thisMonth));
-                expect(rqJson.OTA_AirLowFareSearchRQ.OriginDestinationInformation[0].DestinationLocation.LocationCode).toEqual('LAX');
-                expect(rqJson.OTA_AirLowFareSearchRQ.OriginDestinationInformation[0].OriginLocation.LocationCode).toEqual('DFW');
-                expect(rqJson.OTA_AirLowFareSearchRQ.OriginDestinationInformation[0].DepartureDates.dayOrDaysRange[0].DaysRange.FromDate).toEqual('2015-04-01');
-                // we set ToDate to 192 days plus start date (max number of days we have in the service)
-                //expect(rqJson.OTA_AirLowFareSearchRQ.OriginDestinationInformation[0].DepartureDates.dayOrDaysRange[0].DaysRange.ToDate).toEqual('2015-04-30');
-
-                expect(rqJson.OTA_AirLowFareSearchRQ.OriginDestinationInformation[1].DestinationLocation.LocationCode).toEqual('DFW');
-                expect(rqJson.OTA_AirLowFareSearchRQ.OriginDestinationInformation[1].OriginLocation.LocationCode).toEqual('LAX');
-                expect(rqJson.OTA_AirLowFareSearchRQ.OriginDestinationInformation[1].DepartureDates.lengthOfStayOrLengthOfStayRange[0].LengthOfStayRange.MinDays).toEqual('14');
-            });
-
-            it('when LoS not specified explicitly it is calculated from travel dates', function () {
-                var options = {
-                    year: 2015,
-                    month: 3,
                     departureDate: '2015-05-05',
                     arrivalDate: '2015-05-07',
                     currency: "USD",
                     locale: "en-US",
-                    origin: 'LAX',
-                    destination: 'NYC',
                     currentDate: '2015-01-01'
                 };
                 var cal = new Calendar(options);
-                expect(cal.lengthOfStay).toEqual(2);
-            });
-
-            it('you cannot specify both arrival date and length of stay (LoS)', function () {
-                var options = {
-                    year: 2015,
-                    month: 3,
-                    origin: 'DFW',
-                    destination: 'LAX',
-                    departureDate: '2015-05-05',
-                    arrivalDate: '2015-05-06',
-                    lengthOfStay: 14,
-                    optionsPerDay: 1,
-                    currency: "USD",
-                    locale: "en-US"
-                };
-                expect(function () {
-                    new Calendar(options);
-                }).toThrow(new ex.IllegalArgumentException("You have to specify lengthOfStay or arrivalDate (and not both)"));
+                //TODO expect(cal.lengthOfStay).toEqual(2);
             });
         });
 
         describe('price tiers added', function () {
             it('1st tier (cheapest) marked for all cells with cheapest price', function () {
                 // every Sunday will have cheapest price, every Monday second cheapest, and so on (Saturdays the most expensive)
-                var prices = testPricesGenerator.generatePrices([{
-                    year: defaultOptions.year,
-                    month: defaultOptions.month
-                }], function (date) {
+                var prices = testPricesGenerator.generatePrices([March], function (date) {
                     return date.day() * 100 + 100.05;
                 });
 
                 var cal = new Calendar(defaultOptions);
                 cal.options.testPrices = prices;
-                cal.render(function (dom) {
+                cal.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     // Sun
                     expect(dom.find('tbody > tr > td:last-child')).toContainElement('div.SDSCalendarCellPrice.SDSPriceTier-1');
                     // Mon
@@ -320,88 +249,70 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
         }
 
         describe('calendars for multiple months', function () {
+            var cal = new Calendar(defaultOptions, {numberOfMonthsToShow: 3}, {localizedMonthNamesFailsafe: en_localizedMonthNames});
+            cal.options.testPrices = testPricesGenerator.generatePrices([March, April, May]
+            );
             it('three month calendar', function () {
-                var cal = new Calendar(defaultOptions, {numberOfMonths: 3}, {localizedMonthNamesFailsafe: en_localizedMonthNames});
-                cal.options.testPrices = testPricesGenerator.generatePrices([
-                        {year: defaultOptions.year, month: defaultOptions.month},
-                        {year: defaultOptions.year, month: defaultOptions.month + 1},
-                        {year: defaultOptions.year, month: defaultOptions.month + 2}
-                    ]
-                );
-                cal.render(function (dom) {
+                cal.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     verifyMarch2015renderedCorrectly(dom.find('div.SDSCalendarSlot:first-child'));
-                    verifyApril2015renderedCorrectly(dom.find('div.SDSCalendarSlot:nth-child(2)'));
-                    verifyMay2015renderedCorrectly(dom.find('div.SDSCalendarSlot:last-child'));
                 });
             });
             it('markers of first and last month in sequence', function () {
-                var cal = new Calendar(defaultOptions, {numberOfMonths: 3}, {localizedMonthNamesFailsafe: en_localizedMonthNames});
-                cal.options.testPrices = testPricesGenerator.generatePrices([
-                        {year: defaultOptions.year, month: defaultOptions.month},
-                        {year: defaultOptions.year, month: defaultOptions.month + 1},
-                        {year: defaultOptions.year, month: defaultOptions.month + 2}
-                    ]
-                );
-                cal.render(function (dom) {
+                cal.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     verifyPrevAndNextNavLinksPresentedCorrectly(dom);
                 });
             });
         });
 
         describe('min and max days', function () {
-            it('if departure date month is the same month as min date, and number of months is greater than 1, then present also next months (in quantity of numberOfMonths - 1)', function () {
+            it('if departure date month is the same month as min date, and number of tabs is greater than 1, then present also adjacent months on tabs', function (done) {
                 //When: we create calendar with min date at beginning of March
                 var calendar = new Calendar(defaultOptions, {
                     minDate: "2015-03-01",
                     maxDate: "2015-06-15",
-                    numberOfMonths: 2
+                    tabs: 3
                 });
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}, {
-                    year: 2015,
-                    month: 3
-                }, {year: 2015, month: 4}]);
-                //Then we should present calendar for March and Apr (numberOfMonths is 2):
-                calendar.render(function (dom) {
-                    expect(dom.find('table.SDSCalendar').size()).toBe(2);
-                    verifyMarch2015renderedCorrectly(dom.find('div.SDSCalendarSlot:first-child'));
-                    verifyApril2015renderedCorrectly(dom.find('div.SDSCalendarSlot:nth-child(2)'));
+                calendar.options.testPrices = testPricesGenerator.generatePrices([March, April, May]);
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
+                    expect(dom.find('table.SDSCalendar').size()).toBe(3);
+                    verifyMarch2015renderedCorrectly(dom.find('div.SDSCalendarSlot:first-of-type'));
+                    verifyApril2015renderedCorrectly(dom.find('div.SDSCalendarSlot:nth-of-type(2)'));
+                    done();
                 });
             });
 
-            it('if departure date month is the same month as max date month, and number of months is greater than 1, then present also previous months (in quantity of numberOfMonths - 1)', function () {
+            it('if departure date month is the same month as max date month, and number of months is greater than 1, then present adjacent months on tabs', function (done) {
                 //When: we create calendar with max date to end of March
                 var calendar = new Calendar(defaultOptions, { // calendar is requested for Mar
                     minDate: "2015-01-01",
                     maxDate: "2015-03-31",
-                    numberOfMonths: 2
+                    tabs: 2
                 });
                 calendar.options.testPrices = testPricesGenerator.generatePrices([
-                    {year: 2015, month: 0},
-                    {year: 2015, month: 1},
-                    {year: 2015, month: 2},
+                    January,
+                    February,
+                    March
                 ]);
-                //Then we should present calendar Feb and March (numberOfMonths is 2):
-                calendar.render(function (dom) {
+                //Then we should present calendar Feb and March (numberOfMonthsToShow is 2):
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     expect(dom.find('table.SDSCalendar').size()).toBe(2);
-                    verifyFebruary2015renderedCorrectly(dom.find('div.SDSCalendarSlot:first-child'));
-                    verifyMarch2015renderedCorrectly(dom.find('div.SDSCalendarSlot:nth-child(2)'));
+                    verifyFebruary2015renderedCorrectly(dom.find('div.SDSCalendarSlot:first-of-type'));
+                    verifyMarch2015renderedCorrectly(dom.find('div.SDSCalendarSlot:nth-of-type(2)'));
+                    done();
                 });
             });
 
-            it('numberOfMonths requested > 1, while min and max days allow for only one month)', function () {
+            it('tabs requested greater than 1, while min and max days allow for only one month)', function () {
                 //When: we create calendar with min and max dates constraining to March only.
                 // Also we request number of months more than one month
                 var calendar = new Calendar(defaultOptions, {
                     minDate: "2015-03-01",
                     maxDate: "2015-03-31",
-                    numberOfMonths: 2
+                    tabs: 2
                 });
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}, {
-                    year: 2015,
-                    month: 3
-                }, {year: 2015, month: 4}]);
+                calendar.options.testPrices = testPricesGenerator.generatePrices([March, April, May]);
                 //Then only one month can be shown (March)
-                calendar.render(function (dom) {
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     expect(dom.find('table.SDSCalendar').size()).toBe(1);
                     verifyMarch2015renderedCorrectly(dom);
                 });
@@ -413,21 +324,27 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
             it("Next button works", function () {
                 // When: we create calendar of one month, for March 2015
                 var calendar = new Calendar(defaultOptions);
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}, {
-                    year: 2015,
-                    month: 3
-                }, {year: 2015, month: 4}]);
-                calendar.render(function (dom) {
+                calendar.options.testPrices = testPricesGenerator.generatePrices([
+                    March,
+                    April,
+                    May]);
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
 
                     // after Next icon is clicked then Calendar should present April 2015:
                     var nextLink = dom.find('div.SDSCalendarSlot:first-child > table.SDSCalendar > caption > .SDSNavigationLink.SDSNext');
+                    verifyPrevAndNextNavLinksPresentedCorrectly(dom);
+
                     var spyOnNextClicked = spyOnEvent(nextLink, 'click');
                     // trigger click and verify was clicked
                     nextLink.click();
                     expect('click').toHaveBeenTriggeredOn(nextLink);
                     expect(spyOnNextClicked).toHaveBeenTriggered();
+
+                    // to verify, you have to get the current dom after the update. The dom reference passed to this closure will not auto update: In production code the wrapper element is updated and new view is displayed. This is only special case in unit testing, when there is no widget parent, but do is just passed to anonymous function (the second argument to newSearch).
+                    dom = calendar.getCurrentDom();
+                    verifyOnlyOneMonthShown(dom);
+
                     // verify calendar now shows April 2015
-                    expect(dom.find('table.SDSCalendar').size()).toBe(1);
                     verifyApril2015renderedCorrectly(dom.find('table.SDSCalendar'));
                     verifyPrevAndNextNavLinksPresentedCorrectly(dom);
 
@@ -439,8 +356,9 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                     nextLink = dom.find('div.SDSCalendarSlot:first-child > table.SDSCalendar > caption > .SDSNavigationLink.SDSNext');
                     nextLink.click();
 
+                    dom = calendar.getCurrentDom();
                     // verify calendar now shows May 2015
-                    expect(dom.find('table.SDSCalendar').size()).toBe(1);
+                    verifyOnlyOneMonthShown(dom);
                     verifyMay2015renderedCorrectly(dom.find('table.SDSCalendar'));
                     verifyPrevAndNextNavLinksPresentedCorrectly(dom);
 
@@ -451,17 +369,17 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
 
             it("prev button works for 3 months calendar", function () {
                 // When: we create calendar of three months, for March-Apr-May 2015
-                var calendar = new Calendar(defaultOptions, {numberOfMonths: 3, minDate: "2015-01-01"});
+                var calendar = new Calendar(defaultOptions, {numberOfMonthsToShow: 3, minDate: "2015-01-01"});
                 // let's make sure we have test data for Jan-Feb-Mar-Apr-May
                 calendar.options.testPrices = testPricesGenerator.generatePrices([
-                    {year: 2015, month: 0},
-                    {year: 2015, month: 1},
-                    {year: 2015, month: 2},
-                    {year: 2015, month: 3},
-                    {year: 2015, month: 4}
+                    January,
+                    February,
+                    March,
+                    April,
+                    May
                 ]);
 
-                calendar.render(function (dom) {
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     // trigger click and verify was clicked
                     var prevLink = dom.find('div.SDSCalendarSlot:first-child > table.SDSCalendar > caption > .SDSNavigationLink.SDSPrev');
                     var spyOnNextClicked = spyOnEvent(prevLink, 'click');
@@ -471,6 +389,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
 
                     // after Prev icon is clicked then Calendar should show Feb-Mar-Apr
                     // has 3 months
+                    dom = calendar.getCurrentDom();
                     expect(dom.find('table.SDSCalendar').size()).toBe(3);
                     verifyFebruary2015renderedCorrectly(dom.find('div.SDSCalendarSlot:first-child'));
                     verifyMarch2015renderedCorrectly(dom.find('div.SDSCalendarSlot:nth-child(2)'));
@@ -480,6 +399,8 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                     // trigger click
                     prevLink = dom.find('div.SDSCalendarSlot:first-child > table.SDSCalendar > caption > .SDSNavigationLink.SDSPrev');
                     prevLink.click();
+
+                    dom = calendar.getCurrentDom();
                     // now, after another click calendar should present Jan-Feb-Mar
                     expect(dom.find('table.SDSCalendar').size()).toBe(3);
                     verifyFebruary2015renderedCorrectly(dom.find('div.SDSCalendarSlot:nth-child(2)'));
@@ -488,26 +409,25 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
             });
 
             it("Prev inactive when we first calendar already presents first month permitted by minDate", function () {
-                var calendar = new Calendar(defaultOptions, {numberOfMonths: 2, minDate: '2015-03-01'});
-                calendar.options.testPrices = testPricesGenerator.generatePrices([{year: 2015, month: 2}, {
-                    year: 2015,
-                    month: 3
-                }]);
-                calendar.render(function (dom) {
+                var calendar = new Calendar(defaultOptions, {numberOfMonthsToShow: 2, minDate: '2015-03-01'});
+                calendar.options.testPrices = testPricesGenerator.generatePrices([March, April]);
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     // prev link inactive
-                    expect(dom.find('div.SDSCalendarSlot:first-child > table.SDSCalendar > caption > .SDSNavigationLink.SDSPrev.SDSInactive').size()).toBe(1);
+                    var prevMonthLink = dom.find('div.SDSCalendarSlot:first-child > table.SDSCalendar > caption > .SDSNavigationLink.SDSPrev');
+                    expect(prevMonthLink).toHaveClass('SDSInactive');
                     // next link active
-                    expect(dom.find('div.SDSCalendarSlot:nth-child(2) > table.SDSCalendar > caption > .SDSNavigationLink.SDSNext:not(.SDSInactive)').size()).toBe(1);
+                    var nextMonthLink = dom.find('div.SDSCalendarSlot:nth-child(2) > table.SDSCalendar > caption > .SDSNavigationLink.SDSNext');
+                    expect(nextMonthLink).not.toHaveClass('SDSInactive');
                 });
             });
 
             it("Next inactive on calendar having no prices: we assume that if there are not prices found for given month in the future, then there will be no prices even farther in the future", function () {
-                var calendar = new Calendar(defaultOptions, {numberOfMonths: 2, minDate: '2015-01-01'});
+                var calendar = new Calendar(defaultOptions, {numberOfMonthsToShow: 2, minDate: '2015-01-01'});
                 calendar.options.testPrices = testPricesGenerator.generatePrices([
-                    {year: 2015, month: 2},
-                    {year: 2015, month: 3, emptyPrices: true}
+                    March,
+                    _.extend({emptyPrices: true}, April)
                 ]);
-                calendar.render(function (dom) {
+                calendar.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     // both months rendered, first has prices, second has no prices:
                     expect(dom.find('div.SDSCalendarSlot:first-child > table.SDSCalendar:not(.SDSNoPrices)').size()).toBe(1);
                     expect(dom.find('div.SDSCalendarSlot:nth-child(2) > table.SDSCalendar.SDSNoPrices').size()).toBe(1);
@@ -532,7 +452,7 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
 
             it("uuid present in DOM", function () {
                 var cal = new Calendar(defaultOptions);
-                cal.render(function (dom) {
+                cal.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     expect(dom.find('div.SDSCalendarContainer').addBack().attr('id').length).toBeGreaterThan(1);
                 });
 
@@ -540,26 +460,6 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
         });
 
         describe('tabbed display', function () {
-            it("adjacent months generation", function () {
-                var cal = new Calendar(defaultOptions);
-                var centralMonth = moment({year: 2015, month: 5}); // June
-
-                // if one more month needed then add it to the right
-                var adjacentMonths = cal.generateAdjacentMonths(centralMonth, 1);
-                expect(adjacentMonths.startMonth).toEqual(centralMonth);
-                expect(adjacentMonths.endMonth).toEqual(centralMonth.clone().add(1, 'month'));
-
-                // if two more months needed then add one to the right and one to the left
-                adjacentMonths = cal.generateAdjacentMonths(centralMonth, 2);
-                expect(adjacentMonths.startMonth).toEqual(centralMonth.clone().subtract(1, 'month'));
-                expect(adjacentMonths.endMonth).toEqual(centralMonth.clone().add(1, 'month'));
-
-                // 5 adjacent months: 2 to left and 3 to the right
-                adjacentMonths = cal.generateAdjacentMonths(centralMonth, 5);
-                expect(adjacentMonths.startMonth).toEqual(centralMonth.clone().subtract(2, 'month'));
-                expect(adjacentMonths.endMonth).toEqual(centralMonth.clone().add(3, 'month'));
-            });
-
             it("3 tabs requested", function () {
                 var TABS_NUMBER = 3;
 
@@ -567,13 +467,12 @@ define(['Calendar', 'util/exceptions', 'jasmine-jquery', 'util/feature_detection
                 var cal = new Calendar(defaultOptions, {tabs: TABS_NUMBER});
 
                 cal.options.testPrices = testPricesGenerator.generatePrices([
-                        {year: defaultOptions.year, month: defaultOptions.month - 1}, // Feb 2015
-                        {year: defaultOptions.year, month: defaultOptions.month}, // Mar 2015
-                        {year: defaultOptions.year, month: defaultOptions.month + 1}      // Apr 2015
-                    ]
-                );
+                        February,
+                        March,
+                        April
+                ]);
 
-                cal.render(function (dom) {
+                cal.newSearch(defaultCustomerSearchCriteria, function (dom) {
                     var linkId;
                     var tabHeader;
                     var monthName;

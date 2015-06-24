@@ -45,7 +45,7 @@ table.SDSCalendar {
   /* styling calendar cells itself */
   .SDSCalendarCell {
     @extend %SDSData;
-    height: ($primaryDataFontSize + $secondaryDataFontSize) * 1.5; // 50% more for vertical margins space between day number and price
+    height: (2 * $primaryDataFontSize) * 1.8; // 50% more for vertical margins space between day number and price
     padding: 0.3em;
     position: relative; // relative, for absolute positioning of children
 
@@ -55,7 +55,7 @@ table.SDSCalendar {
   }
 
   .SDSCalendarDateNumber {
-    font-size: $secondaryDataFontSize;
+    font-size: $primaryDataFontSize;
     position: absolute;
     right: 0;
     top: 0;

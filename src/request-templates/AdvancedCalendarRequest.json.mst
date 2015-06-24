@@ -80,7 +80,7 @@
                "TPA_Extensions" :
                   {
                     "NumTrips": {
-                      "PerDateMin": 0,
+                      "PerDateMin": 1,
                       "PerDateMax": "{{optionsPerDay}}"
                     }
                   }

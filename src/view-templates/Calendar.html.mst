@@ -3,49 +3,50 @@
         <ol class="SDSCalendarTabHeaders">
         {{#slots}}
             <li>
-                <a href="#SDSCalendar_{{uuid}}_Slot_{{monthSeqNumber}}_of_{{totalMonths}}">
+                <a href="#SDSCalendar_{{uuid}}_Slot_{{monthSeqNumber}}_of_{{slots.length}}" {{#noPricesFound}}title="no prices found"{{/noPricesFound}}>
                     <span class="SDSCalendarMonthName">{{monthName}}</span>
-                    from
-                    <span class="SDSCalendarMonthLeadPrice">{{monthLeadPrice}}</span>
+                    {{^noPricesFound}}
+                        from <span class="SDSCalendarMonthLeadPrice">{{monthLeadPrice}}</span>
+                    {{/noPricesFound}}
                 </a>
             </li>
         {{/slots}}
         </ol>
     {{/tabsUsed}}
     {{#slots}}
-        {{^isTheFirstMonthShown}}-->{{/isTheFirstMonthShown}}<div class="SDSCalendarSlot{{#tabsUsed}} SDSCalendarTab{{/tabsUsed}}" data-totalmonths="{{totalMonths}}" id="SDSCalendar_{{uuid}}_Slot_{{monthSeqNumber}}_of_{{totalMonths}}">
-                <table class='SDSCalendar{{#noPricesFound}} SDSNoPrices{{/noPricesFound}}' data-month="{{month}}" data-year="{{year}}">
+        {{^isTheFirstMonthShown}}-->{{/isTheFirstMonthShown}}<div class="SDSCalendarSlot{{#tabsUsed}} SDSCalendarTab{{/tabsUsed}}" data-totalmonths="{{slots.length}}" id="SDSCalendar_{{uuid}}_Slot_{{monthSeqNumber}}_of_{{slots.length}}">
+        <table class='SDSCalendar{{#noPricesFound}} SDSNoPrices{{/noPricesFound}}' data-month="{{monthNumber}}" data-year="{{yearNumber}}">
 
-                    {{^tabsUsed}}
-                        <caption>
-                                {{#isTheFirstMonthShown}}<a class="SDSNavigationLink SDSPrev{{#prevInactive}} SDSInactive{{/prevInactive}}" title="Prev month"><span>Prev</span></a>{{/isTheFirstMonthShown}}
-                                    <span class="SDSCalendarMonthName">{{monthName}}</span>
-                                {{#isTheLastMonthShown}}<a class="SDSNavigationLink SDSNext{{#nextInactive}} SDSInactive{{/nextInactive}}" title="Next month"><span>Next</span></a>{{/isTheLastMonthShown}}
-                        </caption>
-                    {{/tabsUsed}}
+            {{^tabsUsed}}
+                <caption>
+                    {{#isTheFirstMonthShown}}<a class="SDSNavigationLink SDSPrev{{#prevInactive}} SDSInactive{{/prevInactive}}" title="Prev month"><span>Prev</span></a>{{/isTheFirstMonthShown}}
+                    <span class="SDSCalendarMonthName">{{monthName}}</span>
+                    {{#isTheLastMonthShown}}<a class="SDSNavigationLink SDSNext{{#nextInactive}} SDSInactive{{/nextInactive}}" title="Next month"><span>Next</span></a>{{/isTheLastMonthShown}}
+                </caption>
+            {{/tabsUsed}}
 
-                    <thead>
-                        <tr>
-                            {{#dayOfWeekNames}}
-                                <th>{{.}}</th>
-                            {{/dayOfWeekNames}}
-                        </tr>
-                    </thead>
+            <thead>
+            <tr>
+                {{#dayOfWeekNames}}
+                    <th>{{.}}</th>
+                {{/dayOfWeekNames}}
+            </tr>
+            </thead>
 
-                    <tbody>
-                        {{#weeks}}
-                            <tr>
-                                {{#week}}
-                                    <td class='SDSCalendarCell{{#isPrevOrNextMonthDay}} SDSCalendarPrevOrNextMonthDay{{/isPrevOrNextMonthDay}}{{#hidden}} SDSHidden{{/hidden}}'>
-                                            <div class='SDSCalendarDateNumber'>{{dayNumber}}</div>
-                                            {{#price}}<div class='SDSCalendarCellPrice SDSPriceTier-{{priceTier}}'>{{price}}</div>{{/price}}
-                                    </td>
-                                {{/week}}
-                            </tr>
-                        {{/weeks}}
-                    </tbody>
+            <tbody>
+            {{#weeks}}
+                <tr>
+                    {{#week}}
+                        <td class='SDSCalendarCell{{#isPrevOrNextMonthDay}} SDSCalendarPrevOrNextMonthDay{{/isPrevOrNextMonthDay}}{{#hidden}} SDSHidden{{/hidden}}'>
+                            <div class='SDSCalendarDateNumber'>{{dayNumber}}</div>
+                            {{#price}}<div class='SDSCalendarCellPrice SDSPriceTier-{{priceTier}}'>{{price}}</div>{{/price}}
+                        </td>
+                    {{/week}}
+                </tr>
+            {{/weeks}}
+            </tbody>
 
-                </table>
-        </div>{{^isTheLastMonthShown}}<!--{{/isTheLastMonthShown}}
+        </table>
+    </div>{{^isTheLastMonthShown}}<!--{{/isTheLastMonthShown}}
     {{/slots}}
 </div>

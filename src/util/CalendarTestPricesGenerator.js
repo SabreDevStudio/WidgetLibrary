@@ -1,4 +1,4 @@
-define(['moment'], function (moment) {
+define(['moment', 'datamodel/ShoppingData'], function (moment, ShoppingData) {
 
     function generatePrices(monthSpecifications, calculatePricePerDayFn) {
         calculatePricePerDayFn = calculatePricePerDayFn || function (currentDay) {
@@ -6,11 +6,13 @@ define(['moment'], function (moment) {
         };
         var allMonthsPrices = {};
         monthSpecifications.forEach(function (monthSpec) {
-            var monthKey = moment({year: monthSpec.year, month: monthSpec.month});
+            var month = moment({year: monthSpec.year, month: monthSpec.month});
+            var monthKey = month.format(ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
             var monthPrices = [];
             if (!monthSpec.emptyPrices) {
-                moment().range(monthKey, monthKey.clone().endOf('month')).by('days', function (currentDay) {
-                    monthPrices[currentDay] = calculatePricePerDayFn(currentDay);
+                moment().range(month, month.clone().endOf('month')).by('days', function (currentDay) {
+                    var currentDayKey = currentDay.format(ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
+                    monthPrices[currentDayKey] = calculatePricePerDayFn(currentDay);
                 });
             }
             allMonthsPrices[monthKey] = monthPrices;

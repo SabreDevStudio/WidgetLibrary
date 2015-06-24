@@ -20,6 +20,7 @@ define(['WidgetBase', 'jquery', 'util/validator', 'filters/BaseFilter', 'filters
             this.trigger('filteringCriteriaChanged', _.values(currentFilteringFunctions));
         };
 
+        // model: TODO make it explicit
         this.filters = this.configureDefaultFilters(filtersEventListener);
 
         this.addResetAllFiltersHandler = function (dom) {
@@ -34,7 +35,7 @@ define(['WidgetBase', 'jquery', 'util/validator', 'filters/BaseFilter', 'filters
                   filter.reset();
               });
               // 4. and rerender itself
-              that.reRender();
+              that.updateView();
           });
         };
     }
@@ -62,9 +63,9 @@ define(['WidgetBase', 'jquery', 'util/validator', 'filters/BaseFilter', 'filters
     FiltersPaneWidget.prototype.resetFiltersBounds = function (newStatistics) {
         var that = this;
         newStatistics.forEach(function (statistic) {
-            that.filters[statistic.filterablePropertyName].updateFilterOptions(statistic.statistics); //TODO naming
+            that.filters[statistic.filterablePropertyName].updateFilterOptions(statistic.statistics);
         });
-        this.reRender();
+        this.updateView();
     };
 
     FiltersPaneWidget.prototype.configureDefaultFilters = function(filtersEventListener) {

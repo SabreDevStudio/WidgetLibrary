@@ -18,8 +18,12 @@ define(['text!dictionaries/market.csv', 'lodash'], function (dictionaryFile, _) 
             );
         }
 
-        AirportNameLookup.prototype.getName = function(airlineCode) {
-            return dictionary[airlineCode];
+        AirportNameLookup.prototype.getName = function(airportCode) {
+            return dictionary[airportCode];
+        };
+
+        AirportNameLookup.prototype.getAllMappings = function () {
+          return dictionary;
         };
     };
 });

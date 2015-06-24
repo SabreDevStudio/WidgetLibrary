@@ -34,11 +34,6 @@
         margin-bottom: 3px;
       }
 
-      // initially hide price details
-      .SDSPriceDetailItem {
-        display: none;
-      }
-
       > :first-child {
         margin-top: 3px;
         margin-right: 3px;
@@ -86,7 +81,6 @@
   }
 
   .SDSLegDetails {
-    display: none;   // initially hide leg details
     box-sizing: border-box;
     background-color: white;
     padding: 6px 10px;
@@ -112,10 +106,6 @@
 
   .SDSFlightTimeLong {
     width: 4.5rem; // not less or otherwise not all dates will fit into width and will cause
-  }
-
-  .SDSShowDetailsLink {
-    @extend %SDSLink;
   }
 
 }

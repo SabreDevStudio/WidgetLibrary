@@ -1,4 +1,4 @@
-define(['util/validator', 'util/feature_detection', 'lodash'], function (v, browser_features, _) {
+define(['util/validator', 'util/feature_detection', 'lodash', 'moment'], function (v, browser_features, _, moment) {
     "use strict";
     /*
      * WARN: Script uses Date.prototype.toLocaleString(), which implementation varies across platforms.
@@ -30,77 +30,72 @@ define(['util/validator', 'util/feature_detection', 'lodash'], function (v, brow
                 v.arrayHasLength(that.options.localizedWeekDayNamesFailsafe, 7, "When providing fail safe for localized names of days of week, you have to provide all 7 of them..");
             }
         }
-
-        this.weekDayNamesCacheKey = Object.keys(this.options);
-
-        if (_.isUndefined(DateFormatter.prototype.weekDaysNamescache[this.weekDayNamesCacheKey])) {
-            DateFormatter.prototype.weekDaysNamescache[this.weekDayNamesCacheKey] = this.createLocalizedWeekDayNames();
-        }
     }
 
     DateFormatter.prototype.FULL_MONTH_FORMAT = 'MMMM';
 
-    DateFormatter.prototype.weekDaysNamescache = {};
-
-    DateFormatter.prototype.monthNamesCache = {};
-
     /** accepts moment date */
-    DateFormatter.prototype.getMonthLocalizedName = function(date) {
-        var cacheKey = Object.keys(this.options).concat(date);
-        if (_.isUndefined(DateFormatter.prototype.monthNamesCache[cacheKey])) {
-            DateFormatter.prototype.monthNamesCache[cacheKey] = this.createMonthLocalizedName(date);
-        }
-        return DateFormatter.prototype.monthNamesCache[cacheKey];
-    };
-
-    DateFormatter.prototype.createMonthLocalizedName = function(date) {
+    DateFormatter.prototype.getMonthLocalizedName = _.memoize(function(date) {
         if (this.options.alwaysUseLocalizedFailsafes) {
             return (this.options.localizedMonthNamesFailsafe)[date.month()];
         }
         if (browser_features.localizedToLocaleStringSupported()) {
-            var monthStartDate = date.toDate();
-            var monthName = monthStartDate.toLocaleString(this.options.locale, {month: "long"});
-            // Remove the left-to-right marks that IE puts in the output of toLocaleString(). Only IE behaviour
-            if (browser_features.isIE()) {
-                monthName = monthName.replace(/\u200E/g, '');
-            }
-            return monthName;
+            return this.createLocalizedMonthName(date);
         }
         if (this.options.localizedMonthNamesFailsafe) {
-            return (this.options.localizedMonthNamesFailsafe)[date]; // if this option is not defined then month name will nto be shown
+            return (this.options.localizedMonthNamesFailsafe)[date]; // if this option is not defined then month name will not be shown
         }
         // if localization not supported and there is no fail safe, then try to format according to current locale:
         return date.format(this.FULL_MONTH_FORMAT);
+    }, function (date) {
+        var cacheKey = _.keys(this.options).concat(date);
+        return cacheKey;
+    });
+
+
+    function removeIESpecialCharacters(localizedString) {
+        // Remove the left-to-right marks that IE puts in the output of toLocaleString(). Only IE behaviour
+        if (browser_features.isIE()) {
+            localizedString = localizedString.replace(/\u200E/g, '');
+        }
+        return localizedString;
+    }
+
+    DateFormatter.prototype.createLocalizedMonthName = function(date) {
+        var monthStartDate = date.toDate();
+        var monthName = monthStartDate.toLocaleString(this.options.locale, {month: "long"});
+        monthName = removeIESpecialCharacters(monthName);
+        return monthName;
     };
+
 
     /**
      * @return {Array} Array of localized strings representing days of week
      */
-    DateFormatter.prototype.createLocalizedWeekDayNames = function() {
+    DateFormatter.prototype.getLocalizedWeekDayNames = _.memoize(function() {
         if (this.options.alwaysUseLocalizedFailsafes) {
             return this.options.localizedWeekDayNamesFailsafe;
         }
-
         if (browser_features.localizedToLocaleStringSupported()) {
-            var localizedWeekDayNames = [];
-            var mondayDate = new Date(2015, 5, 1); // 1 June 2015 is Mon
-            var currentWeekDay = mondayDate;
-            for (var i = 0; i < 7; i++) {
-                var weekLocalizedStr = currentWeekDay.toLocaleString(this.options.locale, {weekday: 'short'});
-                // Remove the left-to-right marks that IE puts in the output of toLocaleString()
-                if (browser_features.isIE()) {
-                    weekLocalizedStr = weekLocalizedStr.replace(/\u200E/g, '');
-                }
-                localizedWeekDayNames.push(weekLocalizedStr);
-                currentWeekDay.setDate(currentWeekDay.getDate() + 1);
-            }
-            return localizedWeekDayNames;
+            return this.createLocalizedWeekdayNames();
         }
         return this.options.localizedWeekDayNamesFailsafe; // if not provided then week day names in header will not be displayed
-    };
+    }, function () {
+        var cacheKey = _.keys(this.options);
+        return cacheKey;
+    });
 
-    DateFormatter.prototype.getLocalizedWeekDayNames = function() {
-        return DateFormatter.prototype.weekDaysNamescache[this.weekDayNamesCacheKey];
+    DateFormatter.prototype.createLocalizedWeekdayNames = function() {
+        var localizedWeekDayNames = [];
+        var mondayDate = moment("2015-06-01", "YYYY-MM-DD"); // 1 June 2015 is Mon
+        var sundayDate = mondayDate.clone().add(6, 'day');
+        var that = this;
+        moment.range(mondayDate, sundayDate).by('days', function (day) {
+            var weekLocalizedStr = day.toDate().toLocaleString(that.options.locale, {weekday: 'short'});
+            weekLocalizedStr = removeIESpecialCharacters(weekLocalizedStr);
+            localizedWeekDayNames.push(weekLocalizedStr);
+        });
+        return localizedWeekDayNames;
     };
 
     return DateFormatter;

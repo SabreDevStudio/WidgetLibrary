@@ -1,5 +1,6 @@
 define(function () {
     "use strict";
+
     var SabreDevStudio = require('sabre-dev-studio');
 
     var sabre_dev_studio = new SabreDevStudio({

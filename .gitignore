@@ -6,8 +6,6 @@ rqrs/
 stylesheets/
 target/
 tmp*/
-www/
 # *.iml
 TODO
 www-customer-page-downloaded
-config.rb

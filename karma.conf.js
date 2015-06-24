@@ -21,7 +21,7 @@ module.exports = function(config) {
       {pattern: 'src/view-templates/*.*', included: false},
       {pattern: 'src/request-templates/*.*', included: false},
       {pattern: 'src/dictionaries/*.*', included: false},
-      {pattern: 'src-test/fixtures/*', included: false},
+      {pattern: 'src-test/**/fixtures/*', included: false},
       {pattern: 'node_modules/validator/validator.js', included: false},
       {pattern: 'node_modules/async/lib/async.js', included: false},
       {pattern: 'node_modules/moment-range/lib/moment-range.js', included: false}

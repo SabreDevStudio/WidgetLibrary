@@ -40,6 +40,7 @@
     "karma-requirejs": "^0.2.2",
     "karma-safari-launcher": "^0.1.1",
     "moment-range": "^1.0.7",
-    "requirejs": "^2.1.16"
+    "requirejs": "^2.1.16",
+	"validator": "^3.35.0"
   }
 }

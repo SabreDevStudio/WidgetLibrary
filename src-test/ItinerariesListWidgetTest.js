@@ -63,56 +63,48 @@ define(['ItinerariesListWidget', 'moment', 'jasmine-jquery', 'datamodel/Itinerar
         it('itineraries list DOM updated after update() called', function () {
             var itinerariesListWidget = new ItinerariesListWidget();
 
-            itinerariesListWidget.render(function (dom) {
-                itinerariesListWidget.update(itinerariesList);
-
-                expect(dom.children('.SDSItinerariesList').data('totalitineraries')).toBe(1);
-                // there is one itinerary
-                expect(dom.find('.SDSItinerariesList > .SDSItinerary').size()).toBe(1);
-                // itin has 2 legs
-                expect(dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg').size()).toBe(2);
-
-                var firstLegSummary = dom.find('.SDSItinerariesList > .SDSItinerary > .SDSLegList > .SDSLeg:first-child > .SDSLegSummary');
-                expect(firstLegSummary.find('> .SDSTravelDate')).toContainText('30');
-
-                expect(firstLegSummary.find('> .SDSDepartureAirport')).toContainText('LAX');
-                expect(firstLegSummary.find('> .SDSArrivalAirport')).toContainText('MIA');
-
-                expect(firstLegSummary.find('> .SDSArrivalTime')).toContainText('12:45');
-
-                var secondLegSummary = dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg:last-child > .SDSLegSummary');
-                expect(secondLegSummary.find('> .SDSTravelDate')).toContainText('01');
-
-                expect(secondLegSummary.find('> .SDSDepartureAirport')).toContainText('MIA');
-                expect(secondLegSummary.find('> .SDSArrivalAirport')).toContainText('LAX');
-
-                expect(secondLegSummary.find('> .SDSArrivalTime')).toContainText('23:15');
-
-                // first itinerary has 2 flights
-                expect(dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg:first-child > .SDSLegDetails .SDSFlightDetails').size()).toBe(2);
-
-                var firstLegFirstFlightDetails = dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg:first-child > .SDSLegDetails > .SDSFlight:first-child > .SDSFlightDetails');
-                expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:first > .SDSFlightTimeLong')).toContainText('07:32');
-                expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:first > .SDSDepartureAirport')).toContainText('LAX');
-
-                expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:last > .SDSFlightTimeLong')).toContainText('09:15');
-                expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:last > .SDSArrivalAirport')).toContainText('DFW');
-
-                // prices:
-                expect(dom.find('.SDSPriceSummary .SDSTotalPrice')).toContainText(186.2);
-                expect(dom.find('.SDSPriceSummary .SDSTotalPrice')).toContainText('USD');
-                expect(dom.find('.SDSPriceSummary .SDSBaseFarePrice')).toContainText(132.33);
-                expect(dom.find('.SDSPriceSummary .SDSTotalTaxesPrice')).toContainText(39.24);
-            });
-
-        });
-    });
-
-    describe('it', function () {
-        it('it', function () {
-            var itinerariesListWidget = new ItinerariesListWidget();
             itinerariesListWidget.update(itinerariesList);
+            var dom = itinerariesListWidget.getCurrentDom();
+
+            expect(dom.children('.SDSItinerariesList').data('totalitineraries')).toBe(1);
+            // there is one itinerary
+            expect(dom.find('.SDSItinerariesList > .SDSItinerary').size()).toBe(1);
+            // itin has 2 legs
+            expect(dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg').size()).toBe(2);
+
+            var firstLegSummary = dom.find('.SDSItinerariesList > .SDSItinerary > .SDSLegList > .SDSLeg:first-child > .SDSLegSummary');
+            expect(firstLegSummary.find('> .SDSTravelDate')).toContainText('30');
+
+            expect(firstLegSummary.find('> .SDSDepartureAirport')).toContainText('LAX');
+            expect(firstLegSummary.find('> .SDSArrivalAirport')).toContainText('MIA');
+
+            expect(firstLegSummary.find('> .SDSArrivalTime')).toContainText('12:45');
+
+            var secondLegSummary = dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg:last-child > .SDSLegSummary');
+            expect(secondLegSummary.find('> .SDSTravelDate')).toContainText('01');
+
+            expect(secondLegSummary.find('> .SDSDepartureAirport')).toContainText('MIA');
+            expect(secondLegSummary.find('> .SDSArrivalAirport')).toContainText('LAX');
+
+            expect(secondLegSummary.find('> .SDSArrivalTime')).toContainText('23:15');
+
+            // first itinerary has 2 flights
+            expect(dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg:first-child > .SDSLegDetails .SDSFlightDetails').size()).toBe(2);
+
+            var firstLegFirstFlightDetails = dom.find('.SDSItinerariesList > .SDSItinerary .SDSLeg:first-child > .SDSLegDetails > .SDSFlight:first-child > .SDSFlightDetails');
+            expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:first > .SDSFlightTimeLong')).toContainText('07:32');
+            expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:first > .SDSDepartureAirport')).toContainText('LAX');
+
+            expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:last > .SDSFlightTimeLong')).toContainText('09:15');
+            expect(firstLegFirstFlightDetails.find('> .SDSDepartureArrivalDetails:last > .SDSArrivalAirport')).toContainText('DFW');
+
+            // prices:
+            expect(dom.find('.SDSPriceSummary .SDSTotalPrice')).toContainText(186.2);
+            expect(dom.find('.SDSPriceSummary .SDSTotalPrice')).toContainText('USD');
+            expect(dom.find('.SDSPriceSummary .SDSBaseFarePrice')).toContainText(132.33);
+            expect(dom.find('.SDSPriceSummary .SDSTotalTaxesPrice')).toContainText(39.24);
 
         });
     });
+
 });

@@ -17,8 +17,18 @@ define(['lodash'], function (_) {
                 }
                 return acc;
             }, {});
-        }
-        //isDefined: _.negate(_.isUndefined)
+        },
+        /**
+         * Selects minimum from all values of object enumerable properties.
+         * Returns undefined if there are no enumerable properties
+         * @param object
+         * @returns {number}
+         */
+        minOfValues: function(object) {
+            var allValues = _.values(object);
+            return Math.min.apply(undefined, allValues);
+        },
+        isDefined: _.negate(_.isUndefined)
     });
 
     return lodash;

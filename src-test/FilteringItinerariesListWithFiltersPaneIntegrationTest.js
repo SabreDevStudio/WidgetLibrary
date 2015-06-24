@@ -60,7 +60,6 @@ define(['ItinerariesListWidget', 'FiltersPaneWidget', 'moment', 'jasmine-jquery'
                 expect(secondAirline.find('.SDSMultipleSelectionItemCount')).toContainText(3);
             });
         });
-        //TODO: in Protractor?
     });
 
 });

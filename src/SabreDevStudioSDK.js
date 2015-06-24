@@ -1,7 +1,7 @@
 require.config({
     paths: {
-        'jquery': "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min",
-        'jquery-ui': 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min',
+        'jquery': "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min",
+        'jquery-ui': 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min',
         //'jquery-mobile': 'https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min',
         mustache: 'lib/mustache',
         text: 'lib/text',
@@ -10,7 +10,10 @@ require.config({
         moment_range: '../node_modules/moment-range/lib/moment-range',
         validator_lib: '../node_modules/validator/validator',
         async: '../node_modules/async/lib/async',
-        lodash: 'lib/lodash'
+        lodash: 'lib/lodash',
+        'sabre-dev-studio': '../node_modules/sabre-dev-studio/lib/sabre-dev-studio'
+        //'simple-errors': '../node_modules/sabre-dev-studio/node_modules/simple-errors/index'
+
     },
     map: {
         '*': { 'jquery': 'util/jquery-loader' },
@@ -29,19 +32,20 @@ require.config({
     }
 });
 
-require(["jquery", "Calendar", 'ItinerariesListWidget', 'FiltersPaneWidget', 'moment', 'util/CalendarTestPricesGenerator', 'util/DateFormatter', 'util/currencyFormatter', 'datamodel/ShoppingData', 'datamodel/ItinerariesList', 'util/AirlineNameLookup', 'util/AirportNameLookup', 'datamodel/TestItineraryBuilder'],
-    function($, Calendar, ItinerariesListWidget, FiltersPaneWidget, moment, testPricesGenerator, DateFormatter, CurrencyFormatter, ShoppingData, ItinerariesList, AirlineNameLookup, AirportNameLookup, TestItineraryBuilder) {
+require(["jquery", "widgets/calendar/CalendarWidget", 'ItinerariesListWidget', 'FiltersPaneWidget', 'SearchFormWidget', 'moment', 'util/CalendarTestPricesGenerator', 'util/DateFormatter', 'util/currencyFormatter', 'datamodel/ShoppingData', 'datamodel/ItinerariesList', 'util/AirlineNameLookup', 'util/AirportNameLookup', 'datamodel/TestItineraryBuilder'
+    ,'datamodel/BasicSearchCriteriaValidator', 'datamodel/InstaflightSearchCriteriaValidator', 'lodash'],
+    function($, Calendar, ItinerariesListWidget, FiltersPaneWidget, SearchFormWidget, moment, testPricesGenerator, DateFormatter, CurrencyFormatter, ShoppingData, ItinerariesList, AirlineNameLookup, AirportNameLookup, TestItineraryBuilder
+    , BasicSearchCriteriaValidator
+    , InstaflightSearchCriteriaValidator, _) {
     "use strict";
 
     function runCustomerCode() {
-        if (window.SDS_onload) {
-            for (var i = 0; i < window.SDS_onload.length; i++) {
-                var func = window.SDS_onload[i];
-                if (typeof func === 'function') {
-                    func();
-                }
-            }
+        if (_.isUndefined(window.SDS_onload)) {
+            throw new Error('Trying to use the SDK, but actually no SDK API calls detected. Is the window.SDS_onload array populated with functions that execute API calls?');
         }
+        window.SDS_onload.filter(_.isFunction).forEach(function (func) {
+            func();
+        });
     }
 
     function initializeSDK() {
@@ -82,22 +86,22 @@ require(["jquery", "Calendar", 'ItinerariesListWidget', 'FiltersPaneWidget', 'mo
             options.globalOptionsCache = globalCache; // TODO: since we deep copy all options in widgets, the cache will not be shared..?
 
             var clientCallback = function (calendarNode) {
-                $("#" + targetDomElementId).empty().append(calendarNode);
+                $("#" + targetDomElementId).append(calendarNode);
             };
+
+            options.callbackOnViewCreate = clientCallback;
 
             var calendar = new Calendar(options);
 
             if (doNotCallWebServiceAndUseFakePrices) {
                 var monthSpecifications = [];
                 var startMonth = moment({year: calendar.options.year, month: calendar.options.month});
-                var endMonth   = startMonth.clone().add(calendar.options.numberOfMonths, 'month');
+                var endMonth   = startMonth.clone().add(calendar.options.numberOfMonthsToShow, 'month');
                 moment().range(startMonth, endMonth).by('months', function (month) {
                     monthSpecifications.push(month);
                 });
                 calendar.options.testPrices = testPricesGenerator.generatePrices(monthSpecifications);
             }
-
-            calendar.render(clientCallback);
 
             return calendar;
         };
@@ -155,6 +159,25 @@ require(["jquery", "Calendar", 'ItinerariesListWidget', 'FiltersPaneWidget', 'mo
             testItineraryBuilder = testItineraryBuilder || new TestItineraryBuilder();
             return testItineraryBuilder;
         };
+
+        /**
+         * as options you can pass any option acceptable by jQuery UI Datepicker
+         * @param DOMSelector
+         * @param options
+         */
+        SDS.searchForm = function (DOMSelector, options) {
+
+            var searchFormWidget = new SearchFormWidget(options);
+
+            searchFormWidget.render(function (searchFormWidgetDOM) {
+                $(DOMSelector).append(searchFormWidgetDOM);
+            });
+            return searchFormWidget;
+        };
+
+        SDS.basicSearchCriteriaValidator = new BasicSearchCriteriaValidator(); //TODO to factories
+
+        SDS.instaflightSearchCriteriaValidator = new InstaflightSearchCriteriaValidator();
 
         window.SDS = SDS;
     }

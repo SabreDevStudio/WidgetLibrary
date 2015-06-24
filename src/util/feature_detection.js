@@ -11,13 +11,31 @@ define(function () {
         return (mondayStr === 'Mon');
     })();
 
+    /**
+     * function to check if locale currency formatting is done correctly
+     */
+    var localizedNumberFormattingSupported = (function () {
+        var tmpFormatter = Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'});
+        return ('' + tmpFormatter.format(123456.78) === '$123,456.78');
+    })();
+
+    var numberInputTypeSupported = (function () { // or Modernizr.inputtypes.number
+        var input = document.createElement('input');
+        input.setAttribute('type', 'number');
+        return (input.type === 'number');
+    })();
+
     return {
         isIE: function () {
             return isIE;
         },
-        localizedToLocaleStringSupported : function () {
+        localizedToLocaleStringSupported: function () {
             return localizedToLocaleStringSupported;
-        }
+        },
+        localizedNumberFormattingSupported: function () {
+            return localizedNumberFormattingSupported;
+        },
+        numberInputTypeSupported: numberInputTypeSupported
     };
 
 });

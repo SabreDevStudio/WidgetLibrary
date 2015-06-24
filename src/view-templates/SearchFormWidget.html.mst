@@ -1,0 +1,85 @@
+<div class="SDSWidget SDSSearchFormWidget" id="SDSSearchFormWidget_{{uuid}}">
+
+    <form>
+        <div class="SDSTripTypeTabGroup">
+            <label for="SDSSearchForm_TripType_RoundTrip">Return</label>
+            <input type="radio" id="SDSSearchForm_TripType_RoundTrip" name="TripType" value="RoundTrip" class="SDSTripTypeTab"/>
+
+            <label for="SDSSearchForm_TripType_OneWay">One-way</label>
+            <input type="radio" id="SDSSearchForm_TripType_OneWay" name="TripType" value="OneWay" class="SDSTripTypeTab" disabled/>
+
+            <label for="SDSSearchForm_TripType_MultiStop">Multi-stop</label>
+            <input type="radio" id="SDSSearchForm_TripType_MultiStop" name="TripType" value="MultiStop" class="SDSTripTypeTab" disabled/>
+        </div>
+    </form>
+
+    <form class="SDSSearchForm">
+
+        <div class="SDSTextInputElement">
+            <label for="SDSSearchForm_Origin">Leaving from</label>
+            <input type="text" id="SDSSearchForm_Origin" name="Origin" class="SDSAirportInput" placeholder="City or airport" autocomplete="off" autofocus required/>
+        </div>
+
+        <div class="SDSTextInputElement">
+            <label for="SDSSearchForm_Destination">Going to</label>
+            <input type="text" id="SDSSearchForm_Destination" name="Destination" class="SDSAirportInput" placeholder="City or airport" autocomplete="off" required/>
+        </div>
+
+        <span class="SDSNoWrap">
+            <div class="SDSTextInputElement">
+                <label for="SDSSearchForm_DepartureDate">Leaving on</label>
+                <input type="text" id="SDSSearchForm_DepartureDate" name="DepartureDate" class="SDSHasDatePicker SDSDatePickerDepartureDate" autocomplete="off" required/>
+            </div>
+
+            <div class="SDSTextInputElement">
+                <label for="SDSSearchForm_ReturnDate">Returning on</label>
+                <input type="text" id="SDSSearchForm_ReturnDate" name="ReturnDate" class="SDSHasDatePicker SDSDatePickerReturnDate" autocomplete="off" required/>
+            </div>
+        </span>
+
+        <div class="SDSNoWrap SDSTextInputElement">
+            <label for="SDSSearchForm_ADTPaxNumber">Adults (12+)</label>
+            <input id="SDSSearchForm_ADTPaxNumber" type="number" name="ADTPaxNumber" value="1" min="1" max="9" required>
+        </div>
+
+        <div>
+            <span class="SDSNoWrap SDSCheckboxInputElement">
+                <label for="SDSSearchForm_IsPlusMinus3DaysFlexible">I'm flexible +/- 3 days</label>
+                <input type="checkbox" name="IsPlusMinus3DaysFlexible" id="SDSSearchForm_IsPlusMinus3DaysFlexible" checked/>
+            </span>
+
+            <span class="SDSNoWrap SDSCheckboxInputElement">
+                <label for="SDSSearchForm_DirectFlightsOnly">Direct flights only</label>
+                <input type="checkbox" name="DirectFlightsOnly" id="SDSSearchForm_DirectFlightsOnly"/>
+            </span>
+        </div>
+
+        <div class="SDSAdvancedSearchCriteria">
+            <a class="SDSShowDetailsLink" href="#">Advanced search options</a>
+            <div class="SDSAdvancedSearchCriteriaItems SDSInitiallyNotDisplayed">
+                <span class="SDSNoWrap SDSSelectInputElement">
+                    <label for="SDSSearchForm_PreferredAirline">Preferred Airline</label>
+                    <select name="PreferredAirline" id="SDSSearchForm_PreferredAirline">
+                        <option value="ALL" selected="selected">No airline preference</option>
+                        <option value="AA">American Airlines</option>
+                        <option value="LH">Lufthansa</option>
+                    </select>
+                </span>
+
+                <span class="SDSNoWrap SDSSelectInputElement">
+                    <label for="SDSSearchForm_PreferredCabin">Cabin</label>
+                    <select name="PreferredCabin" id="SDSSearchForm_PreferredCabin">
+                        <option value="Economy" selected="selected">Economy</option>
+                        <option value="Business">Business</option>
+                        <option value="First">First</option>
+                    </select>
+                </span>
+            </div>
+        </div>
+
+        <button type="submit" class="SDSSubmitButton">Search</button>
+    </form>
+
+    <div id="SDSSearchForm_DialogPlaceholder" title="Mistake"/>
+
+</div>

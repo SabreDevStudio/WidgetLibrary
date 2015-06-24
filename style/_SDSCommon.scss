@@ -13,6 +13,8 @@ $headerBackgroundColor: #0040D0;
 
 $headerFontColor: white;
 
+$widgetFocusPointColor: #f1780b;
+
 $itemsSeparatingLineColor: #D2DDE4;
 $itemsSeparatingLineStyle: solid #D2DDE4 1px;
 
@@ -24,8 +26,8 @@ $borderRadius: 0.4em;
 /* fonts constants */
 $fontStack: 'Lato', Helvetica Neue, Helvetica, Arial, sans-serif;
 
-$secondaryHeaderFontSize: 0.65rem;
-$primaryHeaderFontSize: 0.8rem;
+$secondaryHeaderFontSize: 0.75rem;
+$primaryHeaderFontSize: 0.85rem;
 
 $primaryDataFontSize: $secondaryHeaderFontSize;
 $secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and / 10, to get rounding to 0.1 of em
@@ -177,6 +179,10 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
   }
 }
 
+.SDSShowDetailsLink {
+  @extend %SDSLink;
+}
+
 %SDSLink {
   font-size: 10px;
   text-decoration: none;
@@ -191,6 +197,10 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
 /* helper class, for use in javascript, to hide elements */
 .SDSHidden {
   visibility: hidden;
+}
+
+.SDSInitiallyNotDisplayed {
+  display: none;
 }
 
 /* very simple grid system */
@@ -237,4 +247,26 @@ also sets left and right child to inline block */
   .SDSCollapsibleFlip {
     @include background-image(url($collapseIcon));
   }
+}
+
+%SDSButton {
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    pointer-events: none;
+    border-style: outset;
+  }
+}
+
+%SDSPrimaryButton {
+  @extend %SDSButton;
+  font-size: $focusPointDataFontSize;
+  padding: 0.15rem 1rem;
+}
+
+.SDSNoWrap {
+  white-space:nowrap;
 }

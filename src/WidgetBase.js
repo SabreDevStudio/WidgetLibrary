@@ -29,12 +29,14 @@ define(['lodash', 'jquery'], function (_, $) {
 
     WidgetBase.prototype.createDOMWithEventHandlers = function () {
         var dom = this.createDOM();
-        this.addCommonEventHandlers(dom);
+        this.addGenericEventHandlers(dom);
         return dom;
     };
 
-    WidgetBase.prototype.addCommonEventHandlers = function(dom) {
-        return this.makeFilterLabelsCollapsible(dom);
+    WidgetBase.prototype.addGenericEventHandlers = function (dom) {
+        // var allCustomEventHandlers = _.flow(WidgetBase.prototype.makeFilterLabelsCollapsible, WidgetBase.prototype.addTooltips);
+        var allCustomEventHandlers = _.flow(WidgetBase.prototype.makeFilterLabelsCollapsible);
+        return allCustomEventHandlers(dom);
     };
 
     WidgetBase.prototype.render = function(clientCallback) {
@@ -42,14 +44,28 @@ define(['lodash', 'jquery'], function (_, $) {
         clientCallback(this.currentDOM);
     };
 
-    WidgetBase.prototype.reRender = function () {
+    WidgetBase.prototype.updateView = function (callbackOnViewUpdate) {
+        var newDom = this.createDOMWithEventHandlers();
         if (_.isUndefined(this.currentDOM)) {
-            this.currentDOM = this.createDOMWithEventHandlers();
+            this.currentDOM = newDom;
         } else {
-            var previousDOMHolder = this.currentDOM.empty();
-            var newDOMWithHolderStripped = this.createDOMWithEventHandlers().children();
-            previousDOMHolder.append(newDOMWithHolderStripped);
+            this.replaceInDom(newDom);
         }
+        if (_.isFunction(callbackOnViewUpdate)) {
+            callbackOnViewUpdate(this.currentDOM);
+        }
+    };
+
+    WidgetBase.prototype.replaceInDom = function(newDom) {
+        var externalHolder = this.currentDOM.parent();
+        $(this.currentDOM).remove();
+        this.currentDOM = newDom;
+        $(externalHolder).append(newDom);
+    };
+
+    // Visible for unit testing
+    WidgetBase.prototype.getCurrentDom = function () {
+      return this.currentDOM;
     };
 
     WidgetBase.prototype.getOptions = function () {
@@ -80,7 +96,6 @@ define(['lodash', 'jquery'], function (_, $) {
             // WARN: handlers executed synchronously
             // WARN: we pass the data itself, not copy, to possibly external code
             handlerAndHandlerOwner.eventHandler.call(handlerAndHandlerOwner.eventHandlerOwner, eventData);
-
         });
     };
 
@@ -95,6 +110,14 @@ define(['lodash', 'jquery'], function (_, $) {
             } else {
                 $(this).removeClass('SDSExpandableFlip').addClass('SDSCollapsibleFlip');
             }
+        });
+        return dom;
+    };
+
+    // Not used for not because jquery-ui tooltips require: custom styling (width (static?), font size) + positioning. Still lot of work.
+    WidgetBase.prototype.addTooltips = function (dom) {
+        $(dom).tooltip({
+            position: { 'collision': 'fit', 'hide': false, 'show': false }
         });
         return dom;
     };

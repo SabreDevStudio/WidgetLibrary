@@ -1,10 +1,10 @@
-define(['WidgetBase', 'jquery', 'lodash', 'stache!view-templates/ItinerariesListWidget.html', 'util/AirlineNameLookup', 'util/AirportNameLookup', 'datamodel/ItinerariesList'],
-    function (WidgetBase, $, _, viewTemplate, AirlineNameLookup, AirportNameLookup, ItinerariesList) {
+define(['ShoppingDataDisplayWidget', 'jquery', 'lodash', 'stache!view-templates/ItinerariesListWidget.html', 'util/AirlineNameLookup', 'util/AirportNameLookup', 'datamodel/ItinerariesList'],
+    function (ShoppingDataDisplayWidget, $, _, viewTemplate, AirlineNameLookup, AirportNameLookup, ItinerariesList) {
     "use strict";
 
     function ItinerariesListWidget() {
 
-        WidgetBase.apply(this, arguments);
+        ShoppingDataDisplayWidget.apply(this, arguments);
 
         var model = {
             uuid: this.uuid,
@@ -22,7 +22,7 @@ define(['WidgetBase', 'jquery', 'lodash', 'stache!view-templates/ItinerariesList
                     return filter(itin);
                 });
             });
-            this.reRender();
+            this.updateView();
             // After re-rendering itineraries list (after applying the filters) we may want to to reset the filters as well (as applying one filter very probably changes bounds for other filters)
             // As it is not the pattern for OTA, it is not enabled (next line)
             // this.filteringWidgetAttached.resetFiltersBounds.call(this.filteringWidgetAttached, this.getCurrentValuesBounds());
@@ -32,7 +32,7 @@ define(['WidgetBase', 'jquery', 'lodash', 'stache!view-templates/ItinerariesList
             model.itineraries = itinerariesList;
             // augment model with properties necessary for FlightList presentation
             model.itineraries.getItineraries().forEach(_.flow(
-                updateLegsDepartureDateFormatted,
+                updateLegsDepartureDateFormatted, //TODO: it should be in Itinerary class, update method
                 updateFlightTimes,
                 updateLegDepartureAndArrivalAirport,
                 updateAirlineNames,
@@ -133,13 +133,13 @@ define(['WidgetBase', 'jquery', 'lodash', 'stache!view-templates/ItinerariesList
         }
     }
 
-    ItinerariesListWidget.prototype = Object.create(WidgetBase.prototype);
+    ItinerariesListWidget.prototype = Object.create(ShoppingDataDisplayWidget.prototype);
     ItinerariesListWidget.prototype.constructor = ItinerariesListWidget;
 
 
     ItinerariesListWidget.prototype.update = function(itinerariesList) {
         this.updateModel(itinerariesList);
-        this.reRender();
+        this.updateView();
         this.trigger('itinerariesListUpdated', this.getItinerariesList().getCurrentValuesBounds(this.requiredFiltersBoundsSpecifications));
     };
 

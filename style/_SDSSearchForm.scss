@@ -1,0 +1,64 @@
+@import "SDSCommon";
+
+.SDSSearchFormWidget {
+
+  .SDSSearchForm {
+    margin: 0.8rem 0.6rem;
+
+    button, input, select, textarea {
+      font-family : inherit;
+      font-size   : 100%;
+    }
+
+    .SDSTextInputElement, .SDSCheckboxInputElement, .SDSSelectInputElement {
+      margin: 4px 4px;
+      display: inline-block;
+    }
+
+    // make label stand over its corresponding input: only for text and select inputs. For checkboxes, we leave label in-line with the checkbox
+    .SDSTextInputElement, .SDSSelectInputElement {
+      label, input {
+        display: block;
+      }
+    }
+
+    input[type='text'] {
+      border-radius: 3px;
+    }
+
+    // needed for FF and IE, otherwise this field far too long for one digit input
+    input[type='number'] {
+      width: 2rem;
+    }
+
+    label {
+      padding-bottom: 2px;
+    }
+
+    // default input fields unnecessarily long for dates
+    .SDSHasDatePicker {
+      width: 5.75rem;
+    }
+
+    .SDSAdvancedSearchCriteria {
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+
+  }
+}
+
+.SDSWidget .SDSSubmitButton {
+  @extend %SDSPrimaryButton;
+  display: block;
+  margin: auto;
+
+  background-color: $widgetFocusPointColor;
+  border-color: adjust-lightness($widgetFocusPointColor, -10);
+
+  &:disabled {
+    background-color: adjust-lightness($widgetFocusPointColor, 15%);
+    border-color: adjust-lightness($widgetFocusPointColor, 5%);
+  }
+
+}

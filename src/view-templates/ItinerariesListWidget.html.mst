@@ -17,10 +17,9 @@
                                 <li class="SDSIconAirplaneArrow"></li>
                                 <li class="SDSAirport SDSArrivalAirport">{{arrivalAirport}}</li>
                                 <li class="SDSTime SDSArrivalTime">{{arrivalTime}}</li>
-                                <li class="SDSFlightDetailsLink"><a class="SDSShowDetailsLink" href="#">Flight
-                                    Details</a></li>
+                                <li class="SDSFlightDetailsLink"><a class="SDSShowDetailsLink" href="#">Flight Details</a></li>
                             </ul>
-                            <ul class="SDSLegDetails">
+                            <ul class="SDSLegDetails SDSInitiallyNotDisplayed">
                                 {{#segments}}
                                     <li class="SDSFlight">
                                         <ul class="SDSFlightDetails">
@@ -50,8 +49,8 @@
              --><div class="SDSPriceSummary">
                     <ul>
                         <li>Total price: <strong class="SDSTopLevelPrice SDSTotalPrice">{{totalFareAmount}} {{totalFareCurrency}}</strong></li>
-                        <li class="SDSPriceDetailItem SDSBaseFarePrice">Base fare: {{baseFareAmount}} {{baseFareCurrency}}</li>
-                        <li class="SDSPriceDetailItem SDSTotalTaxesPrice">Taxes: {{totalTaxAmount}} {{totalFareCurrency}}</li>
+                        <li class="SDSPriceDetailItem SDSInitiallyNotDisplayed SDSBaseFarePrice">Base fare: {{baseFareAmount}} {{baseFareCurrency}}</li>
+                        <li class="SDSPriceDetailItem SDSInitiallyNotDisplayed SDSTotalTaxesPrice">Taxes: {{totalTaxAmount}} {{totalFareCurrency}}</li>
                         <li><a class="SDSShowDetailsLink" href="#">Price Details</a></li>
                     </ul>
                 </div>
