@@ -1,4 +1,4 @@
-define(['ShoppingDataDisplayWidget', 'jquery', 'lodash', 'stache!view-templates/ItinerariesListWidget.html', 'util/AirlineNameLookup', 'util/AirportNameLookup', 'datamodel/ItinerariesList'],
+define(['widgets/ShoppingDataDisplayWidget', 'jquery', 'lodash', 'stache!view-templates/ItinerariesListWidget.html', 'util/AirlineNameLookup', 'util/AirportNameLookup', 'datamodel/ItinerariesList'],
     function (ShoppingDataDisplayWidget, $, _, viewTemplate, AirlineNameLookup, AirportNameLookup, ItinerariesList) {
     "use strict";
 

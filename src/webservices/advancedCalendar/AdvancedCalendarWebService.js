@@ -1,5 +1,5 @@
-define(['stache!request-templates/AdvancedCalendarRequest.json', '../../lib/commWrapper', 'moment'],
-    function (requestTemplate, SDSServicesWrapper, moment) {
+define(['stache!request-templates/AdvancedCalendarRequest.json', 'webservices/SabreDevStudioWebServicesWrapper', 'moment'],
+    function (requestTemplate, WebServicesWrapper, moment) {
         'use strict';
 
         function AdvancedCalendarWebService(options) {
@@ -8,7 +8,7 @@ define(['stache!request-templates/AdvancedCalendarRequest.json', '../../lib/comm
             var currentDate = (options.currentDate)? moment(options.currentDate, dateFormat) : moment(); // for (unit) testing: exposing dependency on current time, which is used to determine start and end dates for call to the web service. See lastTravelDateAvailableInWebService
             var lastTravelDateAvailableInWebService = currentDate.clone().add(this.MAX_ADVANCE_PURCHACE_DAYS_FROM_NOW, 'days');
 
-            this.setRequestOptionsDetails = function (requestOptions) {
+            this.setRequestOptionsDefaults = function (requestOptions) {
                 requestOptions.requestStartDate = requestOptions.requestStartDate ||  currentDate;
                 requestOptions.requestEndDate = requestOptions.requestEndDate || lastTravelDateAvailableInWebService;
                 return requestOptions;
@@ -17,6 +17,14 @@ define(['stache!request-templates/AdvancedCalendarRequest.json', '../../lib/comm
             this.maxRequestedTravelOutboundDate = function () {
                 return lastTravelDateAvailableInWebService;
             };
+
+            var credentials = {
+                clientId: 'V1:pe6myrbaa021f2br:DEVCENTER:EXT',
+                clientSecret: 'DUaEf51f',
+                apiURL: 'https://api.test.sabre.com'
+            };
+
+            this.webServicesWrapper = new WebServicesWrapper(credentials);
         }
 
         AdvancedCalendarWebService.prototype.OPTIONS_DEFAULT_DATE_FORMAT = 'YYYY-M-D';
@@ -30,9 +38,9 @@ define(['stache!request-templates/AdvancedCalendarRequest.json', '../../lib/comm
          *  2. callback function, and pass to it two arguments: error and response data.
          */
         AdvancedCalendarWebService.prototype.sendRequest = function (requestOptions, callback) {
-            requestOptions = this.setRequestOptionsDetails(requestOptions);
+            requestOptions = this.setRequestOptionsDefaults(requestOptions);
             var webServiceRequestJson = this.createWebServiceRequest(requestOptions);
-            return SDSServicesWrapper.advanced_calendar_search(webServiceRequestJson, callback);
+            return this.webServicesWrapper.advancedCalendarSearch(webServiceRequestJson, callback);
         };
 
 

@@ -30,7 +30,7 @@ define(['widgets/calendar/CalendarWidget', 'util/exceptions', 'jasmine-jquery',
     function createWebServiceMock(responseFixture) {
         return {
             sendRequest: function (requestOptions, responseProcessingFn) {
-                responseProcessingFn(undefined, responseFixture);
+                responseProcessingFn(undefined, JSON.parse(responseFixture));
             },
             maxRequestedTravelOutboundDate: function () {
                 return undefined;

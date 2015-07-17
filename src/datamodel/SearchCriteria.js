@@ -1,4 +1,10 @@
-define(['lodash'], function (_) {
+define([
+          'lodash'
+        , 'moment'
+    ], function (
+          _
+        , moment
+    ) {
     "use strict";
 
     function SearchCriteria() {
@@ -40,6 +46,10 @@ define(['lodash'], function (_) {
     }
 
     SearchCriteria.prototype.AIRPORT_CODE_REGEX = /^[A-Z]{3}$/;
+
+    SearchCriteria.prototype.getLengthOfStay = function () {
+        return this.lengthOfStay || moment(this.returnDate).diff(moment(this.departureDate), 'days');
+    };
 
     SearchCriteria.prototype.TripTypeEnum = Object.freeze({
         'OneWay': 'OneWay',

@@ -7,27 +7,27 @@ define(['lodash'],
 
             var that = this;
 
-            function getOrderByValueFullMatch(a, b) {
-                if (a.value === that.stringCurrentlySearchedFor) {
+            function getOrderByAirportCodeFullMatch(a, b) {
+                if (a.airportCode === that.stringCurrentlySearchedFor) {
                     return 1;
                 }
-                if (b.value === that.stringCurrentlySearchedFor) {
+                if (b.airportCode === that.stringCurrentlySearchedFor) {
                     return -1;
                 }
                 return 0;
             }
 
             function getOrderByLabelAtStringStart(a, b) {
-                if (_.startsWith(a.label.toUpperCase(), that.stringCurrentlySearchedFor)) {
+                if (_.startsWith(a.fullName.toUpperCase(), that.stringCurrentlySearchedFor)) {
                     return 1;
                 }
-                if (_.startsWith(b.label.toUpperCase(), that.stringCurrentlySearchedFor)) {
+                if (_.startsWith(b.fullName.toUpperCase(), that.stringCurrentlySearchedFor)) {
                     return -1;
                 }
             }
 
             return function(a, b) {
-                var orderByValueFullMatch = getOrderByValueFullMatch(a, b);
+                var orderByValueFullMatch = getOrderByAirportCodeFullMatch(a, b);
                 if (orderByValueFullMatch !== 0) {
                     return orderByValueFullMatch;
                 }

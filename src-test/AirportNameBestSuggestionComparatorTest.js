@@ -6,12 +6,12 @@ define(['AirportNameBestSuggestionComparator'], function (Comparator) {
         it('full matching 3 letter airport IATA airport code always wins', function () {
             var comparator = new Comparator('KRK');
             var first = {
-                label: "Krakow (KRK)",
-                value: "KRK"
+                fullName: "Krakow (KRK)",
+                airportCode: "KRK"
             };
             var second = {
-                label: "Akron (AKO)",
-                value: "AKO"
+                fullName: "Akron (AKO)",
+                airportCode: "AKO"
             };
             expect(comparator(first, second)).toBeGreaterThan(0);
         });
@@ -19,12 +19,12 @@ define(['AirportNameBestSuggestionComparator'], function (Comparator) {
         it('prefer start of line matches over other position matches', function () {
             var comparator = new Comparator('KRAKOW');
             var startOfLineMatch = {
-                label: "KRAKOW (XXX)",
-                value: "XXX"
+                fullName: "KRAKOW (XXX)",
+                airportCode: "XXX"
             };
             var inLineMatch = {
-                label: "xxxxKRAKOWxxxxx (XXX)",
-                value: "XXX"
+                fullName: "xxxxKRAKOWxxxxx (XXX)",
+                airportCode: "XXX"
             };
             expect(comparator(startOfLineMatch, inLineMatch)).toBeGreaterThan(0);
         });
@@ -32,12 +32,12 @@ define(['AirportNameBestSuggestionComparator'], function (Comparator) {
         it('prefer start of line matches over other position matches ignore case', function () {
             var comparatorDifferentCase = new Comparator('Krakow');
             var startOfLineMatch = {
-                label: "KRAKOW (XXX)",
-                value: "XXX"
+                fullName: "KRAKOW (XXX)",
+                airportCode: "XXX"
             };
             var inLineMatch = {
-                label: "xxxxKRAKOWxxxxx (XXX)",
-                value: "XXX"
+                fullName: "xxxxKRAKOWxxxxx (XXX)",
+                airportCode: "XXX"
             };
             expect(comparatorDifferentCase(startOfLineMatch, inLineMatch)).toBeGreaterThan(0);
         });
@@ -48,20 +48,20 @@ define(['AirportNameBestSuggestionComparator'], function (Comparator) {
         it('user starts typing full name', function () {
             var array = [
             {
-                label: "Paso Delos Libres (AOL)",
-                value: "AOL"
+                fullName: "Paso Delos Libres (AOL)",
+                airportCode: "AOL"
             },
             {
-                label: "Klosters (ZHS)",
-                value: "ZHS"
+                fullName: "Klosters (ZHS)",
+                airportCode: "ZHS"
             },
             {
-                label: "Los Angeles (LAX)",
-                value: "LAX"
+                fullName: "Los Angeles (LAX)",
+                airportCode: "LAX"
             },
             {
-                label: "Volos (VOL)",
-                value: "VOL"
+                fullName: "Volos (VOL)",
+                airportCode: "VOL"
             }
             ];
 
@@ -69,7 +69,7 @@ define(['AirportNameBestSuggestionComparator'], function (Comparator) {
 
             array.sort(comparator);
 
-            expect(array[array.length - 1].value).toBe('LAX');
+            expect(array[array.length - 1].airportCode).toBe('LAX');
         });
     });
 });

@@ -9,7 +9,7 @@
  * - Views, on view changes, call a controller function (onEvent...). So they know explicitly about controllers and call specific controllers. There is no internal "viewChanged..." event that views emit and controllers listen to.
  * - Model: on its update, executes function to update view. No (typical) Observer pattern (view observing the model).
  */
-define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds', 'util/validator', 'jquery', 'util/jQueryExtensions', 'jquery-ui', 'lodash', 'util/LodashExtensions',
+define(['../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds', 'util/validator', 'jquery', 'util/jQueryExtensions', 'jquery-ui', 'util/LodashExtensions',
     'mustache',
     'stache!view-templates/Calendar.html',
     'util/feature_detection',
@@ -24,11 +24,10 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
     'datamodel/ShoppingData',
     '../../webservices/advancedCalendar/AdvancedCalendarResponseParser',
     'datamodel/SearchCriteria',
-    '../../webservices/advancedCalendar/AdvancedCalendarWebService',
-    'datamodel/InstaflightSearchCriteriaValidator'
-], function (ShoppingDataDisplayWidget, CalendarMonth, v, $, $$, jqueryUIDummy, _, __
+    '../../webservices/advancedCalendar/AdvancedCalendarWebService'
+], function (ShoppingDataDisplayWidget, CalendarMonth, v, $, $$, jqueryUIDummy, _
     , Mustache, calendarTemplate, browser_features_package, moment, moment_range, momentRangeUtils, CurrencyFormatter, DateFormatter, PriceClassifier, async, ex
-    , ShoppingData, AdvancedCalendarResponseParser, SearchCriteria, AdvancedCalendarWebService, InstaflightSearchCriteriaValidator) {
+    , ShoppingData, AdvancedCalendarResponseParser, SearchCriteria, AdvancedCalendarWebService) {
     "use strict";
 
     /**
@@ -58,8 +57,6 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
 
         ShoppingDataDisplayWidget.apply(this, arguments);
 
-        var searchCriteriaValidator = this.options.searchCriteriaValidator || new InstaflightSearchCriteriaValidator(); //TODO: expose this dependency for Calendar factories in SDK SDK.calendar(Enum.CalendarType..) and move creating InstaflightSearchCriteriaValidator out?
-
         var webService = this.options.webService || new AdvancedCalendarWebService(); //TODO: same: move creation of this default object into external factory?
 
         var that = this;
@@ -72,7 +69,10 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
 
         validateOptions(this.options);
 
-        var currencyFormatter = (window.SDS) ? window.SDS.currencyFormatter() : new CurrencyFormatter({currency: this.options.currency});
+        var currencyFormatter = (window.SDS) ? window.SDS.currencyFormatter() : new CurrencyFormatter({
+            currency: this.options.currency,
+            locale: this.options.locale
+        });
 
         function createOptionsCacheKey(searchCriteria) {
             return searchCriteria.origin + '-' + searchCriteria.destination + '-' + searchCriteria.lengthOfStay + '-' + that.options.currency;
@@ -94,15 +94,16 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
             that.options.maxDate = (that.options.maxDate) ? moment(that.options.maxDate, that.options.dateFormat) : undefined;
 
             var maxRequestedTravelOutboundDateFromWebService = webService.maxRequestedTravelOutboundDate();
-            if (_.isUndefined(that.options.maxDate) && __.isDefined(maxRequestedTravelOutboundDateFromWebService)) {
+
+            if (_.isUndefined(that.options.maxDate) && _.isDefined(maxRequestedTravelOutboundDateFromWebService)) {
                 that.options.maxDate = maxRequestedTravelOutboundDateFromWebService;
-            } else if (__.isDefined(maxRequestedTravelOutboundDateFromWebService)) {
+            } else if (_.isDefined(maxRequestedTravelOutboundDateFromWebService)) {
                 that.options.maxDate = moment.min(that.options.maxDate, maxRequestedTravelOutboundDateFromWebService);
             }
 
             that.minDateStartOfMonth = that.options.minDate.clone().startOf('month');
 
-            if (__.isDefined(that.options.maxDate)) {
+            if (_.isDefined(that.options.maxDate)) {
                 that.maxDateStartOfMonth = that.options.maxDate.clone().startOf('month');
                 that.maxDateEndOfMonth = that.options.maxDate.clone().endOf('month');
             }
@@ -180,7 +181,7 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
                 yearNumber: bounds.monthStartDate.year(),
                 monthName: monthName,
                 noPricesFound: noPricesFound,
-                monthLeadPrice: __.minOfValues(prices),
+                monthLeadPrice: _.minOfValues(prices),
                 isTheFirstMonthShown: (monthSeqNumber === 1),
                 isTheLastMonthShown: (monthSeqNumber === totalMonths),
                 prevInactive: (noPricesFound || (bounds.monthStartDate.isSame(that.minDateStartOfMonth) || bounds.monthStartDate.isBefore(that.minDateStartOfMonth))),
@@ -220,14 +221,14 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
                 addTraceCustomerPointer(dom, lastSearchCriteria.lengthOfStay);
             }
             // listeners on prev and next month links
-            var prevLink = $(dom).find('caption > .SDSNavigationLink.SDSPrev:not(.SDSInactive)');
+            var prevLink = $(dom).find('caption > .SDSIconNavigationLink.SDSPrevIcon:not(.SDSInactive)');
             prevLink.click(function () {
                 // on click inactivate the link (till results are loaded), and disable click handler on this link
                 $(this).addClass('SDSInactive');
                 $(this).off('click');
                 that.onNavigationLinkClicked.call(that, that.NavigationLinkType.Prev);
             });
-            var nextLink = $(dom).find('caption > .SDSNavigationLink.SDSNext:not(.SDSInactive)');
+            var nextLink = $(dom).find('caption > .SDSIconNavigationLink.SDSNextIcon:not(.SDSInactive)');
             nextLink.click(function () {
                 $(this).addClass('SDSInactive');
                 $(this).off('click');
@@ -280,9 +281,8 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
             if (that.options.testPrices && that.options.testPrices[monthKey]) {
                 calendarModelData = createMonthModel(that.options.testPrices[monthKey], monthBounds, monthSeqNumber, totalMonths);
                 callback(null, calendarModelData);
-            }
-            else if (that.options.globalOptionsCache.contains(optionsCacheKey, month)) {
-                var pricesForWholeMonth = that.options.globalOptionsCache.getLeadPrices(optionsCacheKey, month);
+            } else if (that.options.globalOptionsCache.contains(optionsCacheKey, month)) {
+                var pricesForWholeMonth = that.options.globalOptionsCache.getLeadPricesForMonth(optionsCacheKey, month);
                 calendarModelData = createMonthModel(pricesForWholeMonth, monthBounds, monthSeqNumber, totalMonths);
                 callback(null, calendarModelData);
             } else {
@@ -301,10 +301,10 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
                         callback(err);
                     }
                     var shoppingData = responseParser.parseResponse(data, requestStartDate, requestEndDate, optionsCacheKey);
-                    calendarModelData = createMonthModel(shoppingData.getLeadPrices(optionsCacheKey, month), monthBounds, monthSeqNumber, totalMonths);
+                    calendarModelData = createMonthModel(shoppingData.getLeadPricesForMonth(optionsCacheKey, month), monthBounds, monthSeqNumber, totalMonths);
 
                     // update cache for all months that we requested
-                    that.options.globalOptionsCache.addUpdate(shoppingData);
+                    that.options.globalOptionsCache.addUpdate(shoppingData); //TODO: hide using cache at all from this service
                     callback(null, calendarModelData);
                 });
             }
@@ -335,7 +335,6 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
          */
         this.newSearch = function (searchCriteria, callbackOnViewUpdate) {
             searchCriteria = _.extend({}, searchCriteria);
-            searchCriteriaValidator.validate(searchCriteria);
             this.setDefaults(searchCriteria);
             lastSearchCriteria = searchCriteria;
             var requestModelMonths = this.createRequestModelMonths(searchCriteria);
@@ -379,14 +378,15 @@ define(['../../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds
             searchCriteria.lengthOfStay = searchCriteria.lengthOfStay || moment(searchCriteria.returnDate).diff(moment(searchCriteria.departureDate), 'days');
         }
 
-        /** translates user search criteria into requested calendar model. //TODO describe both models, maybe in clsss header, describe that it is MVC, how view is updated.
+        /** translates user search criteria into requested calendar model. //TODO describe both models, maybe in class header, describe that it is MVC, how view is updated.
          * Here the business logic what calendar data to show to customer based on their search criteria
          * @param searchCriteria
          */
         this.createRequestModelMonths = function (searchCriteria, firstMonthToShow) {
             var calendarRequestedModel = {};
             calendarRequestedModel.lengthOfStay = moment(searchCriteria.returnDate).diff(moment(searchCriteria.departureDate), 'days'); //TODO not used
-            var firstMonthToShow = firstMonthToShow || moment(searchCriteria.departureDate, that.options.dateFormat);
+            // as search criteria searchCriteria.departureDate we accept both JS Date object and string in the format defined or predefined (default)
+            var firstMonthToShow = firstMonthToShow || (_.isDate(searchCriteria.departureDate))? moment(searchCriteria.departureDate) : moment(searchCriteria.departureDate, that.options.dateFormat);
             var rangeOfMonthsToShow = this.createRangeOfMonthsToShow(firstMonthToShow);
             var requestModelMonths = generateMonths(rangeOfMonthsToShow); //TODO move it into next function??
             return requestModelMonths;

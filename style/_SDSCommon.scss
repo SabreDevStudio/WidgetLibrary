@@ -125,7 +125,7 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
 }
 
 /* navigation links (for now prev and next arrows) */
-.SDSNavigationLink {
+.SDSIconNavigationLink {
   $iconPrev: "../img/prev-arrows-16.png";
   $iconNext: "../img/next-arrows-16.png";
   $marginForNavigationArrows: 0.1em;
@@ -136,15 +136,25 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
   & span {
     visibility: hidden;
   }
-  &.SDSPrev {
+  &.SDSPrevIcon {
     left: 0;
     margin-left: $marginForNavigationArrows;
     @include background-image(url($iconPrev));
   }
-  &.SDSNext {
+  &.SDSNextIcon {
     right: 0;
     margin-right: $marginForNavigationArrows;
     @include background-image(url($iconNext));
+  }
+}
+
+.SDSNavigationPane {
+  display: flex;
+  justify-content: space-between;
+
+  .SDSPrevLink, .SDSNextLink {
+    @extend %SDSLink;
+    padding: 5px;
   }
 }
 
@@ -189,9 +199,14 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
   color: rgb(0, 136, 204);
 }
 
+.SDSToggleLink {
+  padding-bottom: 4px;
+}
+
 /* general class to add to all for all inactive/deactivated elements */
 .SDSInactive {
   @include opacity(0.35);
+  pointer-events: none;
 }
 
 /* helper class, for use in javascript, to hide elements */
@@ -269,4 +284,12 @@ also sets left and right child to inline block */
 
 .SDSNoWrap {
   white-space:nowrap;
+}
+
+%SDSClearFix {
+  &:after { // by http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best
+    content:"";
+    display:table;
+    clear:both;
+  }
 }

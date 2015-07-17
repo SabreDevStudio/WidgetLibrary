@@ -19,9 +19,9 @@
 
             {{^tabsUsed}}
                 <caption>
-                    {{#isTheFirstMonthShown}}<a class="SDSNavigationLink SDSPrev{{#prevInactive}} SDSInactive{{/prevInactive}}" title="Prev month"><span>Prev</span></a>{{/isTheFirstMonthShown}}
+                    {{#isTheFirstMonthShown}}<a class="SDSIconNavigationLink SDSPrevIcon{{#prevInactive}} SDSInactive{{/prevInactive}}" title="Prev month"><span>Prev</span></a>{{/isTheFirstMonthShown}}
                     <span class="SDSCalendarMonthName">{{monthName}}</span>
-                    {{#isTheLastMonthShown}}<a class="SDSNavigationLink SDSNext{{#nextInactive}} SDSInactive{{/nextInactive}}" title="Next month"><span>Next</span></a>{{/isTheLastMonthShown}}
+                    {{#isTheLastMonthShown}}<a class="SDSIconNavigationLink SDSNextIcon{{#nextInactive}} SDSInactive{{/nextInactive}}" title="Next month"><span>Next</span></a>{{/isTheLastMonthShown}}
                 </caption>
             {{/tabsUsed}}
 

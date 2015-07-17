@@ -6,7 +6,7 @@ define(['util/validator', 'lodash', 'util/feature_detection'], function (v, _, f
         var formatter;
 
         var options = _.defaults(currencyOptions, {
-            locale: window.navigator.language // for example "en-US"
+            locale: window.navigator.language // if locale not defined in options then we default to browser settings. for example "en-US"
         });
 
         validateOptions();

@@ -1,4 +1,4 @@
-define(['util/LodashExtensions'], function (__) {
+define(['util/LodashExtensions'], function (_) {
     "use strict";
     describe('groupByAndGetCountAndMin', function () {
         it('it', function () {
@@ -8,7 +8,7 @@ define(['util/LodashExtensions'], function (__) {
                 , {name: 'anna', department: 'finance', salary: 300}
             ];
             // get number of employees per department and minimum salary per department
-            var results = __.groupByAndGetCountAndMin(employees, 'department', 'salary');
+            var results = _.groupByAndGetCountAndMin(employees, 'department', 'salary');
 
             expect(results.sales.count).toBe(2);
             expect(results.sales.min).toBe(150);

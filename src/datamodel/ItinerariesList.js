@@ -1,4 +1,4 @@
-define(['util/LodashExtensions'], function (__) {
+define(['util/LodashExtensions'], function (_) {
     "use strict";
 
     function ItinerariesList() {
@@ -13,7 +13,7 @@ define(['util/LodashExtensions'], function (__) {
         };
 
         this.sort = function() { //TODO hardcoded sort criteria for now
-            itineraries = __.sortBy(itineraries, 'totalFareAmount');
+            itineraries = _.sortBy(itineraries, 'totalFareAmount');
         };
 
         this.size = function (includeFilteredOut) {
@@ -24,14 +24,14 @@ define(['util/LodashExtensions'], function (__) {
         };
 
         this.getMinValue = function (propertyName) {
-            return __.chain(itineraries)
+            return _.chain(itineraries)
                 .reject('filteredOut')
                 .map(_.ary(_.partialRight(_.result, propertyName), 1))
                 .min().value();
         };
 
         this.getMaxValue = function (propertyName) {
-            return __.chain(itineraries)
+            return _.chain(itineraries)
                 .reject('filteredOut')
                 .map(_.ary(_.partialRight(_.result, propertyName), 1))
                 .max().value();
@@ -45,7 +45,7 @@ define(['util/LodashExtensions'], function (__) {
         };
 
         this.getDiscreteValuesStatistics = function (propertyName) {
-            var selectableValues =  __.chain(itineraries)
+            var selectableValues =  _.chain(itineraries)
                 .reject('filteredOut')
                 .groupByAndGetCountAndMin(propertyName, 'totalFareAmount').map(function (value, key) {
                     return {

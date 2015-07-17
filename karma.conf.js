@@ -7,11 +7,8 @@ module.exports = function(config) {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
 
-
-    // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine', 'requirejs'],
-
 
     // list of files / patterns to load in the browser
     files: [
@@ -22,18 +19,14 @@ module.exports = function(config) {
       {pattern: 'src/request-templates/*.*', included: false},
       {pattern: 'src/dictionaries/*.*', included: false},
       {pattern: 'src-test/**/fixtures/*', included: false},
-      {pattern: 'node_modules/validator/validator.js', included: false},
-      {pattern: 'node_modules/async/lib/async.js', included: false},
-      {pattern: 'node_modules/moment-range/lib/moment-range.js', included: false}
+      {pattern: 'bower_components/**/*.js', included: false},
+      {pattern: 'node_modules/**/*.js', included: false}
     ],
-
 
     // list of files to exclude
     exclude: [
-      'src/SabreDevStudioSDK.js',
-      'src/lib/commWrapperSrc.js'
+      'src/SabreDevStudioSDK.js'
     ],
-
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor

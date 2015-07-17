@@ -25,3 +25,13 @@ body {
     display: inline-block;
     vertical-align: top;
 }
+
+#FareTrendChart {
+    width: 600px;
+    height: 250px;
+}
+
+#SearchFormNG {
+    width: 1200px;
+    height: 250px;
+}

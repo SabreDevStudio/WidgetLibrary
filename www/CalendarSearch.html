@@ -47,14 +47,14 @@
                 , localizedMonthNamesFailsafe: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
                 , localizedWeekDayNamesFailsafe: ['Mon', 'Thu', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 , numberOfMonthsToShow: 2
-            }, true);
+            }, false);
 
             cal1.newSearch(searchCriteria);
 
             var cal2 = SDS.calendar("CalendarSearchResults2", {
                   showDayNumbersPrevAndNextMonth: true
                 , tabs: 3
-            }, true);
+            }, false);
 
             cal2.newSearch(searchCriteria);
         });
@@ -65,7 +65,7 @@
 
 <!-- this snippet must be placed after any customer use of SDK. In particular it may be placed immediately after customer configuration,
 may be in the bottom, may be async or deferred.-->
-<!--<script type="text/javascript" src="../src/SabreDevStudioSDK.js"></script>-->
-<script async data-main="../src/SabreDevStudioSDK" src="../src/lib/require.js"></script>
+<!--<script async type="text/javascript" src="../dist/SDSWidgets.dist.js"></script>-->
+<script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
 </body>
 </html>

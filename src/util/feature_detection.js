@@ -1,4 +1,4 @@
-define(function () {
+define(['lodash'], function (_) {
 
     var isIE = (function(userAgent) {
         userAgent = userAgent || navigator.userAgent;
@@ -15,6 +15,9 @@ define(function () {
      * function to check if locale currency formatting is done correctly
      */
     var localizedNumberFormattingSupported = (function () {
+        if (_.isUndefined(window.Intl) || _.isUndefined(window.Intl.NumberFormat)) {
+            return false;
+        }
         var tmpFormatter = Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'});
         return ('' + tmpFormatter.format(123456.78) === '$123,456.78');
     })();

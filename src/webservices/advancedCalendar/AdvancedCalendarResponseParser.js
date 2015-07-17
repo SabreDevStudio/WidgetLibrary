@@ -5,18 +5,17 @@ define(['../../datamodel/ShoppingData', 'datamodel/Itinerary', 'moment'], functi
 
         var that = this;
 
-        AdvancedCalendarResponseParser.prototype.parseResponse = function (responseData, startDate, endDate, key) {
+        AdvancedCalendarResponseParser.prototype.parseResponse = function (responseObject, startDate, endDate, key) {
             var shoppingData = new ShoppingData();
             shoppingData.markRequestedData(key, startDate, endDate);
-            if (_.isUndefined(responseData)) {
+            if (_.isUndefined(responseObject)) {
                 return shoppingData; // if no prices found return empty prices object
             }
-            var rs = JSON.parse(responseData);
-            if (_.isUndefined(rs.OTA_AirLowFareSearchRS) || _.isUndefined(rs.OTA_AirLowFareSearchRS.Success)) {
+            if (_.isUndefined(responseObject.OTA_AirLowFareSearchRS) || _.isUndefined(responseObject.OTA_AirLowFareSearchRS.Success)) {
                 return shoppingData; // if no prices found return empty prices objects for every month
             }
 
-            rs.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary.forEach(function (itin) {
+            responseObject.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary.forEach(function (itin) {
                 var parsedItinerary = that.parseItinerary(itin);
                 shoppingData.addItinerary(key, parsedItinerary, parsedItinerary.getOutboundDepartureDateTime());
             });

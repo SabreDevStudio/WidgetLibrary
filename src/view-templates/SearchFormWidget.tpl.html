@@ -1,0 +1,91 @@
+<div class="panel panel-default SDSSearchFormWidget" id="SDSSearchFormWidget_{{widgetId}}">
+    <div class="panel-body container">
+        <form class="form-inline">
+            <div class="btn-group">
+                <label class="btn btn-primary" ng-model="tripType" btn-radio="'returnTrip'">Return</label>
+                <label class="btn btn-primary" ng-model="tripType" btn-radio="'oneWay'" disabled>One-way</label>
+                <label class="btn btn-primary" ng-model="tripType" btn-radio="'multiDestination'" disabled>Multi-stop</label>
+            </div>
+        </form>
+
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group">
+                    <label for="SDSSearchForm_Origin" class="input-sm">Leaving from</label>
+                    <input type="text" id="SDSSearchForm_Origin" name="Origin" class="form-control input-sm" placeholder="City or airport" autocomplete="off" autofocus required
+                           ng-model="Origin" typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="SDSSearchForm_Destination" class="input-sm">Going to</label>
+                    <input type="text" id="SDSSearchForm_Destination" name="Destination" class="form-control input-sm" placeholder="City or airport" autocomplete="off" required
+                           ng-model="Destination" typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="SDSSearchForm_DepartureDate" class="input-sm">Leaving on</label>
+                    <p class="input-group SDSDateInput">
+                        <input type="text" id="SDSSearchForm_DepartureDate" name="DepartureDate" class="form-control input-sm" autocomplete="off" required
+                               datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestTravelStart}} is-open="isDepartureDatePickerOpened" ng-model="DepartureDate" ng-change="onDepartureDateChange()"/>
+                        <!-- bug in NG 1.3 with not formatting initial date value: http://stackoverflow.com/questions/26188956/angular-ui-datepicker-initial-state-of-datepicker-not-formatted-per-datepicker-p, fixed in 1.4 -->
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default input-sm" ng-click="openDepartureDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                </div>
+
+                <div class="form-group" ng-show="tripType === 'returnTrip'">
+                    <label for="SDSSearchForm_ReturnDate" class="input-sm">Returning on</label>
+                    <p class="input-group SDSDateInput">
+                        <input type="text" id="SDSSearchForm_ReturnDate" name="ReturnDate" class="form-control input-sm" autocomplete="off" required
+                               datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestTravelStart}} is-open="isReturnDatePickerOpened" ng-model="ReturnDate" ng-change="onReturnDateChange()"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default input-sm" ng-click="openReturnDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="SDSSearchForm_ADTPaxNumber" class="input-sm">Adults (12+)</label>
+                    <input id="SDSSearchForm_ADTPaxNumber" type="number" name="ADTPaxNumber" value="1" min="1" max="9" required class="form-control input-sm">
+                </div>
+            </div>
+
+            <div class="row">
+                    <label for="SDSSearchForm_IsPlusMinus3DaysFlexible" class="input-sm checkbox-inline">I'm flexible +/- 3 days</label>
+                    <input type="checkbox" name="IsPlusMinus3DaysFlexible" id="SDSSearchForm_IsPlusMinus3DaysFlexible" checked class="form-control input-sm"/>
+
+                    <label for="SDSSearchForm_DirectFlightsOnly" class="input-sm checkbox-inline">Direct flights only</label>
+                    <input type="checkbox" name="DirectFlightsOnly" id="SDSSearchForm_DirectFlightsOnly" ng-model="directFlightsOnly"/>
+            </div>
+            <div class="row">
+                <a href="#" ng-click="areAdvancedSearchOptionsCollapsed = !areAdvancedSearchOptionsCollapsed" class="input-sm SDSToggleLink">Advanced search options</a>
+                <div collapse="!areAdvancedSearchOptionsCollapsed">
+                    <div class="form-group">
+                        <label for="SDSSearchForm_PreferredAirline" class="input-sm">Preferred Airline</label>
+                        <select name="PreferredAirline" class="form-control input-sm" id="SDSSearchForm_PreferredAirline">
+                            <option value="ALL" selected="selected">No airline preference</option>
+                            <option value="AA">American Airlines</option>
+                            <option value="LH">Lufthansa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="SDSSearchForm_PreferredCabin" class="input-sm">Cabin</label>
+                        <select name="PreferredCabin" class="form-control input-sm" id="SDSSearchForm_PreferredCabin">
+                            <option value="Economy" selected="selected">Economy</option>
+                            <option value="Business">Business</option>
+                            <option value="First">First</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <button type="submit" class="btn btn-primary" ng-click="onNewSearchCriteria()">Search</button>
+            </div>
+        </form>
+
+        <!--<div id="SDSSearchForm_DialogPlaceholder" title="Mistake"/>-->
+
+    </div>
+</div>

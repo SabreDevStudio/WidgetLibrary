@@ -1,16 +1,38 @@
-define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], function (moment, ItinerariesList, __) {
+define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], function (moment, ItinerariesList, _) {
     //TODO: lodash also available thru global object..
     "use strict";
 
     function ShoppingData() {
 
         this.data = {};
+
+        this.maxAvailableDates = {};
+
+        this.minDateAndPricePairs = {};
     }
 
     /* In all this object we use string representation of moment date objects for month and day key.
        In order not to depend on moment.js internal date format used in toString(),
        the this object prototype internal fixed format is defined and used to create string keys from moment objects. */
     ShoppingData.prototype.DATE_FORMAT_FOR_KEYS = 'ddd MMM DD YYYY HH:mm:ss';
+
+    ShoppingData.prototype.updateMaxAvailableDate = function (key, newDate) {
+        var currentMaxAvailableDate = this.maxAvailableDates[key];
+        if (_.isUndefined(currentMaxAvailableDate) || newDate.isAfter(currentMaxAvailableDate)) {
+            this.maxAvailableDates[key] = newDate;
+        }
+    };
+
+    ShoppingData.prototype.updateMinDateAndPricePair = function (key, candidateDate, candidateTotalFareAmount) {
+        var currentMinDateAndPricePair = this.minDateAndPricePairs[key];
+        if (_.isUndefined(currentMinDateAndPricePair)
+            || ((candidateTotalFareAmount <= currentMinDateAndPricePair.totalFareAmount) && (candidateDate.isBefore(currentMinDateAndPricePair.date)))) { // prefer more close dates when two dates have same price
+            this.minDateAndPricePairs[key] = {
+                date: candidateDate,
+                totalFareAmount: candidateTotalFareAmount
+            };
+        }
+    };
 
     /* if there is entry for given month, then data had been already requested (from web service) for this month.
     * It is to remember that call was made, there was no results, so not point to call web service again
@@ -67,6 +89,8 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
         this.initKeyEntries(this.data, key, monthKey, dayKey);
 
         this.data[key][monthKey][dayKey].itinerariesList.add(itinerary);
+        this.updateMaxAvailableDate(key, date);
+        this.updateMinDateAndPricePair(key, date, itinerary.totalFareAmount);
     };
 
     ShoppingData.prototype.getItinerariesList = function (key, day) {
@@ -78,7 +102,7 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
     };
 
 
-    ShoppingData.prototype.getLeadPrices = function (key, month) {
+    ShoppingData.prototype.getLeadPricesForMonth = function (key, month) {
         var leadPrices = {};
         var that = this;
         var monthKey = month.format(this.DATE_FORMAT_FOR_KEYS);
@@ -88,6 +112,39 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
             });
         }
         return leadPrices;
+    };
+
+    ShoppingData.prototype.getLeadPricesForRange = function (key, rangeStartDate, rangeEndDate) {
+        var leadPrices = {};
+        var that = this;
+        moment.range(rangeStartDate, rangeEndDate).by('days', function (day) {
+            var dayLeadPrice = that.getLeadPriceForDay(key, day);
+            _.extend(leadPrices, dayLeadPrice);
+        });
+        return leadPrices;
+    };
+
+    ShoppingData.prototype.getLeadPriceForDay = function (key, day) {
+        var dayLeadPrice = {};
+        var monthKey = day.clone().startOf('month').format(this.DATE_FORMAT_FOR_KEYS);
+        var dayKey = day.format(this.DATE_FORMAT_FOR_KEYS);
+        if (_.isUndefined(this.data[key]) || _.isUndefined(this.data[key][monthKey]) || _.isUndefined(this.data[key][monthKey][dayKey])) {
+            return {};
+        }
+        dayLeadPrice[day] = this.data[key][monthKey][dayKey].leadPrice;
+        return dayLeadPrice;
+    };
+
+    ShoppingData.prototype.getMonthLeadPrice = function (key, month) {
+        return _.min(_.values(this.getLeadPricesForMonth(key, month)));
+    };
+
+    ShoppingData.prototype.getMinDateAndPricePair = function (key) {
+        return this.minDateAndPricePairs[key];
+    };
+
+    ShoppingData.prototype.getMaxAvailableDate = function (key) {
+        return this.maxAvailableDates[key];
     };
 
     /**
@@ -105,7 +162,7 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
                 var leadPrice = dayData.itinerariesList.getLeadPrice();
                 monthData[dayKey].leadPrice = leadPrice;
             });
-        })
+        });
     };
 
     //TODO this is lodash 3.7 _.set function, other problems with new lodash 3.7 now, refactor later

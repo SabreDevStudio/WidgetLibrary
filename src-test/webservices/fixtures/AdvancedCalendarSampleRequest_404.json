@@ -1,0 +1,109 @@
+{
+  "OTA_AirLowFareSearchRQ" :
+  {
+    "OriginDestinationInformation" :
+    [
+      {
+        "DepartureDates" :
+        {
+          "dayOrDaysRange" :
+          [
+            {
+              "DaysRange" :
+              {
+                "FromDate" : "2015-06-09",
+                "ToDate" : "2015-12-18"
+              }
+            }
+          ]
+        },
+        "DestinationLocation" :
+        {
+          "LocationCode" : "KRK"
+        },
+        "OriginLocation" :
+        {
+          "LocationCode" : "TFN"
+        },
+        "RPH" : 1
+      },
+      {
+        "DepartureDates" :
+        {
+          "lengthOfStayOrLengthOfStayRange" :
+          [
+            {
+              "LengthOfStayRange" :
+              {
+                "MinDays" : "7",
+                "MaxDays" : "7"
+              }
+            }
+          ]
+        },
+        "DestinationLocation" :
+        {
+          "LocationCode" : "TFN"
+        },
+        "OriginLocation" :
+        {
+          "LocationCode" : "KRK"
+        },
+        "RPH" : 2
+      }
+    ],
+    "POS" :
+    {
+      "Source" :
+      [
+        {
+          "RequestorID" :
+          {
+            "CompanyName" :
+            {
+              "Code" : "TN"
+            },
+            "ID" : "REQ.ID",
+            "Type" : "0.AAA.X"
+          }
+        }
+      ]
+    },
+    "TPA_Extensions" :
+    {
+      "IntelliSellTransaction" :
+      {
+        "RequestType" :
+        {
+          "Name" : "ADC1000"
+        }
+      }
+    },
+    "TravelPreferences" :
+    {
+      "TPA_Extensions" :
+      {
+        "NumTrips" :
+        {
+          "PerDateMin" : 0,
+          "PerDateMax" : "1"
+        }
+      }
+    },
+    "TravelerInfoSummary" :
+    {
+      "AirTravelerAvail" :
+      [
+        {
+          "PassengerTypeQuantity" :
+          [
+            {
+              "Code" : "ADT",
+              "Quantity" : 1
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

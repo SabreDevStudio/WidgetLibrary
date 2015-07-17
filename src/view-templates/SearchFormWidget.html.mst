@@ -17,23 +17,23 @@
 
         <div class="SDSTextInputElement">
             <label for="SDSSearchForm_Origin">Leaving from</label>
-            <input type="text" id="SDSSearchForm_Origin" name="Origin" class="SDSAirportInput" placeholder="City or airport" autocomplete="off" autofocus required/>
+            <input type="text" id="SDSSearchForm_Origin" name="Origin" class="SDSAirportInput" placeholder="City or airport" autocomplete="off" autofocus required ng-model="Origin"/>
         </div>
 
         <div class="SDSTextInputElement">
             <label for="SDSSearchForm_Destination">Going to</label>
-            <input type="text" id="SDSSearchForm_Destination" name="Destination" class="SDSAirportInput" placeholder="City or airport" autocomplete="off" required/>
+            <input type="text" id="SDSSearchForm_Destination" name="Destination" class="SDSAirportInput" placeholder="City or airport" autocomplete="off" required ng-model="Destination"/>
         </div>
 
         <span class="SDSNoWrap">
             <div class="SDSTextInputElement">
                 <label for="SDSSearchForm_DepartureDate">Leaving on</label>
-                <input type="text" id="SDSSearchForm_DepartureDate" name="DepartureDate" class="SDSHasDatePicker SDSDatePickerDepartureDate" autocomplete="off" required/>
+                <input type="text" id="SDSSearchForm_DepartureDate" name="DepartureDate" class="SDSHasDatePicker SDSDatePickerDepartureDate" autocomplete="off" required ng-model="DepartureDate"/>
             </div>
 
             <div class="SDSTextInputElement">
                 <label for="SDSSearchForm_ReturnDate">Returning on</label>
-                <input type="text" id="SDSSearchForm_ReturnDate" name="ReturnDate" class="SDSHasDatePicker SDSDatePickerReturnDate" autocomplete="off" required/>
+                <input type="text" id="SDSSearchForm_ReturnDate" name="ReturnDate" class="SDSHasDatePicker SDSDatePickerReturnDate" autocomplete="off" required ng-model="ReturnDate"/>
             </div>
         </span>
 
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <button type="submit" class="SDSSubmitButton">Search</button>
+        <button type="submit" class="SDSSubmitButton" ng-click="onNewSearchCriteria()">Search</button>
     </form>
 
     <div id="SDSSearchForm_DialogPlaceholder" title="Mistake"/>

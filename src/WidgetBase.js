@@ -51,6 +51,7 @@ define(['lodash', 'jquery'], function (_, $) {
         } else {
             this.replaceInDom(newDom);
         }
+
         if (_.isFunction(callbackOnViewUpdate)) {
             callbackOnViewUpdate(this.currentDOM);
         }
@@ -65,7 +66,7 @@ define(['lodash', 'jquery'], function (_, $) {
 
     // Visible for unit testing
     WidgetBase.prototype.getCurrentDom = function () {
-      return this.currentDOM;
+        return this.currentDOM;
     };
 
     WidgetBase.prototype.getOptions = function () {

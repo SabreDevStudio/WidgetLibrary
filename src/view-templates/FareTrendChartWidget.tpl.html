@@ -1,0 +1,26 @@
+<div class="SDSFareTrendWidget panel panel-default container" ng-if="isAnyDataToDisplayAvailable()">
+
+    <div class="panel-heading text-center">
+        <h4 class="panel-title">Lead Prices</h4>
+    </div>
+
+    <div class="panel-body">
+        <div class="panel-heading">
+            <h4 class="panel-title">Prices for {{departureAirport}}-{{arrivalAirport}},
+                from <strong>{{minDateAndPricePair.totalFareAmount | currency}}</strong> at <strong>{{minDateAndPricePair.date | amDateFormat:'D MMM'}}</strong>
+            </h4>
+        </div>
+
+        <nvd3 options="graphOptions" data="prices"></nvd3>
+
+        <nav>
+            <ul class="pager">
+                <li class="previous"><a href="" ng-if="prevLinkActive" ng-click="onEarlierRequested()">EARLIER</a></li>
+                <li class="previous disabled SDSInactive"><a href="" ng-if="!prevLinkActive" ng-click="onEarlierRequested()">EARLIER</a></li>
+
+                <li class="next"><a href="" ng-if="nextLinkActive" ng-click="onLaterRequested()">LATER</a></li>
+                <li class="next disabled SDSInactive"><a href="" ng-if="!nextLinkActive" ng-click="onLaterRequested()">LATER</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-define(['WidgetBase'], function (WidgetBase) {
+define(['../WidgetBase'], function (WidgetBase) {
     "use strict";
 
     function ShoppingDataDisplayWidget() {

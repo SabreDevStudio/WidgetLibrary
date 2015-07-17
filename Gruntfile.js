@@ -39,31 +39,6 @@ module.exports = function (grunt) {
             }
         },
 
-
-        strip_code: {
-            options: {
-                /** we have to comment out one line of outh2 module: unused variable is initialized by function which is not implemented yet for other library:
-                 * in oauth module, file: lib/outh2, line:
-                 * var creds = crypto.createCredentials({ });
-                 *
-                 *  Error: sorry, createCredentials is not implemented yet
-                 *  we accept pull requests
-                 *  https://github.com/crypto-browserify/crypto-browserify
-                 *
-                 * This variable is not used anyway, and object creation does not have side effects for our use.
-                 **/
-                pattern: /var\s+creds\s*=\s*crypto.createCredentials\(\{\s*\}\);/
-                //pattern: /var\s+creds\s*=\s*crypto.createCredentials/
-            },
-            strip_thirdParty: {
-                src: 'src/lib/commWrapper.js'
-            }
-        },
-
-        browserify: {
-            'src/lib/commWrapper.js': ['src/lib/commWrapperSrc.js']
-        },
-
         copy: {
             main: {
                 expand: true,
@@ -105,13 +80,6 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            //js: {
-            //files: ['src/lib/commWrapperSrc.js'],
-            //tasks: ['browserify', 'strip_code'],
-            //options: {
-            //  spawn: false
-            //}
-            //},
             compass: {
                 files: ['style/*.scss'],
                 tasks: ['compass'],
@@ -140,10 +108,9 @@ module.exports = function (grunt) {
                         'jquery-ui': "empty:"
                     },
                     inlineText: true,
-                    optimize: 'none',
-                    findNestedDependencies: true,
+                    //optimize: 'none',
+                    //findNestedDependencies: true,
                     include: ['../node_modules/requirejs/require.js']
-                    //cjsTranslate: true
                 }
             }
         }
@@ -153,8 +120,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-compass');
-    grunt.loadNpmTasks('grunt-browserify');
-    grunt.loadNpmTasks('grunt-strip-code');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-autoprefixer');

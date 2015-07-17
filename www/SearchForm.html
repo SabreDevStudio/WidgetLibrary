@@ -5,15 +5,21 @@
     <title>Search form</title>
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/cupertino/jquery-ui.css">
+    <link rel="stylesheet" href="../bower_components/nvd3/nv.d3.css">
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="SearchForm.custom.css">
 </head>
 <body>
 
-<div id="SDSSearchFormWrapper_1"></div>
+<!--<div id="SDSSearchFormWrapper_1"></div>-->
 <div id="mainPageContainer">
     <div id="SDSSearchFormWrapper_2"></div>
     <div id="CalendarSearchResults"></div>
+
+    <widgets-config data-client-id="CLIENT"/>
+    <div id="SearchFormNG" data-search-form></div>
+    <div id="FareTrendChart" data-fare-trend-chart data-number-of-weeks-to-display="6"></div>
 </div>
 <script>
     // customer must provide his SDS SDK configuration functions before SDK script executes (SDK executes functions from global configuration object)
@@ -32,25 +38,20 @@
             searchCriteriaValidator: SDS.instaflightSearchCriteriaValidator
         });
 
-//        var searchFormWidgetVertical = SDS.searchForm('#SDSSearchFormWrapper_2', {
-//            searchCriteriaValidator: SDS.instaflightSearchCriteriaValidator
-//        });
-
         var cal = SDS.calendar("CalendarSearchResults", {
-            year: 2015
-            , month: 6
-            , origin: 'DFW'
-            , destination: 'LAX'
-            , lengthOfStay: 14
-            , showDayNumbersPrevAndNextMonth: true
-            , tabs: 3
-        }, true);
+              showDayNumbersPrevAndNextMonth: true
+            , tabs: 9
+        }, false);
 
         cal.addSearchForm(searchFormWidget);
+
+//        var fareTrendChart = SDS.fareTrendChart("#FareTrendChart");
+//        fareTrendChart.addSearchForm(searchFormWidget);
+
     });
 
 </script>
-<script async data-main="../src/SabreDevStudioSDK" src="../src/lib/require.js"></script>
+<script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
 <!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
 </body>
 </html>
