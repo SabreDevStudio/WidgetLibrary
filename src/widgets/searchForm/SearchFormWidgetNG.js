@@ -71,7 +71,7 @@ define([
                 $scope.tripType = 'returnTrip';
 
                 function setReturnDateToDefaultLengthOfStay() {
-                    $scope.ReturnDate = moment($scope.DepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days');
+                    $scope.ReturnDate = moment($scope.DepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days').toDate();
                 }
 
                 var returnDateWasEverChanged = false;

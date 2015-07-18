@@ -14,13 +14,15 @@ define([
 
         return angular.module('sabreDevStudioWebServices')
             .factory('AuthenticationService', [
-                      '$resource'
+                      '$q'
+                    , '$resource'
                     , 'credentials'
-                    , '$q'
+                    , 'apiURL'
                 , function (
-                      $resource
+                      $q
+                    , $resource
                     , credentials
-                    , $q
+                    , apiURL
                 ) {
 
                 var cachedToken;
@@ -38,7 +40,7 @@ define([
                     return encodedClientIdSecret;
                 }
 
-                var endpointURL = credentials.apiURL + '/v1/auth/token';
+                var endpointURL = apiURL + '/v1/auth/token';
 
                 var authResource = $resource(endpointURL, null, {
                     sendRequest: {

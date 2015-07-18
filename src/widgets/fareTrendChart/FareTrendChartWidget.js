@@ -1,5 +1,6 @@
 define([
           'moment'
+        , 'moment_range'
         , 'lodash'
         , 'angular'
         , 'angular_moment'
@@ -11,6 +12,7 @@ define([
     ],
     function (
           moment
+        , moment_range
         , _
         , angular
         , angular_moment
@@ -28,7 +30,7 @@ define([
                     , 'DateService'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'
-                    , 'AdvancedCalendarDataService'
+                    , 'LeadPriceCalendarDataService'//, 'AdvancedCalendarDataService'
                     , 'chartConfigurationOptions'
                 , function ( //controller exposed globally to angular for unit testing
                       $scope
@@ -64,8 +66,9 @@ define([
 
                     $scope.lastSearchCriteria = {};
 
-                    $scope.firstDayDisplayed = firstDayDisplayedCap.clone();
-                    $scope.lastDayDisplayed = calculateLastDayDisplayed($scope.firstDayDisplayed);
+                    var firstDayDisplayed = firstDayDisplayedCap.clone();
+                    var lastDayDisplayed = calculateLastDayDisplayed(firstDayDisplayed);
+                    $scope.displayedRange = moment.range(firstDayDisplayed, lastDayDisplayed);
                 }
 
                 function calculateLastDayDisplayed(firstDayDisplayed) {
@@ -76,7 +79,7 @@ define([
                 // @Controller: main controller function, acting on new search criteria sent to the widget
                 $scope.$on(newSearchCriteriaEvent, function () {
                     var newSearchCriteria = SearchCriteriaBroadcastingService.searchCriteria;
-                    ShoppingDataService.getLeadPricesForRange(newSearchCriteria, $scope.firstDayDisplayed, $scope.lastDayDisplayed).then(function (leadPrices) {
+                    ShoppingDataService.getLeadPricesForRange(newSearchCriteria, $scope.displayedRange).then(function (leadPrices) {
                         currentSearchCriteria = newSearchCriteria;
                         $scope.minDateAndPricePair = ShoppingDataService.getMinDateAndPricePair(newSearchCriteria);
 
@@ -107,20 +110,20 @@ define([
                 function shiftRangePresented (requestedWeeksOffset) {
                     var requestedDaysOffset = requestedWeeksOffset * 7;
                     requestedDaysOffset = trimOffsetToObeyLastDayDisplayedCap(requestedDaysOffset);
-                    $scope.firstDayDisplayed.add(requestedDaysOffset, 'days');
-                    $scope.lastDayDisplayed = calculateLastDayDisplayed($scope.firstDayDisplayed);
-                    ShoppingDataService.getLeadPricesForRange(currentSearchCriteria, $scope.firstDayDisplayed, $scope.lastDayDisplayed).then(function(leadPrices) {
+                    $scope.displayedRange.start.add(requestedDaysOffset, 'days');
+                    $scope.displayedRange.end = calculateLastDayDisplayed($scope.displayedRange.start);
+                    ShoppingDataService.getLeadPricesForRange(currentSearchCriteria, $scope.displayedRange).then(function(leadPrices) {
                         updateModelWithLeadPrices(leadPrices);
                     });
                 }
 
                 function trimOffsetToObeyLastDayDisplayedCap(requestedDaysOffset) {
                     if (requestedDaysOffset > 0) {
-                        var numberOfLaterDaysLeftToPresent = lastDayDisplayedCap.diff($scope.lastDayDisplayed, 'days');
+                        var numberOfLaterDaysLeftToPresent = lastDayDisplayedCap.diff($scope.displayedRange.end, 'days');
                         return (numberOfLaterDaysLeftToPresent < requestedDaysOffset)? numberOfLaterDaysLeftToPresent : requestedDaysOffset;
                     }
                     if (requestedDaysOffset < 0) {
-                        var numberOfEarlierDaysLeftToPresent = $scope.firstDayDisplayed.diff(firstDayDisplayedCap, 'days');
+                        var numberOfEarlierDaysLeftToPresent = $scope.displayedRange.start.diff(firstDayDisplayedCap, 'days');
                         return (numberOfEarlierDaysLeftToPresent < Math.abs(requestedDaysOffset))? -numberOfEarlierDaysLeftToPresent: requestedDaysOffset; // requestedDaysOffset is negative (moving to past) so the returned numberOfEarlierDaysLeftToPresent must be also negative if returned as offset value
                     }
                 }
@@ -138,8 +141,8 @@ define([
                 }
 
                 function updateStateOfNavigationLinks() {
-                    $scope.prevLinkActive = $scope.firstDayDisplayed.isAfter(firstDayDisplayedCap);
-                    $scope.nextLinkActive = $scope.lastDayDisplayed.isBefore(lastDayDisplayedCap);
+                    $scope.prevLinkActive = $scope.displayedRange.start.isAfter(firstDayDisplayedCap);
+                    $scope.nextLinkActive = $scope.displayedRange.end.isBefore(lastDayDisplayedCap);
                 }
 
                 }])

@@ -3,24 +3,28 @@ define([
         , 'angular_resource'
         , 'util/LodashExtensions'
         , 'moment'
+        , 'moment_range'
         , 'stache!request-templates/AdvancedCalendarRequest.json'
         , 'Configuration'
         , 'webservices/advancedCalendar/AdvancedCalendarResponseParser'
         , 'util/BaseServices'
-        , 'webservices/AuthenticationService'
+        , 'webservices/AuthenticationService' // TODO: seems not needed here but without it and with interceptor modules not not load
         , 'webservices/SabreDevStudioWebServicesModule'
+        , 'datamodel/FareForecast'
     ],
     function (
           angular
         , angular_resource
         , _
         , moment
+        , moment_range
         , requestTemplate
         , ConfigurationDummy
         , AdvancedCalendarResponseParser
         , BaseServices
         , AuthenticationService
         , SabreDevStudioWebServicesModule
+        , FareForecast
     ) {
         'use strict';
 
@@ -62,19 +66,17 @@ define([
                 , '$resource'
                 , 'credentials'
                 , '$cacheFactory'
-                , 'AuthenticationService'
-            , function ($q, $resource, credentials, $cacheFactory, AuthenticationService) {
+            , function ($q, $resource, credentials, $cacheFactory) {
                 var endpointURL = credentials.apiURL + '/v1.8.1/shop/calendar/flights';
 
                 var responseCache = $cacheFactory('AdvancedCalendarSearchServiceCache');
 
                 var resource = $resource(endpointURL, null, {
                     sendRequest: {method: 'POST', headers: generalHeaders
-                        ,transformRequest: function (webServiceRequestOptions, headersGetter) {
+                        , transformRequest: function (webServiceRequestOptions, headersGetter) {
                             webServiceRequestOptions.fromDate = webServiceRequestOptions.requestStartDate.format('YYYY-MM-DD');
                             webServiceRequestOptions.toDate = webServiceRequestOptions.requestEndDate.format('YYYY-MM-DD');
                             var webServiceRequestPayload = requestTemplate(webServiceRequestOptions); //todo remove mustache request template, must be domain object, but how to wrap it into NG?
-                            angular.extend(headersGetter(), {'Authorization': 'Bearer ' + webServiceRequestOptions.token}); //TODO ugly, but also cannot pass custom header in $resource call
                             return webServiceRequestPayload;
                         }
                     }
@@ -95,23 +97,18 @@ define([
                             if (cached) {
                                 return resolve(cached);
                             }
-                            AuthenticationService.getToken().then(function (token) {
-                                var requestOptions = angular.extend({}, webServiceRequestOptions, {
-                                    token: token
-                                });
-                                resource.sendRequest({}, requestOptions).$promise.then(
-                                    function (response) {
-                                        responseCache.put(cacheKey, response);
-                                        return resolve(response);
-                                    },
-                                    function (error) {
-                                        if (isErrorResponseCacheable(error.status)) {
-                                            responseCache.put(cacheKey, error);
-                                        }
-                                        return reject(error);
+                            resource.sendRequest({}, webServiceRequestOptions).$promise.then(
+                                function (response) {
+                                    responseCache.put(cacheKey, response);
+                                    return resolve(response);
+                                },
+                                function (error) {
+                                    if (isErrorResponseCacheable(error.status)) {
+                                        responseCache.put(cacheKey, error);
                                     }
-                                );
-                            })
+                                    return reject(error);
+                                }
+                            );
                         });
                     }
                 };
@@ -135,20 +132,19 @@ define([
                 }
 
                 return {
-                    getLeadPricesForRange: function (searchCriteria, rangeStartDate, rangeEndDate) {
+                    getLeadPricesForRange: function (searchCriteria, range) {
                         return $q(function(resolve, reject) {
                             var cacheKey = createCacheKey(searchCriteria);
-                            var optionsFromCache = ShoppingOptionsCacheService.getLeadPricesForRange(cacheKey, rangeStartDate, rangeEndDate);
+                            var optionsFromCache = ShoppingOptionsCacheService.getLeadPricesForRange(cacheKey, range.start, range.end); //TODO
                             if (_.size(optionsFromCache) > 0) {
                                 return resolve(optionsFromCache);
                             }
                             var webServiceRequestOptions = searchCriteriaTransformer.translateSearchCriteriaIntoRequestOptions(searchCriteria);
                             AdvancedCalendarSearchService.sendRequest(webServiceRequestOptions).then(
                                 function (shoppingData) {
-                                    var shoppingData = responseParser.parseResponse(shoppingData, rangeStartDate, rangeEndDate, cacheKey); //todo parser should not know of request dates or cache key: add one more transformation. parser should only create itineraries list
+                                    var shoppingData = responseParser.parseResponse(shoppingData, range.start, range.end, cacheKey); //todo parser should not know of request dates or cache key: add one more transformation. parser should only create itineraries list
                                     ShoppingOptionsCacheService.addUpdate(shoppingData);
-                                    var leadPricesForRange = shoppingData.getLeadPricesForRange(cacheKey, rangeStartDate, rangeEndDate);
-                                    console.log(leadPricesForRange);
+                                    var leadPricesForRange = shoppingData.getLeadPricesForRange(cacheKey, range.start, range.end);
                                     return resolve(leadPricesForRange);
                                 },
                                 function (error) {
@@ -170,19 +166,29 @@ define([
             .factory('LeadPriceCalendarResponseParser', function () {
                 return {
                     parse: function (response) {
-                        return response;
+                        return response.FareInfo.map(function (fareInfo) {
+                            return {
+                                  departureDateTime: fareInfo.DepartureDateTime
+                                , lowestFare: fareInfo.LowestFare
+                                , lowestNonStopFare: fareInfo.LowestNonStopFare
+                            };
+                        });
                     }
                 };
             })
             .factory('LeadPriceCalendarDataService', [
                       '$q'
+                    , '$cacheFactory'
                     , 'LeadPriceCalendarWebService'
                     , 'LeadPriceCalendarResponseParser'
                 , function (
                       $q
+                    , $cacheFactory
                     , LeadPriceCalendarWebService
                     , parser
                 ) {
+
+                    var leadFaresCache = $cacheFactory('leadPricesCache');
 
                     function translateSearchCriteriaIntoRequestOptions(searchCriteria) {
                         return {
@@ -192,86 +198,155 @@ define([
                         }
                     }
 
-                    function sliceLeadPrices(leadPrices, range) { //TODO into data model object: LeadPrices
-                        var leadPrices = {};
-                        leadPrices.forEach(function (price, dayString) {
-                            var date = moment(dayString, moment.ISO_8601);
-                            if (range.contains(date)) {
-                                _.extend(leadPrices, {dayString: price});
+                    function sliceLeadFares(leadFares, range) { //TODO into data model object: LeadPrices
+                        return leadFares.filter(function (leadFare) {
+                            var date = moment(leadFare.departureDateTime, moment.ISO_8601);
+                            return range.contains(date);
+                        });
+                    }
+
+                    function getMinDateAndPricePair(leadFares, directFlightsOnly) {
+                        var minLeadFare = _.min(leadFares, function (leadFare) {
+                            return (directFlightsOnly)? leadFare.lowestNonStopFare: leadFare.lowestFare;
+                        });
+                        return { //todo into model
+                              totalFareAmount: (directFlightsOnly)? minLeadFare.lowestNonStopFare: minLeadFare.lowestFare
+                            , date: moment(minLeadFare.departureDateTime, moment.ISO_8601)
+                        };
+                    }
+
+                    function getMaxAvailableDate(leadFares) {
+                        var maxAvailableDateString = leadFares.reduce(function (maxAvailableDate, leadFare) {
+                            if (_.isUndefined(maxAvailableDate) || (leadFare.departureDateTime > maxAvailableDate)) {
+                                return leadFare.departureDateTime;
                             }
                         });
-                        return leadPrices;
+                        return moment(maxAvailableDateString, moment.ISO_8601);
+                    }
+
+                    function buildLeadPrices(leadFaresForRange, directFlightsOnly) {
+                        return leadFaresForRange.reduce(function (acc, leadFare) {
+                            var dateKey = moment(leadFare.departureDateTime, moment.ISO_8601).toString();
+                            var leadPrice = (directFlightsOnly)? leadFare.lowestNonStopFare: leadFare.lowestFare;
+                            acc[dateKey] = leadPrice;
+                            return acc;
+                        }, {});
                     }
 
                     return {
                         getLeadPricesForRange: function (searchCriteria, range) {
                             return $q(function(resolve, reject) {
+                                var dataFromCache = leadFaresCache.get(searchCriteria);
+                                if (dataFromCache) {
+                                    var leadFaresForRange = sliceLeadFares(dataFromCache, range);
+                                    var leadPrices = buildLeadPrices(leadFaresForRange, searchCriteria.directFlightsOnly);
+                                    return resolve(leadPrices);
+                                }
                                 var webServiceRequestOptions = translateSearchCriteriaIntoRequestOptions(searchCriteria);
-                                    LeadPriceCalendarWebService.sendRequest(webServiceRequestOptions).then(
+                                    LeadPriceCalendarWebService.get(webServiceRequestOptions).$promise.then(
                                         function(response) {
-                                            var leadPrices = parser.parse(response);
-                                            var leadPricesForRange = sliceLeadPrices(leadPrices, range);
-                                            return resolve(leadPricesForRange);
+                                            var leadFares = parser.parse(response); //TODO variables naming
+                                            leadFaresCache.put(searchCriteria, leadFares);
+                                            var leadFaresForRange = sliceLeadFares(leadFares, range);
+                                            var leadPrices = buildLeadPrices(leadFaresForRange, searchCriteria.directFlightsOnly);
+                                            return resolve(leadPrices);
                                         },
                                         function(error) {
+                                            //TODO? put result of 404 in cache also?
                                             return reject(error);
                                         }
                                     );
                             });
+                        },
+                        getMinDateAndPricePair: function (searchCriteria) { //todo for now assume it is called after getLeadPricesForRange
+                            var dataFromCache = leadFaresCache.get(searchCriteria);
+                            if (_.isUndefined(dataFromCache)) {
+                                throw new Error('trying to get aggregate from lead prices data while first call not done yet'); //TODO handle
+                            }
+                            return getMinDateAndPricePair(dataFromCache, searchCriteria.directFlightsOnly);
+                        },
+                        getMaxAvailableDate: function (searchCriteria) {
+                            var dataFromCache = leadFaresCache.get(searchCriteria);
+                            if (_.isUndefined(dataFromCache)) {
+                                throw new Error('trying to get aggregate from lead prices data while first call not done yet'); //TODO handle
+                            }
+                            return getMaxAvailableDate(dataFromCache);
                         }
+
                     };
                 }
             ])
             .factory('LeadPriceCalendarWebService', [
-                      '$q'
-                    , '$resource'
-                    , 'credentials'
-                    , 'AuthenticationService'
+                      '$resource'
+                    , 'apiURL'
                 , function (
-                      $q
-                    , $resource
-                    , credentials
-                    , AuthenticationService
+                      $resource
+                    , apiURL
                 ) {
-                var endpointURL = credentials.apiURL + '/v1/shop/flights/fares';
-                var resource = $resource(endpointURL, {}, {
+                var endpointURL = apiURL + '/v1/shop/flights/fares';
+                return $resource(endpointURL, {}, {
                     get: {
                           method:'GET'
                         , cache: true
-                        , headers: {
-                            'Authorization': 'Bearer ' + requestOptions.token
-                        }
-                        //, transformRequest: function (requestOptions, headersGetter) {
-                        //    angular.extend(headersGetter(), {'Authorization': 'Bearer ' + requestOptions.token});
-                        //    return requestOptions;
-                        //}
                     }
                 });
+            }])
+            .factory('FareForecastWebService', [
+                      '$resource'
+                    , 'apiURL'
+                , function (
+                      $resource
+                    , apiURL
+                ) {
+                var endpointURL = apiURL + '/v1/forecast/flights/fares'; //TODO dup
+                return $resource(endpointURL, {}, {
+                    get: {
+                        method:'GET'
+                        , cache: true
+                    }
+                });
+             }])
+            .factory('FareForecastResponseParser', function () {
                 return {
-                    sendRequest: function (webServiceRequestOptions) {
-                        return $q(function (resolve, reject) {
-                            AuthenticationService.getToken().then(function (token) {
-                                var requestOptionsWithToken = angular.extend({}, webServiceRequestOptions, {
-                                    token: token
-                                });
-                                resource.get(requestOptionsWithToken).$promise.then(
-                                    function (response) {
-                                        resolve(response);
-                                    },
-                                    function (error) {
-                                        reject(error);
-                                    }
-                                );
-                            });
+                    parse: function (response) {
+                        var recommendation = response.Recommendation;
+                        return new FareForecast(recommendation);
+                    }
+                };
+            })
+            .factory('FareForecastDataService', [
+                      '$q'
+                    , 'FareForecastWebService'
+                    , 'FareForecastResponseParser'
+                , function (
+                      $q
+                    , FareForecastWebService
+                    , FareForecastResponseParser) {
+
+                function translateSearchCriteriaIntoRequestParams(searchCriteria) {
+                    return {
+                          origin: searchCriteria.origin
+                        , destination: searchCriteria.destination
+                        , departuredate: moment(searchCriteria.departureDate).format('YYYY-MM-DD')
+                        , returndate: moment(searchCriteria.returnDate).format('YYYY-MM-DD')
+                    };
+                }
+
+                return {
+                    getFareForecast: function (searchCriteria) {
+                        return $q(function(resolve, reject) {
+                            var requestParams = translateSearchCriteriaIntoRequestParams(searchCriteria);
+                            FareForecastWebService.get(requestParams).$promise.then(
+                                function (response) {
+                                    var fareForecast = FareForecastResponseParser.parse(response);
+                                    resolve(fareForecast);
+                                },
+                                function (error) {
+                                    reject(error);
+                                }
+                            );
                         });
                     }
                 };
             }]);
-
-        //.factory('FareForecastWebService', ['$resource', 'credentials', function ($resource, credentials) {
-            //    var endpointURL = credentials.apiURL + '/v1/forecast/flights/fares';
-            //    var resource =  $resource(endpointURL, null, {
-            //        sendRequest: {method: 'GET', headers: generalHeaders} //TODO transformRequest here and here request building from skeleton!
-            //    });
-            //}]);
 });

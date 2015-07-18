@@ -51,6 +51,10 @@ define([
         return this.lengthOfStay || moment(this.returnDate).diff(moment(this.departureDate), 'days');
     };
 
+    SearchCriteria.prototype.toString = function () {
+        return JSON.stringify(this);
+    };
+
     SearchCriteria.prototype.TripTypeEnum = Object.freeze({
         'OneWay': 'OneWay',
         'RoundTrip': 'RoundTrip',

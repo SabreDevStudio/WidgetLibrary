@@ -9,9 +9,9 @@ define([
         var configurationModule = angular.module('configuration', [])
             .value('credentials', {
                 clientId: 'V1:pe6myrbaa021f2br:DEVCENTER:EXT',
-                clientSecret: 'DUaEf51f',
-                apiURL: 'https://api.test.sabre.com'
+                clientSecret: 'DUaEf51f'
             })
+            .value('apiURL', 'https://api.test.sabre.com')
             .directive('widgetsConfig', function () {
                 return {
                       restrict: 'E'

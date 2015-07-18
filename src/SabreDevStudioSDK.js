@@ -84,6 +84,7 @@ require([
         , 'angular'
         , 'widgets/fareTrendChart/FareTrendChartWidget'
         , 'widgets/searchForm/SearchFormWidgetNG'
+        , 'widgets/fareForecast/FareForecastWidget'
         , 'Configuration'
     ], function (
           $
@@ -106,6 +107,7 @@ require([
         , angular
         , FareTrendChartWidget
         , SearchFormWidgetNG
+        , FareForecastWidget
         , Configuration
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?
         "use strict";
