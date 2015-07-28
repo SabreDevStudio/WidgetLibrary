@@ -1,0 +1,38 @@
+<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
+    <div class="panel-heading text-center">
+        <h4>Lowest prices by airline and number of stops</h4>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="SDSPricePerStopsPerAirlineSummaryTable table table-hover table-bordered table-condensed"> <!-- todo freeze first nad second column when scrolling: http://jsfiddle.net/4XG7T/3/, http://stackoverflow.com/questions/19737306/bootstrap-3-responsive-table-with-fixed-first-column -->
+                <thead>
+                    <th></th>
+                    <th class="success">Lowest price</th>
+                    <th class="text-center" ng-repeat="item in summary.airlineSummaries">
+                        <img class="SDSAirlineLogo" ng-src="../img/airlineLogos/{{item.airline}}.PNG" fallback-src="../img/airlineLogos/generic_airline.PNG">
+                        <div>{{item.airline | airlineFullName}}</div>
+                    </th>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Non-stop</td>
+                        <td class="success">{{summary.totalSummary.nonStopLowestPrice | currency}}</td>
+                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestNonStop === true}">{{item.nonStopLowestPrice | currency}}</td>
+                    </tr>
+                    <tr>
+                        <td>1 Stop</td>
+                        <td class="success">{{summary.totalSummary.oneStopLowestPrice | currency}}</td>
+                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestOneStopLowestPrice === true}">{{item.oneStopLowestPrice | currency}}</td>
+                    </tr>
+                    <tr>
+                        <td>2+ Stops</td>
+                        <td class="success">{{summary.totalSummary.twoAndMoreStopsLowestPrice | currency}}</td>
+                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestTowOrMoreStopsLowestPrice === true}">{{item.twoAndMoreStopsLowestPrice | currency}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-transclude/>

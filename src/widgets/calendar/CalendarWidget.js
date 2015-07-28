@@ -22,12 +22,12 @@ define(['../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds', 
     "async",
     'util/exceptions',
     'datamodel/ShoppingData',
-    '../../webservices/advancedCalendar/AdvancedCalendarResponseParser',
+    'webservices/OTAResponseParser',
     'datamodel/SearchCriteria',
     '../../webservices/advancedCalendar/AdvancedCalendarWebService'
 ], function (ShoppingDataDisplayWidget, CalendarMonth, v, $, $$, jqueryUIDummy, _
     , Mustache, calendarTemplate, browser_features_package, moment, moment_range, momentRangeUtils, CurrencyFormatter, DateFormatter, PriceClassifier, async, ex
-    , ShoppingData, AdvancedCalendarResponseParser, SearchCriteria, AdvancedCalendarWebService) {
+    , ShoppingData, OTAResponseParser, SearchCriteria, AdvancedCalendarWebService) {
     "use strict";
 
     /**
@@ -53,7 +53,8 @@ define(['../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds', 
         };
 
         // TODO expose as external dependency so that this calendar can work also with other services.
-        var responseParser = new AdvancedCalendarResponseParser();
+        // var responseParser = new AdvancedCalendarResponseParser();
+        var responseParser = new OTAResponseParser();
 
         ShoppingDataDisplayWidget.apply(this, arguments);
 
@@ -300,7 +301,15 @@ define(['../ShoppingDataDisplayWidget', 'widgets/calendar/CalendarMonthBounds', 
                     if (err && err.status !== 404) { // do not parse errors other that 404. 404 is a valid business response.
                         callback(err);
                     }
-                    var shoppingData = responseParser.parseResponse(data, requestStartDate, requestEndDate, optionsCacheKey);
+
+                    var itinerariesList = responseParser.parse(data);
+                    var shoppingData = new ShoppingData();
+                    shoppingData.markRequestedData(optionsCacheKey, requestStartDate, requestEndDate);
+                    itinerariesList.getItineraries().forEach(function(itineary) {
+                        shoppingData.addItinerary(optionsCacheKey, itineary, itineary.getOutboundDepartureDateTime());
+                    });
+                    shoppingData.updateLeadPrices(optionsCacheKey);
+
                     calendarModelData = createMonthModel(shoppingData.getLeadPricesForMonth(optionsCacheKey, month), monthBounds, monthSeqNumber, totalMonths);
 
                     // update cache for all months that we requested

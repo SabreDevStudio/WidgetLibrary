@@ -168,25 +168,11 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
   }
 }
 
-.SDSWidget .SDSAirport {
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-  margin-right: 3px;
-  background-color: #3a87ad;
-  border-radius: 3px;
-  padding: 2px 4px;
-  font-weight: bold;
-  color: #ffffff;
-  white-space: nowrap;
+.SDSAirlineLogo {
+  border: none;
   width: 22px;
-}
-
-.SDSWidget {
-  .SDSAirlineLogo {
-    border: none;
-    width: 22px;
-    height: 15px;
-    overflow: hidden;
-  }
+  height: 15px;
+  overflow: hidden;
 }
 
 .SDSShowDetailsLink {
@@ -292,4 +278,25 @@ also sets left and right child to inline block */
     display:table;
     clear:both;
   }
+}
+
+.SDSWidgetNG { //TODO remove .SDSWidget and replace with SDSWidgetNG
+
+  .SDSPaxNbrInput { //bumping up selector value to override bootstrap
+    // needed for FF and IE, otherwise this field far too long for one digit input
+    width: 5.5rem;
+  }
+
+  // Bootstrap default input fields unnecessarily long for dates
+  .SDSDateInput {
+    width: 14rem;
+  }
+}
+
+.SDSDisableLink {
+  pointer-events: none;
+}
+
+.SDSBadgeInfo, .panel-default .panel-heading .badge.SDSBadgeInfo {
+  background-color: #3a87ad;
 }

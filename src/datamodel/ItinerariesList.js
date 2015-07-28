@@ -2,6 +2,7 @@ define(['util/LodashExtensions'], function (_) {
     "use strict";
 
     function ItinerariesList() {
+
         var itineraries = [];
 
         this.getItineraries = function () {
@@ -12,9 +13,9 @@ define(['util/LodashExtensions'], function (_) {
             itineraries.push(itin);
         };
 
-        this.sort = function() { //TODO hardcoded sort criteria for now
-            itineraries = _.sortBy(itineraries, 'totalFareAmount');
-        };
+        //this.sort = function() { //TODO hardcoded sort criteria for now
+        //    itineraries = _.sortBy(itineraries, 'totalFareAmount');
+        //};
 
         this.size = function (includeFilteredOut) {
             if (includeFilteredOut === true) {
@@ -59,36 +60,42 @@ define(['util/LodashExtensions'], function (_) {
             return {selectableValues: selectableValues};
         };
 
-        ItinerariesList.prototype.getCurrentValuesBounds = function (boundsSpecifications) {
-            var that = this;
-            return boundsSpecifications.map(function (spec) {
-                var filterablePropertyName = spec.filterablePropertyName;
-                if (spec.type === that.StatisticsTypeEnum.range) {
-                    var statistics = that.getRangeStatistics(filterablePropertyName);
-                } else if (spec.type === that.StatisticsTypeEnum.discrete) {
-                    statistics = that.getDiscreteValuesStatistics(filterablePropertyName)
-                } else {
-                    throw new Error('Illegal specification of bounds requested' + spec.type);
-                }
-                return {
-                    filterablePropertyName: filterablePropertyName,
-                    statistics: statistics
-                };
-            });
-        };
-
-        ItinerariesList.prototype.getLeadPrice = function () {
-            return this.getMinValue('totalFareAmount');
-        };
-
-        ItinerariesList.prototype.StatisticsTypeEnum = Object.freeze({
-            'range': 'range',
-            'discrete': 'discrete'
-        });
-
     }
 
-    ItinerariesList
+    ItinerariesList.prototype.getCurrentValuesBounds = function (boundsSpecifications) {
+        var that = this;
+        return boundsSpecifications.map(function (spec) {
+            var filterablePropertyName = spec.filterablePropertyName;
+            if (spec.type === that.StatisticsTypeEnum.range) {
+                var statistics = that.getRangeStatistics(filterablePropertyName);
+            } else if (spec.type === that.StatisticsTypeEnum.discrete) {
+                statistics = that.getDiscreteValuesStatistics(filterablePropertyName)
+            } else {
+                throw new Error('Illegal specification of bounds requested' + spec.type);
+            }
+            return {
+                filterablePropertyName: filterablePropertyName,
+                statistics: statistics
+            };
+        });
+    };
+
+    ItinerariesList.prototype.getLeadPrice = function () {
+        return this.getMinValue('totalFareAmount');
+    };
+
+    ItinerariesList.prototype.StatisticsTypeEnum = Object.freeze({
+        'range': 'range',
+        'discrete': 'discrete'
+    });
+
+    ItinerariesList.prototype.getCheapestItinerary = function () {
+        return _.min(this.getItineraries(), 'totalFareAmount');
+    };
+
+    ItinerariesList.prototype.getShortestItinerary = function () {
+        return _.min(this.getItineraries(), 'duration');
+    };
 
     return ItinerariesList;
 });

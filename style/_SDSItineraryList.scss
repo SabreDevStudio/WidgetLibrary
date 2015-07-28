@@ -1,111 +1,62 @@
 @import "SDSCommon";
 
-.SDSItinerariesListWidget {
-
-  .SDSItinerariesListHeader {
-    @extend %SDSHeaderDataPrimary;
+.SDSLegList {
+  border-right: $itemsSeparatingLineStyle;
+  box-sizing: border-box;
+  > li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  > li:not(:last-child) {
+    border-bottom: dotted $itemsSeparatingLineColor 1px;
   }
 
-  .SDSItinerariesList {
-    @extend %SDSData;
+}
+
+.SDSIconAirplaneArrow {
+  background: url("../img/sabre.png") -109px -161px no-repeat;
+  width: 2px;
+  height: 14px;
+}
+
+.SDSLegSummary {
+  padding-bottom: 0.5rem;
+
+  > .SDSTravelDate {
+    width: 10%;
   }
-
-  ol, ul {
-    list-style-type: none;
+  > .SDSAirport {
+    width: 4%;
   }
-
-  .SDSLegSummary > li {
-    display: inline-block;
+  > .SDSIconAirplaneArrow {
+    margin-left: 2rem;
+    margin-right: 1.5rem;
   }
-
-  .SDSItinerary {
-    > .SDSLegList, > .SDSPriceSummary {
-      display: inline-block;
-      vertical-align: top;
-    }
-    > .SDSLegList {
-      width: 70%;
-    }
-    .SDSPriceSummary {
-      @include childToRight('ul');
-      width: 30%;
-
-      ul > li:not(:last-child) {
-        margin-bottom: 3px;
-      }
-
-      > :first-child {
-        margin-top: 3px;
-        margin-right: 3px;
-      }
-      .SDSShowDetailsLink {
-        vertical-align: bottom;
-      }
-    }
+  > .SDTravelDepartureArrivalTime {
+    width: 4%;
   }
+}
 
-  .SDSLegSummary {
-    > .SDSTravelDate {
-      padding-left: 5px;
-      padding-right: 4px;
-    }
-    > .SDSIconAirplaneArrow {
-      background: url("../img/sabre.png") -109px -161px no-repeat;
-      width: 4px;
-      height: 14px;
-      vertical-align: middle;
-      margin-left: 10px;
-      margin-right: 5px;
-    }
-    > .SDSFlightDetailsLink {
-      float: right;
-      padding-right: 5px;
-    }
+.SDSLegShortSummary {
+  margin-top: 10px;
+}
+
+.SDSFlightDepartureOrArrival {
+  > .SDSLabelForTravelDate {
+    width: 6%;
   }
-
-  .SDSLegList {
-    border-right: $itemsSeparatingLineStyle;
-    box-sizing: border-box;
-    > li {
-      padding-top: 5px;
-      padding-bottom: 5px;
-    }
-    > li:not(:last-child) {
-      border-bottom: dotted $itemsSeparatingLineColor 1px;
-    }
-    // hide flight details links on legs other than the first one
-    .SDSLeg:not(:first-child) .SDSFlightDetailsLink {
-      display: none;
-    }
-
+  > .SDSTravelDate {
+    width: 5%;
   }
-
-  .SDSLegDetails {
-    box-sizing: border-box;
-    background-color: white;
-    padding: 6px 10px;
-    margin: 5px 8px 3px 8px;
-    border-radius: 3px;
-
-    > li:not(:last-child) {
-      margin-bottom: 14px;
-    }
-
-    .SDSFlightDetails {
-      > li {
-        margin-bottom: 3px;
-      }
-      > .SDSAirlineAndFlightNumberLong {
-        font-weight: bolder;
-      }
-      > .SDSDepartureArrivalDetails > div {
-        display: inline-block;
-      }
-    }
+  > .SDSAirport {
+    width: 5%;
   }
+}
 
-  .SDSFlightTimeLong {
-    width: 4.5rem; // not less or otherwise not all dates will fit into width and will cause
-  }
+.SDSPriceSummary .SDSCheckoutButton {
+  margin-bottom: 0.4rem;
+}
 
+.SDSPricePerStopsPerAirlineSummaryTable td {
+  white-space:nowrap;
 }

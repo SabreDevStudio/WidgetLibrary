@@ -18,15 +18,19 @@ require.config({
         'angular_resource': '../bower_components/angular-resource/angular-resource',
         'angular_moment': '../bower_components/angular-moment/angular-moment',
         'angular_bootstrap': '../bower_components/angular-bootstrap/ui-bootstrap-tpls',
-        'angular_animate': '../bower_components/angular-animate/angular-animate'
+        'angular_animate': '../bower_components/angular-animate/angular-animate',
+        'angular-ui-select': '../bower_components/angular-ui-select/dist/select',
+        'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize',
+        'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback'
     },
-    map: {
-        '*': {'jquery': 'util/jquery-loader'},
-        'util/jquery-loader': {'jquery': 'jquery'}
-    },
+    //map: { // disabled, with it angular is not using jquery but its jqLite
+    //    '*': {'jquery': 'util/jquery-loader'},
+    //    'util/jquery-loader': {'jquery': 'jquery'}
+    //},
     // angular does not support AMD out of the box, put it in a shim
     shim: {
         'angular': {
+            deps: ['jquery'],
             exports: 'angular'
         },
         angular_resource: {
@@ -47,6 +51,15 @@ require.config({
             deps: ['angular']
         },
         angular_animate: {
+            deps: ['angular']
+        },
+        'angular-ui-select': {
+            deps: ['angular']
+        },
+        'angular-sanitize': {
+            deps: ['angular']
+        },
+        'angular-img-fallback': {
             deps: ['angular']
         }
     },
@@ -85,6 +98,9 @@ require([
         , 'widgets/fareTrendChart/FareTrendChartWidget'
         , 'widgets/searchForm/SearchFormWidgetNG'
         , 'widgets/fareForecast/FareForecastWidget'
+        , 'widgets/FareRangeWidget'
+        , 'widgets/FareNabberWidget'
+        , 'widgets/ItineraryListWidget'
         , 'Configuration'
     ], function (
           $
@@ -108,6 +124,9 @@ require([
         , FareTrendChartWidget
         , SearchFormWidgetNG
         , FareForecastWidget
+        , FareRangeWidget
+        , FareNabberWidget
+        , ItineraryListWidget
         , Configuration
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?
         "use strict";
@@ -261,6 +280,7 @@ require([
 
         function bootstrapNG() {
             angular.element(document).ready(function () { // TODO: we cannot compile on whole document level..
+            //$(document).ready(function() {
                 angular.bootstrap(document, ['sdsWidgets']);
             });
         }

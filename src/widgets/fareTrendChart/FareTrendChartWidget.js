@@ -30,7 +30,8 @@ define([
                     , 'DateService'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'
-                    , 'LeadPriceCalendarDataService'//, 'AdvancedCalendarDataService'
+                    , 'AdvancedCalendarDataService'
+                    //, 'LeadPriceCalendarDataService'
                     , 'chartConfigurationOptions'
                 , function ( //controller exposed globally to angular for unit testing
                       $scope
@@ -83,8 +84,8 @@ define([
                         currentSearchCriteria = newSearchCriteria;
                         $scope.minDateAndPricePair = ShoppingDataService.getMinDateAndPricePair(newSearchCriteria);
 
-                        $scope.departureAirport = newSearchCriteria.origin;
-                        $scope.arrivalAirport = newSearchCriteria.destination;
+                        $scope.departureAirport = newSearchCriteria.getFirstLeg().origin;
+                        $scope.arrivalAirport = newSearchCriteria.getFirstLeg().destination;//TSZ
 
                         lastDayDisplayedCap = ShoppingDataService.getMaxAvailableDate(newSearchCriteria);
 

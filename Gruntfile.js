@@ -30,6 +30,14 @@ module.exports = function (grunt) {
             src: ['stylesheets/**/*.css', '!stylesheets/reset.css'] // do not css lint reset as it is machine generated and fine
         },
 
+        bootlint: {
+            options: {
+                stoponerror: false,
+                relaxerror: ['W001', 'W002', 'W003', 'W005', 'E001']
+            },
+            files: ['src/view-templates/*.tpl.html', 'www/*.html']
+        },
+
         autoprefixer: {
             options: {
                 browsers: ['> 1%'] // more codenames at https://github.com/ai/autoprefixer#browsers
@@ -126,11 +134,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-csslint');
+    grunt.loadNpmTasks('grunt-bootlint');
 
     grunt.registerTask('test', 'karma');
 
     grunt.registerTask('css-pipeline', ['compass', 'csslint', 'autoprefixer']);
 
-    grunt.registerTask('default', ['clean', 'jshint', 'karma', 'compass', 'csslint', 'autoprefixer', 'copy']);
+    grunt.registerTask('default', ['clean', 'jshint', 'karma', 'compass', 'bootlint', 'csslint', 'autoprefixer', 'copy']);
 
 };

@@ -19,5 +19,10 @@ define(['text!dictionaries/carrier.csv', 'lodash'], function (dictionaryFile, _)
         AirlineNameLookup.prototype.getName = function(airlineCode) {
             return dictionary[airlineCode];
         };
+
+        AirlineNameLookup.prototype.getAllMappings = function() {
+            return dictionary;
+        };
+
     };
 });

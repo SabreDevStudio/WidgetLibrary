@@ -17,6 +17,8 @@ define([
         }
 
         return angular.module('sabreDevStudioWebServices', ['ngResource', 'configuration'])
+            .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss') // //"2015-04-11T00:00:00",
+            .constant('dateFormat', 'YYYY-MM-DD') // //"2015-04-11T00:00:00",
             .factory('AuthTokenDecoratorHttpInterceptor', [
                       '$q'
                     , '$injector'

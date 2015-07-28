@@ -1,22 +1,34 @@
 define([
         'angular'
       , 'util/BaseServices'
+      , 'util/CommonDirectives'
+      , 'util/CommonFilters'
       , 'webservices/SabreDevStudioWebServices'
       , 'angular_nvd3'
       , 'angular_moment'
       , 'angular_animate'
+      , 'angular-ui-select'
+      , 'angular-sanitize'
+      , 'util/Lookups'
+      , 'angular-img-fallback'
     ],
     function (
           NG
         , BaseServices
+        , CommonDirectives
+        , CommonFilters
         , SabreDevStudioWebServices
         , angular_nvd3
         , angular_moment
         , angular_animate
+        , angular_ui_select
+        , angular_sanitize
+        , Lookups
+        , angular_img_fallback
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'nvd3', 'angularMoment', 'ui.bootstrap', 'ngAnimate'])
+        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'nvd3', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback'])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .config(function (datepickerConfig) { //TODO make every widget a module of its own, then this config, specyfic to Form will go there
                 datepickerConfig.showWeeks = false;

@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Fare Forecast</title>
+    <title>Fare Nabber form</title>
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/cupertino/jquery-ui.css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
@@ -11,15 +11,11 @@
 </head>
 <body>
 
-<!--<div id="SDSSearchFormWrapper_1"></div>-->
 <div id="mainPageContainer">
-    <div id="SDSSearchFormWrapper_2"></div>
-    <div id="CalendarSearchResults"></div>
-
-    <widgets-config data-client-id="CLIENT"/>
-    <div id="SearchFormNG" data-search-form></div>
-    <!--<div id="FareForecast" data-fare-forecast></div>-->
-    <div id="FareForecast" data-fare-forecast data-show-unknown-recommendation="1" data-show-wait-recommendation="1"></div>
+    <div>Flight list goes here...</div>
+    <!-- when putting widgets together pass as cutoff like 80% of the lowest fare -->
+    <button id="FareNabber" class="btn btn-primary" data-fare-nabber data-origin="SFO" data-destination="DFW" data-departure-date="2015-09-01" data-adults-count="1" data-maximum-acceptable-price="143.23" data-maximum-acceptable-price-currency="USD">Subscribe for price alerts</button>
+    <div>Other page content</div>
 </div>
 <script>
     // customer must provide his SDS SDK configuration functions before SDK script executes (SDK executes functions from global configuration object)
@@ -33,21 +29,6 @@
             localizedWeekDayNamesFailsafe: ['Mon', 'Thu', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
         });
-
-        var searchFormWidget = SDS.searchForm('#SDSSearchFormWrapper_1', {
-            searchCriteriaValidator: SDS.instaflightSearchCriteriaValidator
-        });
-
-        var cal = SDS.calendar("CalendarSearchResults", {
-              showDayNumbersPrevAndNextMonth: true
-            , tabs: 9
-        }, false);
-
-        cal.addSearchForm(searchFormWidget);
-
-//        var fareTrendChart = SDS.fareTrendChart("#FareTrendChart");
-//        fareTrendChart.addSearchForm(searchFormWidget);
-
     });
 
 </script>

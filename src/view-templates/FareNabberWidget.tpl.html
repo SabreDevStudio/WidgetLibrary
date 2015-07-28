@@ -1,0 +1,100 @@
+<div ng-transclude>
+    <script type="text/ng-template" id="FareNabberSubscriptionFormModal.html.tpl">
+        <div class="SDSWidgetNG SDSFareNabberWidget">
+
+            <div class="modal-header">
+                <h3 class="modal-title">Subscribe to price alerts</h3>
+            </div>
+
+            <form class="form-horizontal" name="fareNabberForm" novalidate ng-submit="fareNabberForm.$valid && subscribe()">
+                <div class="modal-body">
+
+
+                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.subscriberEmail.$invalid}">
+                        <label for="SDSFareNabberForm_SubscriberEmail" class="input-sm col-sm-3 control-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" id="SDSFareNabberForm_SubscriberEmail" name="subscriberEmail" class="form-control input-sm col-sm-10" placeholder="Type your email" autofocus required ng-model="subscriberEmail">
+                            <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.subscriberEmail.$invalid">
+                                <small ng-show="fareNabberForm.subscriberEmail.$error.required">Input your email</small>
+                                <small ng-show="fareNabberForm.subscriberEmail.$error.email">Invalid email</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SDSFareNabberForm_Origin" class="input-sm col-sm-3 control-label">Trip departure airport or city</label>
+                        <div class="col-sm-9">
+                            <!-- todo present expanded (lookup directive) airport name, but still send iata code on submit -->
+                            <input type="text" class="form-control input-sm" id="SDSFareNabberForm_Origin" name="origin" placeholder="Trip departure airport or city" required autocomplete="off" ng-model="origin">
+                            <!-- todo when there is requirement to be able to change the origin then hide previous input ( toggle link) and present this one-->
+                            <!--<input type="text" id="SDSFareNabberForm_Origin" name="origin" class="form-control input-sm" placeholder="Trip departure airport or city" required autocomplete="off" ng-model="origin"-->
+                            <!--typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">-->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SDSFareNabberForm_Destination" class="input-sm col-sm-3 control-label">Trip arrival airport or city</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="SDSFareNabberForm_Destination" name="destination" placeholder="Trip arrival airport or city" required autocomplete="off" ng-model="destination">
+                            <!--<input type="text" id="SDSFareNabberForm_Destination" name="destination" class="form-control input-sm" placeholder="Trip arrival airport or city" required autocomplete="off" ng-model="destination"-->
+                               <!--typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">-->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SDSFareNabberForm_DepartureDate" class="input-sm col-sm-3 control-label">Leaving on</label>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="text" id="SDSFareNabberForm_DepartureDate" name="departureDate" class="form-control input-sm" autocomplete="off" required
+                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestTravelStart}} is-open="isDepartureDatePickerOpened" ng-model="departureDate" ng-change="onDepartureDateChange()"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default input-sm" ng-click="openDepartureDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SDSFareNabberForm_ADTPaxNumber" class="input-sm control-label col-sm-3">Adults (12+)</label> <!-- TODO add other pax types option, like in LMC page -->
+                        <div class="col-sm-9">
+                            <input type="number" id="SDSFareNabberForm_ADTPaxNumber" name="adultsCount" value="1" min="1" max="9" required class="form-control input-sm SDSPaxNbrInput" string-to-number ng-model="adultsCount">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SDSFareNabberForm_MaximumAcceptablePrice" class="input-sm col-sm-3 control-label">Maximum acceptable price</label>
+
+                        <div class="col-sm-3">
+                            <input type="number" step="50" id="SDSFareNabberForm_MaximumAcceptablePrice" name="maximumAcceptablePrice" class="form-control input-sm" placeholder="Max price" min="0" required string-to-number ng-model="maximumAcceptablePrice">
+                        </div>
+                        <div class="col-sm-3">
+                                <input type="text" id="SDSFareNabberForm_MaximumAcceptablePriceCurrency" name="maximumAcceptablePriceCurrency" class="form-control input-sm" placeholder="currency" ng-value="USD" required ng-model="maximumAcceptablePriceCurrency">
+                                <!-- todo add typeahead from currencies dictionary, maybe make such select currency input component of its own (directive) -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SDSFareNabberForm_SubscriptionExpiryDate" class="input-sm col-sm-3 control-label">Expire subscription after <em>(optional)</em></label>
+                        <div class="col-sm-3">
+                            <p class="input-group">
+                                <input type="text" id="SDSFareNabberForm_SubscriptionExpiryDate" name="subscriptionExpiryDate" class="form-control input-sm" autocomplete="off"
+                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestSubscriptionExpiry}} is-open="isSubscriptionExpiryDatePickerOpened" ng-model="subscriptionExpiryDate"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default input-sm" ng-click="openSubscriptionExpiryDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </script>
+
+</div>

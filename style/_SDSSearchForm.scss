@@ -11,13 +11,4 @@
     padding-left: 5px;
   }
 
-    // needed for FF and IE, otherwise this field far too long for one digit input
-    input[type='number'] {
-      width: 5.5rem;
-    }
-
-    // default input fields unnecessarily long for dates
-    .SDSDateInput {
-      width: 14rem;
-    }
 }

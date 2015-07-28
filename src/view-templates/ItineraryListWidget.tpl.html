@@ -1,0 +1,124 @@
+<itinerary-summary-price-per-stops-per-airline itineraries="itineraries.getItineraries()"/>
+
+<div class="panel panel-default" ng-if="businessErrorMessage">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>
+                    No options found for {{searchCriteriaDepartureAirport | airportFullName}} to {{searchCriteriaArrivalAirport | airportFullName}}
+                    <span class="glyphicon glyphicon-info-sign" ng-click="businessErrorMessageShown = !businessErrorMessageShown"></span>
+                </h4>
+                <small ng-show="businessErrorMessageShown">{{businessErrorMessage}}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
+
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-lg-3">
+                <h4>{{itineraries.size()}} options found for {{searchCriteriaDepartureAirport | airportFullName}} to {{searchCriteriaArrivalAirport | airportFullName}}</h4>
+            </div>
+
+            <div class="col-lg-6">
+                <tabset>
+                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency}}">
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.cheapest"/>
+                    </tab>
+                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmount | currency}}">
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.best"/>
+                    </tab>
+                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmount | currency}}">
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.shortest"/>
+                    </tab>
+                </tabset>
+            </div>
+
+            <div class="col-lg-3">
+                    <div class="pull-right" dropdown>
+                        <label class="control-label">Sort by</label>
+                        <button type="button" class="btn btn-primary btn-sm" dropdown-toggle>
+                            <span class="SDSDropdownLabelText" ng-model="sortByCriterion">{{sortByCriterion.label}}</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="criterion in sortingCriteria"><a href="" data-criterion-index="{{$index}}">{{criterion.label}}</a></li>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <ul class="list-unstyled SDSTopLevelList">
+            <li class="row" ng-repeat="itinerary in itineraries.getItineraries() | orderBy:sortByCriterion.propertyName:sortByCriterion.reverse | startFrom: (currentPage - 1)*itemsPerPage | limitTo: itemsPerPage">
+                <!--<div class="row">-->
+                    <ul class="SDSLegList list-unstyled col-lg-9">
+                        <li ng-repeat="leg in itinerary.legs">
+                            <ul class="SDSLegSummary list-inline list-unstyled">
+                                <li class="SDSTravelDate">{{leg.getLegDepartureDateTime() | amDateFormat: 'ddd, DD MMM' }}</li><!-- Sun, 05 Dec -->
+                                <li class="SDSAirport badge SDSBadgeInfo">{{leg.getLegDepartureAirport()}}</li>
+                                <li class="SDTravelDepartureArrivalTime">{{leg.getLegDepartureDateTime() | amDateFormat: 'HH:mm'}}</li><!-- 14:34 -->
+                                <li class="SDSIconAirplaneArrow"></li>
+                                <li class="SDSAirport badge SDSBadgeInfo">{{leg.getLegArrivalAirport()}}</li>
+                                <li class="SDTravelDepartureArrivalTime">{{leg.getLegArrivalDateTime() | amDateFormat: 'HH:mm'}}</li>
+                            </ul>
+                            <ul class="list-group" ng-show="flightDetailsShown">
+                                <li class="list-group-item" ng-repeat="flight in leg.segments">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <strong>
+                                                <img class="SDSAirlineLogo" ng-src="../img/airlineLogos/{{flight.marketingAirline}}.PNG" fallback-src="../img/airlineLogos/generic_airline.PNG">
+                                                {{flight.marketingAirline}} {{flight.marketingFlightNumber}} {{flight.marketingAirline | airlineFullName}}
+                                            </strong>
+                                        </li>
+                                        <li>
+                                            <ul class="SDSFlightDepartureOrArrival list-inline">
+                                                <li class="SDSLabelForTravelDate">Depart:</li>
+                                                <li class="SDSTravelDate">{{flight.departureDateTime | amDateFormat: 'HH:mm'}}</li>
+                                                <li class="SDSAirport badge SDSBadgeInfo">{{flight.departureAirport}}</li>
+                                                <li>{{flight.departureAirport | airportFullName}}</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <ul class="SDSFlightDepartureOrArrival list-inline">
+                                                <li class="SDSLabelForTravelDate">Arrive:</li>
+                                                <li class="SDSTravelDate">{{flight.arrivalDateTime | amDateFormat: 'HH:mm'}}</li>
+                                                <li class="SDSAirport badge SDSBadgeInfo">{{flight.arrivalAirport}}</li>
+                                                <li>{{flight.arrivalAirport | airportFullName}}</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="SDSPriceSummary col-lg-3">
+                            <div class="pull-left">
+                                <a href="" ng-click="flightDetailsShown = !flightDetailsShown">Flight Details</a>
+                            </div>
+                            <div>
+                                <ul class="list-unstyled pull-right">
+                                    <li>Total price: <strong >{{itinerary.totalFareAmount | currency}}</strong></li>
+                                    <li><a href="" ng-click="priceDetailsExpanded = !priceDetailsExpanded" ng-hide="priceDetailsExpanded">Price Details</a></li>
+                                    <li ng-show="priceDetailsExpanded" ng-click="priceDetailsExpanded = !priceDetailsExpanded">Base fare: {{itinerary.baseFareAmount | currency}}</li>
+                                    <li ng-show="priceDetailsExpanded" ng-click="priceDetailsExpanded = !priceDetailsExpanded">Taxes: {{itinerary.totalTaxAmount | currency}}</li>
+                                </ul>
+                            </div>
+                            <div class="clearfix"/>
+                            <button class="SDSCheckoutButton btn btn-primary btn-sm pull-right">Select</button>
+                    </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="panel-footer">
+        <pagination class="pagination-sm pull-right" total-items="itineraries.size()" items-per-page="itemsPerPage" ng-model="currentPage" boundary-links="true" rotate="false"></pagination>
+        <div class="clearfix"></div>
+        <!-- TODO In mobile versions it should be less than 10 items per page-->
+    </div>
+
+</div>

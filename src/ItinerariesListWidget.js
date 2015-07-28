@@ -46,7 +46,6 @@ define(['widgets/ShoppingDataDisplayWidget', 'jquery', 'lodash', 'stache!view-te
             return itinerary;
         }
 
-
         function updateFlightTimes(itinerary) {
             itinerary.legs.forEach(function (leg) {
                 leg.segments.forEach(function (segment) {
