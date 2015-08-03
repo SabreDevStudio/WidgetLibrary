@@ -21,7 +21,8 @@ require.config({
         'angular_animate': '../bower_components/angular-animate/angular-animate',
         'angular-ui-select': '../bower_components/angular-ui-select/dist/select',
         'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize',
-        'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback'
+        'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback',
+        'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider'
     },
     //map: { // disabled, with it angular is not using jquery but its jqLite
     //    '*': {'jquery': 'util/jquery-loader'},
@@ -61,6 +62,9 @@ require.config({
         },
         'angular-img-fallback': {
             deps: ['angular']
+        },
+        'angular-rangeslider': {
+            deps: ['angular']
         }
     },
     stache: {
@@ -79,9 +83,6 @@ require.config({
 require([
           "jquery"
         , "widgets/calendar/CalendarWidget"
-        , 'ItinerariesListWidget'
-        , 'FiltersPaneWidget'
-        , 'SearchFormWidget'
         , 'moment'
         , 'util/CalendarTestPricesGenerator'
         , 'util/DateFormatter'
@@ -101,13 +102,12 @@ require([
         , 'widgets/FareRangeWidget'
         , 'widgets/FareNabberWidget'
         , 'widgets/ItineraryListWidget'
+        , 'widgets/filters/FiltersPanelWidget'
+        , 'widgets/filters/ValuesFilterDirective'
         , 'Configuration'
     ], function (
           $
         , Calendar
-        , ItinerariesListWidget
-        , FiltersPaneWidget
-        , SearchFormWidget
         , moment
         , testPricesGenerator
         , DateFormatter
@@ -127,6 +127,8 @@ require([
         , FareRangeWidget
         , FareNabberWidget
         , ItineraryListWidget
+        , FiltersPanelWidget
+        , DiscreteFilterWidget
         , Configuration
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?
         "use strict";
@@ -196,34 +198,6 @@ require([
                 }
 
                 return calendar;
-            };
-
-            SDS.itinerariesList = function (targetDomElementId) {
-                if (!SDS.initializedSuccessful) {
-                    throw new Error("You have to initialize Sabre Dev Studio first, call init");
-                }
-
-                var itinerariesListWidget = new ItinerariesListWidget();
-
-                itinerariesListWidget.render(function (itinerariesListDom) {
-                    $("#" + targetDomElementId).append(itinerariesListDom);
-                });
-
-                return itinerariesListWidget;
-            };
-
-            SDS.filtersPaneWidget = function (targetDomElementId) {
-                if (!SDS.initializedSuccessful) {
-                    throw new Error("You have to initialize Sabre Dev Studio first, call init");
-                }
-
-                var filtersPaneWidget = new FiltersPaneWidget();
-
-                filtersPaneWidget.render(function (filtersPaneWidgetDOM) {
-                    $("#" + targetDomElementId).append(filtersPaneWidgetDOM);
-                });
-
-                return filtersPaneWidget;
             };
 
             // returns localized dates formatter, for use of widgets, or SDK user

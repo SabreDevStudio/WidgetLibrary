@@ -1,56 +1,6 @@
 @import "SDSCommon";
 
-%SDSFilter {
-  border: $itemsSeparatingLineStyle;
-  border-radius: $borderRadius;
-  padding: 4px;
-  &:not(:last-child) {
-    margin-bottom: 4px;
-  }
-
-  .SDSFilterLabel {
-    @include childrenToLeftAndRight('.SDSFilterLabelHeaderText', '.SDSTextLabel');
-    font-size: $secondaryHeaderFontSize;
-    margin-bottom: 2px;
-    height: 0.8rem;
-  }
-
-}
-
-// qualifying by element name to match specificity in reset file
-div.SDSRangeFilter {
-  @extend %SDSFilter;
-
-  .SDSRangeFilterCurrentValuesContainer {
-    @include childrenToLeftAndRight('.SDSRangeFilterCurrentValueMin', '.SDSRangeFilterCurrentValueMax');
-    height: $primaryDataFontSize * 1.2;
-  }
-
-  .SDSRangeFilterSlider {
-    margin: 6px;
-  }
-}
-
-// qualifying by element name to match specificity in reset file
-div.SDSDiscreteValuesFilter {
-
-  @extend %SDSFilter;
-
-  .SDSMultipleSelectionList {
-    list-style: none;
-  }
-
-  .SDSMultipleSelectionItem {
-    @include childrenToLeftAndRight('label', '.SDSMultipleSelectionItemPrice');
-    height: $primaryDataFontSize * 1.5;
-    > label > span {
-      display: inline-block;
-      padding-top: 2px;
-      vertical-align: top;
-    }
-    > .SDSMultipleSelectionItemPrice {
-      padding-top: 2px;
-    }
-  }
-
+// make label take 100% width of containing element, so that price can be pulled to very right
+.SDSDiscreteFilterValueLabel {
+  width: 100%;
 }

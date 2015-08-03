@@ -9,31 +9,26 @@ define(['util/LodashExtensions'], function (_) {
             return itineraries;
         };
 
+        this.getPermittedItineraries = function () {
+          return _.reject(itineraries, 'filteredOut');
+        };
+
         this.add = function (itin) {
             itineraries.push(itin);
         };
 
-        //this.sort = function() { //TODO hardcoded sort criteria for now
-        //    itineraries = _.sortBy(itineraries, 'totalFareAmount');
-        //};
-
-        this.size = function (includeFilteredOut) {
-            if (includeFilteredOut === true) {
-                return itineraries.length;
-            }
-            return _.reject(itineraries, 'filteredOut').length;
+        this.size = function () {
+            return this.getPermittedItineraries().length;
         };
 
         this.getMinValue = function (propertyName) {
-            return _.chain(itineraries)
-                .reject('filteredOut')
+            return _.chain(this.getPermittedItineraries())
                 .map(_.ary(_.partialRight(_.result, propertyName), 1))
                 .min().value();
         };
 
         this.getMaxValue = function (propertyName) {
-            return _.chain(itineraries)
-                .reject('filteredOut')
+            return _.chain(this.getPermittedItineraries())
                 .map(_.ary(_.partialRight(_.result, propertyName), 1))
                 .max().value();
         };
@@ -46,13 +41,12 @@ define(['util/LodashExtensions'], function (_) {
         };
 
         this.getDiscreteValuesStatistics = function (propertyName) {
-            var selectableValues =  _.chain(itineraries)
-                .reject('filteredOut')
-                .groupByAndGetCountAndMin(propertyName, 'totalFareAmount').map(function (value, key) {
+            var selectableValues =  _.chain(this.getPermittedItineraries())
+                .groupByAndGetCountAndMin(propertyName, 'totalFareAmount').map(function (groupingItem) {
                     return {
-                        value: key,
-                        count: value.count,
-                        minPrice: value.min
+                        value: groupingItem.value,
+                        count: groupingItem.count,
+                        minPrice: groupingItem.min
                     };
                 })
                 .sortBy('value')
@@ -60,22 +54,30 @@ define(['util/LodashExtensions'], function (_) {
             return {selectableValues: selectableValues};
         };
 
+        this.getStatistics = function (statisticsSpecification) {
+            var filterablePropertyName = statisticsSpecification.property;
+            switch (statisticsSpecification.type) {
+                case 'range': {
+                    return this.getRangeStatistics(filterablePropertyName);
+                }
+                case 'discrete': {
+                    return  this.getDiscreteValuesStatistics(filterablePropertyName);
+                }
+                case 'noop': {
+                    return undefined;
+                }
+                default:
+                    throw new Error('Illegal specification of bounds requested: ' + statisticsSpecification.type);
+            }
+        };
     }
 
-    ItinerariesList.prototype.getCurrentValuesBounds = function (boundsSpecifications) {
+    ItinerariesList.prototype.getCurrentValuesBounds = function (statisticsSpecifications) {
         var that = this;
-        return boundsSpecifications.map(function (spec) {
-            var filterablePropertyName = spec.filterablePropertyName;
-            if (spec.type === that.StatisticsTypeEnum.range) {
-                var statistics = that.getRangeStatistics(filterablePropertyName);
-            } else if (spec.type === that.StatisticsTypeEnum.discrete) {
-                statistics = that.getDiscreteValuesStatistics(filterablePropertyName)
-            } else {
-                throw new Error('Illegal specification of bounds requested' + spec.type);
-            }
+        return statisticsSpecifications.map(function (statisticsSpecification) {
             return {
-                filterablePropertyName: filterablePropertyName,
-                statistics: statistics
+                filterablePropertyName: statisticsSpecification.property,
+                statistics: that.getStatistics(statisticsSpecification)
             };
         });
     };
@@ -84,17 +86,20 @@ define(['util/LodashExtensions'], function (_) {
         return this.getMinValue('totalFareAmount');
     };
 
-    ItinerariesList.prototype.StatisticsTypeEnum = Object.freeze({
-        'range': 'range',
-        'discrete': 'discrete'
-    });
-
     ItinerariesList.prototype.getCheapestItinerary = function () {
-        return _.min(this.getItineraries(), 'totalFareAmount');
+        return _.min(this.getPermittedItineraries(), 'totalFareAmount');
     };
 
     ItinerariesList.prototype.getShortestItinerary = function () {
-        return _.min(this.getItineraries(), 'duration');
+        return _.min(this.getPermittedItineraries(), 'duration');
+    };
+
+    ItinerariesList.prototype.applyFilters = function (filteringFunctions) {
+        this.getItineraries().forEach(function (itin) {
+            itin.filteredOut = !filteringFunctions.every(function (filteringFunction) {
+                return filteringFunction(itin);
+            });
+        });
     };
 
     return ItinerariesList;

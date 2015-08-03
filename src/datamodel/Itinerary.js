@@ -31,7 +31,7 @@ define(['lodash'], function (_) {
 
         // convenience property-style getters, needed for angular sorting of itineraries list
 
-        // returns the sum of trip durations for all legs.
+        // returns the sum of trip durations for all legs, in minutes
         // This includes connection times on all legs (but does not include stopovers, in particular the stopover in the turnaround point at destination of round trip travel)
         Object.defineProperty(this, 'duration', {
             get: function() {
@@ -40,6 +40,13 @@ define(['lodash'], function (_) {
                 }, 0);
             }
         });
+
+        Object.defineProperty(this, 'outboundLegDuration', {
+            get: function() {
+                return _.first(this.legs).getDuration();
+            }
+        });
+
 
         Object.defineProperty(this, 'outboundDepartureDateTime', {
             get: function() {
@@ -120,6 +127,29 @@ define(['lodash'], function (_) {
 
     Itinerary.prototype.getFirstMarketingAirline = function() {
         return this.legs[0].segments[0].marketingAirline;
+    };
+
+    Itinerary.prototype.getConnectionAirports = function () {
+        var legsConnectionAirportsLists = this.legs.map(function (leg) {
+            return leg.getConnectionAirports();
+        });
+        return _.union(_.flatten(legsConnectionAirportsLists));
+    };
+
+    Itinerary.prototype.getTripDepartureAirport = function () {
+        return _.first(this.legs).getLegDepartureAirport();
+    };
+
+    Itinerary.prototype.getTripArrivalAirport= function () {
+        return _.last(this.legs).getLegArrivalAirport();
+    };
+
+    Itinerary.prototype.getFirstLegArrivalAirport = function () {
+        return _.first(this.legs).getLegArrivalAirport();
+    };
+
+    Itinerary.prototype.isDepartureAndReturnSameAirport = function () {
+        return this.getTripDepartureAirport() === this.getTripArrivalAirport();
     };
 
     return Itinerary;

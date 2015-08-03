@@ -38,7 +38,7 @@ define([
                     return allMatches.sort(new AirportNameBestSuggestionComparator(userCurrentInput)).reverse();
                 };
             })
-            .service('SearchCriteriaBroadcastingService', [
+            .service('SearchCriteriaBroadcastingService', [ //TODO dup with SDSWidgets
                 '$rootScope'
                 , 'newSearchCriteriaEvent'
                 , function ($rootScope, newSearchCriteriaEvent) {

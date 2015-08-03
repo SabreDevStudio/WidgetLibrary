@@ -33,12 +33,30 @@ define([
         };
 
         // returns leg duration, that is the duration from the leg's first flight departure time till its last flight arrival time (so all flight times plus all connection times)
+        // returned value is in minutes
         Leg.prototype.getDuration = function () {
-            return this.getLegArrivalDateTime().diff(this.getLegDepartureDateTime());
+            return this.duration;
         };
 
         Leg.prototype.getFirstFlightMarketingAirline = function () {
             return _.first(this.segments).marketingAirline;
+        };
+
+        Leg.prototype.hasConnection = function () {
+          return this.segments.length > 1;
+        };
+
+        Leg.prototype.getConnectionAirports = function () {
+            if (!this.hasConnection()) {
+                return [];
+            }
+
+            // as we will consider arrival airport for every flight, we skip the arrival of the last flight within the leg, as it is not connection but end of leg (stopover)
+            var allFlightsWithoutLastOne = _.initial(this.segments);
+
+            return allFlightsWithoutLastOne.map(function (flight) {
+                return flight.arrivalAirport;
+            });
         };
 
         return Leg;

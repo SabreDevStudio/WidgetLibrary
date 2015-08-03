@@ -10,6 +10,9 @@ define([
         , 'datamodel/DiversitySwapper'
         , 'widgets/ItineraryShortSummary'
         , 'widgets/ItineraryPricePerStopsPerAirlineSummary'
+        , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
+        , 'datamodel/SearchCriteria'
+        , 'webservices/ShoppingMockDataService'
     ],
     function (
           moment
@@ -23,6 +26,9 @@ define([
         , DiversitySwapper
         , ItineraryShortSummary
         , ItineraryPricePerStopsPerAirlineSummary
+        , ItinerariesListSummaryByAirlineAndNumberOfStops
+        , SearchCriteria
+        , ShoppingMockDateService
     ) {
         'use strict';
 
@@ -30,15 +36,24 @@ define([
             .controller('ItineraryListCtrl', [
                       '$scope'
                     , 'BargainFinderMaxDataService'
-                    //  , 'InstaflightsDataService'
+                    //, 'InstaflightsDataService'
+                    //, 'ShoppingMockDateService'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'
+                    , 'StatisticsGatheringRequestsRegistryService'
+                    , 'ItineraryStatisticsBroadcastingService'
+                    , 'filteringCriteriaChangedEvent'
+                    , 'FilteringCriteriaChangedBroadcastingService'
 
                 , function (
                       $scope
                     , shoppingService
                     , SearchCriteriaBroadcastingService
                     , newSearchCriteriaEvent
+                    , StatisticsGatheringRequestsRegistryService
+                    , ItineraryStatisticsBroadcastingService
+                    , filteringCriteriaChangedEvent
+                    , FilteringCriteriaChangedBroadcastingService
                 ) {
 
                     $scope.sortingCriteria = [
@@ -106,15 +121,21 @@ define([
                     }
 
                     function recalculateSummaries() {
+                        var permittedItineraries = $scope.itineraries.getPermittedItineraries();
                         $scope.bestItinerariesSummary = {
                             cheapest:
                                 $scope.itineraries.getCheapestItinerary(),
                             best:
-                                _.last($scope.itineraries.getItineraries().sort(DiversitySwapper.comparator)),
+                                _.last(permittedItineraries.sort(DiversitySwapper.comparator)),
                             shortest:
                                 $scope.itineraries.getShortestItinerary()
                         };
+
+                        $scope.summaryPerStopsPerAirline = (new ItinerariesListSummaryByAirlineAndNumberOfStops(permittedItineraries)).getSummaries();
                     }
+
+
+                    //TODO: when you add listener method for updating itinerary list from other widget (Adv Calendar), then also call recalculateAndBroadcastStatistics
 
                     // @Controller: main controller function, acting on new search criteria sent to the widget
                     $scope.$on(newSearchCriteriaEvent, function () {
@@ -124,6 +145,8 @@ define([
                             resetNavigationAndSortCriteria();
 
                             $scope.itineraries = itins;
+
+                            recalculateAndBroadcastStatistics();
 
                             updateSearchAirports(newSearchCriteria);
 
@@ -137,9 +160,37 @@ define([
                         });
                     });
 
+                    //TODO tmp here https://coderwall.com/p/ngisma/safe-apply-in-angular-js , move to general package
+                    $scope.safeApply = function(fn) {
+                        var phase = this.$root.$$phase;
+                        if(phase == '$apply' || phase == '$digest') {
+                            if(fn && (typeof(fn) === 'function')) {
+                                fn();
+                            }
+                        } else {
+                            this.$apply(fn);
+                        }
+                    };
+
+                    $scope.$on(filteringCriteriaChangedEvent, function () {
+                        var currentFilteringFunctions = FilteringCriteriaChangedBroadcastingService.filteringFunctions;
+                        $scope.itineraries.applyFilters(currentFilteringFunctions);
+                        recalculateSummaries();
+                        // by applying filters we changed internal state of the $scope.itineraries object. NG is not watching its internal state (result of getPermittedItineraries() call in view)
+                        $scope.safeApply(); //TODO this is temporary trigger to angular, as discrete values filter already trigger apply, thru some sideeffect, while rangeSliders not. Also while rest all filters is clicked apply is already in progress. Debug NG what triggers apply in case of dicreate values filters
+                        // whatever filter type (range, discrete) the model itself (ItinerariesList) is updated correctly (filteredOut set) in every case.
+                    });
+
+                    function recalculateAndBroadcastStatistics() {
+                        var requestedStatisticsDescriptions = StatisticsGatheringRequestsRegistryService.getAll();
+                        var statistics = $scope.itineraries.getCurrentValuesBounds(requestedStatisticsDescriptions);
+                        ItineraryStatisticsBroadcastingService.statistics = statistics;
+                        ItineraryStatisticsBroadcastingService.broadcast();
+                    }
+
                     function updateSearchAirports(newSearchCriteria) {
-                        $scope.searchCriteriaDepartureAirport = newSearchCriteria.getFirstLeg().origin;
-                        $scope.searchCriteriaArrivalAirport = newSearchCriteria.getFirstLeg().destination;
+                           $scope.searchCriteriaDepartureAirport = newSearchCriteria.getFirstLeg().origin;
+                           $scope.searchCriteriaArrivalAirport = newSearchCriteria.getFirstLeg().destination;
                     }
 
                     $scope.isAnyDataToDisplayAvailable = function () {

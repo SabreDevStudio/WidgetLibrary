@@ -1,16 +1,16 @@
 define([
-          'angular'
+          'util/LodashExtensions'
+        , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
         , 'text!view-templates/ItineraryPricePerStopsPerAirlineSummary.tpl.html'
     ],
     function (
-          angular
+          _
+        , angular
         , angular_bootstrap
         , SDSWidgets
-        , ItinerariesListSummaryByAirlineAndNumberOfStops
-        , ItineraryPricePerStopsPerAirlineSummary
+        , ItineraryPricePerStopsPerAirlineSummaryTemplate
 
     ) {
         'use strict';
@@ -19,21 +19,15 @@ define([
             .directive('itinerarySummaryPricePerStopsPerAirline', function () {
                 return {
                     scope: {
-                        itineraries: '='
+                        summary: '='
                     },
                     transclude: true,
-                    template: ItineraryPricePerStopsPerAirlineSummary,
+                    template: ItineraryPricePerStopsPerAirlineSummaryTemplate,
                     controller: function ($scope) {
 
                         $scope.isAnyDataToDisplayAvailable = function () {
-                            return ($scope.itineraries && ($scope.itineraries.length > 0));
+                            return (_.isDefined($scope.summary));
                         };
-
-                        $scope.$watch('itineraries', function (value) {
-                            if (value) {
-                                $scope.summary = (new ItinerariesListSummaryByAirlineAndNumberOfStops(value)).getSummaries();
-                            }
-                        });
 
                     }
                 }

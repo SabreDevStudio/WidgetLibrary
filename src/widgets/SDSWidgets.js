@@ -11,6 +11,7 @@ define([
       , 'angular-sanitize'
       , 'util/Lookups'
       , 'angular-img-fallback'
+      , 'angular-rangeslider'
     ],
     function (
           NG
@@ -25,11 +26,15 @@ define([
         , angular_sanitize
         , Lookups
         , angular_img_fallback
+        , angular_rangeslider
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'nvd3', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback'])
+        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'nvd3', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback', 'ui-rangeSlider'])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
+            .constant('filteringCriteriaChangedEvent', 'filteringCriteriaChangedEvent')
+            .constant('itinerariesStatisticsUpdateNotification', 'itinerariesStatisticsUpdateNotification')
+            .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
             .config(function (datepickerConfig) { //TODO make every widget a module of its own, then this config, specyfic to Form will go there
                 datepickerConfig.showWeeks = false;
                 datepickerConfig.startingDay = 1;
@@ -46,5 +51,39 @@ define([
                     $rootScope.$broadcast(newSearchCriteriaEvent);
                 };
                 return service;
-            }]);
+            }])
+            .service('ItineraryStatisticsBroadcastingService', [
+                '$rootScope'
+                , 'itinerariesStatisticsUpdateNotification'
+                , function ($rootScope, itinerariesStatisticsUpdateNotification) {
+                    var service = {};
+                    service.statistics = undefined;
+                    service.broadcast = function () {
+                        $rootScope.$broadcast(itinerariesStatisticsUpdateNotification);
+                    };
+                    return service;
+            }])
+            .service('FilteringCriteriaChangedBroadcastingService', [
+                '$rootScope'
+                , 'filteringCriteriaChangedEvent'
+                , function ($rootScope, filteringCriteriaChangedEvent) {
+                    var service = {};
+                    service.filteringFunctions = undefined;
+                    service.broadcast = function () {
+                        $rootScope.$broadcast(filteringCriteriaChangedEvent);
+                    };
+                    return service;
+            }])
+            .factory('StatisticsGatheringRequestsRegistryService', function () { //TODO maybe move from here to other place
+                var registry = [];
+                return {
+                    register: function (statisticDescription) {
+                        registry.push(statisticDescription);
+                    },
+                    getAll: function () {
+                        return registry;
+                    }
+                };
+            });
+
     });

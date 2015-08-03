@@ -1,5 +1,0 @@
-<div class="SDSFiltersPaneWidget SDSWidget">
-    <div class="SDSFiltersPaneHeader">Filter options</div>
-    <div class="SDSFiltersPaneFiltersWrapper"/>
-    <a class="SDSResetAllFiltersLink" href="#">Reset all filters</a>
-</div>

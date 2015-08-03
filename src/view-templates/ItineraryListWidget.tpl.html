@@ -1,16 +1,12 @@
-<itinerary-summary-price-per-stops-per-airline itineraries="itineraries.getItineraries()"/>
+<itinerary-summary-price-per-stops-per-airline summary="summaryPerStopsPerAirline"/>
 
 <div class="panel panel-default" ng-if="businessErrorMessage">
     <div class="panel-heading">
-        <div class="row">
-            <div class="col-lg-12">
-                <h4>
-                    No options found for {{searchCriteriaDepartureAirport | airportFullName}} to {{searchCriteriaArrivalAirport | airportFullName}}
-                    <span class="glyphicon glyphicon-info-sign" ng-click="businessErrorMessageShown = !businessErrorMessageShown"></span>
-                </h4>
-                <small ng-show="businessErrorMessageShown">{{businessErrorMessage}}</small>
-            </div>
-        </div>
+            <h4 class="panel-title">
+                No options found for {{searchCriteriaDepartureAirport | airportFullName}} to {{searchCriteriaArrivalAirport | airportFullName}}
+                <span class="glyphicon glyphicon-info-sign" ng-click="businessErrorMessageShown = !businessErrorMessageShown"></span>
+            </h4>
+            <small ng-show="businessErrorMessageShown">{{businessErrorMessage}}</small>
     </div>
 </div>
 
@@ -51,9 +47,9 @@
         </div>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body"><!-- TODO bootlint col- must be inside contrainer. But when container added then this div expands to full width-->
         <ul class="list-unstyled SDSTopLevelList">
-            <li class="row" ng-repeat="itinerary in itineraries.getItineraries() | orderBy:sortByCriterion.propertyName:sortByCriterion.reverse | startFrom: (currentPage - 1)*itemsPerPage | limitTo: itemsPerPage">
+            <li class="row" ng-repeat="itinerary in itineraries.getPermittedItineraries() | orderBy:sortByCriterion.propertyName:sortByCriterion.reverse | startFrom: (currentPage - 1)*itemsPerPage | limitTo: itemsPerPage">
                 <!--<div class="row">-->
                     <ul class="SDSLegList list-unstyled col-lg-9">
                         <li ng-repeat="leg in itinerary.legs">
@@ -109,7 +105,7 @@
                                 </ul>
                             </div>
                             <div class="clearfix"/>
-                            <button class="SDSCheckoutButton btn btn-primary btn-sm pull-right">Select</button>
+                            <button type="button" class="SDSCheckoutButton btn btn-primary btn-sm pull-right">Select</button>
                     </div>
             </li>
         </ul>

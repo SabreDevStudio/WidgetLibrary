@@ -1,15 +1,13 @@
-<div class="SDSFareTrendWidget panel panel-default container" ng-if="isAnyDataToDisplayAvailable()">
+<div class="SDSFareTrendWidget panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Lead Prices</h4>
     </div>
 
     <div class="panel-body">
-        <div class="panel-heading">
-            <h4 class="panel-title">Prices for {{departureAirport}}-{{arrivalAirport}},
-                from <strong>{{minDateAndPricePair.totalFareAmount | currency}}</strong> at <strong>{{minDateAndPricePair.date | amDateFormat:'D MMM'}}</strong>
-            </h4>
-        </div>
+        <h5>Prices from <em>{{departureAirport | airportFullName}}</em> to <em>{{arrivalAirport| airportFullName}}</em>,
+            from <strong>{{minDateAndPricePair.totalFareAmount | currency}}</strong> at <strong>{{minDateAndPricePair.date | amDateFormat:'D MMM'}}</strong>
+        </h5>
 
         <nvd3 options="graphOptions" data="prices"></nvd3>
 

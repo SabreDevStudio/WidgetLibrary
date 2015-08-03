@@ -1,0 +1,50 @@
+define([
+          'moment'
+        , 'widgets/filters/AbstractFilter'
+    ],
+    function (
+          moment
+        , AbstractFilter
+    ) {
+        'use strict';
+
+        function RangeFilter() {
+            AbstractFilter.apply(this, arguments);
+        }
+
+        RangeFilter.prototype = Object.create(AbstractFilter.prototype);
+        RangeFilter.prototype.constructor = RangeFilter;
+
+        RangeFilter.prototype.applyListenableStatistics = function (statistics) {
+            // constraints for min and max values (of permitted range) will be set once at the beginning, based on the first update //TODO what if list is updates with other itins?
+            //if (_.isUndefined(this.minConstraint) && _.isUndefined(this.maxConstraint)) {
+                this.minConstraint = statistics.min;
+                this.maxConstraint = statistics.max;
+            //}
+            this.min = statistics.min;
+            this.max = statistics.max;
+        };
+
+        RangeFilter.prototype.getRequestedStatisticsType = function () {
+            return 'range';
+        };
+
+        RangeFilter.prototype.reset = function () {
+            this.min = this.minConstraint;
+            this.max = this.maxConstraint;
+        };
+
+        RangeFilter.prototype.rebuildFilteringFunction = function () {
+            this.filteringFunction = this.filteringFunctionConstructor(this.filterablePropertyName, this.min, this.max);
+            return this.filteringFunction;
+        };
+
+        RangeFilter.prototype.filteringFunctionConstructor = function (filterablePropertyName, min, max) {
+            return function (element) {
+                var elementValue = _.result(element, filterablePropertyName);
+                return ( ((_.isUndefined(min)) || (elementValue >= min)) && ((_.isUndefined(max)) || (elementValue <= max)) );
+            };
+        };
+
+        return RangeFilter;
+    });

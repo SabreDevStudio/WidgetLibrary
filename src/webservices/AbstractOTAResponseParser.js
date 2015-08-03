@@ -60,6 +60,7 @@ define([
         AbstractOTAResponseParser.prototype.parseLeg = function(responseLeg) {
             var that = this;
             var leg = new Leg();
+            leg.duration = parseInt(responseLeg.ElapsedTime);
             leg.segments = responseLeg.FlightSegment.map(function (segment) {
                 if (segment.Equipment.length > 1) {
                     throw new Error('parser unsupported'); //TODO: UT on complex responses
