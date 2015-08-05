@@ -59,5 +59,16 @@ define([
             });
         };
 
+        Leg.prototype.getSegmentFlightStructure = function (s) { //TODO introduce segment domain object
+            return [s.departureDateTime.format(), s.departureAirport, s.arrivalDateTime, s.arrivalAirport, s.cabin, s.marketingAirline, s.marketingFlightNumber, s.operatingAirline, s.operatingFlightNumber].join('|');
+        };
+
+        Leg.prototype.getFlightStructure = function () {
+            var that = this;
+            return this.segments.map(function (segment) {
+                return that.getSegmentFlightStructure(segment);
+            }).join('||');
+        };
+
         return Leg;
     });

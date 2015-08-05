@@ -1,4 +1,4 @@
-<div class="SDSFareTrendWidget panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
+<div class="SDSLeadPriceChart panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Lead Prices</h4>
@@ -9,7 +9,7 @@
             from <strong>{{minDateAndPricePair.totalFareAmount | currency}}</strong> at <strong>{{minDateAndPricePair.date | amDateFormat:'D MMM'}}</strong>
         </h5>
 
-        <nvd3 options="graphOptions" data="prices"></nvd3>
+        <canvas></canvas>
 
         <nav>
             <ul class="pager">

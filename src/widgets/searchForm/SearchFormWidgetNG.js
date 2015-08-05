@@ -142,6 +142,7 @@ define([
                 };
 
                 $scope.allAirlines = [];
+
                 _.each(AirlineNameLookupService.getAllMappings(), function (airlineName, airlineCode) {
                     $scope.allAirlines.push({name: airlineName, code: airlineCode});
                 });

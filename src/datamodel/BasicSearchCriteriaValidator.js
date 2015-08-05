@@ -4,35 +4,47 @@ define(['util/validator'],
 
         function BasicSearchCriteriaValidator() {
 
-            this.validate = function(searchCriteria) {
-                v.airportCode(searchCriteria.origin,
+            this.validateRoundTripTravelSpecification = function(searchCriteria) {
+                this.errors = [];
+
+                //TODO change validator to not throw exceptions
+                v.airportCode(searchCriteria.getFirstLeg().origin,
                     "You have to specify origin location, and it must be valid 3 letter airport or city code, for example LAX");
-                v.airportCode(searchCriteria.destination, //TODO inspirational travel : no dest or origin
+                v.airportCode(searchCriteria.getFirstLeg().destination,
                     "You have to specify destination location, and it must be valid 3 letter airport or city code, for example LAX");
-                return true;
-            };
+
+                v.airportCode(searchCriteria.getSecondLeg().origin,
+                    "You have to specify origin location, and it must be valid 3 letter airport or city code, for example LAX");
+                v.airportCode(searchCriteria.getSecondLeg().destination,
+                    "You have to specify destination location, and it must be valid 3 letter airport or city code, for example LAX");
+
+                var departureDateTime = searchCriteria.getFirstLeg().departureDateTime;
+                var returnDateTime = searchCriteria.getSecondLeg().departureDateTime;
+
+                if (_.isUndefined(departureDateTime)) {
+                    this.errors.push('departureDate is not defined for round trip travel');
+                }
+                if (_.isUndefined(returnDateTime)) {
+                    this.errors.push('return date is not defined for round trip travel');
+                }
+
+                _.isDate(departureDateTime);
+                _.isDate(returnDateTime);
+
+                if (_.isUndefined(returnDateTime) && _.isUndefined(searchCriteria.lengthOfStay)) {
+                    this.errors.push('returnDate or lengthOfStay is not defined for round trip travel. You must define one of them.');
+                }
+                if (!_.isUndefined(returnDateTime)) {
+                    _.isDate(departureDateTime);
+                }
+
+                if (returnDateTime.isBefore(departureDateTime) || returnDateTime.isSame(departureDateTime) ) {
+                    this.errors.push('return date must be after departureDate');
+                }
+                return (this.errors.length > 0)? this.errors: undefined;
+            }
             
         }
-
-        BasicSearchCriteriaValidator.prototype.validateIsRoundTripTravel = function (searchCriteria) {
-            if (_.isUndefined(searchCriteria.departureDate)) {
-                throw new Error('departureDate is not defined for round trip travel');
-            }
-            _.isDate(searchCriteria.departureDate);
-
-            if (_.isUndefined(searchCriteria.returnDate) && _.isUndefined(searchCriteria.lengthOfStay)) {
-                throw new Error('returnDate or lengthOfStay is not defined for round trip travel. You must define one of them.');
-            }
-            if (!_.isUndefined(searchCriteria.returnDate)) {
-                _.isDate(searchCriteria.departureDate);
-            }
-
-            v.onlyOneDefined(searchCriteria.lengthOfStay, searchCriteria.returnDate, "You have to specify either lengthOfStay or returnDate (not both)"); // TODO: for one ways request you will not have LoS
-
-            if (searchCriteria.returnDate < searchCriteria.departureDate) {
-                throw new Error('returnDate cannot be before departureDate');
-            }
-        };
 
         return BasicSearchCriteriaValidator;
 });

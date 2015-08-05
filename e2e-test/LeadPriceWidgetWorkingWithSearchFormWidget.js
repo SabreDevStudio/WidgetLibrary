@@ -1,4 +1,4 @@
-describe('Fare Trend Widget working with Search Form: ', function() {
+xdescribe('Lead Price Widget working with Search Form: ', function() {
 
     var originInputField;
     var destinationInputField;
@@ -21,7 +21,7 @@ describe('Fare Trend Widget working with Search Form: ', function() {
        expect(searchButton).toBeDefined();
     });
 
-    it('fare trend chart shown on triggering new search', function (done) {
+    it('lead price chart shown on triggering new search', function (done) {
         var searchCriteria = {
               departure: "LAX"
             , arrival: "DFW"
@@ -35,9 +35,9 @@ describe('Fare Trend Widget working with Search Form: ', function() {
         returnDateField.sendKeys(searchCriteria.returnDate);
 
         searchButton.click();
-        browser.isElementPresent(by.css('.SDSFareTrendWidget')).then(function () { //TODO ugly, non NG way
+        browser.isElementPresent(by.css('.SDSLeadPriceWidget')).then(function () { //TODO ugly, non NG way
             console.log("FOUND");
-            verifyFareTrendWidgetDisplayed();
+            verifyLeadPriceWidgetDisplayed();
             verifyHeaderAndSummaryUpdated(searchCriteria);
             done();
         });
@@ -55,9 +55,9 @@ describe('Fare Trend Widget working with Search Form: ', function() {
         //});
     });
 
-    function verifyFareTrendWidgetDisplayed() {
-        var fareTrendWidget = element(by.css('.SDSFareTrendWidget')); //TODO more classes
-        expect(fareTrendWidget.isPresent()).toBeTruthy();
+    function verifyLeadPriceWidgetDisplayed() {
+        var leadPriceWidget = element(by.css('.SDSLeadPriceWidget')); //TODO more classes
+        expect(leadPriceWidget.isPresent()).toBeTruthy();
     }
 
     function verifyHeaderAndSummaryUpdated(searchCriteria) {

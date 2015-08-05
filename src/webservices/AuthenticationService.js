@@ -65,10 +65,15 @@ define([
                             if (_.isDefined(cachedToken)) {
                                 return resolve(cachedToken);
                             }
-                            authResource.sendRequest().$promise.then(function (response) {
-                                cachedToken = response.token;
-                                resolve(cachedToken);
-                            });
+                            authResource.sendRequest().$promise.then(
+                                function (response) {
+                                    cachedToken = response.token;
+                                    resolve(cachedToken);
+                                },
+                                function (reason) {
+                                    console.log(reason); // TODO: handle retries here
+                                }
+                            );
                         });
                     }
                 };

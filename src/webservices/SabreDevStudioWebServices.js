@@ -12,6 +12,7 @@ define([
         , 'datamodel/FareForecast'
         , 'datamodel/ShoppingData'
         , 'webservices/AdvancedCalendarRequestFactory'
+        , 'datamodel/InstaflightSearchCriteriaValidator'
     ],
     function (
           angular
@@ -27,6 +28,7 @@ define([
         , FareForecast
         , ShoppingData
         , AdvancedCalendarRequestFactory
+        , InstaflightSearchCriteriaValidator
     ) {
         'use strict';
 
@@ -78,6 +80,37 @@ define([
                             );
                         });
                     },
+                    getItineraries : function (searchCriteria) { //TODO near all dup with previous. When works refactor
+                        return $q(function(resolve, reject) {
+                            var cacheKey = createCacheKey(searchCriteria);
+                            var tripDepartureDay = searchCriteria.getFirstLeg().departureDateTime.clone().startOf('day');
+                            var optionsFromCache = ShoppingOptionsCacheService.getItinerariesList(cacheKey, tripDepartureDay);
+                            if (optionsFromCache.size() > 0) {
+                                return resolve(optionsFromCache);
+                            }
+                            var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria);
+                            AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
+                                function (response) {
+                                    var itinerariesList = responseParser.parse(response);
+
+                                    var shoppingData = new ShoppingData();
+                                    shoppingData.markRequestedData(cacheKey, range.start, range.end);
+                                    itinerariesList.getItineraries().forEach(function(itineary) {
+                                        shoppingData.addItinerary(cacheKey, itineary, itineary.getOutboundDepartureDateTime());
+                                    });
+                                    shoppingData.updateLeadPrices(cacheKey);
+
+                                    ShoppingOptionsCacheService.addUpdate(shoppingData);
+                                    var itineraries = shoppingData.getItinerariesList(cacheKey, tripDepartureDay);
+                                    return resolve(itineraries);
+                                },
+                                function (error) {
+                                    return reject(error);
+                                }
+                            );
+
+                        });
+                    },
                     getMinDateAndPricePair: function (searchCriteria) { //todo for now assume it is called after getLeadPricesForRange
                         var cacheKey = createCacheKey(searchCriteria);
                         return ShoppingOptionsCacheService.getMinDateAndPricePair(cacheKey);
@@ -98,6 +131,8 @@ define([
                     , dateFormat
                 ) {
                     var parser = new InstaflightsResponseParser();
+
+                    var validator = new InstaflightSearchCriteriaValidator();
 
                     function translateSearchCriteriaIntoRequestOptions(searchCriteria) {
                         var requestOptions = {
@@ -133,14 +168,21 @@ define([
                     return {
                         getItineraries: function(searchCriteria) {
                             return $q(function(resolve, reject) {
+                                var validationErrors = validator.validate(searchCriteria);
+                                if (_.isDefined(validationErrors)) {
+                                    return reject(validationErrors);
+                                }
                                 var webServiceRequest = translateSearchCriteriaIntoRequestOptions(searchCriteria);
-                                InstaFlightsWebService.get(webServiceRequest).$promise.then(function (response) {
-                                    var itinerariesList = parser.parse(response);
-                                    resolve(itinerariesList);
-                                }).catch(function (reason) {
-                                    var businessErrorMessage = reason.data.message;
-                                    reject(businessErrorMessage);
-                                });
+                                InstaFlightsWebService.get(webServiceRequest).$promise.then(
+                                    function (response) {
+                                        var itinerariesList = parser.parse(response);
+                                        resolve(itinerariesList);
+                                    },
+                                    function (reason) {
+                                        var businessErrorMessage = reason.data.message;
+                                        reject(businessErrorMessage);
+                                    }
+                                );
                             });
                         }
                     };
@@ -336,4 +378,5 @@ define([
                         }
                     };
             }])
+
 });

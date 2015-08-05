@@ -152,5 +152,15 @@ define(['lodash'], function (_) {
         return this.getTripDepartureAirport() === this.getTripArrivalAirport();
     };
 
+    Itinerary.prototype.getPricingSource = function () {
+      return this.pricingSource;
+    };
+
+    Itinerary.prototype.getFlightStructure = function() {
+        return this.legs.map(function (leg) {
+            return leg.getFlightStructure();
+        }).join(' ||| ');
+    };
+
     return Itinerary;
 });

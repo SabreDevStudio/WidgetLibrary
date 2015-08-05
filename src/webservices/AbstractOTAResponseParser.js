@@ -54,6 +54,9 @@ define([
             var totalFareAmountFromResponse = airItineraryPricingInfo.ItinTotalFare.TotalFare.Amount;
             itinerary.totalFareAmount = _.isString(totalFareAmountFromResponse)? parseFloat(totalFareAmountFromResponse): totalFareAmountFromResponse;
             itinerary.totalFareCurrency = airItineraryPricingInfo.ItinTotalFare.TotalFare.CurrencyCode;
+
+            itinerary.pricingSource = this.parsePricingSource(itin);
+
             return itinerary;
         };
 

@@ -185,6 +185,22 @@ define([
                             , cache: true
                         }
                     });
-             }]);
+             }])
+            .factory('AirlineLookupWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v1/lists/utilities/airlines/';
+                    return $resource(endpointURL, {}, {
+                        get: {
+                              method:'GET'
+                            , cache: true
+                        }
+                    });
+                }]);
+
 
     });

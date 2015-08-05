@@ -4,7 +4,6 @@ define([
       , 'util/CommonDirectives'
       , 'util/CommonFilters'
       , 'webservices/SabreDevStudioWebServices'
-      , 'angular_nvd3'
       , 'angular_moment'
       , 'angular_animate'
       , 'angular-ui-select'
@@ -12,6 +11,7 @@ define([
       , 'util/Lookups'
       , 'angular-img-fallback'
       , 'angular-rangeslider'
+      , 'ngStorage'
     ],
     function (
           NG
@@ -19,7 +19,6 @@ define([
         , CommonDirectives
         , CommonFilters
         , SabreDevStudioWebServices
-        , angular_nvd3
         , angular_moment
         , angular_animate
         , angular_ui_select
@@ -27,14 +26,16 @@ define([
         , Lookups
         , angular_img_fallback
         , angular_rangeslider
+        , ngStorage
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'nvd3', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback', 'ui-rangeSlider'])
+        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback', 'ui-rangeSlider', 'ngStorage'])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .constant('filteringCriteriaChangedEvent', 'filteringCriteriaChangedEvent')
             .constant('itinerariesStatisticsUpdateNotification', 'itinerariesStatisticsUpdateNotification')
             .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
+            .constant('dateSelectedEvent', 'dateSelectedEvent')
             .config(function (datepickerConfig) { //TODO make every widget a module of its own, then this config, specyfic to Form will go there
                 datepickerConfig.showWeeks = false;
                 datepickerConfig.startingDay = 1;
@@ -51,6 +52,18 @@ define([
                     $rootScope.$broadcast(newSearchCriteriaEvent);
                 };
                 return service;
+            }])
+            .service('DateSelectedBroadcastingService', [
+                '$rootScope'
+                , 'dateSelectedEvent'
+                , function ($rootScope, dateSelectedEvent) {
+                    var service = {};
+                    service.originalDataSourceWebService = undefined;
+                    service.newSearchCriteria = undefined;
+                    service.broadcast = function () {
+                        $rootScope.$broadcast(dateSelectedEvent);
+                    };
+                    return service;
             }])
             .service('ItineraryStatisticsBroadcastingService', [
                 '$rootScope'

@@ -25,6 +25,10 @@ define([
             this.parseEquipment = function(segment) {
                 return segment.AirEquipType;
             };
+
+            this.parsePricingSource = function() {
+                return 'Instaflights';
+            }
         }
 
         InstaflightResponseParser.prototype = Object.create(AbstractOTAResponseParser.prototype);

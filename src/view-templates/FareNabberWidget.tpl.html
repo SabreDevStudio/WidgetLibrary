@@ -46,7 +46,7 @@
                         <div class="col-sm-3">
                             <div class="input-group">
                                 <input type="text" id="SDSFareNabberForm_DepartureDate" name="departureDate" class="form-control input-sm" autocomplete="off" required
-                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestTravelStart}} is-open="isDepartureDatePickerOpened" ng-model="departureDate" ng-change="onDepartureDateChange()"/>
+                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestTravelStart}} is-open="isDepartureDatePickerOpened" ng-model="departureDate" ng-change="onDepartureDateChange()">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default input-sm" ng-click="openDepartureDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                               </span>
@@ -78,7 +78,7 @@
                         <div class="col-sm-3">
                             <p class="input-group">
                                 <input type="text" id="SDSFareNabberForm_SubscriptionExpiryDate" name="subscriptionExpiryDate" class="form-control input-sm" autocomplete="off"
-                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestSubscriptionExpiry}} is-open="isSubscriptionExpiryDatePickerOpened" ng-model="subscriptionExpiryDate"/>
+                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestSubscriptionExpiry}} is-open="isSubscriptionExpiryDatePickerOpened" ng-model="subscriptionExpiryDate">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default input-sm" ng-click="openSubscriptionExpiryDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                               </span>

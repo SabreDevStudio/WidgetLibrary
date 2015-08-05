@@ -36,13 +36,16 @@ define([
                         getItineraries: function(searchCriteria) {
                             var bfmRequest = bfmRequestFactory.createRequest(searchCriteria);
                             return $q(function(resolve, reject) {
-                                bfmSearchService.sendRequest(bfmRequest).then(function (response) {
-                                    var itinerariesList = parser.parse(response);
-                                    resolve(itinerariesList);
-                                }).catch(function (reason) {
-                                    var businessErrorMessage = parser.getBusinessErrorMessage(reason.data.message);
-                                    reject(businessErrorMessage);
-                                });
+                                bfmSearchService.sendRequest(bfmRequest).then(
+                                    function (response) {
+                                        var itinerariesList = parser.parse(response);
+                                        resolve(itinerariesList);
+                                    },
+                                    function (reason) {
+                                        var businessErrorMessage = parser.getBusinessErrorMessage(reason.data.message);
+                                        reject(businessErrorMessage);
+                                    }
+                                );
                             });
                         }
                     }

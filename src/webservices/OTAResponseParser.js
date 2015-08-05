@@ -38,6 +38,15 @@ define([
                     .join(', ');
                 return errorMessage;
             };
+
+            this.parsePricingSource = function(itinerary) {
+                return 'BFM';
+                // or more detailed parsing:
+                //var pricingInfo = itinerary.AirItineraryPricingInfo[0];
+                //if (pricingInfo.PricingSource === 'ADVJR1' && pricingInfo.PricingSubSource === 'MIP') {
+                //    return 'BFM_MIP';
+                //}
+            }
         }
 
         OTAResponseParser.prototype = Object.create(AbstractOTAResponseParser.prototype);

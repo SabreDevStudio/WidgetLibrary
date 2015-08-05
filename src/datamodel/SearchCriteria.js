@@ -122,6 +122,10 @@ define([
         return JSON.stringify(this);
     };
 
+    SearchCriteria.prototype.isRoundTripTravel = function () {
+        return ((this.legs.length === 2) && (this.getFirstLeg().origin === this.getSecondLeg().destination) && (this.getFirstLeg().destination === this.getSecondLeg().origin));
+    };
+
     SearchCriteria.prototype.TripTypeEnum = Object.freeze({
         'OneWay': 'OneWay',
         'RoundTrip': 'RoundTrip',
@@ -146,6 +150,15 @@ define([
             , code: 'F'
         }
     });
+
+    SearchCriteria.prototype.getCopyAdjustedToOtherDepartureDate = function(date) {
+        var newCriteria = _.extend(Object.create(SearchCriteria.prototype), this);
+        var daysOffset = date.diff(this.getFirstLeg().departureDateTime, 'days');
+        newCriteria.legs.forEach(function (leg) {
+            leg.moveDates(daysOffset);
+        });
+        return newCriteria;
+    };
 
     // utility static factory method
     SearchCriteria.prototype.buildRoundTripTravelSearchCriteria = function (origin, destination, departureDateString, returnDateString) {

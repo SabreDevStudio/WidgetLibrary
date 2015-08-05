@@ -1,12 +1,15 @@
-<itinerary-summary-price-per-stops-per-airline summary="summaryPerStopsPerAirline"/>
+<itinerary-summary-price-per-stops-per-airline summary="summaryPerStopsPerAirline" ng-if="isAnyDataToDisplayAvailable()"></itinerary-summary-price-per-stops-per-airline>
 
-<div class="panel panel-default" ng-if="businessErrorMessage">
+<div class="panel panel-default" ng-if="anyBusinessErrorMessagesPresent()">
     <div class="panel-heading">
             <h4 class="panel-title">
                 No options found for {{searchCriteriaDepartureAirport | airportFullName}} to {{searchCriteriaArrivalAirport | airportFullName}}
-                <span class="glyphicon glyphicon-info-sign" ng-click="businessErrorMessageShown = !businessErrorMessageShown"></span>
             </h4>
-            <small ng-show="businessErrorMessageShown">{{businessErrorMessage}}</small>
+            <div>
+                <ul>
+                    <li ng-repeat="message in businessErrorMessages"><p class="text-danger">{{message}}</p></li>
+                </ul>
+            </div>
     </div>
 </div>
 
@@ -21,13 +24,13 @@
             <div class="col-lg-6">
                 <tabset>
                     <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency}}">
-                        <itinerary-short-summary itinerary="bestItinerariesSummary.cheapest"/>
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.cheapest"></itinerary-short-summary>
                     </tab>
                     <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmount | currency}}">
-                        <itinerary-short-summary itinerary="bestItinerariesSummary.best"/>
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.best"></itinerary-short-summary>
                     </tab>
                     <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmount | currency}}">
-                        <itinerary-short-summary itinerary="bestItinerariesSummary.shortest"/>
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.shortest"></itinerary-short-summary>
                     </tab>
                 </tabset>
             </div>
@@ -104,7 +107,7 @@
                                     <li ng-show="priceDetailsExpanded" ng-click="priceDetailsExpanded = !priceDetailsExpanded">Taxes: {{itinerary.totalTaxAmount | currency}}</li>
                                 </ul>
                             </div>
-                            <div class="clearfix"/>
+                            <div class="clearfix"></div>
                             <button type="button" class="SDSCheckoutButton btn btn-primary btn-sm pull-right">Select</button>
                     </div>
             </li>

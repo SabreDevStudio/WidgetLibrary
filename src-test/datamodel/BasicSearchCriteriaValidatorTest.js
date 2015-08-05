@@ -7,7 +7,7 @@ require(['datamodel/BasicSearchCriteriaValidator'], function (BasicSearchCriteri
 
         it('arrivalDate cannot be before departure date', function () {
             expect(function () {
-                validator.validateIsRoundTripTravel({
+                validator.validateRoundTripTravelSpecification({
                         origin: 'LAX'
                         , destination: 'NYC'
                         , departureDate: '2015-04-15'
@@ -26,7 +26,7 @@ require(['datamodel/BasicSearchCriteriaValidator'], function (BasicSearchCriteri
                 lengthOfStay: 14 //<--
             };
             expect(function () {
-                validator.validateIsRoundTripTravel(searchOptions);
+                validator.validateRoundTripTravelSpecification(searchOptions);
             }).toThrow();
         });
 

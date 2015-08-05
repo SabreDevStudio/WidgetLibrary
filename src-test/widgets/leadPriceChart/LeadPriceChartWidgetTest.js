@@ -1,13 +1,13 @@
 require([
-       'widgets/fareTrendChart/FareTrendChartWidget'
+       'widgets/leadPriceChart/LeadPriceChartWidget'
      , 'datamodel/SearchCriteria' //todo angular-mock module??
     ], function (
-        FareTrendChartWidget
+        LeadPriceChartWidget
       , SearchCriteria
     ) {
     'use strict';
 
-    describe('FareTrendChartCtrl', function () {
+    describe('LeadPriceChartCtrl', function () {
 
         var scope, searchCriteriaBroadcastingServiceMock, controller, mockShoppingDataService;
 
@@ -25,7 +25,7 @@ require([
                 , 'Wed Aug 05 2015 00:00:00 GMT+0200': 198.1
             });
 
-            controller = $controller('FareTrendChartCtrl', {
+            controller = $controller('LeadPriceChartCtrl', {
                 $scope: scope,
                 SearchCriteriaBroadcastingService: searchCriteriaBroadcastingServiceMock,
                 ShoppingDataService: mockShoppingDataService

@@ -12,9 +12,6 @@ require.config({
         async: '../bower_components/async/lib/async',
         lodash: '../bower_components/lodash/lodash',
         angular: '../bower_components/angular/angular',
-        'd3': '../bower_components/d3/d3',
-        'nvd3': '../bower_components/nvd3/nv.d3',
-        'angular_nvd3': '../bower_components/angular-nvd3/dist/angular-nvd3',
         'angular_resource': '../bower_components/angular-resource/angular-resource',
         'angular_moment': '../bower_components/angular-moment/angular-moment',
         'angular_bootstrap': '../bower_components/angular-bootstrap/ui-bootstrap-tpls',
@@ -22,13 +19,19 @@ require.config({
         'angular-ui-select': '../bower_components/angular-ui-select/dist/select',
         'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize',
         'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback',
-        'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider'
+        'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider',
+        'ngStorage': '../bower_components/ngstorage/ngStorage',
+        chartjs: '../bower_components/Chart.js/Chart'
     },
     //map: { // disabled, with it angular is not using jquery but its jqLite
     //    '*': {'jquery': 'util/jquery-loader'},
     //    'util/jquery-loader': {'jquery': 'jquery'}
     //},
     // angular does not support AMD out of the box, put it in a shim
+    map: {
+        '*': { 'chartjs': 'chartjs-noConflict' },
+        'chartjs-noConflict': { 'chartjs': 'chartjs' }
+    },
     shim: {
         'angular': {
             deps: ['jquery'],
@@ -36,17 +39,6 @@ require.config({
         },
         angular_resource: {
             deps: ['angular'], 'exports': 'ngResource'
-        },
-        d3: {
-            exports: 'd3' //todo: all these libs export global symbols...
-        },
-        nvd3: {
-            exports: 'nvd3',
-            deps: ['d3']
-        },
-        angular_nvd3: {
-            exports: 'angular_nvd3',
-            deps: ['nvd3', 'angular']
         },
         angular_bootstrap: {
             deps: ['angular']
@@ -65,6 +57,16 @@ require.config({
         },
         'angular-rangeslider': {
             deps: ['angular']
+        },
+        'ngStorage': {
+            deps: ['angular']
+        },
+        chartjs: {
+            exports: 'Chart',
+            init: function () {
+                console.log('calling this.Chart.noConflict()');
+                return this.Chart.noConflict();
+            }
         }
     },
     stache: {
@@ -96,7 +98,7 @@ require([
         , 'datamodel/InstaflightSearchCriteriaValidator'
         , 'lodash'
         , 'angular'
-        , 'widgets/fareTrendChart/FareTrendChartWidget'
+        , 'widgets/leadPriceChart/LeadPriceChartWidget'
         , 'widgets/searchForm/SearchFormWidgetNG'
         , 'widgets/fareForecast/FareForecastWidget'
         , 'widgets/FareRangeWidget'
@@ -121,7 +123,7 @@ require([
         , InstaflightSearchCriteriaValidator
         , _
         , angular
-        , FareTrendChartWidget
+        , LeadPriceChartWidget
         , SearchFormWidgetNG
         , FareForecastWidget
         , FareRangeWidget
@@ -225,27 +227,6 @@ require([
                 testItineraryBuilder = testItineraryBuilder || new TestItineraryBuilder();
                 return testItineraryBuilder;
             };
-
-            /**
-             * as options you can pass any option acceptable by jQuery UI Datepicker
-             * @param DOMSelector
-             * @param options
-             */
-            SDS.searchForm = function (DOMSelector, options) {
-
-                options.searchCriteriaValidator = options.searchCriteriaValidator || SDS.instaflightSearchCriteriaValidator(); //TODO hardcode for now
-
-                var searchFormWidget = new SearchFormWidget(options);
-
-                searchFormWidget.render(function (searchFormWidgetDOM) {
-                    $(DOMSelector).append(searchFormWidgetDOM);
-                });
-                return searchFormWidget;
-            };
-
-            SDS.basicSearchCriteriaValidator = new BasicSearchCriteriaValidator(); //TODO to factories
-
-            SDS.instaflightSearchCriteriaValidator = new InstaflightSearchCriteriaValidator();
 
             window.SDS = SDS;
 

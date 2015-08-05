@@ -60,6 +60,10 @@ define([],
             }
         }
 
+        SearchCriteriaLeg.prototype.moveDates = function(daysOffset) {
+            this.departureDateTime = this.departureDateTime.add(daysOffset, 'days');
+        };
+
         SearchCriteriaLeg.prototype.AIRPORT_CODE_REGEX = /^[A-Z]{3}$/;
 
         return SearchCriteriaLeg;

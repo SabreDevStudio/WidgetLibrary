@@ -1,29 +1,29 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4>Filter options</h4>
-        <ng-transclude/>
+        <ng-transclude></ng-transclude>
     </div>
 
     <div class="panel-body">
         <values-filter type="discrete" label="Number of stops" filterable-property-name="getNumberOfStops" values-display-filter="humanizeNumberOfStops"></values-filter>
 
-        <values-filter type="discreteList" label="Layover airports" filterable-property-name="getConnectionAirports" values-display-filter="airportFullName"/></values-filter>
+        <values-filter type="discreteList" label="Layover airports" filterable-property-name="getConnectionAirports" values-display-filter="airportFullName"></values-filter>
 
-        <values-filter type="discrete" label="Departure airports" filterable-property-name="getTripDepartureAirport" values-display-filter="airportFullName"/></values-filter>
+        <values-filter type="discrete" label="Departure airports" filterable-property-name="getTripDepartureAirport" values-display-filter="airportFullName"></values-filter>
 
-        <values-filter type="discrete" label="Arrival airports" filterable-property-name="getFirstLegArrivalAirport" values-display-filter="airportFullName"/></values-filter>
+        <values-filter type="discrete" label="Arrival airports" filterable-property-name="getFirstLegArrivalAirport" values-display-filter="airportFullName"></values-filter>
 
-        <values-filter type="boolean" label="Depart/Return same" filterable-property-name="isDepartureAndReturnSameAirport"/></values-filter>
+        <values-filter type="boolean" label="Depart/Return same" filterable-property-name="isDepartureAndReturnSameAirport"></values-filter>
 
-        <values-filter type="discrete" label="Airline" filterable-property-name="getFirstMarketingAirline" values-display-filter="airlineFullName"/></values-filter>
+        <values-filter type="discrete" label="Airline" filterable-property-name="getFirstMarketingAirline" values-display-filter="airlineFullName"></values-filter>
 
-        <values-filter type="range" label="Price" filterable-property-name="totalFareAmount" values-display-filter="currency" can-filter-only-on-max-value="true"/></values-filter>
+        <values-filter type="range" label="Price" filterable-property-name="totalFareAmount" values-display-filter="currency" can-filter-only-on-max-value="true"></values-filter>
 
-        <values-filter type="rangeDateTime" label="Outbound flight departure" filterable-property-name="getOutboundDepartureDateTime" values-display-filter="amDateFormat" values-display-filter-options="hh:mm a"/></values-filter>
+        <values-filter type="rangeDateTime" label="Outbound flight departure" filterable-property-name="getOutboundDepartureDateTime" values-display-filter="amDateFormat" values-display-filter-options="hh:mm a"></values-filter>
 
-        <values-filter type="rangeDateTime" label="Inbound flight departure" filterable-property-name="getInboundArrivalDateTime" values-display-filter="amDateFormat" values-display-filter-options="hh:mm a"/></values-filter>
+        <values-filter type="rangeDateTime" label="Inbound flight departure" filterable-property-name="getInboundArrivalDateTime" values-display-filter="amDateFormat" values-display-filter-options="hh:mm a"></values-filter>
 
-        <values-filter type="range" label="Travel duration" filterable-property-name="outboundLegDuration" values-display-filter="humanizeMinutesAsHours" can-filter-only-on-max-value="true"/></values-filter>
+        <values-filter type="range" label="Travel duration" filterable-property-name="outboundLegDuration" values-display-filter="humanizeMinutesAsHours" can-filter-only-on-max-value="true"></values-filter>
     </div>
 
     <div class="panel-footer text-center">
