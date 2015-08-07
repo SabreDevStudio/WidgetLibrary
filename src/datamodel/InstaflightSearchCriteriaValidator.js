@@ -1,8 +1,10 @@
 define([
-          'moment'
+          'util/LodashExtensions'
+        , 'moment'
         , 'datamodel/BasicSearchCriteriaValidator'],
     function (
-          moment
+          _
+        , moment
         , BasicSearchCriteriaValidator
     ) {
         'use strict';
@@ -26,22 +28,27 @@ define([
         InstaflightSearchCriteriaValidator.prototype.MAX_LENGTH_OF_STAY_DAYS = 16;
 
         InstaflightSearchCriteriaValidator.prototype.validate = function (searchCriteria) {
-            this.errors = [];
+            var errors = [];
+
+            if (searchCriteria.isAlternateDatesRequest()) {
+                errors.push("Instaflight does not support alt dates requests (date flexibility");
+            }
 
             if (!searchCriteria.isRoundTripTravel()) {
-                this.errors.push("Instaflight supports only round trip travel");
-                return this.errors;
+                errors.push("Instaflight supports only round trip travel");
+                return errors;
             }
 
             var roundTripTravelValidationErrors = this.basicValidator.validateRoundTripTravelSpecification(searchCriteria);
-            this.errors.push.apply(this.errors, roundTripTravelValidationErrors);
+            _.pushAll(errors, roundTripTravelValidationErrors);
 
             var lengthOfStayValidationErrors = this.validateLengthOfStay(searchCriteria.departureDate, searchCriteria.returnDate, searchCriteria.lengthOfStay);
-            this.errors.push.apply(this.errors, lengthOfStayValidationErrors);
+            _.pushAll(errors, lengthOfStayValidationErrors);
 
-            if (this.errors.length > 0) {
-                return this.errors;
+            if (errors.length > 0) {
+                return errors;
             }
+            return errors; 
         };
 
 

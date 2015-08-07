@@ -3,6 +3,11 @@
 .SDSLegList {
   border-right: $itemsSeparatingLineStyle;
   box-sizing: border-box;
+
+  // rest bootstrap column paddings so that the separating dotted line is displayed in whole length (line is not displayed on paddings)
+  padding-left: 0;
+  padding-right: 0;
+
   > li {
     padding-top: 5px;
     padding-bottom: 5px;
@@ -19,17 +24,16 @@
   height: 14px;
 }
 
+.SDSTravelDateLong {
+  width: 10%;
+  min-width: 9rem;
+  margin-left: 1rem;
+}
+
 .SDSLegSummary {
   padding-bottom: 0.5rem;
-
-  > .SDSTravelDate {
-    width: 10%;
-  }
-  > .SDSAirport {
-    width: 4%;
-  }
   > .SDSIconAirplaneArrow {
-    margin-left: 2rem;
+    margin-left: 3rem;
     margin-right: 1.5rem;
   }
   > .SDTravelDepartureArrivalTime {
@@ -44,13 +48,18 @@
 .SDSFlightDepartureOrArrival {
   > .SDSLabelForTravelDate {
     width: 6%;
+    min-width: 5rem;
   }
-  > .SDSTravelDate {
-    width: 5%;
-  }
-  > .SDSAirport {
-    width: 5%;
-  }
+}
+
+.SDSTravelTime {
+  width: 5%;
+  min-width: 4rem;
+  margin-right: 0.5rem;
+}
+
+.SDSAirport {
+  width: 3.7rem;
 }
 
 .SDSPriceSummary .SDSCheckoutButton {

@@ -1,8 +1,10 @@
 define([
-        'webservices/OTARequestFactory'
+          'lodash'
+        , 'webservices/OTARequestFactory'
     ],
     function (
-        OTARequestFactory
+          _
+        , OTARequestFactory
     ) {
         'use strict';
 
@@ -13,7 +15,7 @@ define([
         BargainFinderMaxRequestFactory.prototype.constructor = BargainFinderMaxRequestFactory;
 
 
-        BargainFinderMaxRequestFactory.prototype.createOriginDestinationInfos = function(legs, lengthOfStay, preferredAirlines) {
+        BargainFinderMaxRequestFactory.prototype.createOriginDestinationInfos = function(legs, lengthOfStay, preferredAirlines, dateFlexibilityDays) {
             var that = this;
             return legs.map(function (leg, legIdx) {
                 return {
@@ -25,12 +27,33 @@ define([
                         "LocationCode": leg.origin
                     },
                     "RPH": "" + legIdx + 1,
-                    "TPA_Extensions": that.createLegTPAExtensions(preferredAirlines)
+                    "TPA_Extensions": that.createLegTPAExtensions(preferredAirlines, dateFlexibilityDays)
                 };
             });
         };
 
-        BargainFinderMaxRequestFactory.prototype.getRequestType = function (requestedItinsCount) {
+        BargainFinderMaxRequestFactory.prototype.createLegTPAExtensions = function(preferredAirlines, dateFlexibilityDays) {
+            var tpaExtensions = {
+                "IncludeVendorPref": preferredAirlines.map(function (airline) {
+                    return {
+                        "Code": airline
+                    };
+                })
+            };
+            if (dateFlexibilityDays > 0) {
+                _.extend(tpaExtensions, {
+                    "DateFlexibility": {
+                        "NbrOfDays": dateFlexibilityDays
+                    }
+                });
+            }
+            return tpaExtensions;
+        };
+
+        BargainFinderMaxRequestFactory.prototype.getRequestType = function (requestedItinsCount, dateFlexibilityDays) {
+            if (dateFlexibilityDays > 0) {
+                return "AD1";
+            }
             if(requestedItinsCount <= 50) {
                 return "50ITINS";
             }

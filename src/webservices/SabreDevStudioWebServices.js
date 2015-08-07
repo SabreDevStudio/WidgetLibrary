@@ -168,10 +168,6 @@ define([
                     return {
                         getItineraries: function(searchCriteria) {
                             return $q(function(resolve, reject) {
-                                var validationErrors = validator.validate(searchCriteria);
-                                if (_.isDefined(validationErrors)) {
-                                    return reject(validationErrors);
-                                }
                                 var webServiceRequest = translateSearchCriteriaIntoRequestOptions(searchCriteria);
                                 InstaFlightsWebService.get(webServiceRequest).$promise.then(
                                     function (response) {
@@ -184,6 +180,9 @@ define([
                                     }
                                 );
                             });
+                        },
+                        validateSearchCriteria: function (searchCriteria) {
+                            return validator.validate(searchCriteria);
                         }
                     };
 

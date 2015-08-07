@@ -58,12 +58,17 @@ define([
 
         // date flexibility defined on whole travel level, not per leg. So if defined, the same number applies to all legs.
         // possible to define only same + and minus days
-        var _dateFlexibility;
-        Object.defineProperty(this, 'dateFlexibility', {
+        var _dateFlexibilityDays;
+        Object.defineProperty(this, 'dateFlexibilityDays', {
             enumerable: true,
-            get: function() { return _dateFlexibility},
-            set: function(dateFlexibility) { _dateFlexibility = dateFlexibility}
+            get: function() { return _dateFlexibilityDays},
+            set: function(dateFlexibilityDays) { _dateFlexibilityDays = dateFlexibilityDays}
         });
+
+        Object.defineProperty(this, 'returnAlternateDatesOnly', {
+            enumerable: true
+        });
+
 
         this.optionsPerDay;
     }
@@ -158,6 +163,17 @@ define([
             leg.moveDates(daysOffset);
         });
         return newCriteria;
+    };
+
+    SearchCriteria.prototype.getCopyWithoutDateFlexibility = function () {
+        var copy = _.extend(Object.create(SearchCriteria.prototype), this);
+        copy.dateFlexibilityDays = undefined;
+        copy.returnAlternateDatesOnly = undefined;
+        return copy;
+    };
+
+    SearchCriteria.prototype.isAlternateDatesRequest = function () {
+        return this.dateFlexibilityDays > 0;
     };
 
     // utility static factory method

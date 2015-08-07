@@ -26,17 +26,16 @@ define([
                 return segment.Equipment[0].AirEquipType;
             };
 
-            this.getBusinessErrorMessage = function (response) {
-                var skippedErrorTypes = ['WORKERTHREAD', 'SERVER', 'DEFAULT', 'DRE', 'IF2'];
-                var errorMessage = JSON.parse(response).OTA_AirLowFareSearchRS.Errors.Error
+            this.getBusinessErrorMessages = function (response) {
+                var skippedErrorTypes = ['WORKERTHREAD', 'SERVER', 'DEFAULT', 'DRE', 'IF2', 'DSFCLIENT', 'JRCHILD'];
+                var errorMessages = JSON.parse(response).OTA_AirLowFareSearchRS.Errors.Error
                     .filter(function (error) {
                         return !_.contains(skippedErrorTypes, error.Type);
                     })
                     .map(function (error) {
                         return error.ShortText;
-                    })
-                    .join(', ');
-                return errorMessage;
+                    }) || [];
+                return _.unique(errorMessages);
             };
 
             this.parsePricingSource = function(itinerary) {

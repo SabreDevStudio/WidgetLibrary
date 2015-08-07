@@ -192,6 +192,19 @@ define(['lodash'], function (_) {
             } else {
                 return (values[half-1] + values[half]) / 2.0;
             }
+        },
+        // adds all elements of source array to target array. Both arguments must be arrays.
+        // modifies target array.
+        // Returns modified target array
+        pushAll: function(target, source) {
+            target.push.apply(target, source);
+            return target;
+        },
+        pushIfNotContains: function (target, source) {
+            if (!_.contains(target, source)) {
+                target.push(source);
+            }
+            return target;
         }
 
     });

@@ -1,0 +1,15 @@
+<div>
+    <div class="modal-header">
+        <h3 class="modal-title">{{::modalTitle}}</h3>
+    </div>
+    <div class="modal-body">
+        <ul>
+            <li ng-repeat="error in errorsList">
+                <span class="text-error">{{error}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+    </div>
+</div>

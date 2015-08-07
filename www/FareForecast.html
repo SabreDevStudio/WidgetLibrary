@@ -7,18 +7,22 @@
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/cupertino/jquery-ui.css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
-    <link rel="stylesheet" type="text/css" href="SearchForm.custom.css">
 </head>
 <body>
 
-<!--<div id="SDSSearchFormWrapper_1"></div>-->
 <div id="mainPageContainer">
-    <div id="SDSSearchFormWrapper_2"></div>
-    <div id="CalendarSearchResults"></div>
 
-    <widgets-config data-client-id="CLIENT"/>
+    <div class="well">
+        Suggested markets
+        <ul>
+            <li>ATL - LAS</li>
+            <li>CLT - LAS</li>
+            <li>SFO - LAS</li>
+        </ul>
+    </div>
+
     <div id="SearchFormNG" data-search-form></div>
-    <!--<div id="FareForecast" data-fare-forecast></div>-->
+
     <div id="FareForecast" data-fare-forecast data-show-unknown-recommendation="1" data-show-wait-recommendation="1"></div>
 </div>
 <script>

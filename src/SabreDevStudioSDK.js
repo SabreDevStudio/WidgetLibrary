@@ -21,6 +21,7 @@ require.config({
         'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback',
         'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider',
         'ngStorage': '../bower_components/ngstorage/ngStorage',
+        'ngPromiseExtras': '../bower_components/angular-promise-extras/angular-promise-extras',
         chartjs: '../bower_components/Chart.js/Chart'
     },
     //map: { // disabled, with it angular is not using jquery but its jqLite
@@ -61,6 +62,9 @@ require.config({
         'ngStorage': {
             deps: ['angular']
         },
+        'ngPromiseExtras': {
+            deps: ['angular']
+        },
         chartjs: {
             exports: 'Chart',
             init: function () {
@@ -99,7 +103,7 @@ require([
         , 'lodash'
         , 'angular'
         , 'widgets/leadPriceChart/LeadPriceChartWidget'
-        , 'widgets/searchForm/SearchFormWidgetNG'
+        , 'widgets/searchForm/SearchFormWidget'
         , 'widgets/fareForecast/FareForecastWidget'
         , 'widgets/FareRangeWidget'
         , 'widgets/FareNabberWidget'
@@ -124,7 +128,7 @@ require([
         , _
         , angular
         , LeadPriceChartWidget
-        , SearchFormWidgetNG
+        , SearchFormWidget
         , FareForecastWidget
         , FareRangeWidget
         , FareNabberWidget

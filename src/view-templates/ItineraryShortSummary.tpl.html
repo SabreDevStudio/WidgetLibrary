@@ -1,12 +1,12 @@
 <div>
     <ul class="SDSLegShortSummary list-inline list-unstyled">
-        <li class="SDSTravelDate">{{itinerary.getFirstLeg().getLegDepartureDateTime() | amDateFormat: 'ddd, DD MMM' }}</li>
+        <li class="SDSTravelDateLong">{{itinerary.getFirstLeg().getLegDepartureDateTime() | amDateFormat: 'ddd, DD MMM' }}</li>
         <li class="SDSAirport badge SDSBadgeInfo">{{itinerary.getFirstLeg().getLegDepartureAirport()}}</li>
-        <li class="SDTravelDepartureArrivalTime">{{itinerary.getFirstLeg().getLegDepartureDateTime() | amDateFormat: 'HH:mm'}}</li>
+        <li class="SDSTravelTime">{{itinerary.getFirstLeg().getLegDepartureDateTime() | amDateFormat: 'HH:mm'}}</li>
         <li class="SDSIconAirplaneArrow"></li>
-        <li class="SDSTravelDate">{{itinerary.getFirstLeg().getLegArrivalDateTime() | amDateFormat: 'ddd, DD MMM' }}</li>
+        <li class="SDSTravelDateLong">{{itinerary.getFirstLeg().getLegArrivalDateTime() | amDateFormat: 'ddd, DD MMM' }}</li>
         <li class="SDSAirport badge SDSBadgeInfo">{{itinerary.getFirstLeg().getLegArrivalAirport()}}</li>
-        <li class="SDTravelDepartureArrivalTime">{{itinerary.getFirstLeg().getLegArrivalDateTime() | amDateFormat: 'HH:mm'}}</li>
+        <li class="SDSTravelTime">{{itinerary.getFirstLeg().getLegArrivalDateTime() | amDateFormat: 'HH:mm'}}</li>
         <li>
             <strong>
                 <img class="SDSAirlineLogo" ng-src="../img/airlineLogos/{{itinerary.getFirstLeg().getFirstFlightMarketingAirline()}}.PNG" fallback-src="../img/airlineLogos/generic_airline.PNG">

@@ -17,16 +17,17 @@ define(['util/LodashExtensions'], function (_) {
             itineraries.push(itin);
         };
 
-        this.addItinerariesList = function(itinerariesList, dedup) {
-            if (dedup) {
-                this.dedupMerge(itinerariesList);
-            } else {
-                var that = this;
-                itinerariesList.getItineraries().forEach(function (itin) {
-                    that.add(itin);
-                });
-            }
+        this.addItinerariesList = function(itinerariesList) {
+            var that = this;
+            itinerariesList.getItineraries().forEach(function (itin) {
+                that.add(itin);
+            });
+            return this;
+        };
 
+        this.addItinerariesListWithDedup = function(itinerariesList) {
+            this.dedupMerge(itinerariesList);
+            return this;
         };
 
         this.size = function () {

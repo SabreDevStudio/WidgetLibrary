@@ -1,33 +1,35 @@
 define([
-        'moment'
+          'util/LodashExtensions'
+        , 'moment'
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/ItineraryListWidget.tpl.html'
+        , 'text!view-templates/ErrorsModal.tpl.html'
         , 'datamodel/ItinerariesList'
-        , 'webservices/BargainFinderMaxWebService'
+        , 'webservices/BargainFinderMaxWebServices'
         , 'webservices/SabreDevStudioWebServices'
         , 'datamodel/DiversitySwapper'
         , 'widgets/ItineraryShortSummary'
         , 'widgets/ItineraryPricePerStopsPerAirlineSummary'
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
-        , 'datamodel/SearchCriteria'
-        , 'webservices/ShoppingMockDataService'
     ],
-    function (moment
+    function (
+          _
+        , moment
         , angular
         , angular_bootstrap
         , SDSWidgets
         , ItineraryListWidgetTemplate
+        , ErrorsModalTemplate
         , ItinerariesList
-        , BargainFinderMaxWebService
+        , BargainFinderMaxWebServices
         , SabreDevStudioWebServices
         , DiversitySwapper
         , ItineraryShortSummary
         , ItineraryPricePerStopsPerAirlineSummary
         , ItinerariesListSummaryByAirlineAndNumberOfStops
-        , SearchCriteria
-        , ShoppingMockDateService) {
+    ) {
         'use strict';
 
         return angular.module('sdsWidgets')
@@ -43,6 +45,7 @@ define([
                 , 'FilteringCriteriaChangedBroadcastingService'
                 , 'DateSelectedBroadcastingService'
                 , 'dateSelectedEvent'
+                , '$modal'
                 , function ($scope
                     , BargainFinderMaxDataService
                     , InstaflightsDataService
@@ -53,66 +56,94 @@ define([
                     , filteringCriteriaChangedEvent
                     , FilteringCriteriaChangedBroadcastingService
                     , DateSelectedBroadcastingService
-                    , dateSelectedEvent) {
+                    , dateSelectedEvent
+                    , $modal
+                ) {
 
-                    $scope.sortingCriteria = [
-                        {
+                    var sortingCriteriaDefinitions = {
+                        byPriceAsc: {
                             label: 'Price (Lowest)',
                             propertyName: 'totalFareAmount',
                             reverse: false
                         },
-                        {
-                            label: 'Price (Highest)', //TODO view inside controller, will be moved to the sortBy directive template later
+                        byPriceDesc: {
+                            label: 'Price (Highest)',
                             propertyName: 'totalFareAmount',
                             reverse: true
                         },
-                        {
+                        byDurationAsc: {
                             label: 'Duration (Shortest)',
                             propertyName: 'duration',
                             reverse: false
                         },
-                        {
+                        byDurationDesc: {
                             label: 'Duration (Longest)',
                             propertyName: 'duration',
                             reverse: true
                         },
-                        {
+                        byNumberOfStopsAsc: {
                             label: 'Stops (Lowest)',
                             propertyName: 'sumNumberOfStopsForAllLegs',
                             reverse: false
                         },
-                        {
+                        byNumberOfStopsDesc: {
                             label: 'Stops (Highest)',
                             propertyName: 'sumNumberOfStopsForAllLegs',
                             reverse: true
                         },
-                        {
+                        byDepartureTimeAsc: {
                             label: 'Departure (Earliest)',
                             propertyName: 'outboundDepartureDateTime',
                             reverse: false
                         },
-                        {
+                        byDepartureTimeDesc: {
                             label: 'Departure (Latest)',
                             propertyName: 'outboundDepartureDateTime',
                             reverse: true
                         },
-                        {
+                        byArrivalTimeAsc: {
                             label: 'Arrival (Earliest)',
                             propertyName: 'outboundArrivalDateTime',
                             reverse: false
                         },
-                        {
+                        byArrivalTimeDesc: {
                             label: 'Arrival (Latest)',
                             propertyName: 'outboundArrivalDateTime',
                             reverse: true
                         }
+                    };
+
+                    $scope.availableSortingCriteria = [
+                          sortingCriteriaDefinitions.byPriceAsc
+                        , sortingCriteriaDefinitions.byPriceDesc
+                        , sortingCriteriaDefinitions.byDurationAsc
+                        , sortingCriteriaDefinitions.byDurationDesc
+                        , sortingCriteriaDefinitions.byNumberOfStopsAsc
+                        , sortingCriteriaDefinitions.byNumberOfStopsDesc
+                        , sortingCriteriaDefinitions.byDepartureTimeAsc
+                        , sortingCriteriaDefinitions.byDepartureTimeDesc
+                        , sortingCriteriaDefinitions.byArrivalTimeAsc
+                        , sortingCriteriaDefinitions.byArrivalTimeDesc
                     ];
+
+                    var sortCriteriaNaturalOrder = [ // business logic specific sort criteria order (next criteria are applied when application of previous one returned tie)
+                          sortingCriteriaDefinitions.byPriceAsc
+                        , sortingCriteriaDefinitions.byDurationAsc
+                        , sortingCriteriaDefinitions.byDurationAsc
+                        , sortingCriteriaDefinitions.byNumberOfStopsAsc
+                        , sortingCriteriaDefinitions.byDepartureTimeAsc
+                        , sortingCriteriaDefinitions.byArrivalTimeAsc
+                    ];
+
+                    $scope.setSortCriteria = function (firstCriterion) {
+                        $scope.currentSortCriteria = sortCriteriaNaturalOrder.reduce(_.pushIfNotContains, [firstCriterion]);
+                    };
 
                     resetNavigationAndSortCriteria();
 
                     function resetNavigationAndSortCriteria() {
                         // default sort order
-                        $scope.sortByCriterion = $scope.sortingCriteria[0];
+                        $scope.setSortCriteria(sortingCriteriaDefinitions.byPriceAsc);
 
                         $scope.itemsPerPage = 20;
                         // have to explicitly set the current page for pagination (startFrom filter), otherwise undefined and filter getting NaN parameter.
@@ -144,7 +175,7 @@ define([
 
                     function updateWithNewItineraries(newSearchCriteria, itinerariesList) {
                         resetNavigationAndSortCriteria();
-                        $scope.itineraries.addItinerariesList(itinerariesList, true);
+                        $scope.itineraries.addItinerariesListWithDedup(itinerariesList);
                         recalculateAndBroadcastStatistics();
                         recalculateSummaries();
                         updateSearchAirports(newSearchCriteria);
@@ -158,7 +189,7 @@ define([
                         }
                         $scope.businessErrorMessages = businessErrorMessages;
                         // clear model from previous search
-                        delete $scope.itineraries;
+                        $scope.itineraries = undefined;
                         updateSearchAirports(newSearchCriteria);
                     }
 
@@ -166,11 +197,29 @@ define([
 
                     function createSearchStrategy(activeSearchWebService) {
                         var activeSearchWebService = activeSearchWebService || 'instaflights';
+
+                        function collectValidationErrors() {
+                            var args = [].slice.call(arguments);
+                            var searchCriteria = args.shift();
+                            var webServices = args;
+                            return webServices
+                                .map(function (webService) {
+                                        return webService.validateSearchCriteria(searchCriteria);
+                                    }
+                                )
+                                .reduce(function (acc, curr) {
+                                    return _.pushAll(acc, curr);
+                                }, []);
+                        }
+
                         switch (activeSearchWebService) {
                             case 'bfm': {
                                 return {
                                     search: function (searchCriteria, successCallback, failureCallback, updateCallback) {
                                         BargainFinderMaxDataService.getItineraries(searchCriteria).then(successCallback, failureCallback);
+                                    },
+                                    validateSearchCriteria: function (searchCriteria) {
+                                        return collectValidationErrors(searchCriteria, BargainFinderMaxDataService);
                                     }
                                 };
                             }
@@ -178,6 +227,9 @@ define([
                                 return {
                                     search: function (searchCriteria, successCallback, failureCallback, updateCallback) {
                                         InstaflightsDataService.getItineraries(searchCriteria).then(successCallback, failureCallback);
+                                    },
+                                    validateSearchCriteria: function (searchCriteria) {
+                                        return collectValidationErrors(searchCriteria, InstaflightsDataService);
                                     }
                                 };
                             }
@@ -189,6 +241,9 @@ define([
                                             , function () {
                                                 BargainFinderMaxDataService.getItineraries(searchCriteria).then(successCallback, failureCallback);
                                             });
+                                    },
+                                    validateSearchCriteria: function (searchCriteria) {
+                                        return collectValidationErrors(searchCriteria, InstaflightsDataService, BargainFinderMaxDataService);
                                     }
                                 };
                             }
@@ -206,6 +261,9 @@ define([
                                         };
 
                                         InstaflightsDataService.getItineraries(searchCriteria).then(instaflightSuccessCallback, instaflightsFailureCallback);
+                                    },
+                                    validateSearchCriteria: function (searchCriteria) {
+                                        return collectValidationErrors(searchCriteria, InstaflightsDataService, BargainFinderMaxDataService);
                                     }
                                 };
                             }
@@ -221,6 +279,12 @@ define([
                             return;
                         }
                         var newSearchCriteria = SearchCriteriaBroadcastingService.searchCriteria;
+
+                        var validationErrors = searchStrategy.validateSearchCriteria(newSearchCriteria);
+                        if (validationErrors.length > 0) {
+                            openErrorsModal(validationErrors, 'Unsupported search criteria');
+                            return;
+                        }
 
                         searchStrategy.search(newSearchCriteria,
                             _.partial(processNewItineraries, newSearchCriteria),
@@ -283,6 +347,22 @@ define([
                         $scope.searchCriteriaDepartureAirport = newSearchCriteria.getFirstLeg().origin;
                         $scope.searchCriteriaArrivalAirport = newSearchCriteria.getFirstLeg().destination;
                     }
+
+                    function openErrorsModal(validationErrors, modalTitle) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            template: ErrorsModalTemplate,
+                            controller: function ($scope, $modalInstance) {
+                                $scope.errorsList = validationErrors ;
+                                $scope.modalTitle = modalTitle;
+
+                                $scope.ok = function () {
+                                    $modalInstance.close();
+                                };
+                            }
+                        });
+                    }
+
                     $scope.anyBusinessErrorMessagesPresent = function () {
                         return !_.isEmpty($scope.businessErrorMessages);
                     };
@@ -305,13 +385,9 @@ define([
                     controller: 'ItineraryListCtrl',
                     link: function (scope, element) { //TODO into own directive later. not only this behaviour but whole sort by criteria button
 
-                        scope.setSortCriterion = function (criterionIndex) {
-                            scope.sortByCriterion = scope.sortingCriteria[criterionIndex];
-                        };
-
-                        //// adding explicit watch to manually trigger changes to dropdown DOM. Automatic change to sortByCriterion (which is itself updated fine), does not change the label button (sorting criteria itself change, only the label does not)
-                        //scope.$watch('sortByCriterion', function (val) {
-                        //    scope.setSelectDropdownValue(val.label, scope.sortingCriteria.indexOf(val));
+                        //// adding explicit watch to manually trigger changes to dropdown DOM. Automatic change to firstSortByCriterion (which is itself updated fine), does not change the label button (sorting criteria itself change, only the label does not)
+                        //scope.$watch('firstSortByCriterion', function (val) {
+                        //    scope.setSelectDropdownValue(val.label, scope.availableSortingCriteria.indexOf(val));
                         //});
 
                         scope.setSelectDropdownValue = function(selectedValueLabel, selectedValueIdx) {
@@ -321,14 +397,14 @@ define([
 
                             var buttonScope = angular.element($(buttonLabelText)).scope();
                             buttonScope.$apply(function () {
-                                scope.setSortCriterion(selectedValueIdx);
+                                scope.setSortCriteria(scope.availableSortingCriteria[selectedValueIdx]);
 
                                 // when changing sorting criteria, which will trigger resorting of itineraries list, reset current page to 1.
                                 // The customer expectation upon changing sort criteria, is to see, at the very top of the list,
                                 //  the very top items according to the criteria specified.
                                 // However in case customer was already on any results page other than one, then it will not be displayed at the top (we are on the other page and we would need to manually go to page 1).
                                 scope.currentPage = 1;
-                                // cannot put it inside setSortCriterion as it has other scope and it does not work
+                                // cannot put it inside setSortCriteria as it has other scope and it does not work
                             });
                         };
 
@@ -339,6 +415,15 @@ define([
                         });
                     }
 
+                };
+            })
+            .filter('sortByCriteria', function ($filter) {
+                var orderBy = $filter('orderBy');
+                return function (values, sortingCriteriaArray) {
+                    var ngOrderByPredicatesArray = sortingCriteriaArray.map(function (criterion) {
+                        return (criterion.reverse? '-': '+') + criterion.propertyName;
+                    });
+                    return orderBy(values, ngOrderByPredicatesArray);
                 };
             });
     });

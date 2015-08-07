@@ -8,19 +8,33 @@
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
-    <link rel="stylesheet" type="text/css" href="SearchForm.custom.css">
+
+    <style>
+
+        #mainPageContainer {
+            margin-left: 50px;
+            margin-right: 50px;
+        }
+
+        #SearchFormNG {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+    </style>
 </head>
 <body>
 
-<!--<div id="SDSSearchFormWrapper_1"></div>-->
 <div id="mainPageContainer">
-    <div id="SDSSearchFormWrapper_2"></div>
-    <div id="CalendarSearchResults"></div>
-
-    <widgets-config data-client-id="CLIENT"/>
     <div id="SearchFormNG" data-search-form></div>
-    <div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="advancedCalendar"></div>
-    <itinerary-list></itinerary-list>
+    <div class="row">
+        <div class="col-lg-4">
+            <div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="advancedCalendar"></div>
+        </div>
+        <div class="col-lg-8">
+            <itinerary-list id="ItineraryList"></itinerary-list>
+        </div>
+    </div>
 </div>
 <script>
     // customer must provide his SDS SDK configuration functions before SDK script executes (SDK executes functions from global configuration object)

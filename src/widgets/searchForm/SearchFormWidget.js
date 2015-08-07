@@ -79,7 +79,10 @@ define([
                 $scope.multiDestinationLegs = [{}, {}, {}];
 
                 var DEFAULT_PAX_COUNT = 1;
-                $scope.ADTPaxCount = DEFAULT_PAX_COUNT;
+
+                $scope.generalSearchCriteria = {
+                    ADTPaxCount: DEFAULT_PAX_COUNT
+                };
 
                 function setReturnDateToDefaultLengthOfStay() {
                     $scope.ReturnDate = moment($scope.DepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days').toDate();
@@ -189,18 +192,18 @@ define([
                         searchCriteria.addLeg(searchCriteriaLeg);
                     });
 
-                    searchCriteria.addPassenger("ADT", $scope.ADTPaxCount);
+                    searchCriteria.addPassenger("ADT", $scope.generalSearchCriteria.ADTPaxCount);
 
-                    if ($scope.dateFlexibility) {
-                        searchCriteria.dateFlexibility(DEFAULT_DATE_FLEXIBILITY_REQUESTED);
+                    if ($scope.generalSearchCriteria.dateFlexibility) {
+                        searchCriteria.dateFlexibilityDays = DEFAULT_DATE_FLEXIBILITY_REQUESTED;
                     }
 
-                    if ($scope.directFlightsOnly) {
+                    if ($scope.generalSearchCriteria.directFlightsOnly) {
                         searchCriteria.maxStops = 0;
                     }
 
-                    if ($scope.preferredCabin) {
-                        searchCriteria.preferredCabin = $scope.preferredCabin;
+                    if ($scope.generalSearchCriteria.preferredCabin) {
+                        searchCriteria.preferredCabin = $scope.generalSearchCriteria.preferredCabin;
                     }
 
                     if ($scope.preferredAirline.selected) {

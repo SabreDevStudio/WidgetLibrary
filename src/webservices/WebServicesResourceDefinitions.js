@@ -1,12 +1,14 @@
 define([
-          'angular'
+          'lodash'
+        , 'angular'
         , 'angular_resource'
         , 'Configuration'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'stache!request-templates/AdvancedCalendarRequest.json'
     ],
     function (
-          angular
+          _
+        , angular
         , angular_resource
         , Configuration
         , SabreDevStudioWebServicesModule
@@ -20,21 +22,74 @@ define([
         };
 
         return angular.module('sabreDevStudioWebServices')
-            .factory('AdvancedCalendarSearchService', [ // todo dup with BFM for a time, create factory for factories, when request object for advaced is introduced, like in BFM
+            .factory('CachingDecorator', [
                       '$q'
-                    , '$resource'
-                    , 'apiURL'
                     , '$cacheFactory'
                 , function (
                       $q
-                    , $resource
-                    , apiURL
                     , $cacheFactory
+                ) {
+                    var uniqueId = 0;
+
+                    return {
+                        /**
+                         * This function adds caching feature to the resource. Angular allows to configure caching for resources only for GET service.
+                         * If you need to use caching for other HTTP methods (like Sabre Dev Studio POST that is actually a 'get' method)
+                         * then you have to handle it manually - and this wrapper adds this functionality to your resource.
+                         *
+                         *
+                         * It is also possible (the optional second parameter) to instruct the wrapper to cache responses not only for successful HTTP responses, but also for HTTP error responses (like 404).
+                         * This might be useful when we assume that next call to endpoint will not return any different data (like most probably we get another 404 again).
+                         *
+                         * @param resourceMethod NG resource method to wrap
+                         * @param [httpErrorCodesToCacheResponseFor] array of HTTP error codes to cache response for (for example [404])
+                         * @returns {Function} wrapped function
+                         */
+                        addCaching: function (resourceMethod, httpErrorCodesToCacheResponseFor) {
+                            var responseCache = $cacheFactory('CachingDecoratorCache_' + uniqueId++);
+                            return function (request) {
+                                var cacheKey = JSON.stringify(request);
+                                return $q(function(resolve, reject) {
+                                    var cached = responseCache.get(cacheKey);
+                                    if (cached && cached.success) {
+                                        return resolve(cached.success);
+                                    }
+                                    if (cached && cached.error) {
+                                        return reject(cached.error);
+                                    }
+                                    resourceMethod({}, request).$promise.then(
+                                        function (response) {
+                                            responseCache.put(cacheKey, {
+                                                success: response
+                                            });
+                                            return resolve(response);
+                                        },
+                                        function (error) {
+                                            if (_.contains(httpErrorCodesToCacheResponseFor, error.status)) {
+                                                responseCache.put(cacheKey, {
+                                                    error: error
+                                                });
+                                            }
+                                            return reject(error);
+                                        }
+                                    );
+                                });
+                                }
+                        }
+                    }
+
+            }])
+            .factory('AdvancedCalendarSearchService', [
+                      '$resource'
+                    , 'apiURL'
+                    , 'CachingDecorator'
+                , function (
+                      $resource
+                    , apiURL
+                    , CachingDecorator
                 ) {
                     var endpointURL = apiURL + '/v1.8.1/shop/calendar/flights';
 
-                    var responseCache = $cacheFactory('AdvancedCalendarSearchServiceCache');
-
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
                               method: 'POST'
@@ -42,52 +97,20 @@ define([
                         }
                     });
                     return {
-                        sendRequest: function (request) { //todo: more generic name
-
-                            var cacheKey = JSON.stringify(request);
-
-                            var isErrorResponseCacheable = function (code) {
-                                // do not cache responses for any other HTTP errors (on next search request will go to web service)
-                                return (code === 404);
-                            };
-
-                            return $q(function(resolve, reject) {
-                                // need to handle cache get and put manually, as NG handles automatically only for GET method (then provide cache property while defining resource)
-                                var cached = responseCache.get(cacheKey);
-                                if (cached) {
-                                    return resolve(cached);
-                                }
-                                resource.sendRequest({}, request).$promise.then(
-                                    function (response) {
-                                        responseCache.put(cacheKey, response);
-                                        return resolve(response);
-                                    },
-                                    function (error) {
-                                        if (isErrorResponseCacheable(error.status)) {
-                                            responseCache.put(cacheKey, error);
-                                        }
-                                        return reject(error);
-                                    }
-                                );
-                            });
-                        }
+                        sendRequest: CachingDecorator.addCaching(resource.sendRequest, [404])
                     };
              }])
-            .factory('BargainFinderMaxSearchService', [ // todo dup with BFM for a time, create factory for factories, when request object for advaced is introduced, like in BFM
-                      '$q'
-                    , '$resource'
+            .factory('BargainFinderMaxWebService', [
+                      '$resource'
                     , 'apiURL'
-                    , '$cacheFactory'
+                    , 'CachingDecorator'
                 , function (
-                      $q
-                    , $resource
+                      $resource
                     , apiURL
-                    , $cacheFactory
+                    , CachingDecorator
                 ) {
                     var endpointURL = apiURL + '/v1.8.6/shop/flights?mode=live';
 
-                    var responseCache = $cacheFactory('BargainFinderMaxSearchServiceCache');
-
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
                               method: 'POST'
@@ -95,35 +118,28 @@ define([
                         }
                     });
                     return {
-                        sendRequest: function (bargainFinderMaxRequest) {
+                        sendRequest: CachingDecorator.addCaching(resource.sendRequest, [404])
+                    };
+                }])
+            .factory('BargainFinderMaxAlternateDateWebService', [
+                '$resource'
+                , 'apiURL'
+                , 'CachingDecorator'
+                , function (
+                    $resource
+                    , apiURL
+                    , CachingDecorator
+                ) {
+                    var endpointURL = apiURL + '/v1.8.6/shop/altdates/flights?mode=live';
 
-                            var cacheKey = JSON.stringify(bargainFinderMaxRequest);
-
-                            var isErrorResponseCacheable = function (code) {
-                                // do not cache responses for any other HTTP errors (on next search request will go to web service)
-                                return (code === 404);
-                            };
-
-                            return $q(function(resolve, reject) {
-                                // need to handle cache get and put manually, as NG handles automatically only for GET method (then provide cache property while defining resource)
-                                var cached = responseCache.get(cacheKey);
-                                if (cached) {
-                                    return resolve(cached);
-                                }
-                                resource.sendRequest({}, bargainFinderMaxRequest).$promise.then(
-                                    function (response) {
-                                        responseCache.put(cacheKey, response);
-                                        return resolve(response);
-                                    },
-                                    function (error) {
-                                        if (isErrorResponseCacheable(error.status)) {
-                                            responseCache.put(cacheKey, error);
-                                        }
-                                        return reject(error);
-                                    }
-                                );
-                            });
+                    var resource = $resource(endpointURL, null, {
+                        sendRequest: {
+                            method: 'POST'
+                            , headers: generalHeaders
                         }
+                    });
+                    return {
+                        sendRequest: CachingDecorator.addCaching(resource.sendRequest, [404])
                     };
                 }])
             .factory('InstaFlightsWebService', [
