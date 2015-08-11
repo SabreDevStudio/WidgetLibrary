@@ -12,7 +12,9 @@ define([
         , 'datamodel/FareForecast'
         , 'datamodel/ShoppingData'
         , 'webservices/AdvancedCalendarRequestFactory'
-        , 'datamodel/InstaflightSearchCriteriaValidator'
+        , 'webservices/InstaflightSearchCriteriaValidator'
+        , 'webservices/AdvancedCalendarSearchCriteriaValidator'
+        , 'webservices/LeadPriceCalendarSearchCriteriaValidator'
     ],
     function (
           angular
@@ -29,6 +31,8 @@ define([
         , ShoppingData
         , AdvancedCalendarRequestFactory
         , InstaflightSearchCriteriaValidator
+        , AdvancedCalendarSearchCriteriaValidator
+        , LeadPriceCalendarSearchCriteriaValidator
     ) {
         'use strict';
 
@@ -45,6 +49,8 @@ define([
                 var requestBuilder = new AdvancedCalendarRequestFactory();
 
                 var responseParser = new OTAResponseParser();
+
+                var validator = new AdvancedCalendarSearchCriteriaValidator();
 
                 function createCacheKey(searchCriteria) {
                     var keyElements = [
@@ -119,6 +125,9 @@ define([
 
                         });
                     },
+                    validateSearchCriteria: function (searchCriteria) {
+                        return validator.validate(searchCriteria);
+                    },
                     getMinDateAndPricePair: function (searchCriteria) { //todo for now assume it is called after getLeadPricesForRange
                         var cacheKey = createCacheKey(searchCriteria);
                         return ShoppingOptionsCacheService.getMinDateAndPricePair(cacheKey);
@@ -154,7 +163,8 @@ define([
                                 includedcarriers: searchCriteria.preferredAirlines.join()
                             });
                         }
-                        if (searchCriteria.maxStops) {
+
+                        if (_.isDefined(searchCriteria.maxStops)) {
                             _.extend(requestOptions, {
                                   outboundflightstops: searchCriteria.maxStops
                                 , inboundflightstops: searchCriteria.maxStops
@@ -221,6 +231,8 @@ define([
                 ) {
 
                     var leadFaresCache = $cacheFactory('leadPricesCache');
+
+                    var validator = new LeadPriceCalendarSearchCriteriaValidator();
 
                     function translateSearchCriteriaIntoRequestOptions(searchCriteria) {
                         return {
@@ -289,6 +301,9 @@ define([
                                         }
                                     );
                             });
+                        },
+                        validateSearchCriteria: function (searchCriteria) {
+                            return validator.validate(searchCriteria);
                         },
                         getMinDateAndPricePair: function (searchCriteria) { //todo for now assume it is called after getLeadPricesForRange
                             var dataFromCache = leadFaresCache.get(searchCriteria);

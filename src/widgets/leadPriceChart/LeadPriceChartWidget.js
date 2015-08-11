@@ -39,6 +39,7 @@ define([
                     , 'globalBarChartConfiguration'
                     , 'globalChartStyleConfiguration'
                     , 'DateSelectedBroadcastingService'
+                    , 'ErrorReportingService'
                 , function (
                       DateService
                     , SearchCriteriaBroadcastingService
@@ -49,6 +50,7 @@ define([
                     , globalBarChartConfiguration
                     , globalChartStyleConfiguration
                     , DateSelectedBroadcastingService
+                    , ErrorReportingService
         ) {
                 return {
                     restrict: 'AE',
@@ -151,6 +153,13 @@ define([
                         // @Controller: main controller function, acting on new search criteria sent to the widget
                         scope.$on(newSearchCriteriaEvent, function () {
                             var newSearchCriteria = SearchCriteriaBroadcastingService.searchCriteria;
+
+                            var validationErrors = ShoppingDataService.validateSearchCriteria(newSearchCriteria);
+                            if (validationErrors.length > 0) {
+                                ErrorReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
+                                return;
+                            }
+
                             ShoppingDataService.getLeadPricesForRange(newSearchCriteria, scope.displayedRange).then(function (leadPrices) {
                                 lastSearchCriteria = newSearchCriteria;
                                 scope.minDateAndPricePair = ShoppingDataService.getMinDateAndPricePair(newSearchCriteria);

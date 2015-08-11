@@ -1,4 +1,4 @@
-require(['datamodel/BasicSearchCriteriaValidator'], function (BasicSearchCriteriaValidator) {
+require(['../../src/webservices/BasicSearchCriteriaValidator'], function (BasicSearchCriteriaValidator) {
     'use strict';
 
     var validator = new BasicSearchCriteriaValidator();

@@ -1,4 +1,4 @@
-define(['util/validator'],
+define(['../util/validator'],
     function (v) {
         'use strict';
 

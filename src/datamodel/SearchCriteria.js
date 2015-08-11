@@ -137,6 +137,10 @@ define([
         'MultiStop': 'MultiStop'
     });
 
+    SearchCriteria.prototype.isEconomyCabinRequested = function () {
+       return (this.preferredCabin ===  this.CabinEnum.Economy);
+    };
+
     SearchCriteria.prototype.CabinEnum = Object.freeze({
         'Economy': {
               name: 'Economy'

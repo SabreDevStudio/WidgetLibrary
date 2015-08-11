@@ -5,7 +5,6 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/ItinerariesListWidget.tpl.html'
-        , 'text!view-templates/ErrorsModal.tpl.html'
         , 'datamodel/ItinerariesList'
         , 'webservices/BargainFinderMaxWebServices'
         , 'webservices/SabreDevStudioWebServices'
@@ -24,7 +23,6 @@ define([
         , angular_bootstrap
         , SDSWidgets
         , ItinerariesListWidgetTemplate
-        , ErrorsModalTemplate
         , ItinerariesList
         , BargainFinderMaxWebServices
         , SabreDevStudioWebServices
@@ -40,17 +38,17 @@ define([
 
         return angular.module('sdsWidgets')
             .controller('ItineraryListCtrl', [
-                  '$scope'
-                , 'OneDaySearchStrategyFactory'
-                , 'SearchCriteriaBroadcastingService'
-                , 'newSearchCriteriaEvent'
-                , 'StatisticsGatheringRequestsRegistryService'
-                , 'ItineraryStatisticsBroadcastingService'
-                , 'filteringCriteriaChangedEvent'
-                , 'FilteringCriteriaChangedBroadcastingService'
-                , 'DateSelectedBroadcastingService'
-                , 'dateSelectedEvent'
-                , '$modal'
+                      '$scope'
+                    , 'OneDaySearchStrategyFactory'
+                    , 'SearchCriteriaBroadcastingService'
+                    , 'newSearchCriteriaEvent'
+                    , 'StatisticsGatheringRequestsRegistryService'
+                    , 'ItineraryStatisticsBroadcastingService'
+                    , 'filteringCriteriaChangedEvent'
+                    , 'FilteringCriteriaChangedBroadcastingService'
+                    , 'DateSelectedBroadcastingService'
+                    , 'dateSelectedEvent'
+                    , 'ErrorReportingService'
                 , function (
                       $scope
                     , searchStrategyFactory
@@ -62,7 +60,7 @@ define([
                     , FilteringCriteriaChangedBroadcastingService
                     , DateSelectedBroadcastingService
                     , dateSelectedEvent
-                    , $modal
+                    , ErrorReportingService
                 ) {
 
                     $scope.sortCriteria = new ItinerariesListSortCriteria();
@@ -104,7 +102,6 @@ define([
 
                     function processNewItineraries(newSearchCriteria, itins) {
                         $scope.businessErrorMessages = [];
-                        console.log('processNewItineraries');
                         resetNavigationAndSortCriteria();
 
                         $scope.itineraries = itins;
@@ -148,7 +145,7 @@ define([
                         }
                         var validationErrors = searchStrategy.validateSearchCriteria(searchCriteria);
                         if (validationErrors.length > 0) {
-                            openErrorsModal(validationErrors, 'Unsupported search criteria');
+                            ErrorReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
                             return;
                         }
 
@@ -212,21 +209,6 @@ define([
                     function updateSearchAirports(newSearchCriteria) {
                         $scope.searchCriteriaDepartureAirport = newSearchCriteria.getFirstLeg().origin;
                         $scope.searchCriteriaArrivalAirport = newSearchCriteria.getFirstLeg().destination;
-                    }
-
-                    function openErrorsModal(validationErrors, modalTitle) {
-                        var modalInstance = $modal.open({
-                            animation: true,
-                            template: ErrorsModalTemplate,
-                            controller: function ($scope, $modalInstance) {
-                                $scope.errorsList = validationErrors ;
-                                $scope.modalTitle = modalTitle;
-
-                                $scope.ok = function () {
-                                    $modalInstance.close();
-                                };
-                            }
-                        });
                     }
 
                     $scope.anyBusinessErrorMessagesPresent = function () {

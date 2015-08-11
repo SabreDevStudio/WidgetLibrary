@@ -13,6 +13,8 @@ define([
       , 'angular-rangeslider'
       , 'angular_bootstrap_switch'
       , 'ngStorage'
+      , 'text!view-templates/ErrorsModal.tpl.html'
+
     ],
     function (
           NG
@@ -29,6 +31,7 @@ define([
         , angular_rangeslider
         , angular_bootstrap_switch
         , ngStorage
+        , ErrorsModalTemplate
     ) {
         'use strict';
 
@@ -99,6 +102,27 @@ define([
                         return registry;
                     }
                 };
-            });
+            })
+            .factory('ErrorReportingService', [
+                '$modal'
+                , function ($modal) {
+                    return {
+                        reportErrors: function (errors, errorsCategory) {
+                            var modalInstance = $modal.open({
+                                animation: true,
+                                template: ErrorsModalTemplate,
+                                controller: function ($scope, $modalInstance) {
+                                    $scope.errorsList = errors;
+                                    $scope.modalTitle = errorsCategory;
+
+                                    $scope.ok = function () {
+                                        $modalInstance.close();
+                                    };
+                                }
+                            });
+                        }
+                    };
+                }])
+
 
     });
