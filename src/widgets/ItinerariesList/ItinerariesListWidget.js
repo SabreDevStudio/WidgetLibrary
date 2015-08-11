@@ -76,7 +76,6 @@ define([
                     function resetNavigationAndSortCriteria() {
                         $scope.sortCriteria.resetSortCriteria();
                         $scope.selectedFirstCriterion.selected =  _.first($scope.sortCriteria.availableSortCriteria);
-                        console.log('$scope.selectedFirstCriterion.selected changed, to: ' + $scope.selectedFirstCriterion.selected.label);
 
                         $scope.itemsPerPage = 20;
                         // have to explicitly set the current page for pagination (startFrom filter), otherwise undefined and filter getting NaN parameter.

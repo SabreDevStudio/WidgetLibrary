@@ -82,9 +82,7 @@ define([
                 $scope.DepartureDate = $DateService.now().startOf('day').add(DEFAULT_ADVANCE_PURCHASE_DAYS, 'days').toDate();
                 setReturnDateToDefaultLengthOfStay();
 
-                $scope.preferredAirline = { // cannot keep here simple scope property like just $scope.preferredAirline, as the angular-ui-select is unable to assign to scope simple property, but only to property of the object, see http://stackoverflow.com/questions/25937098/ng-model-is-not-getting-changed-in-ui-select
-                    selected: undefined
-                };
+                $scope.preferredAirline = {}; // cannot keep here simple scope property like just $scope.preferredAirline, as the angular-ui-select is unable to assign to scope simple property, but only to property of the object, see http://stackoverflow.com/questions/25937098/ng-model-is-not-getting-changed-in-ui-select
 
                 function createLegs(tripType) {
                     switch (tripType) {
@@ -141,8 +139,8 @@ define([
                         searchCriteria.preferredCabin = $scope.generalSearchCriteria.preferredCabin;
                     }
 
-                    if ($scope.preferredAirline.selected) {
-                        searchCriteria.addPreferredAirline($scope.preferredAirline.selected);
+                    if ($scope.preferredAirline.selected && $scope.preferredAirline.selected.code) {
+                        searchCriteria.addPreferredAirline($scope.preferredAirline.selected.code);
                     }
 
                     SearchCriteriaBroadcastingService.searchCriteria = searchCriteria;

@@ -73,17 +73,25 @@ $(document).ready(function () {
             , arrivalDate: returnDate
             , currency: "BRL"
             , optionsPerDay: 60
-            // , tabs: 8
-            , numberOfMonths: 2
+            , tabs: 8
+            //, numberOfMonths: 2
             , showDayNumbersPrevAndNextMonth: true
             , localizedMonthNamesFailsafe: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
             , localizedWeekDayNamesFailsafe: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
         });
 
-        calendarWidget.bind('calendarCellClicked', function (itins) {
-            var itinerariesListWidget = SDS.itinerariesList("ItinerariesList");
-            itinerariesListWidget.update(itins);
-        });
+        //calendarWidget.bind('calendarCellClicked', function (itins) {
+        //    var itinerariesListWidget = SDS.itinerariesList("ItinerariesList");
+        //    itinerariesListWidget.update(itins);
+        //});
+
+        var itinerariesListWidget = SDS.itinerariesList("ItinerariesList");
+
+        calendarWidget.bind('calendarCellClicked', itinerariesListWidget.update, itinerariesListWidget);
+
+        var filtersPaneWidget = SDS.filtersPaneWidget('FiltersPane');
+
+        itinerariesListWidget.addFilterWidget(filtersPaneWidget);
 
     });
 });

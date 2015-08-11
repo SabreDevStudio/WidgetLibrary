@@ -47,7 +47,15 @@ define([
                 var responseParser = new OTAResponseParser();
 
                 function createCacheKey(searchCriteria) {
-                    return searchCriteria.getFirstLeg().origin + '-' + searchCriteria.getFirstLeg().destination + '-' + searchCriteria.getLengthOfStay();
+                    var keyElements = [
+                          searchCriteria.getFirstLeg().origin
+                        , searchCriteria.getFirstLeg().destination
+                        , searchCriteria.getLengthOfStay()
+                        , JSON.stringify(searchCriteria.preferredAirlines)
+                        , searchCriteria.maxStops
+                        , JSON.stringify(searchCriteria.passengerSpecifications)
+                    ];
+                    return keyElements.join('-');
                 }
 
                 return {

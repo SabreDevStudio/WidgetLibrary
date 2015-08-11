@@ -72,6 +72,12 @@ define([
                                 , code: airlineCode
                             };
                         });
+                        // add empty airline to all airlines model to denote no airline preference
+                        scope.allAirlines.splice(0, 0, {
+                              name: ''
+                            , code: undefined
+                        });
+                        scope.preferredAirline = _.first(scope.allAirlines);
                     }
                 }
             }])
