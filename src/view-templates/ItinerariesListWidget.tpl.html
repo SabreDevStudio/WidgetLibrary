@@ -36,16 +36,12 @@
             </div>
 
             <div class="col-lg-3">
-                <div class="pull-right" dropdown>
-                    <label class="control-label">Sort by</label>
-                    <button type="button" class="btn btn-primary btn-sm" dropdown-toggle>
-                        <span class="SDSDropdownLabelText">{{currentSortCriteria[0].label}}</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li ng-repeat="criterion in availableSortingCriteria"><a href="" data-criterion-index="{{$index}}">{{criterion.label}}</a></li>
-                    </ul>
-                </div>
+                <input-sort-by class="pull-right"
+                               available-sort-criteria="sortCriteria.availableSortCriteria"
+                               selected-first-sort-criterion="selectedFirstCriterion"
+                               on-sorting-criteria-changed="onSortingCriteriaChanged()"
+                               label="Sort by">
+                </input-sort-by>
             </div>
         </div>
     </div>
@@ -53,8 +49,8 @@
     <div class="panel-body"><!-- TODO bootlint col- must be inside contrainer. But when container added then this div expands to full width-->
         <ul class="list-unstyled SDSTopLevelList">
             <li class="row" ng-repeat="itinerary in itineraries.getPermittedItineraries()
-                                            | sortByCriteria:currentSortCriteria
-                                            | startFrom: (currentPage - 1)*itemsPerPage | limitTo: itemsPerPage">
+                                            | sortByCriteria:sortCriteria.getCurrentSortCriteria()
+                                            | startFrom: (paginationSettings.currentPage - 1)*itemsPerPage | limitTo: itemsPerPage">
 
                 <!--<div class="row">-->
                     <ul class="SDSLegList list-unstyled col-lg-9">
@@ -119,7 +115,7 @@
     </div>
 
     <div class="panel-footer">
-        <pagination class="pagination-sm pull-right" total-items="itineraries.size()" items-per-page="itemsPerPage" ng-model="currentPage" boundary-links="true" rotate="false"></pagination>
+        <pagination class="pagination-sm pull-right" total-items="itineraries.size()" items-per-page="itemsPerPage" ng-model="paginationSettings.currentPage" boundary-links="true" rotate="false"></pagination>
         <div class="clearfix"></div>
         <!-- TODO In mobile versions it should be less than 10 items per page-->
     </div>

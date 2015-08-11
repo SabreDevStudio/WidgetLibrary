@@ -20,7 +20,6 @@
                     Direct flights only
                 </label>
             </div>
-
         </div>
     </div>
 
@@ -52,23 +51,10 @@
 
         <div class="row">
             <div class="col-xs-3">
-                <!--<select-preferred-airline ng-model="preferredAirline.selected"></select-preferred-airline>-->
-                <select class="form-control input-sm" id="SDSSearchForm_PreferredAirline" ng-model="preferredAirline.selected" ng-options="airline.code as airline.name for airline in allAirlines"></select>
-                <!--<ui-select id="SDSSearchForm_PreferredAirline" ng-model="preferredAirline.selected" theme="bootstrap">-->
-                <!--<ui-select-match placeholder="No airline preference">{{$select.selected.name}}</ui-select-match>-->
-                <!--<ui-select-choices repeat="airline in allAirlines | filter: $select.search">-->
-                <!--<span ng-bind-html="airline.name | highlight: $select.search"></span>-->
-                <!--<small ng-bind-html="airline.code | highlight: $select.search"></small>-->
-                <!--</ui-select-choices>-->
-                <!--</ui-select>-->
+                <select-preferred-airline class="form-control input-sm" id="SDSSearchForm_PreferredAirline" preferred-airline="preferredAirline.selected"></select-preferred-airline>
             </div>
             <div class="col-xs-3">
-                <select name="PreferredCabin" class="form-control input-sm" id="SDSSearchForm_PreferredCabin" ng-model="generalSearchCriteria.preferredCabin">
-                    <option value="Economy" selected="selected">Economy</option>
-                    <option value="PremiumEconomy">Premium Economy</option>
-                    <option value="Business">Business</option>
-                    <option value="First">First</option>
-                </select>
+                <select-preferred-cabin name="PreferredCabin" class="form-control input-sm" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
             </div>
         </div>
     </div>
@@ -96,40 +82,29 @@
                         <div class="col-xs-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Origin.$invalid}">
                                 <label for="SDSSearchForm_Origin" class="input-sm control-label">Leaving from</label>
-                                <input type="text" id="SDSSearchForm_Origin" name="Origin" class="form-control input-sm" placeholder="City or airport" autocomplete="off" autofocus required
-                                       ng-model="Origin" typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">
+                                <input-airport id="SDSSearchForm_Origin" name="Origin" class="form-control input-sm" autofocus required airport="Origin"></input-airport>
                             </div>
                         </div>
                         <div class="col-xs-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Destination.$invalid}">
                                 <label for="SDSSearchForm_Destination" class="input-sm control-label">Going to</label>
-                                <input type="text" id="SDSSearchForm_Destination" name="Destination" class="form-control input-sm" placeholder="City or airport" autocomplete="off" required
-                                       ng-model="Destination" typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">
+                                <input-airport id="SDSSearchForm_Destination" name="Destination" class="form-control input-sm" required airport="Destination"></input-airport>
                             </div>
                         </div>
                         <div class="col-xs-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.DepartureDate.$invalid}">
                                 <label for="SDSSearchForm_DepartureDate" class="input-sm control-label">Leaving on</label>
-                                <p class="input-group input-group-sm SDSDateInput">
-                                    <input type="text" id="SDSSearchForm_DepartureDate" name="DepartureDate" class="form-control" autocomplete="off" required
-                                           datepicker-popup="{{::datepickerOptions.format}}" min-date={{::datepickerOptions.earliestTravelStart}} is-open="isDepartureDatePickerOpened" ng-model="DepartureDate" ng-change="onDepartureDateChange()">
-                                    <!-- bug in NG 1.3 with not formatting initial date value: http://stackoverflow.com/questions/26188956/angular-ui-datepicker-initial-state-of-datepicker-not-formatted-per-datepicker-p, fixed in 1.4 -->
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="openDepartureDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                  </span>
-                                </p>
+                                <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_DepartureDate" name="DepartureDate" required="true"
+                                            date="DepartureDate" on-date-change="onDepartureDateChange()" min-date="{{::earliestTravelStart}}">
+                                </input-date>
                             </div>
                         </div>
                         <div class="col-xs-3">
                             <div class="form-group" ng-show="tripType === 'returnTrip'" ng-class="{'has-error':searchForm.$submitted && searchForm.ReturnDate.$invalid}">
                                 <label for="SDSSearchForm_ReturnDate" class="input-sm control-label">Returning on</label>
-                                <p class="input-group input-group-sm SDSDateInput">
-                                    <input type="text" id="SDSSearchForm_ReturnDate" name="ReturnDate" class="form-control" autocomplete="off" required
-                                           datepicker-popup="{{::datepickerOptions.format}}" min-date={{::datepickerOptions.earliestTravelStart}} is-open="isReturnDatePickerOpened" ng-model="ReturnDate" ng-change="onReturnDateChange()">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="openReturnDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                  </span>
-                                </p>
+                                <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_ReturnDate" name="ReturnDate" required="true"
+                                            date="ReturnDate" on-date-change="onReturnDateChange()" min-date="{{::earliestTravelStart}}">
+                                </input-date>
                             </div>
                         </div>
                     </div>
@@ -172,30 +147,23 @@
                         <div class="col-xs-3">
                             <div class="form-group" ng-class="{'has-error':searchFormMultiDestination.$submitted && searchFormMultiDestination.Origin_{{$index}}.$invalid}">
                                 <label for="SDSSearchForm_Origin_{{$index}}" class="input-sm control-label">Leaving from</label>
-                                <input type="text" id="SDSSearchForm_Origin_{{$index}}" name="Origin_{{$index}}" class="form-control input-sm" placeholder="City or airport" autocomplete="off" ng-focus="$first" required
-                                       ng-model="multiDestinationLegs[$index].Origin" typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">
+                                <input-airport id="SDSSearchForm_Origin_{{$index}}" name="Origin_{{$index}}" class="form-control input-sm" ng-focus="$first" required airport="multiDestinationLegs[$index].Origin"></input-airport>
                             </div>
                         </div>
 
                         <div class="col-xs-3">
                             <div class="form-group" ng-class="{'has-error':searchFormMultiDestination.$submitted && searchFormMultiDestination.Destination_{{$index}}.$invalid}">
                                 <label for="SDSSearchForm_Destination_{{$index}}" class="input-sm control-label">Going to</label>
-                                <input type="text" id="SDSSearchForm_Destination_{{$index}}" name="Destination_{{$index}}" class="form-control input-sm" placeholder="City or airport" autocomplete="off" required
-                                       ng-model="multiDestinationLegs[$index].Destination" typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">
+                                <input-airport id="SDSSearchForm_Destination_{{$index}}" name="Destination_{{$index}}" class="form-control input-sm" required airport="multiDestinationLegs[$index].Destination"></input-airport>
                             </div>
                         </div>
 
                         <div class="col-xs-6">
                             <div class="form-group" ng-class="{'has-error':searchFormMultiDestination.$submitted && searchFormMultiDestination.DepartureDate_{{$index}}.$invalid}">
                                 <label for="SDSSearchForm_DepartureDate_{{$index}}" class="input-sm control-label">Leaving on</label>
-                                <p class="input-group input-group-sm SDSDateInput">
-                                    <input type="text" id="SDSSearchForm_DepartureDate_{{$index}}" name="DepartureDate_{{$index}}" class="form-control" autocomplete="off" required
-                                           datepicker-popup="{{::datepickerOptions.format}}" min-date={{::datepickerOptions.earliestTravelStart}} is-open="isMultiDestinationDepartureDatePickerOpened[$index]" ng-model="multiDestinationLegs[$index].DepartureDate">
-                                    <!-- bug in NG 1.3 with not formatting initial date value: http://stackoverflow.com/questions/26188956/angular-ui-datepicker-initial-state-of-datepicker-not-formatted-per-datepicker-p, fixed in 1.4 -->
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="openMultiDestinationDepartureDatePicker($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                  </span>
-                                </p>
+                                <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_DepartureDate_{{$index}}" name="DepartureDate_{{$index}}" required="true"
+                                            date="multiDestinationLegs[$index].DepartureDate" min-date="{{::earliestTravelStart}}">
+                                </input-date>
                             </div>
                             <a ng-show="$last && $index > 2" href="" ng-click="removeLastSearchCriteriaLeg()" class="input-sm"><i class="glyphicon glyphicon-minus-sign"></i> Remove</a>
                         </div>

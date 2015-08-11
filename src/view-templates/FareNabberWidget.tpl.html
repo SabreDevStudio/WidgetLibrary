@@ -34,7 +34,7 @@
 
                     <div class="form-group">
                         <label for="SDSFareNabberForm_Destination" class="input-sm col-sm-3 control-label">Trip arrival airport or city</label>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9"><!-- TODO directive -->
                             <input type="text" class="form-control input-sm" id="SDSFareNabberForm_Destination" name="destination" placeholder="Trip arrival airport or city" required autocomplete="off" ng-model="destination">
                             <!--<input type="text" id="SDSFareNabberForm_Destination" name="destination" class="form-control input-sm" placeholder="Trip arrival airport or city" required autocomplete="off" ng-model="destination"-->
                                <!--typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">-->
@@ -44,12 +44,58 @@
                     <div class="form-group">
                         <label for="SDSFareNabberForm_DepartureDate" class="input-sm col-sm-3 control-label">Leaving on</label>
                         <div class="col-sm-3">
-                            <div class="input-group">
-                                <input type="text" id="SDSFareNabberForm_DepartureDate" name="departureDate" class="form-control input-sm" autocomplete="off" required
-                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestTravelStart}} is-open="isDepartureDatePickerOpened" ng-model="departureDate" ng-change="onDepartureDateChange()">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default input-sm" ng-click="openDepartureDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                              </span>
+                            <input-date class="input-group" id="SDSFareNabberForm_DepartureDate" name="departureDate" class="form-control input-sm" required="true" date="departureDate" min-date="{{::defaultOptions.earliestTravelStart}}"></input-date>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-9 col-lg-offset-3">
+                            <a href="" class="SDSToggleLink" ng-click="outboundTimeRangePickerShown = !outboundTimeRangePickerShown">Set specific hours for departure flights</a>
+                            <div collapse="!outboundTimeRangePickerShown">
+                                <input-departure-or-arrival-switch selected-value="outboundTravelTimeRange.isDepartureOrArrival"></input-departure-or-arrival-switch>
+                                <input-time-range-picker class="SDSTravelTimeRangeInput" time-min="outboundTravelTimeRange.min" time-max="outboundTravelTimeRange.max"></input-time-range-picker>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-if="returnDate">
+                        <div class="form-group">
+                            <label for="SDSFareNabberForm_ReturnDate" class="input-sm col-sm-3 control-label">Returning on</label>
+                            <div class="col-sm-3">
+                                <input-date class="input-group" id="SDSFareNabberForm_ReturnDate" name="returnDate" class="form-control input-sm"
+                                            required="(returnDate)? true: false" date="returnDate" min-date="{{::defaultOptions.earliestTravelStart}}"></input-date>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <a href="" class="SDSToggleLink" ng-click="inboundTimeRangePickerShown = !inboundTimeRangePickerShown">Set specific hours for return flights</a>
+                                <div collapse="!inboundTimeRangePickerShown">
+                                    <input-departure-or-arrival-switch selected-value="inboundTravelTimeRange.isDepartureOrArrival"></input-departure-or-arrival-switch>
+                                    <input-time-range-picker class="SDSTravelTimeRangeInput" time-min="inboundTravelTimeRange.min" time-max="inboundTravelTimeRange.max"></input-time-range-picker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-9 col-lg-offset-3">
+                            <div class="checkbox">
+                                <label for="SDSFareNabberForm_DirectFlightsOnly">
+                                    <input type="checkbox" name="DirectFlightsOnly" id="SDSFareNabberForm_DirectFlightsOnly" ng-model="directFlightsOnly">
+                                    Direct flights only
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-9 col-lg-offset-3">
+                            <div class="checkbox">
+                                <label for="SDSFareNabberForm_AllowInterline">
+                                    <input type="checkbox" name="AllowInterline" id="SDSFareNabberForm_AllowInterline" ng-model="defaultOptions.allowInterline">
+                                    Allow multiple airline itineraries
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -76,13 +122,8 @@
                     <div class="form-group">
                         <label for="SDSFareNabberForm_SubscriptionExpiryDate" class="input-sm col-sm-3 control-label">Expire subscription after <em>(optional)</em></label>
                         <div class="col-sm-3">
-                            <p class="input-group">
-                                <input type="text" id="SDSFareNabberForm_SubscriptionExpiryDate" name="subscriptionExpiryDate" class="form-control input-sm" autocomplete="off"
-                                       datepicker-popup="{{datepickerOptions.format}}" min-date={{datepickerOptions.earliestSubscriptionExpiry}} is-open="isSubscriptionExpiryDatePickerOpened" ng-model="subscriptionExpiryDate">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default input-sm" ng-click="openSubscriptionExpiryDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                              </span>
-                            </p>
+                            <input-date class="input-group" id="SDSFareNabberForm_SubscriptionExpiryDate" name="subscriptionExpiryDate" class="form-control input-sm"
+                                        min-date="{{::defaultOptions.earliestSubscriptionExpiry}}" date="subscriptionExpiryDate"></input-date>
                         </div>
                     </div>
 

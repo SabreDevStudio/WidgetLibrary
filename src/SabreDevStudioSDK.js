@@ -1,28 +1,29 @@
 require.config({
     paths: {
-        'jquery': "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min",
-        'jquery-ui': 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min',
-        //'jquery-mobile': 'https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min',
-        mustache: '../bower_components/mustache/mustache',
-        text: 'lib/text',
-        stache: 'lib/stache',
-        moment: '../bower_components/moment/min/moment-with-locales',
-        moment_range: '../bower_components/moment-range/dist/moment-range',
-        validator_lib: '../bower_components/validator-js/validator',
-        async: '../bower_components/async/lib/async',
-        lodash: '../bower_components/lodash/lodash',
-        angular: '../bower_components/angular/angular',
-        'angular_resource': '../bower_components/angular-resource/angular-resource',
-        'angular_moment': '../bower_components/angular-moment/angular-moment',
-        'angular_bootstrap': '../bower_components/angular-bootstrap/ui-bootstrap-tpls',
-        'angular_animate': '../bower_components/angular-animate/angular-animate',
-        'angular-ui-select': '../bower_components/angular-ui-select/dist/select',
-        'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize',
-        'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback',
-        'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider',
-        'ngStorage': '../bower_components/ngstorage/ngStorage',
-        'ngPromiseExtras': '../bower_components/angular-promise-extras/angular-promise-extras',
-        chartjs: '../bower_components/Chart.js/Chart'
+          'jquery': "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min"
+        , 'jquery-ui': 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min'
+        , mustache: '../bower_components/mustache/mustache'
+        , text: 'lib/text'
+        , stache: 'lib/stache'
+        , moment: '../bower_components/moment/min/moment-with-locales'
+        , moment_range: '../bower_components/moment-range/dist/moment-range'
+        , validator_lib: '../bower_components/validator-js/validator'
+        , async: '../bower_components/async/lib/async'
+        , lodash: '../bower_components/lodash/lodash'
+        , angular: '../bower_components/angular/angular'
+        , 'angular_resource': '../bower_components/angular-resource/angular-resource'
+        , 'angular_moment': '../bower_components/angular-moment/angular-moment'
+        , 'angular_bootstrap': '../bower_components/angular-bootstrap/ui-bootstrap-tpls'
+        , 'angular_animate': '../bower_components/angular-animate/angular-animate'
+        , 'angular-ui-select': '../bower_components/angular-ui-select/dist/select'
+        , 'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize'
+        , 'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback'
+        , 'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider'
+        , 'ngStorage': '../bower_components/ngstorage/ngStorage'
+        , 'ngPromiseExtras': '../bower_components/angular-promise-extras/angular-promise-extras'
+        , chartjs: '../bower_components/Chart.js/Chart'
+        , 'bootstrap_switch': '../bower_components/bootstrap-switch/dist/js/bootstrap-switch'
+        , 'angular_bootstrap_switch': '../bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch'
     },
     //map: { // disabled, with it angular is not using jquery but its jqLite
     //    '*': {'jquery': 'util/jquery-loader'},
@@ -65,6 +66,12 @@ require.config({
         'ngPromiseExtras': {
             deps: ['angular']
         },
+        'bootstrap_switch': {
+            deps: ['jquery']
+        },
+        'angular_bootstrap_switch': {
+            deps: ['angular', 'bootstrap_switch']
+        },
         chartjs: {
             exports: 'Chart',
             init: function () {
@@ -104,10 +111,12 @@ require([
         , 'angular'
         , 'widgets/leadPriceChart/LeadPriceChartWidget'
         , 'widgets/searchForm/SearchFormWidget'
+        , 'widgets/searchForm/SearchFormInputControls'
+        , 'widgets/ItinerariesList/InputSortBy'
         , 'widgets/fareForecast/FareForecastWidget'
         , 'widgets/FareRangeWidget'
         , 'widgets/FareNabberWidget'
-        , 'widgets/ItineraryListWidget'
+        , 'widgets/ItinerariesList/ItinerariesListWidget'
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
         , 'Configuration'
@@ -129,10 +138,12 @@ require([
         , angular
         , LeadPriceChartWidget
         , SearchFormWidget
+        , SearchFormInputControls
+        , InputSortBy
         , FareForecastWidget
         , FareRangeWidget
         , FareNabberWidget
-        , ItineraryListWidget
+        , ItinerariesListWidget
         , FiltersPanelWidget
         , DiscreteFilterWidget
         , Configuration

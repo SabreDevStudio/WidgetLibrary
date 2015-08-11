@@ -6,6 +6,8 @@
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/cupertino/jquery-ui.css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../bower_components/angular-rangeslider/angular.rangeSlider.css">
+    <link rel="stylesheet" href="../bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
 </head>
 <body>
@@ -13,7 +15,12 @@
 <div id="mainPageContainer">
     <div>Flight list goes here...</div>
     <!-- when putting widgets together pass as cutoff like 80% of the lowest fare -->
-    <button type="button" id="FareNabber" class="btn btn-primary" data-fare-nabber data-origin="SFO" data-destination="DFW" data-departure-date="2015-09-01" data-adults-count="1" data-maximum-acceptable-price="143.23" data-maximum-acceptable-price-currency="USD">Subscribe for price alerts</button>
+    <button type="button" id="FareNabber" class="btn btn-primary"
+            data-fare-nabber data-origin="SFO" data-destination="DFW" data-departure-date="2015-09-01" data-return-date="2015-10-01"
+            data-adults-count="1"
+            data-maximum-acceptable-price="143.23" data-maximum-acceptable-price-currency="USD">
+        Subscribe for price alerts
+    </button>
     <div>Other page content</div>
 </div>
 <script>

@@ -12,35 +12,47 @@ define([
 
         return angular.module('sdsWidgets')
             .controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-                $scope.datepickerOptions = {
-                      format: 'dd-MMM-yyyy'
-                    , earliestTravelStart: new Date()
+
+                $scope.defaultOptions = {
+                      earliestTravelStart: new Date()
                     , earliestSubscriptionExpiry: new Date()
+                    , allowInterline: true
                 };
+                $scope.subscriptionExpiryDate = $scope.defaultOptions.earliestSubscriptionExpiry;
 
-                $scope.openDepartureDatePicker = function($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    $scope.isDepartureDatePickerOpened = true;
+                $scope.outboundTravelTimeRange = {
+                    isDepartureOrArrival: 'departure'
                 };
-
-                $scope.openSubscriptionExpiryDatePicker = function($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    $scope.isSubscriptionExpiryDatePickerOpened = true;
+                $scope.inboundTravelTimeRange = {
+                    isDepartureOrArrival: 'departure'
                 };
 
                 $scope.subscribe = function () {
-                    var fareNabberSubscriptionRequest = {
-                          subscriberEmail: $scope.subscriberEmail
-                        , origin: $scope.origin
-                        , destination: $scope.destination
-                        , departureDate: $scope.departureDate
-                        , adultsCount: $scope.adultsCount
-                        , maximumAcceptablePrice: $scope.maximumAcceptablePrice
-                        , maximumAcceptablePriceCurrency: $scope.maximumAcceptablePriceCurrency
-                        , subscriptionExpiryDate: $scope.subscriptionExpiryDate
-                    } ;
+                    var allProps = [
+                          'subscriberEmail'
+                        , 'origin'
+                        , 'destination'
+                        , 'departureDate'
+                        , 'returnDate'
+                        , 'adultsCount'
+                        , 'directFlightsOnly'
+                        , 'allowInterline'
+                        , 'maximumAcceptablePrice'
+                        , 'maximumAcceptablePriceCurrency'
+                        , 'subscriptionExpiryDate'
+                        , 'outboundTravelTimeRange'
+                        , 'outboundDepartureOrArrivalTimeRange'
+                        , 'inboundTravelTimeRange'
+                        , 'inboundDepartureOrArrivalTimeRange'
+                        , 'tmp'
+                    ];
+                    var fareNabberSubscriptionRequest = allProps.reduce(function (acc, curr) {
+                        if ($scope[curr]) {
+                            acc[curr] = $scope[curr];
+                        }
+                        return acc;
+                    }, {});
+
                     $modalInstance.close(fareNabberSubscriptionRequest);
                 };
 
@@ -56,6 +68,7 @@ define([
                           origin: '@'
                         , destination: '@'
                         , departureDate: '@'
+                        , returnDate: '@'
                         , adultsCount: '@'
                         , maximumAcceptablePrice: '@'
                         , maximumAcceptablePriceCurrency: '@'

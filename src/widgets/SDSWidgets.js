@@ -11,6 +11,7 @@ define([
       , 'util/Lookups'
       , 'angular-img-fallback'
       , 'angular-rangeslider'
+      , 'angular_bootstrap_switch'
       , 'ngStorage'
     ],
     function (
@@ -26,11 +27,12 @@ define([
         , Lookups
         , angular_img_fallback
         , angular_rangeslider
+        , angular_bootstrap_switch
         , ngStorage
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback', 'ui-rangeSlider', 'ngStorage'])
+        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback', 'ui-rangeSlider', 'ngStorage', 'frapontillo.bootstrap-switch'])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .constant('filteringCriteriaChangedEvent', 'filteringCriteriaChangedEvent')
             .constant('itinerariesStatisticsUpdateNotification', 'itinerariesStatisticsUpdateNotification')

@@ -1,0 +1,4 @@
+<input type="text" placeholder="City or airport" autocomplete="off" ng-model="airport"
+       typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30"
+       typeahead-min-length="2"
+       typeahead-wait-ms="50">

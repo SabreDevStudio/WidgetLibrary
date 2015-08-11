@@ -7,8 +7,6 @@ define([
         , 'datamodel/SearchCriteria'
         , 'datamodel/SearchCriteriaLeg'
         , 'text!view-templates/SearchFormWidget.tpl.html'
-        , 'util/AirportNameLookup'
-        , 'AirportNameBestSuggestionComparator'
     ],
     function (
           moment
@@ -19,25 +17,11 @@ define([
         , SearchCriteria
         , SearchCriteriaLeg
         , SearchFormWidgetTemplate
-        , AirportNameLookup
-        , AirportNameBestSuggestionComparator
     ) {
         'use strict';
 
         return angular.module('sdsWidgets')
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
-            .filter('airportNameWithIATACode', function () {
-                return function (airportAndIATACode) {
-                    if (_.isDefined(airportAndIATACode)) {
-                        return airportAndIATACode.fullName + ' (' + airportAndIATACode.airportCode + ')';
-                    }
-                };
-            })
-            .filter('airportNameBestSuggestionComparator', function () {
-                return function (allMatches, userCurrentInput) {
-                    return allMatches.sort(new AirportNameBestSuggestionComparator(userCurrentInput)).reverse();
-                };
-            })
             .service('SearchCriteriaBroadcastingService', [ //TODO dup with SDSWidgets
                 '$rootScope'
                 , 'newSearchCriteriaEvent'
@@ -54,23 +38,18 @@ define([
                 , 'DateService'
                 , 'WidgetIdGeneratorService'
                 , 'SearchCriteriaBroadcastingService'
-                , 'AirlineNameLookupService'
             , function (
                   $scope
                 , $DateService
                 , widgetIdGenerator
                 , SearchCriteriaBroadcastingService
-                , AirlineNameLookupService
                 ) {
 
                 var DEFAULT_ADVANCE_PURCHASE_DAYS = 14;
                 var DEFAULT_LENGTH_OF_STAY = 14;
                 var DEFAULT_DATE_FLEXIBILITY_REQUESTED = 3;
 
-                $scope.datepickerOptions = {
-                      format: 'dd-MMM-yyyy'
-                    , earliestTravelStart: $DateService.now().startOf('day').toDate()
-                };
+                $scope.earliestTravelStart = $DateService.now().startOf('day').toDate();
 
                 $scope.widgetId = widgetIdGenerator.next();
 
@@ -103,52 +82,9 @@ define([
                 $scope.DepartureDate = $DateService.now().startOf('day').add(DEFAULT_ADVANCE_PURCHASE_DAYS, 'days').toDate();
                 setReturnDateToDefaultLengthOfStay();
 
-                $scope.openDepartureDatePicker = function($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    $scope.isDepartureDatePickerOpened = true;
-                };
-
-                $scope.openReturnDatePicker = function($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    $scope.isReturnDatePickerOpened = true;
-                };
-
-                $scope.openMultiDestinationDepartureDatePicker = function ($event, index) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    if (_.isUndefined($scope.isMultiDestinationDepartureDatePickerOpened)) {
-                        $scope.isMultiDestinationDepartureDatePickerOpened = [];
-                    }
-                    $scope.isMultiDestinationDepartureDatePickerOpened[index] = true;
-                };
-
-                /**
-                 * loads all mappings of airport code into full name, into array of objects expected by jQuery Autocomplete widget: [ {label: 'Krakow (KRK)', code: 'KRK'}, {label: 'Amsterdam Schiphol (AMS)', code: 'AMS'}, .... ]
-                 * We want the label to be displayed to user, while aiport code must be passed as field value.
-                 */
-                var loadLabelsForAutocomplete = function () {
-                    var airportNameLookup = (window.SDS)? window.SDS.airportNameLookup() : new AirportNameLookup();
-                    var output = [];
-                    _.each(airportNameLookup.getAllMappings(), function (airportFullName, airportCode) {
-                        output.push({fullName: airportFullName, airportCode: airportCode});
-                    });
-                    return output;
-                };
-
-                $scope.airports = loadLabelsForAutocomplete();
-
-                //TODO into own selectAirline directive:
                 $scope.preferredAirline = { // cannot keep here simple scope property like just $scope.preferredAirline, as the angular-ui-select is unable to assign to scope simple property, but only to property of the object, see http://stackoverflow.com/questions/25937098/ng-model-is-not-getting-changed-in-ui-select
                     selected: undefined
                 };
-
-                $scope.allAirlines = [];
-
-                _.each(AirlineNameLookupService.getAllMappings(), function (airlineName, airlineCode) {
-                    $scope.allAirlines.push({name: airlineName, code: airlineCode});
-                });
 
                 function createLegs(tripType) {
                     switch (tripType) {
@@ -186,7 +122,6 @@ define([
                 $scope.createNewSearchCriteria = function () {
                     var searchCriteria = new SearchCriteria();
 
-                    //var DATE_FORMAT_FOR_MOMENT = 'DD-MMM-YYYY';
                     var searchCriteriaLegs = createLegs($scope.tripType);
                     searchCriteriaLegs.forEach(function (searchCriteriaLeg) {
                         searchCriteria.addLeg(searchCriteriaLeg);
@@ -207,7 +142,7 @@ define([
                     }
 
                     if ($scope.preferredAirline.selected) {
-                        searchCriteria.addPreferredAirline($scope.preferredAirline.selected.code);
+                        searchCriteria.addPreferredAirline($scope.preferredAirline.selected);
                     }
 
                     SearchCriteriaBroadcastingService.searchCriteria = searchCriteria;
