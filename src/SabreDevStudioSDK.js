@@ -1,14 +1,11 @@
 require.config({
     paths: {
-          'jquery': "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min"
-        , 'jquery-ui': 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min'
-        , mustache: '../bower_components/mustache/mustache'
-        , text: 'lib/text'
-        , stache: 'lib/stache'
+          'jquery': "../bower_components/jquery/dist/jquery"
+        , 'jquery_loader': 'util/jquery-loader'
+        , text: '../bower_components/text/text'
         , moment: '../bower_components/moment/min/moment-with-locales'
         , moment_range: '../bower_components/moment-range/dist/moment-range'
         , validator_lib: '../bower_components/validator-js/validator'
-        , async: '../bower_components/async/lib/async'
         , lodash: '../bower_components/lodash/lodash'
         , angular: '../bower_components/angular/angular'
         , 'angular_resource': '../bower_components/angular-resource/angular-resource'
@@ -21,20 +18,28 @@ require.config({
         , 'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider'
         , 'ngStorage': '../bower_components/ngstorage/ngStorage'
         , 'ngPromiseExtras': '../bower_components/angular-promise-extras/angular-promise-extras'
-        , chartjs: '../bower_components/Chart.js/Chart'
-        , 'bootstrap_switch': '../bower_components/bootstrap-switch/dist/js/bootstrap-switch'
+        ,  chartjs: '../bower_components/Chart.js/Chart'
+        , 'bootstrap_switch': 'lib/bootstrap-switch-AMD'
         , 'angular_bootstrap_switch': '../bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch'
+        , 'angular_iso_currency': '../bower_components/iso-currency/dist/isoCurrency'
     },
     //map: { // disabled, with it angular is not using jquery but its jqLite
     //    '*': {'jquery': 'util/jquery-loader'},
     //    'util/jquery-loader': {'jquery': 'jquery'}
     //},
-    // angular does not support AMD out of the box, put it in a shim
     map: {
-        '*': { 'chartjs': 'chartjs-noConflict' },
-        'chartjs-noConflict': { 'chartjs': 'chartjs' }
+        '*': {
+              'chartjs': 'chartjs-noConflict'
+  //           ,'jquery': 'jquery_loader'
+        }
+        , 'chartjs-noConflict': { 'chartjs': 'chartjs'}
+//         ,'jquery_loader': {'jquery': 'jquery'}
     },
     shim: {
+        //'jquery': {
+        //    exports: '$'
+        //},
+        // angular does not support AMD out of the box, put it in a shim
         'angular': {
             deps: ['jquery'],
             exports: 'angular'
@@ -66,50 +71,39 @@ require.config({
         'ngPromiseExtras': {
             deps: ['angular']
         },
+        'angular_currency_filter': {
+            deps: ['angular']
+        },
+        'angular_iso_currency': {
+            deps: ['angular']
+        },
         'bootstrap_switch': {
             deps: ['jquery']
         },
         'angular_bootstrap_switch': {
             deps: ['angular', 'bootstrap_switch']
-        },
-        chartjs: {
-            exports: 'Chart',
-            init: function () {
-                console.log('calling this.Chart.noConflict()');
-                return this.Chart.noConflict();
-            }
         }
-    },
-    stache: {
-        extension: '.mst'
-    },
-    'jquery-ui': {
-        deps: ['jquery']
     },
     config: {
         moment: {
             noGlobal: true
         }
-    }
+    },
+    waitSeconds: 15
 });
 
 require([
           "jquery"
-        , "widgets/calendar/CalendarWidget"
         , 'moment'
-        , 'util/CalendarTestPricesGenerator'
-        , 'util/DateFormatter'
-        , 'util/currencyFormatter'
-        , 'datamodel/ShoppingData'
         , 'datamodel/ItinerariesList'
-        , 'util/AirlineNameLookup'
-        , 'util/AirportNameLookup'
-        , 'datamodel/TestItineraryBuilder'
         , 'webservices/BasicSearchCriteriaValidator'
         , 'webservices/InstaflightSearchCriteriaValidator'
         , 'lodash'
         , 'angular'
+        , 'widgets/calendar/CalendarWidget'
+        , 'widgets/AlternateDatesMatrixWidget'
         , 'widgets/leadPriceChart/LeadPriceChartWidget'
+        , 'widgets/LowFareHistoryWidget'
         , 'widgets/searchForm/SearchFormWidget'
         , 'widgets/searchForm/SearchFormInputControls'
         , 'widgets/ItinerariesList/InputSortBy'
@@ -122,21 +116,16 @@ require([
         , 'Configuration'
     ], function (
           $
-        , Calendar
         , moment
-        , testPricesGenerator
-        , DateFormatter
-        , CurrencyFormatter
-        , ShoppingData
         , ItinerariesList
-        , AirlineNameLookup
-        , AirportNameLookup
-        , TestItineraryBuilder
         , BasicSearchCriteriaValidator
         , InstaflightSearchCriteriaValidator
         , _
         , angular
+        , CalendarWidget
+        , AlternateDatesMatrixWidget
         , LeadPriceChartWidget
+        , LowFareHistoryWidget
         , SearchFormWidget
         , SearchFormInputControls
         , InputSortBy
@@ -150,104 +139,6 @@ require([
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?
         "use strict";
 
-        function runCustomerCode() {
-            if (_.isUndefined(window.SDS_onload)) {
-                throw new Error('Trying to use the SDK, but actually no SDK API calls detected. Is the window.SDS_onload array populated with functions that execute API calls?');
-            }
-            window.SDS_onload.filter(_.isFunction).forEach(function (func) {
-                func();
-            });
-        }
-
-        function initializeSDK() {
-
-            var dateFormatter;
-
-            var currencyFormatter;
-
-            var airlineNameLookup;
-
-            var airportNameLookup;
-
-            var testItineraryBuilder;
-
-            if (window.SDS) {
-                return;
-            }
-
-            var SDS = {};
-
-            SDS.initializedSuccessful = false;
-
-            var globalCache = new ShoppingData();
-
-            SDS.init = function (options) {
-                if (typeof options.apiKey === 'undefined') {
-                    new Error("You have to specify apiKey to use Sabre Dev Studio");
-                }
-                SDS.options = $.extend(true, {}, options);
-                this.initializedSuccessful = true;
-            };
-
-            SDS.calendar = function (targetDomElementId, options, doNotCallWebServiceAndUseFakePrices) {
-                if (!SDS.initializedSuccessful) {
-                    throw new Error("You have to initialize Sabre Dev Studio first, call init");
-                }
-
-                options.globalOptionsCache = globalCache; // TODO: since we deep copy all options in widgets, the cache will not be shared..?
-
-                var clientCallback = function (calendarNode) {
-                    $("#" + targetDomElementId).append(calendarNode);
-                };
-
-                options.callbackOnViewCreate = clientCallback;
-
-                var calendar = new Calendar(options);
-
-                if (doNotCallWebServiceAndUseFakePrices) {
-                    var monthSpecifications = [];
-                    var startMonth = moment({year: calendar.options.year, month: calendar.options.month});
-                    var endMonth = startMonth.clone().add(calendar.options.numberOfMonthsToShow, 'month');
-                    moment().range(startMonth, endMonth).by('months', function (month) {
-                        monthSpecifications.push(month);
-                    });
-                    calendar.options.testPrices = testPricesGenerator.generatePrices(monthSpecifications);
-                }
-
-                return calendar;
-            };
-
-            // returns localized dates formatter, for use of widgets, or SDK user
-            SDS.dateFormatter = function () {
-                dateFormatter = dateFormatter || new DateFormatter(SDS.options);
-                return dateFormatter;
-            };
-
-            SDS.currencyFormatter = function () {
-                currencyFormatter = currencyFormatter || new CurrencyFormatter(SDS.options);
-                return currencyFormatter;
-            };
-
-            SDS.airlineNameLookup = function () {
-                airlineNameLookup = airlineNameLookup || new AirlineNameLookup();
-                return airlineNameLookup;
-            };
-
-            SDS.airportNameLookup = function () {
-                airportNameLookup = airportNameLookup || new AirportNameLookup();
-                return airportNameLookup;
-            };
-
-            SDS.testItineraryBuilder = function (numberOfItins) {
-                testItineraryBuilder = testItineraryBuilder || new TestItineraryBuilder();
-                return testItineraryBuilder;
-            };
-
-            window.SDS = SDS;
-
-            bootstrapNG();
-        }
-
         function bootstrapNG() {
             angular.element(document).ready(function () { // TODO: we cannot compile on whole document level..
             //$(document).ready(function() {
@@ -255,7 +146,6 @@ require([
             });
         }
 
-        initializeSDK();
-        runCustomerCode();
+        bootstrapNG();
 
     });

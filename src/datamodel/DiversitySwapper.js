@@ -13,7 +13,7 @@ define([],
                 if (rankingFirst === rankingSecond) {
                     return 0;
                 } else if (rankingFirst > rankingSecond) {
-                    return 1
+                    return 1;
                 } else {
                     return -1;
                 }

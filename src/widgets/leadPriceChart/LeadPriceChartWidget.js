@@ -8,7 +8,7 @@ define([
         , 'widgets/GlobalChartsConfiguration'
         , 'text!view-templates/LeadPriceChartWidget.tpl.html'
         , 'datamodel/ShoppingData'
-        , 'webservices/SabreDevStudioWebServices'
+        , 'webservices/DaysRangeSearchStrategyFactory'
         , 'datamodel/SearchCriteria'
         , 'chartjs'
     ],
@@ -22,7 +22,7 @@ define([
         , GlobalChartsConfiguration
         , LeadPriceChartWidgetTemplate
         , ShoppingData
-        , SabreDevStudioWebServices
+        , DaysRangeSearchStrategyFactory
         , SearchCriteria
         , Chart
     ) {
@@ -33,24 +33,26 @@ define([
                       'DateService'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'
-                    , 'AdvancedCalendarDataService'
-                    , 'LeadPriceCalendarDataService'
                     , '$timeout'
                     , 'globalBarChartConfiguration'
+                    , 'customToStringFunction'
                     , 'globalChartStyleConfiguration'
                     , 'DateSelectedBroadcastingService'
-                    , 'ErrorReportingService'
+                    , 'ValidationErrorsReportingService'
+                    , 'DaysRangeSearchStrategyFactory'
+                    , 'NoResultsFoundBroadcastingService'
                 , function (
                       DateService
                     , SearchCriteriaBroadcastingService
                     , newSearchCriteriaEvent
-                    , AdvancedCalendarDataService
-                    , LeadPriceCalendarDataService
                     , $timeout
                     , globalBarChartConfiguration
+                    , customToStringFunction
                     , globalChartStyleConfiguration
                     , DateSelectedBroadcastingService
                     , ErrorReportingService
+                    , DaysRangeSearchStrategyFactory
+                    , NoResultsFoundBroadcastingService
         ) {
                 return {
                     restrict: 'AE',
@@ -58,8 +60,6 @@ define([
                     replace: false, //TODO: cannot select canvas from template when true
                     template: LeadPriceChartWidgetTemplate,
                     link: function(scope, element, attrs) {
-
-                        var CHART_X_AXIS_DATE_VALUES_FORMAT = 'D MMM'; // for example: 17 Aug
 
                         var numberOfWeeksToDisplay = attrs.numberOfWeeksToDisplay || 2;
 
@@ -71,27 +71,15 @@ define([
 
                         var lastSearchCriteria = {};
 
-                        var ShoppingDataService = selectShoppingService(attrs.activeSearchWebService);
+                        var searchService = DaysRangeSearchStrategyFactory.createSearchStrategy(attrs.activeSearchWebService);
 
-                        initializeModel();
+                        resetModel();
 
                         createChartInstance();
 
                         updateStateOfNavigationLinks();
 
-                        function selectShoppingService(webService) {
-                            var webService = webService || 'leadPriceCalendar';
-                            switch (webService) {
-                                case 'advancedCalendar':
-                                    return AdvancedCalendarDataService;
-                                case 'leadPriceCalendar':
-                                    return LeadPriceCalendarDataService;
-                                default:
-                                    throw new Error('unrecognized web service: ' + webService);
-                            }
-                        }
-
-                        function initializeModel() {
+                        function resetModel() {
                             // main model object, storing prices used by the charting library (directive) to draw the lead price chart
                             scope.data = {
                                 labels: [],
@@ -139,7 +127,7 @@ define([
                                 }
                                 var date = barClicked.label;
                                 DateSelectedBroadcastingService.newSearchCriteria = lastSearchCriteria.getCopyAdjustedToOtherDepartureDate(date);
-                                DateSelectedBroadcastingService.originalDataSourceWebService = ShoppingDataService;
+                                DateSelectedBroadcastingService.originalDataSourceWebService = searchService;
                                 DateSelectedBroadcastingService.broadcast();
                             });
                         }
@@ -149,28 +137,43 @@ define([
                             return firstDayDisplayed.clone().add(numberOfWeeksToDisplay, 'weeks').subtract(1, 'day');
                         }
 
+                        function processLeadPrices(newSearchCriteria, leadPrices) {
+                            lastSearchCriteria = newSearchCriteria;
+                            scope.minDateAndPricePair = searchService.getMinDateAndPricePair(newSearchCriteria);
+
+                            lastDayDisplayedCap = searchService.getMaxAvailableDate(newSearchCriteria);
+
+                            updateModelWithLeadPrices(leadPrices);
+                            clearErrorMessages();
+                        }
+
+                        function processServiceErrorMessages(businessErrorMessages) {
+                            scope.businessErrorMessages = businessErrorMessages;
+                            resetModel();
+                            NoResultsFoundBroadcastingService.broadcast();
+                        }
 
                         // @Controller: main controller function, acting on new search criteria sent to the widget
                         scope.$on(newSearchCriteriaEvent, function () {
                             var newSearchCriteria = SearchCriteriaBroadcastingService.searchCriteria;
 
-                            var validationErrors = ShoppingDataService.validateSearchCriteria(newSearchCriteria);
+                            var validationErrors = searchService.validateSearchCriteria(newSearchCriteria);
                             if (validationErrors.length > 0) {
                                 ErrorReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
                                 return;
                             }
 
-                            ShoppingDataService.getLeadPricesForRange(newSearchCriteria, scope.displayedRange).then(function (leadPrices) {
-                                lastSearchCriteria = newSearchCriteria;
-                                scope.minDateAndPricePair = ShoppingDataService.getMinDateAndPricePair(newSearchCriteria);
-
-                                scope.departureAirport = newSearchCriteria.getFirstLeg().origin;
-                                scope.arrivalAirport = newSearchCriteria.getFirstLeg().destination;
-
-                                lastDayDisplayedCap = ShoppingDataService.getMaxAvailableDate(newSearchCriteria);
-
-                                updateModelWithLeadPrices(leadPrices);
-                            });
+                            searchService.getLeadPricesForRange(newSearchCriteria, scope.displayedRange,
+                                function (leadPrices) {
+                                    processLeadPrices(newSearchCriteria, leadPrices);
+                                    scope.departureAirport = newSearchCriteria.getFirstLeg().origin;
+                                    scope.arrivalAirport = newSearchCriteria.getFirstLeg().destination;
+                                }, function (businessErrorMessages) {
+                                    processServiceErrorMessages(businessErrorMessages);
+                                    //scope.departureAirport = newSearchCriteria.getFirstLeg().origin;
+                                    //scope.arrivalAirport = newSearchCriteria.getFirstLeg().destination; //TODO
+                                }
+                            );
                         });
 
                         scope.isAnyDataToDisplayAvailable = function () {
@@ -189,14 +192,20 @@ define([
                             shiftRangePresented(numberOfWeeksToDisplay);
                         };
 
+                        function clearErrorMessages() {
+                            _.remove(scope.businessErrorMessages);
+                        }
+
+                        scope.anyBusinessErrorMessagesPresent = function () {
+                            return !_.isEmpty(scope.businessErrorMessages);
+                        };
+
                         function shiftRangePresented (requestedWeeksOffset) {
                             var requestedDaysOffset = requestedWeeksOffset * 7;
                             requestedDaysOffset = trimOffsetToObeyLastDayDisplayedCap(requestedDaysOffset);
                             scope.displayedRange.start.add(requestedDaysOffset, 'days');
                             scope.displayedRange.end = calculateLastDayDisplayed(scope.displayedRange.start);
-                            ShoppingDataService.getLeadPricesForRange(lastSearchCriteria, scope.displayedRange).then(function(leadPrices) {
-                                updateModelWithLeadPrices(leadPrices);
-                            });
+                            searchService.getLeadPricesForRange(lastSearchCriteria, scope.displayedRange, updateModelWithLeadPrices);
                         }
 
                         function trimOffsetToObeyLastDayDisplayedCap(requestedDaysOffset) {
@@ -216,32 +225,19 @@ define([
                             // Before we iterate this map to transform to required arrays format, we have to explicitly sort it,
                             // because iteration order of Object.keys, _.map and similar methods iterating object properties is not guaranteed.
                             var leadPricesAndDatesSorted = _.sortBy(_.pairs(leadPricesAndDateStrings), function (dateAndPricePair) {
-                                var date = moment(dateAndPricePair[0]);
+                                var date = moment(dateAndPricePair[0], ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
                                 return date;
                             });
                             var leadPricesAndDates = _.map(leadPricesAndDatesSorted, function (dateAndPricePair) {
                                 var dateString = dateAndPricePair[0];
                                 var leadPrice = dateAndPricePair[1];
                                 return {
-                                      date: moment(dateString, ShoppingData.DATE_FORMAT_FOR_KEYS)
+                                      date: moment(dateString, ShoppingData.prototype.DATE_FORMAT_FOR_KEYS)
                                     , leadPrice: leadPrice
                                 }
                             });
 
-                            scope.data.labels = _.pluck(leadPricesAndDates, 'date').map(addCustomToStringFunction);
-
-                            // returns copy of original date, with the toString method overwritten.
-                            // custom toString is needed to the Chart.js library to display label in the format we wish.
-                            // Otherwise the default toString method would be used, which prints too much information (whole date time).
-                            // Other solution would be to pass as label the already formatted date string, but then, in the click event handler,
-                            // we would get just string from the helper getBarsAtEvent method (and would need to parse this back string into date object).
-                            function addCustomToStringFunction(date) {
-                                var copy = date.clone();
-                                copy.toString = function () {
-                                    return this.format(CHART_X_AXIS_DATE_VALUES_FORMAT);
-                                }
-                                return copy;
-                            }
+                            scope.data.labels = _.pluck(leadPricesAndDates, 'date').map(customToStringFunction.toString);
 
                             scope.data.datasets[0].data = _.pluck(leadPricesAndDates, 'leadPrice');
 

@@ -22,7 +22,7 @@ define([
         var _preferredCabin = this.CabinEnum.Economy;
         Object.defineProperty(this, 'preferredCabin', {
             enumerable: true,
-            get: function() { return _preferredCabin},
+            get: function() { return _preferredCabin;},
             set: function(preferredCabin) {
                 switch (preferredCabin) {
                     case 'Economy': {
@@ -50,7 +50,7 @@ define([
         var _maxStops;
         Object.defineProperty(this, 'maxStops', {
             enumerable: true,
-            get: function() { return _maxStops},
+            get: function() { return _maxStops;},
             set: function(maxStops) { _maxStops = maxStops}
         });
 
@@ -61,16 +61,14 @@ define([
         var _dateFlexibilityDays;
         Object.defineProperty(this, 'dateFlexibilityDays', {
             enumerable: true,
-            get: function() { return _dateFlexibilityDays},
-            set: function(dateFlexibilityDays) { _dateFlexibilityDays = dateFlexibilityDays}
+            get: function() { return _dateFlexibilityDays;},
+            set: function(dateFlexibilityDays) { _dateFlexibilityDays = dateFlexibilityDays;}
         });
 
         Object.defineProperty(this, 'returnAlternateDatesOnly', {
-            enumerable: true
+            enumerable: true,
+            writable: true
         });
-
-
-        this.optionsPerDay;
     }
 
     SearchCriteria.prototype.addLeg = function (leg) {
@@ -131,6 +129,10 @@ define([
         return ((this.legs.length === 2) && (this.getFirstLeg().origin === this.getSecondLeg().destination) && (this.getFirstLeg().destination === this.getSecondLeg().origin));
     };
 
+    SearchCriteria.prototype.isOneWayTravel = function () {
+        return (this.legs.length === 1);
+    };
+
     SearchCriteria.prototype.TripTypeEnum = Object.freeze({
         'OneWay': 'OneWay',
         'RoundTrip': 'RoundTrip',
@@ -180,6 +182,38 @@ define([
         return this.dateFlexibilityDays > 0;
     };
 
+    SearchCriteria.prototype.getRequestedDepartureDates = function () {
+        return this.generateAlternateDates(this.getFirstLeg().departureDateTime);
+    };
+
+    SearchCriteria.prototype.getRequestedReturnDates = function () {
+        return this.generateAlternateDates(this.getSecondLeg().departureDateTime);
+    };
+
+    SearchCriteria.prototype.getRequestedLengthOfStayValues = function () {
+        var departureDates = this.getRequestedDepartureDates();
+        var returnDates = this.getRequestedReturnDates();
+        //TODO write functional reduce!!
+        var allLoS = [];
+        departureDates.forEach(function (departureDate) {
+            returnDates.forEach(function (returnDate) {
+                var lengthOfStay = returnDate.diff(departureDate, 'days');
+                if (lengthOfStay >= 0) {
+                    allLoS.push(lengthOfStay);
+                }
+            });
+        });
+        return _.uniq(allLoS);
+    };
+
+    SearchCriteria.prototype.getTripDepartureDateTime = function () {
+        return this.getFirstLeg().departureDateTime;
+    };
+
+    SearchCriteria.prototype.getTripReturnDateTime = function () {
+        return _.last(this.legs).departureDateTime;
+    };
+
     // utility static factory method
     SearchCriteria.prototype.buildRoundTripTravelSearchCriteria = function (origin, destination, departureDateString, returnDateString) {
         var departureDateTime = moment(departureDateString, moment.ISO_8601);
@@ -200,6 +234,12 @@ define([
         return searchCriteria;
     };
 
+    SearchCriteria.prototype.buildRoundTripTravelSearchCriteriaWithDateFlexibility = function (origin, destination, departureDateString, returnDateString, dateFlexibilityDays) {
+        var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
+        searchCriteria.dateFlexibilityDays = dateFlexibilityDays;
+        return searchCriteria;
+    };
+
     SearchCriteria.prototype.buildMultidestinationSearchCriteria = function (originDestinationPairs) {
         var lengthOfStay = 7;
         var searchCriteria = new SearchCriteria();
@@ -214,6 +254,34 @@ define([
 
         return searchCriteria;
     };
+
+    SearchCriteria.prototype.generateAlternateDates = function (centralDate) {
+        if (!this.isAlternateDatesRequest()) {
+            return centralDate;
+        }
+        var alternateDates = [];
+        var offsets = generateAltDatesOffsets(this.dateFlexibilityDays);
+        offsets.forEach(function (offset) {
+            var alternateDate = centralDate.clone().add(offset, 'days');
+            alternateDates.push(alternateDate);
+        });
+        if (!this.returnAlternateDatesOnly) {
+            var centralDateInsertIndex = _.sortedIndex(alternateDates, centralDate, function (date) {
+                return date.unix();
+            });
+            alternateDates.splice(centralDateInsertIndex, 0, centralDate);
+        }
+        return alternateDates;
+    };
+
+    function generateAltDatesOffsets(dateFlexibilityDays) {
+        var offsets = [];
+        for (var i = 1; i <= dateFlexibilityDays; i++) {
+            offsets.splice(0, 0, -i);
+            offsets.push(i);
+        }
+        return offsets;
+    }
 
     return SearchCriteria;
 });

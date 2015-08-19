@@ -1,16 +1,16 @@
 define([
           'util/LodashExtensions'
         , 'angular'
-        , 'widgets/SDSWidgets'
+        , 'webservices/SabreDevStudioWebServicesModule'
     ],
     function (
           _
         , angular
-        , SDSWidgets
+        , SDSWebServices
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets').factory('OneDaySearchStrategyFactory', [
+        return angular.module('sabreDevStudioWebServices').factory('OneDaySearchStrategyFactory', [
                   'BargainFinderMaxDataService'
                 , 'InstaflightsDataService' //, 'ShoppingMockDateService'
             , function (
@@ -19,7 +19,7 @@ define([
             ) {
                 return {
                     createSearchStrategy: function (activeSearchWebService) {
-                        var activeSearchWebService = activeSearchWebService || 'instaflights';
+                        activeSearchWebService = activeSearchWebService || 'instaflights';
 
                         function collectValidationErrors() {
                             var args = [].slice.call(arguments);

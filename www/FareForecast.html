@@ -2,9 +2,9 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Fare Forecast</title>
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/cupertino/jquery-ui.css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
 </head>
@@ -25,23 +25,7 @@
 
     <div id="FareForecast" data-fare-forecast data-show-unknown-recommendation="1" data-show-wait-recommendation="1"></div>
 </div>
-<script>
-    // customer must provide his SDS SDK configuration functions before SDK script executes (SDK executes functions from global configuration object)
-    window.SDS_onload = window.SDS_onload || [];
-    SDS_onload.push(function () {
 
-        SDS.init({
-            apiKey: "xxx",
-            currency: "USD",
-            localizedMonthNamesFailsafe: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
-            localizedWeekDayNamesFailsafe: ['Mon', 'Thu', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-
-        });
-
-
-    });
-
-</script>
 <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
 <!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
 </body>

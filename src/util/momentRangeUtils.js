@@ -10,9 +10,6 @@ define(['moment', 'moment_range' ], function (moment, moment_range) {
      Returns leftmost month and rightmost month
      */
     moment.generateAdjacentMonths = function(centralMonth, monthsToAdd) {
-        if (monthsToAdd < 1) {
-            throw new Error("at least one month to add as adjacent is needed, specify monthsToAdd");
-        }
         var numberToAddPerSide = Math.floor(monthsToAdd / 2);
         var numberToAddToTheRight = monthsToAdd % 2;
         var startMonth = centralMonth.clone().subtract(numberToAddPerSide, 'month');

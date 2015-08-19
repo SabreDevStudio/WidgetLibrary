@@ -22,8 +22,8 @@ define([
 
         AdvancedCalendarRequestFactory.prototype.dateFormat = 'YYYY-MM-DD';
 
-
         AdvancedCalendarRequestFactory.prototype.createOriginDestinationInfos = function(legs, lengthOfStay, preferredAirlines) {
+
             var that = this;
 
             var today = moment().startOf('day');
@@ -80,6 +80,9 @@ define([
             return [firstOriginDestinationInfo, secondOriginDestinationInfo];
         };
 
+
+
+
         AdvancedCalendarRequestFactory.prototype.getRequestType = function (requestedItinsCount) {
             return "ADC1000";
         };
@@ -88,7 +91,7 @@ define([
             return {
                   "PerDateMin": 1
                 , "PerDateMax": "" + requestedItinsCount
-            }
+            };
         };
 
         return AdvancedCalendarRequestFactory;

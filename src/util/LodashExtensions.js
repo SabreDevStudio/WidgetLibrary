@@ -90,7 +90,7 @@ define(['lodash'], function (_) {
                     value: accumulatorsPair.keysAcc[key],
                     count: accumulatorsPair.valuesAcc[key].count,
                     min: accumulatorsPair.valuesAcc[key].min
-                }
+                };
             });
 
             return merged;

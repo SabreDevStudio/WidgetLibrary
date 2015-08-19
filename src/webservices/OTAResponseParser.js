@@ -10,6 +10,8 @@ define([
 
         function OTAResponseParser() {
 
+            AbstractOTAResponseParser.apply(this, arguments);
+
             this.getPricedItinerariesArray = function(response) {
                 return response.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary;
             };
@@ -26,16 +28,23 @@ define([
                 return segment.Equipment[0].AirEquipType;
             };
 
-            this.getBusinessErrorMessages = function (response) {
+            this.getBusinessErrorMessages = function (message) {
                 var skippedErrorTypes = ['WORKERTHREAD', 'SERVER', 'DEFAULT', 'DRE', 'IF2', 'DSFCLIENT', 'JRCHILD'];
-                var errorMessages = JSON.parse(response).OTA_AirLowFareSearchRS.Errors.Error
-                    .filter(function (error) {
-                        return !_.contains(skippedErrorTypes, error.Type);
-                    })
-                    .map(function (error) {
-                        return error.ShortText;
-                    }) || [];
-                return _.unique(errorMessages);
+                try {
+                    var responseJSON = JSON.parse(message);
+                    //if (_.has(responseJSON, 'OTA_AirLowFareSearchRS', 'Errors', 'Error')) {
+                        var errorMessages = JSON.parse(message).OTA_AirLowFareSearchRS.Errors.Error
+                                .filter(function (error) {
+                                    return !_.contains(skippedErrorTypes, error.Type);
+                                })
+                                .map(function (error) {
+                                    return error.ShortText;
+                                }) || [];
+                        return _.unique(errorMessages);
+                    //}
+                } catch(e) {
+                    return [message];
+                }
             };
 
             this.parsePricingSource = function(itinerary) {
@@ -45,7 +54,7 @@ define([
                 //if (pricingInfo.PricingSource === 'ADVJR1' && pricingInfo.PricingSubSource === 'MIP') {
                 //    return 'BFM_MIP';
                 //}
-            }
+            };
         }
 
         OTAResponseParser.prototype = Object.create(AbstractOTAResponseParser.prototype);

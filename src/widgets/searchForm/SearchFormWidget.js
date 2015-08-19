@@ -143,16 +143,23 @@ define([
                         searchCriteria.addPreferredAirline($scope.preferredAirline.selected.code);
                     }
 
+                    if ($scope.optionsPerDay) {
+                        searchCriteria.optionsPerDay = $scope.optionsPerDay;
+                    }
+
                     SearchCriteriaBroadcastingService.searchCriteria = searchCriteria;
                     SearchCriteriaBroadcastingService.broadcast();
                 };
             }])
             .directive('searchForm', function () {
                return {
-                   restrict: 'A',
+                   restrict: 'AE',
                    template: SearchFormWidgetTemplate, //TODO will it use templateCache this way?
                    controller: 'SearchFormCtrl',
-                   scope: {}
+                   scope: true,
+                   link: function (scope, element) {
+                       scope.optionsPerDay = parseInt(element.attr('options-per-day'));
+                   }
                };
             });
     });

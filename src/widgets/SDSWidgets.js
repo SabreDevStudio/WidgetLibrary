@@ -13,8 +13,9 @@ define([
       , 'angular-rangeslider'
       , 'angular_bootstrap_switch'
       , 'ngStorage'
+      , 'angular_iso_currency'
       , 'text!view-templates/ErrorsModal.tpl.html'
-
+      , 'text!view-templates/ErrorsMessages.tpl.html'
     ],
     function (
           NG
@@ -31,16 +32,35 @@ define([
         , angular_rangeslider
         , angular_bootstrap_switch
         , ngStorage
+        , angular_iso_currency
         , ErrorsModalTemplate
+        , ErrorMessagesTemplate
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets', ['baseServices', 'sabreDevStudioWebServices', 'commonDirectives', 'commonFilters', 'angularMoment', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ui.select', 'sDSLookups', 'dcbImgFallback', 'ui-rangeSlider', 'ngStorage', 'frapontillo.bootstrap-switch'])
+        return angular.module('sdsWidgets', [
+                  'baseServices'
+                , 'sabreDevStudioWebServices'
+                , 'commonDirectives'
+                , 'commonFilters'
+                , 'angularMoment'
+                , 'ui.bootstrap'
+                , 'ngAnimate'
+                , 'ngSanitize'
+                , 'ui.select'
+                , 'sDSLookups'
+                , 'dcbImgFallback'
+                , 'ui-rangeSlider'
+                , 'ngStorage'
+                , 'frapontillo.bootstrap-switch'
+                , 'isoCurrency'
+            ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .constant('filteringCriteriaChangedEvent', 'filteringCriteriaChangedEvent')
             .constant('itinerariesStatisticsUpdateNotification', 'itinerariesStatisticsUpdateNotification')
             .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
             .constant('dateSelectedEvent', 'dateSelectedEvent')
+            .constant('noResultsFoundEvent', 'noResultsFoundEvent')
             .config(function (datepickerConfig) { //TODO make every widget a module of its own, then this config, specyfic to Form will go there
                 datepickerConfig.showWeeks = false;
                 datepickerConfig.startingDay = 1;
@@ -70,6 +90,16 @@ define([
                     };
                     return service;
             }])
+            .service('NoResultsFoundBroadcastingService', [
+                '$rootScope'
+                , 'noResultsFoundEvent'
+                , function ($rootScope, noResultsFoundEvent) {
+                    var service = {};
+                    service.broadcast = function () {
+                        $rootScope.$broadcast(noResultsFoundEvent);
+                    };
+                    return service;
+                }])
             .service('ItineraryStatisticsBroadcastingService', [
                 '$rootScope'
                 , 'itinerariesStatisticsUpdateNotification'
@@ -103,7 +133,7 @@ define([
                     }
                 };
             })
-            .factory('ErrorReportingService', [
+            .factory('ValidationErrorsReportingService', [
                 '$modal'
                 , function ($modal) {
                     return {
@@ -123,6 +153,16 @@ define([
                         }
                     };
                 }])
+            .directive('errorMessages', function () {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        messages: '='
+                    },
+                    replace: true,
+                    template: ErrorMessagesTemplate
+                };
+            });
 
 
     });

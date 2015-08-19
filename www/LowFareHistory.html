@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Low Fare History</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+
+    <style>
+
+        #mainPageContainer {
+            margin-left: 50px;
+            margin-right: 50px;
+        }
+
+        #SearchFormNG {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="mainPageContainer">
+    <div id="SearchFormNG" data-search-form></div>
+    <div class="row">
+        <div class="col-lg-4">
+            <low-fare-history origin="DFW" destination="ORL" departure-date="2015-09-01" return-date="2015-09-10">
+            </low-fare-history>
+            <!--<low-fare-history></low-fare-history>-->
+        </div>
+    </div>
+</div>
+<script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
+<!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
+</body>
+</html>

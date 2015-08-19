@@ -40,6 +40,7 @@ define([
                     };
                 })
             };
+            dateFlexibilityDays = parseInt(dateFlexibilityDays);
             if (dateFlexibilityDays > 0) {
                 _.extend(tpaExtensions, {
                     "DateFlexibility": {
@@ -66,7 +67,7 @@ define([
         BargainFinderMaxRequestFactory.prototype.createNumTrips = function (requestedItinsCount) {
             return {
                 "Number": requestedItinsCount
-            }
+            };
         };
 
         return BargainFinderMaxRequestFactory;

@@ -10,6 +10,8 @@ define([
 
         function InstaflightResponseParser() {
 
+            AbstractOTAResponseParser.apply(this, arguments);
+
             this.getPricedItinerariesArray = function(response) {
                 return response.PricedItineraries;
             };
@@ -28,7 +30,7 @@ define([
 
             this.parsePricingSource = function() {
                 return 'Instaflights';
-            }
+            };
         }
 
         InstaflightResponseParser.prototype = Object.create(AbstractOTAResponseParser.prototype);

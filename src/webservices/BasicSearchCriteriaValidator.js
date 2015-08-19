@@ -1,5 +1,11 @@
-define(['../util/validator'],
-    function (v) {
+define([
+          'lodash'
+        , 'util/validator'
+    ],
+    function (
+          _
+        , v
+    ) {
         'use strict';
 
         function BasicSearchCriteriaValidator() {
@@ -42,7 +48,7 @@ define(['../util/validator'],
                     errors.push('return date must be after departureDate');
                 }
                 return errors;
-            }
+            };
             
         }
 

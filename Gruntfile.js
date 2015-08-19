@@ -11,7 +11,7 @@ module.exports = function (grunt) {
                 jshintrc: '.jshintrc'
             },
             prod: {
-                src: ['src/*.js', 'src/util/*.js', 'src-test/*.js']
+                src: ['src/**/*.js', '!src/lib/**/*.js']//'src-test/**.js']
             }
         },
 
@@ -112,12 +112,11 @@ module.exports = function (grunt) {
                     mainConfigFile: 'src/SabreDevStudioSDK.js',
                     out: "dist/SDSWidgets.dist.js",
                     paths: {
-                        'jquery': "empty:",
-                        'jquery-ui': "empty:"
+                        'jquery': "empty:"
                     },
                     inlineText: true,
-                    //optimize: 'none',
-                    //findNestedDependencies: true,
+                    optimize: 'none',
+                    findNestedDependencies: true,
                     include: ['../node_modules/requirejs/require.js']
                 }
             }

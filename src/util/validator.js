@@ -99,11 +99,6 @@ define(['util/exceptions', 'validator_lib', 'moment', 'lodash'], function (ex, v
                 throw new ex.IllegalArgumentException(actual+ ": " + actual+ " is less than required: "+ required);
             }
         },
-        function: function (arg) {
-            if (!_.isFunction(arg)) {
-                throw new ex.IllegalArgumentException('Provided argument ' + arg + ' is not a function. Function required');
-            }
-        },
         notLowerThan: function (first, second) {
             if (first < second) {
                 throw new ex.IllegalArgumentException(first + ' cannot be lower than ' + second);

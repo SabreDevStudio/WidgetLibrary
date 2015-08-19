@@ -4,7 +4,6 @@ define([
         , 'angular_resource'
         , 'Configuration'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'stache!request-templates/AdvancedCalendarRequest.json'
     ],
     function (
           _
@@ -12,13 +11,12 @@ define([
         , angular_resource
         , Configuration
         , SabreDevStudioWebServicesModule
-        , advancedCalendarRequestTemplate
 
     ) {
         'use strict';
 
         var generalHeaders = {
-            'Content-Type' : 'application/json'
+            'Content-Type' : 'application/JSON'
         };
 
         return angular.module('sabreDevStudioWebServices')
@@ -154,6 +152,7 @@ define([
                         get: {
                             method:'GET'
                             , cache: true
+                            , headers: generalHeaders
                         }
                     });
              }])
@@ -169,6 +168,7 @@ define([
                         get: {
                             method:'GET'
                             , cache: true
+                            , headers: generalHeaders
                         }
                     });
             }])
@@ -184,6 +184,7 @@ define([
                         get: {
                             method:'GET'
                             , cache: true
+                            , headers: generalHeaders
                         }
                     });
             }])
@@ -199,9 +200,26 @@ define([
                         get: {
                             method:'GET'
                             , cache: true
+                            , headers: generalHeaders
                         }
                     });
              }])
+            .factory('LowFareHistoryWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v1/historical/shop/flights/fares';
+                    return $resource(endpointURL, {}, {
+                        get: {
+                            method:'GET'
+                            , cache: true
+                            , headers: generalHeaders
+                        }
+                    });
+                }])
             .factory('AirlineLookupWebService', [
                 '$resource'
                 , 'apiURL'
@@ -214,6 +232,7 @@ define([
                         get: {
                               method:'GET'
                             , cache: true
+                            , headers: generalHeaders
                         }
                     });
                 }]);

@@ -25,7 +25,8 @@ define([
                         getItineraries: function() {
                             var itinerariesList = parser.parse(JSON.parse(SampleBFMResponse).Resource);
                             return $q.when(itinerariesList)
-                        }
+                        },
+                        validateSearchCriteria: angular.noop
                     }
             }]);
     });

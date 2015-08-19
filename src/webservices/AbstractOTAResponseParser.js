@@ -1,18 +1,44 @@
 define([
-          'moment'
+          'lodash'
+        , 'moment'
         , 'datamodel/Itinerary'
         , 'datamodel/Leg'
         , 'datamodel/ItinerariesList'
+        , 'datamodel/AlternateDatesOneWayPriceMatrix'
+        , 'datamodel/AlternateDatesRoundTripPriceMatrix'
     ],
     function (
-          moment
+          _
+        , moment
         , Itinerary
         , Leg
         , ItinerariesList
+        , AlternateDatesOneWayPriceMatrix
+        , AlternateDatesRoundTripPriceMatrix
     ) {
         'use strict';
 
         function AbstractOTAResponseParser() {
+
+            this.getFirstItineraryTripType = function(response) {
+                var firstItinerary = _.first(this.getPricedItinerariesArray(response));
+                if (firstItinerary.AirItinerary.DirectionInd === 'OneWay') {
+                    return 'OneWay';
+                }
+                if (firstItinerary.AirItinerary.DirectionInd === 'Return') {
+                    return 'RoundTrip';
+                }
+            };
+
+            // other class hierarchy creation logic in client code , not to introduce Factory class to be used only by this client
+            this.createAlternateDatesPriceMatrixForTripType = function (tripType) {
+                if (tripType === 'OneWay') {
+                    return new AlternateDatesOneWayPriceMatrix();
+                }
+                if (tripType === 'RoundTrip') {
+                    return new AlternateDatesRoundTripPriceMatrix();
+                }
+            };
         }
 
         AbstractOTAResponseParser.prototype.parse = function(response) {
@@ -29,6 +55,23 @@ define([
             });
 
             return itins;
+        };
+
+        AbstractOTAResponseParser.prototype.extractAlternateDatesPriceMatrix = function (response) {
+            var firstItineraryTripType = this.getFirstItineraryTripType(response);
+            var altDatePriceMatrix = this.createAlternateDatesPriceMatrixForTripType(firstItineraryTripType);
+
+            if (!this.itinerariesFound(response)) {
+                return altDatePriceMatrix;
+            }
+
+            var that = this;
+            this.getPricedItinerariesArray(response).forEach(function(itin) {
+                var travelDatesWithLeadPrice = that.getTravelDatesWithLeadPrice(itin);
+                altDatePriceMatrix.addLeadFareForDate(travelDatesWithLeadPrice);
+            });
+
+            return altDatePriceMatrix;
         };
 
         AbstractOTAResponseParser.prototype.parseItinerary = function (itin) {
@@ -58,6 +101,17 @@ define([
             itinerary.pricingSource = this.parsePricingSource(itin);
 
             return itinerary;
+        };
+
+        AbstractOTAResponseParser.prototype.getTravelDatesWithLeadPrice = function (itin) {
+            var itinerary = this.parseItinerary(itin);
+            var travelDatesWithLeadPrice = {
+                  departureDate: itinerary.getOutboundDepartureDateTime()
+                , returnDate: itinerary.getInboundDepartureDateTime()
+                , price: itinerary.totalFareAmount
+                , currency: itinerary.totalFareCurrency
+            };
+            return travelDatesWithLeadPrice;
         };
 
         AbstractOTAResponseParser.prototype.parseLeg = function(responseLeg) {

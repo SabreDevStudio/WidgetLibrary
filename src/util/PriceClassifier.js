@@ -1,9 +1,17 @@
-define(['lodash'], function (_) {
-    return function PriceClassifier(priceArray) {
+define([
+        'lodash'
+    ], function (
+        _
+    ) {
+    return function PriceClassifier() {
 
-        var uniquePrices = _.uniq(priceArray);
+        var uniquePrices;
 
-        this.tier = function (price) {
+        this.train = function (prices) {
+            uniquePrices = _.sortBy(_.uniq(prices)); // sort so that binary search while classifying is possible
+        };
+
+        this.classifyIntoTier = function (price) {
             return _.indexOf(uniquePrices, price, true) + 1;
         };
     };

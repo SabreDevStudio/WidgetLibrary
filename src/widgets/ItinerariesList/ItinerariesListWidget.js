@@ -14,7 +14,7 @@ define([
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
         , 'datamodel/SearchCriteria'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
-        , 'widgets/ItinerariesList/OneDaySearchStrategyFactory'
+        , 'webservices/OneDaySearchStrategyFactory'
     ],
     function (
           _
@@ -48,7 +48,9 @@ define([
                     , 'FilteringCriteriaChangedBroadcastingService'
                     , 'DateSelectedBroadcastingService'
                     , 'dateSelectedEvent'
-                    , 'ErrorReportingService'
+                    , 'ValidationErrorsReportingService'
+                    , 'BargainFinderMaxDataService'
+                    , 'noResultsFoundEvent'
                 , function (
                       $scope
                     , searchStrategyFactory
@@ -61,6 +63,8 @@ define([
                     , DateSelectedBroadcastingService
                     , dateSelectedEvent
                     , ErrorReportingService
+                    , BargainFinderMaxDataService
+                    , noResultsFoundEvent
                 ) {
 
                     $scope.sortCriteria = new ItinerariesListSortCriteria();
@@ -119,6 +123,10 @@ define([
                         updateSearchAirports(newSearchCriteria);
                     }
 
+                    function clearModel() {
+                        $scope.itineraries = undefined;
+                    }
+
                     function processServiceErrorMessages(newSearchCriteria, businessErrorMessages) { //accepts array or just one string
                         // array holding error messages from processing of last search criteria sent.
                         // like error messages from validation of search criteria or errors returned from the last web service call
@@ -127,7 +135,7 @@ define([
                         }
                         $scope.businessErrorMessages = businessErrorMessages;
                         // clear model from previous search
-                        $scope.itineraries = undefined;
+                        clearModel();
                         updateSearchAirports(newSearchCriteria);
                     }
 
@@ -191,8 +199,18 @@ define([
                         $scope.safeApply();
                     });
 
+                    /**
+                     * this event may come from other widget, like Calendar, when no results were found.
+                     * In such case we should clear (passive) itineraries list, to reflect that noting is found or selected.
+                     * clearing is needed, when for example previously the other widget found data for some search criteria, then sent dateSelected event
+                     * , so the itinerary list populated, and later there was another search in the other widget which now did not return any results (so we have to clear previous state).
+                     */
+                    $scope.$on(noResultsFoundEvent, function () {
+                        clearModel();
+                    });
+
                     function selectItinerariesListProducingService(originalWebService) {
-                        return (isItinerariesListProducingService(originalWebService)) ? originalWebService : BargainFinderMaxDataService; //TODO search strategy here as well
+                        return (isItinerariesListProducingService(originalWebService))? originalWebService : BargainFinderMaxDataService; //TODO search strategy here as well
                     }
 
                     function isItinerariesListProducingService(originalWebService) {
@@ -207,6 +225,7 @@ define([
                     }
 
                     function updateSearchAirports(newSearchCriteria) {
+                        //TODO: move both airports into ItinerariesList (the airports for which the search was done)
                         $scope.searchCriteriaDepartureAirport = newSearchCriteria.getFirstLeg().origin;
                         $scope.searchCriteriaArrivalAirport = newSearchCriteria.getFirstLeg().destination;
                     }
@@ -234,9 +253,9 @@ define([
                     controller: 'ItineraryListCtrl',
                     link: function (scope, element) {
 
-                        scope.predefinedSearchCriteria = buildSearchCriteriaFromPredefinedParameters();
-                        if (scope.predefinedSearchCriteria) {
-                            scope.processSearchCriteria(scope.predefinedSearchCriteria);
+                        var predefinedSearchCriteria = buildSearchCriteriaFromPredefinedParameters();
+                        if (predefinedSearchCriteria) {
+                            scope.processSearchCriteria(predefinedSearchCriteria);
                         }
 
                         function buildSearchCriteriaFromPredefinedParameters() {

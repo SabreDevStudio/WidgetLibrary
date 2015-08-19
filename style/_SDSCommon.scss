@@ -124,40 +124,6 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
   }
 }
 
-/* navigation links (for now prev and next arrows) */
-.SDSIconNavigationLink {
-  $iconPrev: "../img/prev-arrows-16.png";
-  $iconNext: "../img/next-arrows-16.png";
-  $marginForNavigationArrows: 0.1em;
-  //background-repeat: no-repeat;
-  height: image-height($iconPrev);
-  width: image-width($iconPrev);
-  position: absolute;
-  & span {
-    visibility: hidden;
-  }
-  &.SDSPrevIcon {
-    left: 0;
-    margin-left: $marginForNavigationArrows;
-    @include background-image(url($iconPrev));
-  }
-  &.SDSNextIcon {
-    right: 0;
-    margin-right: $marginForNavigationArrows;
-    @include background-image(url($iconNext));
-  }
-}
-
-.SDSNavigationPane {
-  display: flex;
-  justify-content: space-between;
-
-  .SDSPrevLink, .SDSNextLink {
-    @extend %SDSLink;
-    padding: 5px;
-  }
-}
-
 .SDSTopLevelList > li  {
   border-bottom: solid #D2DDE4 1px;
   &:nth-child(odd) {
@@ -228,25 +194,6 @@ also sets left and right child to inline block */
     position: absolute;
     display: inline-block;
     right: 0;
-  }
-}
-
-.SDSWidget {
-  $expandIcon: '../img/expand.gif';
-  $collapseIcon: '../img/collapse.gif';
-
-  .SDSExpandableFlip, .SDSCollapsibleFlip {
-    background-repeat: no-repeat;
-    padding-left: image-width($expandIcon) + 2px;
-    cursor: pointer;
-  }
-
-  .SDSExpandableFlip {
-    @include background-image(url($expandIcon));
-  }
-
-  .SDSCollapsibleFlip {
-    @include background-image(url($collapseIcon));
   }
 }
 

@@ -1,4 +1,4 @@
-define([
+define([ //TODO too long
           'angular'
         , 'util/LodashExtensions'
         , 'moment'
@@ -6,15 +6,18 @@ define([
         , 'webservices/InstaflightResponseParser'
         , 'webservices/OTAResponseParser'
         , 'util/BaseServices'
-        , 'webservices/AuthenticationService' // TODO: seems not needed here but without it and with interceptor modules not not load
+        , 'webservices/AuthenticationService' // without it interceptor modules that use it do not not load
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/WebServicesResourceDefinitions'
         , 'datamodel/FareForecast'
         , 'datamodel/ShoppingData'
+        , 'datamodel/AlternateDatesRoundTripPriceMatrix'
         , 'webservices/AdvancedCalendarRequestFactory'
+        , 'webservices/AdvancedCalendarRequestFactoryForAltDates'
         , 'webservices/InstaflightSearchCriteriaValidator'
         , 'webservices/AdvancedCalendarSearchCriteriaValidator'
         , 'webservices/LeadPriceCalendarSearchCriteriaValidator'
+        , 'webservices/TravelInsightEngineSearchCriteriaValidator'
     ],
     function (
           angular
@@ -29,12 +32,27 @@ define([
         , WebServicesResourceDefinitions
         , FareForecast
         , ShoppingData
+        , AlternateDatesRoundTripPriceMatrix
         , AdvancedCalendarRequestFactory
+        , AdvancedCalendarRequestFactoryForAltDates
         , InstaflightSearchCriteriaValidator
         , AdvancedCalendarSearchCriteriaValidator
         , LeadPriceCalendarSearchCriteriaValidator
+        , TravelInsightEngineSearchCriteriaValidator
     ) {
         'use strict';
+
+        var HTTP_NETWORK_ERROR_MSG = 'Unable to communicate with the Sabre Dev Studio';
+
+        var errorsStandardHandler = function(reason) {
+            if (reason.status == 0) {
+                return [HTTP_NETWORK_ERROR_MSG];
+            }
+            var businessErrorMessage = reason.data.message; //TODO replicate this pattern reason.data.message to all data services
+            return [businessErrorMessage];
+        };
+
+        var travelInsightEngineSearchCriteriaValidator = new TravelInsightEngineSearchCriteriaValidator();
 
         return angular.module('sabreDevStudioWebServices')
             .factory('AdvancedCalendarDataService', [
@@ -47,6 +65,7 @@ define([
                     , ShoppingOptionsCacheService
                 ) {
                 var requestBuilder = new AdvancedCalendarRequestFactory();
+                var requestBuilderForAltDates = new AdvancedCalendarRequestFactoryForAltDates();
 
                 var responseParser = new OTAResponseParser();
 
@@ -68,7 +87,7 @@ define([
                     getLeadPricesForRange: function (searchCriteria, range) {
                         return $q(function(resolve, reject) {
                             var cacheKey = createCacheKey(searchCriteria);
-                            var optionsFromCache = ShoppingOptionsCacheService.getLeadPricesForRange(cacheKey, range.start, range.end); //TODO
+                            var optionsFromCache = ShoppingOptionsCacheService.getLeadPricesForRange(cacheKey, range.start, range.end);
                             if (_.size(optionsFromCache) > 0) {
                                 return resolve(optionsFromCache);
                             }
@@ -77,7 +96,7 @@ define([
                                 function (response) {
                                     var itinerariesList = responseParser.parse(response);
 
-                                    var shoppingData = new ShoppingData();
+                                    var shoppingData = new ShoppingData(); //TODO far too complex interface to ShoppingData
                                     shoppingData.markRequestedData(cacheKey, range.start, range.end);
                                     itinerariesList.getItineraries().forEach(function(itineary) {
                                         shoppingData.addItinerary(cacheKey, itineary, itineary.getOutboundDepartureDateTime());
@@ -89,7 +108,7 @@ define([
                                     return resolve(leadPricesForRange);
                                 },
                                 function (error) {
-                                    return reject(error);
+                                    return reject(errorsStandardHandler(error));
                                 }
                             );
                         });
@@ -108,7 +127,7 @@ define([
                                     var itinerariesList = responseParser.parse(response);
 
                                     var shoppingData = new ShoppingData();
-                                    shoppingData.markRequestedData(cacheKey, range.start, range.end);
+                                    shoppingData.markRequestedData(cacheKey, range.start, range.end);//TODO range is not defined!!
                                     itinerariesList.getItineraries().forEach(function(itineary) {
                                         shoppingData.addItinerary(cacheKey, itineary, itineary.getOutboundDepartureDateTime());
                                     });
@@ -124,6 +143,25 @@ define([
                             );
 
                         });
+                    },
+                    getAlternateDatesPriceMatrix: function (searchCriteria) {
+                        if (!searchCriteria.isAlternateDatesRequest()) {
+                            throw new Error('Calling Alternative Dates service for non alternative dates request');
+                        }
+                        var advancedCalendarRequest = requestBuilderForAltDates.createRequest(searchCriteria);
+                        return $q(function(resolve, reject) {
+                            AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
+                                function (response) {
+                                    var alternateDatesPriceMatrix = responseParser.extractAlternateDatesPriceMatrix(response);
+                                    resolve(alternateDatesPriceMatrix);
+                                },
+                                function (reason) {
+                                    var businessErrorMessages = responseParser.getBusinessErrorMessages(reason.data.message);
+                                    reject(businessErrorMessages);
+                                }
+                            );
+                        });
+
                     },
                     validateSearchCriteria: function (searchCriteria) {
                         return validator.validate(searchCriteria);
@@ -215,6 +253,23 @@ define([
                                 , lowestNonStopFare: fareInfo.LowestNonStopFare
                             };
                         });
+                    },
+                    extractAlternateDatesPriceMatrix: function (response) {
+                        return response.FareInfo
+                            .map(function (fareInfo) {
+                                return {
+                                      departureDate: moment(fareInfo.DepartureDateTime, moment.ISO_8601)
+                                    , returnDate: moment(fareInfo.ReturnDateTime, moment.ISO_8601)
+                                    , price: fareInfo.LowestFare
+                                    , currency: fareInfo.CurrencyCode
+                                };
+                            }).reduce(function (altDatePriceMatrix, travelDatesWithLeadPrice) {
+                                    altDatePriceMatrix.addLeadFareForDate(travelDatesWithLeadPrice);
+                                    return altDatePriceMatrix;
+                            }, new AlternateDatesRoundTripPriceMatrix());
+                    },
+                    getBusinessErrorMessages: function (response) {
+                        return response;
                     }
                 };
             })
@@ -239,7 +294,43 @@ define([
                               origin: searchCriteria.getFirstLeg().origin
                             , destination: searchCriteria.getFirstLeg().destination
                             , lengthofstay: searchCriteria.getLengthOfStay()
+                        };
+                    }
+
+                    function translateSearchCriteriaIntoAlternateDatesRequestOptions(searchCriteria) {
+                        var departureDates = searchCriteria.getRequestedDepartureDates();
+                        var lengthOfStays = searchCriteria.getRequestedLengthOfStayValues();
+                        lengthOfStays = lengthOfStays.filter(travelInsightsEngineAcceptedLengthOfStayValues);
+
+                        var centralDateRequestLengthOfStay = searchCriteria.getLengthOfStay();
+                        var MAX_LEAD_PRICE_CALENDAR_ACCEPTED_LENGTHOFSTAY_SPECIFICATIONS = 10;
+                        if (lengthOfStays.length > MAX_LEAD_PRICE_CALENDAR_ACCEPTED_LENGTHOFSTAY_SPECIFICATIONS) {
+                            lengthOfStays = filterOutMostDistantLoS(lengthOfStays, centralDateRequestLengthOfStay, MAX_LEAD_PRICE_CALENDAR_ACCEPTED_LENGTHOFSTAY_SPECIFICATIONS);
                         }
+                        // Note that such combining of departure dates with all length of stays is the superset of what search criteria specified
+                        // (we are producing more combinations), but the interface to Lead Price Calendar does not allow specifying length of stays per departure date
+                        return {
+                              origin: searchCriteria.getFirstLeg().origin
+                            , destination: searchCriteria.getFirstLeg().destination
+                            , departuredate: departureDates.map(function (date) {
+                                return date.format('YYYY-MM-DD');
+                            }).join(',')
+                            , lengthofstay: lengthOfStays.join(',')
+                        };
+                    }
+
+                    function travelInsightsEngineAcceptedLengthOfStayValues(LoS) {
+                        return (LoS <=16);
+                    }
+
+                    function filterOutMostDistantLoS(candidatesIncludingOriginal, original, maxCount) {
+
+                        function distanceToOriginalLengthOfStay(candidate) {
+                            return Math.abs(original - candidate);
+                        }
+
+                        var sorted = _.sortBy(candidatesIncludingOriginal, distanceToOriginalLengthOfStay);
+                        return _.slice(sorted, 0, maxCount);
                     }
 
                     function sliceLeadFares(leadFares, range) { //TODO into data model object: LeadPrices
@@ -297,9 +388,27 @@ define([
                                         },
                                         function(error) {
                                             //TODO? put result of 404 in cache also?
-                                            return reject(error);
+                                            return reject(errorsStandardHandler(error));
                                         }
                                     );
+                            });
+                        },
+                        getAlternateDatesPriceMatrix: function(searchCriteria) {
+                            if (!searchCriteria.isAlternateDatesRequest()) {
+                                throw new Error('Calling Alternative Dates service for non alternative dates request');
+                            }
+                            var webServiceRequestOptions = translateSearchCriteriaIntoAlternateDatesRequestOptions(searchCriteria);
+                            return $q(function(resolve, reject) {
+                                LeadPriceCalendarWebService.get(webServiceRequestOptions).$promise.then(
+                                    function (response) {
+                                        var alternateDatesPriceMatrix = parser.extractAlternateDatesPriceMatrix(response);
+                                        resolve(alternateDatesPriceMatrix);
+                                    },
+                                    function (reason) {
+                                        var businessErrorMessages = parser.getBusinessErrorMessages(reason.data.message);
+                                        reject(businessErrorMessages);
+                                    }
+                                );
                             });
                         },
                         validateSearchCriteria: function (searchCriteria) {
@@ -373,7 +482,6 @@ define([
                       $q
                     , FareRangeWebService
                 ) {
-
                     function translateSearchCriteriaIntoRequestParams(searchCriteria, departureDateRangeRange) {
                         return {
                               origin: searchCriteria.getFirstLeg().origin
@@ -392,13 +500,77 @@ define([
                                     function (response) {
                                         resolve(response);
                                     },
-                                    function (error) {
-                                        reject(error);
+                                    function (reason) {
+                                        if (reason.status == 0) {
+                                            return reject([HTTP_NETWORK_ERROR_MSG]);
+                                        }
+                                        var businessErrorMessage = reason.data.message;
+                                        reject([businessErrorMessage]); //TODO data services always return arr of errors, not string.
                                     }
                                 );
                             });
+                        },
+                        validateSearchCriteria: function (searchCriteria) {
+                            return travelInsightEngineSearchCriteriaValidator.validate(searchCriteria);
                         }
                     };
             }])
+            .factory('LowFareHistoryDataService', [
+                      '$q'
+                    , 'LowFareHistoryWebService'
+                , function (
+                      $q
+                    , LowFareHistoryWebService
+                ) {
+
+                    function translateSearchCriteriaIntoRequestParams(searchCriteria) {
+                        return {
+                              origin: searchCriteria.getFirstLeg().origin
+                            , destination: searchCriteria.getFirstLeg().destination
+                            , departuredate: searchCriteria.getTripDepartureDateTime().format('YYYY-MM-DD')
+                            , returndate: searchCriteria.getTripReturnDateTime().format('YYYY-MM-DD')
+                        };
+                    }
+
+                    function parseResponse(rs) {
+                        var historicalPrices = rs.FareInfo.map(function (fareInfo) {
+                           return {
+                                 lowestFare: fareInfo.LowestFare
+                               , lowestNonStopFare: fareInfo.LowestNonStopFare
+                               , dateOfShopping: moment(fareInfo.ShopDateTime, moment.ISO_8601)
+                           };
+                        });
+                        return {
+                              origin: rs.OriginLocation
+                            , destination: rs.DestinationLocation
+                            , currency: rs.FareInfo[0].CurrencyCode
+                            , historicalPrices: historicalPrices
+                        };
+                    }
+
+                    return {
+                      getLowFareHistory: function (searchCriteria) {
+                          return $q(function(resolve, reject) {
+                              var requestParams = translateSearchCriteriaIntoRequestParams(searchCriteria);
+                              LowFareHistoryWebService.get(requestParams).$promise.then(
+                                  function (response) {
+                                      var lowFareHistory = parseResponse(response);
+                                      resolve(lowFareHistory);
+                                  },
+                                  function (reason) {
+                                      if (reason.status == 0) {
+                                          return reject([HTTP_NETWORK_ERROR_MSG]);
+                                      }
+                                      var businessErrorMessage = reason.data.message; //TODO replicate this pattern reason.data.message to all data services
+                                      reject([businessErrorMessage]);
+                                  }
+                              );
+                          });
+                      },
+                      validateSearchCriteria: function (searchCriteria) {
+                          return travelInsightEngineSearchCriteriaValidator.validate(searchCriteria);
+                      }
+                    };
+                }]);
 
 });

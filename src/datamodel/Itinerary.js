@@ -26,7 +26,7 @@ define(['lodash'], function (_) {
             return {
                 legIdx: retLegIdx,
                 segmentIdx: retSegmentIdx
-            }
+            };
         };
 
         // convenience property-style getters, needed for angular sorting of itineraries list

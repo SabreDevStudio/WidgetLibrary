@@ -49,10 +49,6 @@ requirejs.config({
         d3: {
             exports: 'd3' //todo: all these libs export global symbols...
         },
-        nvd3: {
-            exports: 'nvd3',
-            deps: ['d3']
-        },
         angular_nvd3: {
             exports: 'angular_nvd3',
             deps: ['nvd3', 'angular']

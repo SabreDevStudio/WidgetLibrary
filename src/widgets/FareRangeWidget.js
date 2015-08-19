@@ -28,35 +28,78 @@ define([
                     , 'DateService'
                     , 'FareRangeDataService'
                     , 'FareRangeSummaryService'
+                    , 'newSearchCriteriaEvent'
+                    , 'SearchCriteriaBroadcastingService'
+                    , 'ValidationErrorsReportingService'
                 , function (
                       $scope
                     , DateService
                     , FareRangeDataService
                     , FareRangeSummaryService
+                    , newSearchCriteriaEvent
+                    , searchCriteriaBroadcastingService
+                    , validationErrorsReportingService
                 ) {
+
+                    var rangeDays = $scope.rangeDays | 15;
 
                     // main model object
                     $scope.fareRangeSummary = {};
 
-                    var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteria($scope.origin, $scope.destination, $scope.departureDate, $scope.returnDate);
-                    var rangeDays = $scope.rangeDays | 15;
+                    if ($scope.origin && $scope.destination && $scope.departureDate && $scope.returnDate) {
+                        var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteria($scope.origin, $scope.destination, $scope.departureDate, $scope.returnDate);
+                        processSearchCriteria(searchCriteria);
+                    }
 
-                    $scope.requestedRange = calculateRequestedDepartureDateRanges($scope.departureDate, rangeDays);
+                    function processSearchCriteria(searchCriteria) {
+                        var validationErrors = FareRangeDataService.validateSearchCriteria(searchCriteria);
+                        if (validationErrors.length > 0) {
+                            validationErrorsReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
+                            return;
+                        }
 
-                    FareRangeDataService.getFareRange(searchCriteria, $scope.requestedRange).then(function (response) {
-                        $scope.fareRangeSummary = FareRangeSummaryService.getSummary(response, searchCriteria.getFirstLeg().departureDateTime, searchCriteria.getSecondLeg().departureDateTime);
+                        var requestedRange = calculateRequestedDepartureDateRanges(searchCriteria.getTripDepartureDateTime(), rangeDays);
+                        FareRangeDataService.getFareRange(searchCriteria, requestedRange).then(
+                            function (response) {
+                                $scope.fareRangeSummary = FareRangeSummaryService.getSummary(response, searchCriteria.getFirstLeg().departureDateTime, searchCriteria.getSecondLeg().departureDateTime);
+                                $scope.requestedRange = requestedRange;
+                                clearErrorMessages();
+                            },
+                            function (errors) {
+                                $scope.businessErrorMessages = errors;
+                                clearModel();
+                            }
+                        );
+                    }
+
+                    $scope.$on(newSearchCriteriaEvent, function () {
+                        var newSearchCriteria = searchCriteriaBroadcastingService.searchCriteria;
+                        $scope.currentLowestFare = undefined;
+                        $scope.currentLowestFareCurrency = undefined;
+                        processSearchCriteria(newSearchCriteria);
                     });
 
-                    function calculateRequestedDepartureDateRanges(departureDateTimeString, rangeDays) {
+                    $scope.anyBusinessErrorMessagesPresent = function () {
+                        return !_.isEmpty($scope.businessErrorMessages);
+                    };
+
+                    function clearErrorMessages() {
+                        _.remove($scope.businessErrorMessages);
+                    }
+
+                    function clearModel() {
+                        $scope.fareRangeSummary = {};
+                    }
+
+                    function calculateRequestedDepartureDateRanges(departureDateTime, rangeDays) {
                         // try to evenly distribute the range across the departure data, make provision for the maximum days from now till the requested date
-                        var departureDate = moment(departureDateTimeString, moment.ISO_8601);
-                        var advancePurchase = departureDate.diff(DateService.now(), 'days');
+                        var advancePurchase = departureDateTime.diff(DateService.now(), 'days');
                         var daysToAddBeforeRequestedDate = Math.min(advancePurchase, Math.floor(rangeDays / 2));
 
                         var daysToAddAfterRequestedDate = rangeDays - daysToAddBeforeRequestedDate - 1; // -1 stands for the requested day itself
 
-                        var rangeStart = departureDate.clone().subtract(daysToAddBeforeRequestedDate, 'days').format('YYYY-MM-DD');
-                        var rangeEnd = departureDate.clone().add(daysToAddAfterRequestedDate, 'days').format('YYYY-MM-DD');
+                        var rangeStart = departureDateTime.clone().subtract(daysToAddBeforeRequestedDate, 'days').format('YYYY-MM-DD');
+                        var rangeEnd = departureDateTime.clone().add(daysToAddAfterRequestedDate, 'days').format('YYYY-MM-DD');
 
                         return moment.range(rangeStart, rangeEnd);
                     }
@@ -88,7 +131,7 @@ define([
                 }])
             .directive('fareRange', function () {
                 return {
-                    restrict: 'A',
+                    restrict: 'AE',
                     scope: {
                           origin: '@'
                         , destination: '@'

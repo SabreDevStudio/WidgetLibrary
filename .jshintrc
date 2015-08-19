@@ -14,7 +14,7 @@
     "xit": false,
     "xdescribe": false
   },
-  "maxcomplexity": 4,
+  "maxcomplexity": 5,
   "maxdepth": 3,
   "browser": true,
   "browserify": true,

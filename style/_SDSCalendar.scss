@@ -1,72 +1,19 @@
 @import "SDSCommon";
 @import "SDSPriceTiered";
 
-$calendarMinWidth: 20em;
-
-div.SDSCalendarSlot {
-  display: inline-block; //TODO: add responsive styling: (analogous to number of columns in RWD)
-  vertical-align: top; // we align to top because two adjacent calendar can have different height. Default alignment to bottom ugly: calendar headers not in line then
-}
-
-div.SDSCalendarSlot:not(.SDSCalendarTab) { // we present months in columns only without tabs. For tabs not needed
-  &[data-totalMonths='2'] {
-    @include oneOfNColumns(2);
-  }
-  &[data-totalMonths='3'] {
-    @include oneOfNColumns(3);
-  }
-  &[data-totalMonths='4'] {
-    @include oneOfNColumns(4);
-  }
-}
-
-.SDSCalendarContainer .SDSCalendarTabHeaders {
-  @extend %SDSHeaderDataSecondary;
-}
-
-table.SDSCalendar {
-  width: 100%;
-  table-layout: fixed;
-  min-width: $calendarMinWidth;
-  //max-width: $calendarMaxWidth; max width not needed - it will stretch to whole containing element, client to determine width of that element
+.SDSCalendarTable {
   border-collapse: separate;
-  border-spacing: 0.15em;
+  border-spacing: 0.1rem;
+}
 
-  caption, th {
-    @extend %SDSHeaderData;
-  }
+.SDSCalendarCellPrice {
+  @extend %SDSPriceTiered;
+  white-space: nowrap;
+}
 
-  caption {
-    //@extend %SDSHeader;
-    padding: 0.25em;
-    position: relative; // for absolute positioning of navigation links
-    height: 16px; // TODO: hardcode, caption does not grow with content. It it the image-height($iconPrev);
-  }
-  /* styling calendar cells itself */
-  .SDSCalendarCell {
-    @extend %SDSData;
-    height: (2 * $primaryDataFontSize) * 1.8; // 50% more for vertical margins space between day number and price
-    padding: 0.3em;
-    position: relative; // relative, for absolute positioning of children
-
-    &.SDSCalendarPrevOrNextMonthDay {
-      @extend %SDSInactiveData;
-    }
-  }
-
-  .SDSCalendarDateNumber {
-    font-size: $primaryDataFontSize;
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin-top: 0.15em;
-    margin-right: 0.15em;
-  }
-
-  .SDSCalendarCellPrice {
-    @extend %SDSPriceTiered;
-    white-space: nowrap;
-  }
+.SDSCalendarCellContent {
+  // explicit setting of cell height is needed for the cases when all TD of one table row (one week) does not have any prices. Then such row would be smaller than others
+  height: 5rem;
 }
 
 

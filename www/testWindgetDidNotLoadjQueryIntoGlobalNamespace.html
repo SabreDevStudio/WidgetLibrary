@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!--<link href="../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">-->
@@ -24,18 +25,6 @@
 
     <div id="CalendarSearchResults"></div>
     <script>
-        // customer must provide his SDS SDK configuration functions before SDK script executes (SDK executes functions from global configuration object)
-        window.SDS_onload = window.SDS_onload || [];
-        SDS_onload.push(function () {
-            SDS.init({apiKey: "xxx"});
-            SDS.calendar("CalendarSearchResults", {
-                year: 2015
-                , month: 3
-                , currency: "EUR"
-                , lengthOfStay: 7
-                , showDayNumbersPrevAndNextMonth: true
-            });
-        });
         if (typeof $ === 'undefined') {
             console.log("$ undefined");
         }

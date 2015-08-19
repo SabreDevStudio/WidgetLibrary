@@ -103,7 +103,7 @@ define([
                          * We want the label to be displayed to user, while aiport code must be passed as field value.
                          */
                         function loadLabelsForAutocomplete() {
-                            var airportNameLookup = (window.SDS)? window.SDS.airportNameLookup() : new AirportNameLookup();
+                            var airportNameLookup = new AirportNameLookup();
                             var output = [];
                             _.each(airportNameLookup.getAllMappings(), function (airportFullName, airportCode) {
                                 output.push({fullName: airportFullName, airportCode: airportCode});

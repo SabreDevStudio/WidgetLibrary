@@ -14,7 +14,7 @@ define([
 
     // TODO: move it to src-test: but problems with require-js to load it from src-test. The same with util CalendarTestPricesGenerator
     function TestItineraryBuilder() {
-    };
+    }
 
     TestItineraryBuilder.prototype.buildSampleItinerary = function(spec) {
             var itin = new Itinerary();

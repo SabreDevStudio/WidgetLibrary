@@ -42,7 +42,7 @@ define([
                             return getDataFromService(bfmWebService, searchCriteria);
                         }
                         // alternate dates requests
-                        if (searchCriteria.isAlternateDatesRequest()) {
+                        if (searchCriteria.isAlternateDatesRequest()) { //TODO split this service into plain date search and AD search (interface segregation principle)
                             if (searchCriteria.returnAlternateDatesOnly) {
                                 return getDataFromService(bfmAltDatesWebService, searchCriteria);
                             } else { // call both Alt Dates BFM and normal BFM
@@ -52,6 +52,25 @@ define([
                                 return $q.mergePromises([bfmDataPromise, bfmAltDatesDataPromise], itinerariesListMergingFn, otaResponseErrorsMergingFn);
                             }
                         }
+                    }
+
+                    function getAlternateDatesPriceMatrix(searchCriteria) {
+                        if (!searchCriteria.isAlternateDatesRequest()) {
+                            throw new Error('Calling Alternative Dates service for non alternative dates request');
+                        }
+                        var bfmRequest = bfmRequestFactory.createRequest(searchCriteria);
+                        return $q(function(resolve, reject) {
+                            bfmAltDatesWebService.sendRequest(bfmRequest).then(
+                                function (response) {
+                                    var alternateDatesPriceMatrix = parser.extractAlternateDatesPriceMatrix(response);
+                                    resolve(alternateDatesPriceMatrix);
+                                },
+                                function (reason) {
+                                    var businessErrorMessages = parser.getBusinessErrorMessages(reason.data.message);
+                                    reject(businessErrorMessages);
+                                }
+                            );
+                        });
                     }
 
                     var bfmRequestFactory = new BargainFinderMaxRequestFactory();
@@ -86,7 +105,8 @@ define([
 
                     return {
                         getItineraries: getItineraries,
+                        getAlternateDatesPriceMatrix: getAlternateDatesPriceMatrix,
                         validateSearchCriteria: function () {}
-                    }
+                    };
             }]);
     });

@@ -53,7 +53,7 @@ define([
                 } else { // for all number of stops over 1
                     summary.twoAndMoreStopsLowestPrice = Math.min(summary.twoAndMoreStopsLowestPrice, itineraryTotalFareAmount);
                 }
-            };
+            }
 
             function createEmptySummary() {
                 return {
@@ -108,13 +108,13 @@ define([
                         break;
                     }
                 }
-                for(var i = 0; i < airlineSummaries.length; i++) {
+                for(i = 0; i < airlineSummaries.length; i++) {
                     if (airlineSummaries[i].oneStopLowestPrice) {
                         airlineSummaries[i].isCheapestOneStopLowestPrice = true;
                         break;
                     }
                 }
-                for(var i = 0; i < airlineSummaries.length; i++) {
+                for(i = 0; i < airlineSummaries.length; i++) {
                     if (airlineSummaries[i].twoAndMoreStopsLowestPrice) {
                         airlineSummaries[i].isCheapestTowOrMoreStopsLowestPrice = true;
                         break;

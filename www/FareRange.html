@@ -2,45 +2,20 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Fare Range</title>
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/cupertino/jquery-ui.css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
 </head>
 <body>
 
-<!--<div id="SDSSearchFormWrapper_1"></div>-->
 <div id="mainPageContainer">
-    <div id="SDSSearchFormWrapper_2"></div>
-    <div id="CalendarSearchResults"></div>
+    <search-form></search-form>
+    <fare-range></fare-range>
+    <!--<fare-range data-origin="LON" data-destination="NYC" data-departure-date="2015-09-01" data-return-date="2015-09-08" data-current-lowest-fare="1200" data-current-lowest-fare-currency="USD"></fare-range>-->
 
-    content before. Next one should be shown:
-    <div data-fare-range data-origin="LON" data-destination="NYC" data-departure-date="2015-09-01" data-return-date="2015-09-08" data-current-lowest-fare="800" data-current-lowest-fare-currency="USD"></div>
-    content... next one will not be shown as cutoff to high
-    <div data-fare-range data-origin="LON" data-destination="NYC" data-departure-date="2015-09-01" data-return-date="2015-09-08" data-current-lowest-fare="1200" data-current-lowest-fare-currency="USD"></div>
-    content... next will be shown:
-    <div data-fare-range data-origin="SFO" data-destination="DFW" data-departure-date="2015-09-01" data-return-date="2015-09-08" data-current-lowest-fare="143.23" data-current-lowest-fare-currency="USD"></div>
-
-    content... next will be shown, as there is no cutoff:
-    <div data-fare-range data-origin="SFO" data-destination="DFW" data-departure-date="2015-09-01" data-return-date="2015-09-08" data-current-lowest-fare="143.23" data-current-lowest-fare-currency="USD"></div>
-
-    content after
 </div>
-<script>
-    // customer must provide his SDS SDK configuration functions before SDK script executes (SDK executes functions from global configuration object)
-    window.SDS_onload = window.SDS_onload || [];
-    SDS_onload.push(function () {
-
-        SDS.init({
-            apiKey: "xxx",
-            currency: "USD",
-            localizedMonthNamesFailsafe: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
-            localizedWeekDayNamesFailsafe: ['Mon', 'Thu', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        });
-    });
-
-</script>
 <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
 <!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
 </body>

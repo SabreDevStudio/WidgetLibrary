@@ -1,0 +1,24 @@
+<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
+
+    <div class="panel-heading text-center">
+        <h4 class="panel-title">Lead Prices Calendar</h4>
+    </div>
+
+    <div class="panel-body">
+        <div class="row">
+            <div ng-class="{'col-lg-12': numberOfMonthsShownAtOnce == 1, 'col-lg-6':numberOfMonthsShownAtOnce == 2, 'col-lg-4':numberOfMonthsShownAtOnce == 3}"
+                 ng-repeat="month in calendar.months | startFrom: (paginationSettings.currentPage - 1) * numberOfMonthsShownAtOnce | limitTo: numberOfMonthsShownAtOnce"
+                 disable="month.noPricesFound">
+
+                    <h4 class="text-center">{{month.monthStartDate | amDateFormat:'MMMM'}}</h4><!-- January February -->
+                    <ng-include src="'CalendarOneMonth'"></ng-include>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-footer" ng-if="numberOfMonths > 1">
+        <pager total-items="calendar.months.length" ng-model="paginationSettings.currentPage" items-per-page="numberOfMonthsShownAtOnce"></pager>
+    </div>
+
+</div>

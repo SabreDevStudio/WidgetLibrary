@@ -10,9 +10,9 @@ define([
     ) {
         'use strict';
 
-        var airlineNameLookup = (window.SDS)? window.SDS.airlineNameLookup() : new AirlineNameLookup();
+        var airlineNameLookup = new AirlineNameLookup();
 
-        var airportNameLookup = (window.SDS)? window.SDS.airportNameLookup() : new AirportNameLookup();
+        var airportNameLookup = new AirportNameLookup();
 
         return angular.module('sDSLookups', [])
             .filter('airlineFullName', function () {

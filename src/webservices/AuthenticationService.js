@@ -61,7 +61,7 @@ define([
 
                 return {
                     getToken: function () {
-                        return $q(function(resolve) {
+                        return $q(function(resolve, reject) {
                             if (_.isDefined(cachedToken)) {
                                 return resolve(cachedToken);
                             }
@@ -71,7 +71,7 @@ define([
                                     resolve(cachedToken);
                                 },
                                 function (reason) {
-                                    console.log(reason); // TODO: handle retries here
+                                    reject(reason);
                                 }
                             );
                         });

@@ -1,0 +1,25 @@
+<div class="panel panel-default" ng-show="ctrl.isAnyDataToDisplayAvailable() || ctrl.anyBusinessErrorMessagesPresent()">
+
+    <div class="panel-heading text-center">
+        <h4 class="panel-title">Low Fare History</h4>
+    </div>
+
+    <div class="panel-body" ng-hide="ctrl.anyBusinessErrorMessagesPresent()">
+        <h5>
+            Low fares history from <em>{{ctrl.departureAirport | airportFullName}}</em> to <em>{{ctrl.arrivalAirport| airportFullName}}</em>
+        </h5>
+
+        <canvas></canvas>
+    </div>
+
+
+    <div class="panel-body" ng-show="ctrl.anyBusinessErrorMessagesPresent()">
+        <h5>
+            Low fare history from <em>{{ctrl.departureAirport | airportFullName}}</em> to <em>{{ctrl.arrivalAirport| airportFullName}}</em> is not available.
+        </h5>
+
+        <error-messages messages="ctrl.businessErrorMessages"></error-messages>
+    </div>
+
+
+</div>

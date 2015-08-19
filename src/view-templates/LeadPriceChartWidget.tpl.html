@@ -1,4 +1,4 @@
-<div class="SDSLeadPriceChart panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
+<div class="SDSLeadPriceChart panel panel-default" ng-if="isAnyDataToDisplayAvailable() || anyBusinessErrorMessagesPresent()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Lead Prices</h4>
@@ -12,7 +12,7 @@
         <canvas></canvas>
 
         <nav>
-            <ul class="pager">
+            <ul class="pager"><!-- todo refactor it into pager component from angular-ui ?? -->
                 <li class="previous"><a href="" ng-if="prevLinkActive" ng-click="onEarlierRequested()">EARLIER</a></li>
                 <li class="previous disabled SDSInactive"><a href="" ng-if="!prevLinkActive" ng-click="onEarlierRequested()">EARLIER</a></li>
 
@@ -21,4 +21,11 @@
             </ul>
         </nav>
     </div>
+
+    <div class="panel-body" ng-show="anyBusinessErrorMessagesPresent()">
+        <h5>
+            No prices found for <em>{{departureAirport | airportFullName}}</em> to <em>{{arrivalAirport| airportFullName}}</em>
+        </h5>
+    </div>
+
 </div>

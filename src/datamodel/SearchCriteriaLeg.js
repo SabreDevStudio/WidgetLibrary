@@ -1,5 +1,9 @@
-define([],
-    function () {
+define([
+        'lodash'
+    ],
+    function (
+        _
+    ) {
         'use strict';
 
         /**
@@ -26,9 +30,9 @@ define([],
             Object.defineProperty(this, 'departureDateTime', {
                 enumerable: true,
                 get: function() {
-                    return _departureDateTime.clone()}, // defensive cloning to avoid many errors resulting from moment objects mutable
+                    return _departureDateTime.clone();}, // defensive cloning to avoid many errors resulting from moment objects mutable
                 set: function(departureDateTime) {
-                    _departureDateTime = departureDateTime.clone()}
+                    _departureDateTime = departureDateTime.clone();}
             });
 
             this.departureDateTime = departureDateTime;

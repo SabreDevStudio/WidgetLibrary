@@ -1,9 +1,11 @@
 define([
-          'moment'
+          'lodash'
+        , 'moment'
         , 'angular'
     ],
     function (
-          moment
+          _
+        , moment
         , angular
     ) {
         'use strict';

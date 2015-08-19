@@ -14,7 +14,7 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
     /* In all this object we use string representation of moment date objects for month and day key.
        In order not to depend on moment.js internal date format used in toString(),
        the this object prototype internal fixed format is defined and used to create string keys from moment objects. */
-    ShoppingData.prototype.DATE_FORMAT_FOR_KEYS = 'ddd MMM DD YYYY HH:mm:ss';
+    ShoppingData.prototype.DATE_FORMAT_FOR_KEYS = 'YYYY-MM-DD';
 
     ShoppingData.prototype.updateMaxAvailableDate = function (key, newDate) {
         var currentMaxAvailableDate = this.maxAvailableDates[key];
@@ -25,8 +25,7 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
 
     ShoppingData.prototype.updateMinDateAndPricePair = function (key, candidateDate, candidateTotalFareAmount) {
         var currentMinDateAndPricePair = this.minDateAndPricePairs[key];
-        if (_.isUndefined(currentMinDateAndPricePair)
-            || ((candidateTotalFareAmount <= currentMinDateAndPricePair.totalFareAmount) && (candidateDate.isBefore(currentMinDateAndPricePair.date)))) { // prefer more close dates when two dates have same price
+        if (_.isUndefined(currentMinDateAndPricePair) || ((candidateTotalFareAmount <= currentMinDateAndPricePair.totalFareAmount) && (candidateDate.isBefore(currentMinDateAndPricePair.date)))) { // prefer more close dates when two dates have same price
             this.minDateAndPricePairs[key] = {
                 date: candidateDate,
                 totalFareAmount: candidateTotalFareAmount
@@ -131,7 +130,7 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
         if (_.isUndefined(this.data[key]) || _.isUndefined(this.data[key][monthKey]) || _.isUndefined(this.data[key][monthKey][dayKey])) {
             return {};
         }
-        dayLeadPrice[day] = this.data[key][monthKey][dayKey].leadPrice;
+        dayLeadPrice[day.format(this.DATE_FORMAT_FOR_KEYS)] = this.data[key][monthKey][dayKey].leadPrice;
         return dayLeadPrice;
     };
 
@@ -168,7 +167,7 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
     //TODO this is lodash 3.7 _.set function, other problems with new lodash 3.7 now, refactor later
     ShoppingData.prototype.initKeyEntries = function(data, key, monthKey, dayKey) {
         if (_.isUndefined(data)) {
-            this.data = {}
+            this.data = {};
         }
         if (!this.data[key]) {
             this.data[key] = {};
