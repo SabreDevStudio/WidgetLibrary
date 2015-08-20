@@ -23,13 +23,12 @@ define([
                     },
                     transclude: true,
                     template: ItineraryPricePerStopsPerAirlineSummaryTemplate,
-                    controller: function ($scope) {
+                    controller: ['$scope', function ($scope) {
 
                         $scope.isAnyDataToDisplayAvailable = function () {
                             return (_.isDefined($scope.summary));
                         };
-
-                    }
+                    }]
                 }
             });
     });

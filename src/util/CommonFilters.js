@@ -50,7 +50,7 @@ define([
                     return input;
                 };
             })
-            .filter('applyFilter', function($filter) { // http://stackoverflow.com/questions/21491747/apply-formatting-filter-dynamically-in-a-ng-repeat
+            .filter('applyFilter', ['$filter', function($filter) { // http://stackoverflow.com/questions/21491747/apply-formatting-filter-dynamically-in-a-ng-repeat
                 return function() {
                     // arguments are: [value, filterName, filter_1st_arg, filter_2nd_arg, ....]
                     var args = Array.prototype.slice.call(arguments);
@@ -65,6 +65,6 @@ define([
 
                     return filter.apply(null, args);
                 };
-            });
+            }]);
 
     });

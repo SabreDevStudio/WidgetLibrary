@@ -142,7 +142,9 @@ require([
         function bootstrapNG() {
             angular.element(document).ready(function () { // TODO: we cannot compile on whole document level..
             //$(document).ready(function() {
-                angular.bootstrap(document, ['sdsWidgets']);
+                angular.bootstrap(document, ['sdsWidgets'], {
+                    strictDi: true
+                });
             });
         }
 

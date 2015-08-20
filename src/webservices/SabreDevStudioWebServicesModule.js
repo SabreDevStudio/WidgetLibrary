@@ -65,8 +65,8 @@ define([
                         }
                     };
                 }])
-            .config(function ($httpProvider) {
+            .config(['$httpProvider', function ($httpProvider) {
                 //$httpProvider.interceptors.push('AuthTokenDecoratorHttpInterceptor');
                 $httpProvider.interceptors.push('ResponseTimeLoggerHttpInterceptor');
-            });
+            }]);
     });

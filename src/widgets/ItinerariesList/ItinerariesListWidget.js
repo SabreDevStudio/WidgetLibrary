@@ -272,7 +272,7 @@ define([
 
                 };
             })
-            .filter('sortByCriteria', function ($filter) {
+            .filter('sortByCriteria', ['$filter', function ($filter) {
                 var orderBy = $filter('orderBy');
                 return function (values, sortingCriteriaArray) {
                     var ngOrderByPredicatesArray = sortingCriteriaArray.map(function (criterion) {
@@ -280,5 +280,5 @@ define([
                     });
                     return orderBy(values, ngOrderByPredicatesArray);
                 };
-            });
+            }]);
     });

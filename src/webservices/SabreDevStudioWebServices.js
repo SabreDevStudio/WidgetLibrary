@@ -361,7 +361,7 @@ define([ //TODO too long
 
                     function buildLeadPrices(leadFaresForRange, maxStops) {
                         return leadFaresForRange.reduce(function (acc, leadFare) {
-                            var dateKey = moment(leadFare.departureDateTime, moment.ISO_8601).toString();
+                            var dateKey = moment(leadFare.departureDateTime, moment.ISO_8601).format(ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
                             var leadPrice = (maxStops === 0)? leadFare.lowestNonStopFare: leadFare.lowestFare;
                             acc[dateKey] = leadPrice;
                             return acc;

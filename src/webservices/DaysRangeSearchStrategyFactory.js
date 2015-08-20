@@ -38,36 +38,9 @@ define([
 
                         switch (activeSearchWebService) {
                             case 'advancedCalendar':
-                                return {
-                                    getLeadPricesForRange: function (searchCriteria, range, successCallback, failureCallback) {
-                                        AdvancedCalendarDataService.getLeadPricesForRange(searchCriteria, range).then(successCallback, failureCallback);
-                                    },
-                                    getMinDateAndPricePair: function (searchCriteria) {
-                                        return AdvancedCalendarDataService.getMinDateAndPricePair(searchCriteria);
-                                    },
-                                    getMaxAvailableDate: function (searchCriteria) {
-                                        return AdvancedCalendarDataService.getMaxAvailableDate(searchCriteria);
-                                    },
-                                    validateSearchCriteria: function (searchCriteria) {
-                                        return collectValidationErrors(searchCriteria, AdvancedCalendarDataService);
-                                    },
-                                    getItineraries: AdvancedCalendarDataService.getItineraries
-                                };
+                                return AdvancedCalendarDataService;
                             case 'leadPriceCalendar':
-                                return {
-                                    getLeadPricesForRange: function (searchCriteria, range, successCallback, failureCallback) {
-                                        LeadPriceCalendarDataService.getLeadPricesForRange(searchCriteria, range).then(successCallback, failureCallback);
-                                    },
-                                    getMinDateAndPricePair: function (searchCriteria) {
-                                        return LeadPriceCalendarDataService.getMinDateAndPricePair(searchCriteria);
-                                    },
-                                    getMaxAvailableDate: function (searchCriteria) {
-                                        return LeadPriceCalendarDataService.getMaxAvailableDate(searchCriteria);
-                                    },
-                                    validateSearchCriteria: function (searchCriteria) {
-                                        return collectValidationErrors(searchCriteria, LeadPriceCalendarDataService);
-                                    }
-                                };
+                                return LeadPriceCalendarDataService;
                             default:
                                 throw new Error('unrecognized web service: ' + activeSearchWebService);
                         }

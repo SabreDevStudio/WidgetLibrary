@@ -81,12 +81,12 @@ define([
                         $scope.calendar.prepareDataModel(searchCriteria);
 
                         $scope.paginationSettings.currentPage = Math.floor(($scope.calendar.requestedMonthSeqNumber + 2) / $scope.numberOfMonthsShownAtOnce); // +2, because: pages numbering start from 1, not from 0 (this is consumed from the angular-ui pager), second we need to set initially to correct page
-                        searchService.getLeadPricesForRange(searchCriteria, $scope.calendar.getDisplayedRange()
-                            , function (leadPrices) {
+                        searchService.getLeadPricesForRange(searchCriteria, $scope.calendar.getDisplayedRange()).then(
+                            function (leadPrices) {
                                 processLeadPrices(searchCriteria, leadPrices);
                                 lastSearchCriteria = searchCriteria;
                                 clearErrorMessages();
-                        },
+                            },
                             processServiceErrorMessages
                         );
                     };
@@ -144,10 +144,10 @@ define([
                     },
                     template: CalendarWidgetTabsTemplate,
                     controller: 'CalendarWidgetCtrl',
-                    link: function (scope, element) {
+                    link: function (scope, element, attrs) {
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) | 1;
                         $compile(CalendarWidgetOneMonthTemplate); //hackish, to source external template into template cache, so that it is accessible for including for the both calendar view templates
-                        scope.executeLifeSearchOnPredefinedCriteriaIfPresent(element.attr('origin'), element.attr('destination'), element.attr('departure-date'), element.attr('return-date'));
+                        scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
                     }
                 }
             }])
@@ -167,7 +167,7 @@ define([
                         scope.numberOfMonthsShownAtOnce = parseInt(scope.numberOfMonthsShownAtOnce) || 1;
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) || 10;
                         $compile(CalendarWidgetOneMonthTemplate);
-                        scope.executeLifeSearchOnPredefinedCriteriaIfPresent(element.attr('origin'), element.attr('destination'), element.attr('departure-date'), element.attr('return-date'));
+                        scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
                     }
                 }
             }])

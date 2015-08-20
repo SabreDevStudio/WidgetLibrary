@@ -61,12 +61,12 @@ define([
             .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
             .constant('dateSelectedEvent', 'dateSelectedEvent')
             .constant('noResultsFoundEvent', 'noResultsFoundEvent')
-            .config(function (datepickerConfig) { //TODO make every widget a module of its own, then this config, specyfic to Form will go there
+            .config(['datepickerConfig', function (datepickerConfig) { //TODO make every widget a module of its own, then this config, specyfic to Form will go there
                 datepickerConfig.showWeeks = false;
                 datepickerConfig.startingDay = 1;
                 datepickerConfig.yearRange = 2;
                 datepickerConfig.showButtonBar = false;
-            })
+            }])
             .service('SearchCriteriaBroadcastingService', [
                   '$rootScope'
                 , 'newSearchCriteriaEvent'
@@ -141,14 +141,14 @@ define([
                             var modalInstance = $modal.open({
                                 animation: true,
                                 template: ErrorsModalTemplate,
-                                controller: function ($scope, $modalInstance) {
+                                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                                     $scope.errorsList = errors;
                                     $scope.modalTitle = errorsCategory;
 
                                     $scope.ok = function () {
                                         $modalInstance.close();
                                     };
-                                }
+                                }]
                             });
                         }
                     };

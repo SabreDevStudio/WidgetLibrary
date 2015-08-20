@@ -10,7 +10,8 @@ define([
     ) {
         'use strict';
 
-        return angular.module('sabreDevStudioWebServices').factory('OneDaySearchStrategyFactory', [
+        return angular.module('sabreDevStudioWebServices')
+            .factory('OneDaySearchStrategyFactory', [
                   'BargainFinderMaxDataService'
                 , 'InstaflightsDataService' //, 'ShoppingMockDateService'
             , function (

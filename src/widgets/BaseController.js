@@ -11,9 +11,12 @@ define([
         function BaseController(args) {
             var that = this;
 
-            this.scope = args.scope;
+            this.scope = args.scope; //TODO all into private vars
             this.searchService = args.searchService;
             this.validationErrorsReportingService = args.validationErrorsReportingService;
+            this.noResultsFoundBroadcastingService = args.noResultsFoundBroadcastingService || { broadcast: _.noop };
+
+            this.lastSearchCriteriaAirports = {};
 
             this.scope.executeLifeSearchOnPredefinedCriteriaIfPresent = function (origin, destination, departureDateString, returnDateString) {
                 if (origin && destination && departureDateString && returnDateString) {
@@ -42,12 +45,15 @@ define([
 
                 this.searchService.executeSearch(searchCriteria).then(
                     function (searchResults) {
-                        that.updateModelWithSearchCriteria(searchCriteria);
+                        saveLastSearchCriteria(searchCriteria);
                         that.processSearchResults(searchResults);
                         that.clearErrorMessages();
                     }, function (errors) {
-                        that.updateModelWithSearchCriteria(searchCriteria);
+                        saveLastSearchCriteria(searchCriteria);
                         that.processServiceErrorMessages(errors);
+                        // clear model from previous search
+                        that.clearModel();
+                        that.noResultsFoundBroadcastingService.broadcast();
                     }
                 );
             };
@@ -63,9 +69,13 @@ define([
                     businessErrorMessages = [businessErrorMessages];
                 }
                 this.businessErrorMessages = businessErrorMessages;
-                // clear model from previous search
-                this.clearModel();
             };
+
+            function saveLastSearchCriteria(searchCriteria) {
+                that.lastSearchCriteria = searchCriteria;
+                that.lastSearchCriteriaAirports.departureAirport = searchCriteria.getFirstLeg().origin;
+                that.lastSearchCriteriaAirports.arrivalAirport = searchCriteria.getFirstLeg().destination;
+            }
         }
 
         return BaseController;

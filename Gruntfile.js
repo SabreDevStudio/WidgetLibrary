@@ -108,16 +108,38 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: {
-                    name: 'SabreDevStudioSDK',
-                    mainConfigFile: 'src/SabreDevStudioSDK.js',
-                    out: "dist/SDSWidgets.dist.js",
-                    paths: {
-                        'jquery': "empty:"
-                    },
-                    inlineText: true,
-                    optimize: 'none',
-                    findNestedDependencies: true,
-                    include: ['../node_modules/requirejs/require.js']
+                      name: 'SabreDevStudioSDK'
+                    , mainConfigFile: 'src/SabreDevStudioSDK.js'
+                    , out: "dist/SDSWidgets.dist.js"
+                    //paths: {
+                    //    'jquery': "empty:"
+                    //},
+                    , inlineText: true
+                    //, findNestedDependencies: true
+                    , optimize: 'uglify2'
+                    , include: ['../node_modules/requirejs/require.js']
+                    , uglify2: { // decreases size by only 3%
+                        compress: {
+                            screw_ie8: true,
+                            sequences: true,
+                            //properties: true,
+                            dead_code: true,
+                            drop_debugger: true,
+                            comparisons: true,
+                            conditionals: true,
+                            evaluate: true,
+                            booleans: true,
+                            loops: true,
+                            unused: true,
+                            hoist_funs: true,
+                            if_return: true,
+                            join_vars: true,
+                            cascade: true,
+                            //negate_iife: true,
+                            drop_console: true
+                        },
+                        warnings: true
+                    }
                 }
             }
         }
