@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Calendar Tabs Display</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <partial command="include('partials/navigation-includes.html')"></partial>
+</head>
+<body>
+
+<div id="mainPageContainer">
+    <partial command="include('partials/navigation.html')"></partial>
+    <div class="embeddedWidget" data-search-form></div>
+    <div class="row">
+        <div class="col-lg-4">
+            <calendar-tabs class="embeddedWidget" tabs-shown="5" active-search-web-service="leadPriceCalendar"></calendar-tabs>
+            <!--<calendar-tabs tabs-shown="5" active-search-web-service="leadPriceCalendar"-->
+                           <!--origin="DFW" destination="LAX" departure-date="2015-11-01" return-date="2015-11-10"-->
+                           <!--do-not-show-prev-next-month-days="true">-->
+            <!--</calendar-tabs>-->
+            <!--<calendar-tabs tabs-shown="8" active-search-web-service="leadPriceCalendar"-->
+                           <!--origin="DFW" destination="NYC" departure-date="2015-10-01" return-date="2015-10-10"-->
+                           <!--do-not-show-prev-next-month-days="true">-->
+            <!--</calendar-tabs>-->
+        </div>
+        <div class="col-lg-8">
+            <itinerary-list class="embeddedWidget" id="ItineraryList"></itinerary-list>
+        </div>
+    </div>
+</div>
+<script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
+</body>
+</html>

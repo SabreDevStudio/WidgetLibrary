@@ -145,7 +145,6 @@ define([
                                 $event.stopPropagation();
                                 scope.isDatePickerOpened = true;
                             };
-
                         }
                     };
                 }

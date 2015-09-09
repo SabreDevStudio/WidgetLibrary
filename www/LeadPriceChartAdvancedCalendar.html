@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Low Fare History</title>
+    <title>Lead Price Chart</title>
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
@@ -12,16 +12,20 @@
     <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
 <body>
-
 <div id="mainPageContainer">
+    <partial command="include('partials/navigation.html')"></partial>
     <div class="embeddedWidget" data-search-form></div>
     <div class="row">
         <div class="col-lg-4">
-            <low-fare-history class="embeddedWidget" origin="DFW" destination="ORL" departure-date="2015-09-01" return-date="2015-09-10">
-            </low-fare-history>
+            <div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="advancedCalendar"></div>
+            <!--<div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="leadPriceCalendar"></div>-->
+        </div>
+        <div class="col-lg-8">
+            <itinerary-list id="ItineraryList"></itinerary-list>
         </div>
     </div>
 </div>
+
 <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
 </body>
 </html>

@@ -8,28 +8,18 @@
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
-
-    <style>
-
-        #mainPageContainer {
-            margin-left: 50px;
-            margin-right: 50px;
-        }
-
-        #SearchFormNG {
-            max-width: 1400px;
-            margin: auto;
-        }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
 <body>
 
 <div id="mainPageContainer">
-    <div id="SearchFormNG" data-search-form></div>
+    <partial command="include('partials/navigation.html')"></partial>
+    <div class="embeddedWidget" data-search-form></div>
     <div class="row">
         <div class="col-lg-4">
-            <div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="advancedCalendar"></div>
+            <div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="leadPriceCalendar"
+                 origin="LAX" destination="DFW" departure-date="2015-09-01" return-date="2015-09-10"></div>
             <!--<div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="leadPriceCalendar"></div>-->
         </div>
         <div class="col-lg-8">
@@ -39,6 +29,5 @@
 </div>
 
 <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
-<!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
 </body>
 </html>

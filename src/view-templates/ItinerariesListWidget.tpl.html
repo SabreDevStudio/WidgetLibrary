@@ -23,13 +23,13 @@
 
             <div class="col-lg-6">
                 <tabset>
-                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency}}">
+                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency:bestItinerariesSummary.cheapest.totalFareCurrency}}">
                         <itinerary-short-summary itinerary="bestItinerariesSummary.cheapest"></itinerary-short-summary>
                     </tab>
-                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmount | currency}}">
+                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmount | currency:bestItinerariesSummary.best.totalFareCurrency}}">
                         <itinerary-short-summary itinerary="bestItinerariesSummary.best"></itinerary-short-summary>
                     </tab>
-                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmount | currency}}">
+                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmount | currency:bestItinerariesSummary.shortest.totalFareCurrency}}">
                         <itinerary-short-summary itinerary="bestItinerariesSummary.shortest"></itinerary-short-summary>
                     </tab>
                 </tabset>
@@ -68,7 +68,7 @@
                                     <ul class="list-unstyled">
                                         <li>
                                             <strong>
-                                                <img class="SDSAirlineLogo" ng-src="../img/airlineLogos/{{flight.marketingAirline}}.PNG" fallback-src="../img/airlineLogos/generic_airline.PNG">
+                                                <img class="SDSAirlineLogo" ng-src="../widgets/img/airlineLogos/{{flight.marketingAirline}}.PNG" fallback-src="../widgets/img/airlineLogos/generic_airline.PNG">
                                                 {{flight.marketingAirline}} {{flight.marketingFlightNumber}} {{flight.marketingAirline | airlineFullName}}
                                             </strong>
                                         </li>
@@ -100,10 +100,10 @@
                             </div>
                             <div>
                                 <ul class="list-unstyled pull-right">
-                                    <li>Total price: <strong >{{itinerary.totalFareAmount | currency}}</strong></li>
+                                    <li>Total price: <strong >{{itinerary.totalFareAmount | currency:itinerary.totalFareCurrency}}</strong></li>
                                     <li><a href="" ng-click="priceDetailsExpanded = !priceDetailsExpanded" ng-hide="priceDetailsExpanded">Price Details</a></li>
-                                    <li ng-show="priceDetailsExpanded" ng-click="priceDetailsExpanded = !priceDetailsExpanded">Base fare: {{itinerary.baseFareAmount | currency}}</li>
-                                    <li ng-show="priceDetailsExpanded" ng-click="priceDetailsExpanded = !priceDetailsExpanded">Taxes: {{itinerary.totalTaxAmount | currency}}</li>
+                                    <li ng-show="priceDetailsExpanded" ng-click="priceDetailsExpanded = !priceDetailsExpanded">Base fare: {{itinerary.baseFareAmount | currency:itinerary.baseFareCurrency}}</li>
+                                    <li ng-show="priceDetailsExpanded" ng-click="priceDetailsExpanded = !priceDetailsExpanded">Taxes: {{itinerary.totalTaxAmount | currency:itinerary.taxCurrency}}</li>
                                 </ul>
                             </div>
                             <div class="clearfix"></div>

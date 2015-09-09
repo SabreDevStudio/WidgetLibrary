@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Alternate Dates Lead Fares</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">>
+    <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <partial command="include('partials/navigation-includes.html')"></partial>
+</head>
+<body>
+
+<div id="mainPageContainer">
+    <partial command="include('partials/navigation.html')"></partial>
+
+    <div class="embeddedWidget" data-search-form options-per-day="1" set-checkboxes-as-checked="IsPlusMinus3DaysFlexible"></div>
+    <div class="row">
+        <div class="col-lg-6">
+            <alternate-dates-matrix active-search-web-service="advancedCalendar"></alternate-dates-matrix>
+            <!--<alternate-dates-matrix-->
+                    <!--active-search-web-service="advancedCalendar"-->
+                    <!--origin="DFW"-->
+                    <!--destination="LAX"-->
+                    <!--departure-date="2015-08-27"-->
+                    <!--return-date="2015-09-10"-->
+                    <!--alt-dates-plus-minus="3">-->
+            <!--</alternate-dates-matrix>-->
+        </div>
+        <div class="col-lg-8">
+            <itinerary-list id="ItineraryList"></itinerary-list>
+        </div>
+    </div>
+</div>
+<script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
+<!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
+</body>
+</html>

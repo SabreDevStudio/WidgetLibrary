@@ -1,0 +1,14 @@
+#mainPageContainer {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.embeddedWidget {
+    max-width: 1400px;
+    margin: auto;
+}
+
+.embeddedWidgetWrapper {
+    max-width: 1400px;
+    margin: auto;
+}

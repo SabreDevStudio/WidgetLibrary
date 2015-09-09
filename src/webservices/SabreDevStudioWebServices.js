@@ -180,10 +180,12 @@ define([ //TODO too long
                       '$q'
                     , 'InstaFlightsWebService'
                     , 'dateFormat'
+                    , 'pointOfSaleCountry'
                 , function (
                       $q
                     , InstaFlightsWebService
                     , dateFormat
+                    , pointOfSaleCountry
                 ) {
                     var parser = new InstaflightsResponseParser();
 
@@ -216,6 +218,11 @@ define([ //TODO too long
                         if (searchCriteria.passengerSpecifications.length > 0) {
                             _.extend(requestOptions, {
                                 passengercount: searchCriteria.getTotalPassengerCount()
+                            });
+                        }
+                        if (pointOfSaleCountry.length > 0) {
+                            _.extend(requestOptions, {
+                                pointofsalecountry: pointOfSaleCountry
                             });
                         }
                         return requestOptions;
@@ -251,6 +258,7 @@ define([ //TODO too long
                                   departureDateTime: fareInfo.DepartureDateTime
                                 , lowestFare: fareInfo.LowestFare
                                 , lowestNonStopFare: fareInfo.LowestNonStopFare
+                                , currency: fareInfo.CurrencyCode
                             };
                         });
                     },
@@ -278,11 +286,13 @@ define([ //TODO too long
                     , '$cacheFactory'
                     , 'LeadPriceCalendarWebService'
                     , 'LeadPriceCalendarResponseParser'
+                    , 'pointOfSaleCountry'
                 , function (
                       $q
                     , $cacheFactory
                     , LeadPriceCalendarWebService
                     , parser
+                    , pointOfSaleCountry
                 ) {
 
                     var leadFaresCache = $cacheFactory('leadPricesCache');
@@ -290,11 +300,17 @@ define([ //TODO too long
                     var validator = new LeadPriceCalendarSearchCriteriaValidator();
 
                     function translateSearchCriteriaIntoRequestOptions(searchCriteria) {
-                        return {
+                        var requestOptions = {
                               origin: searchCriteria.getFirstLeg().origin
                             , destination: searchCriteria.getFirstLeg().destination
                             , lengthofstay: searchCriteria.getLengthOfStay()
                         };
+                        if (pointOfSaleCountry.length > 0) {
+                            _.extend(requestOptions, {
+                                pointofsalecountry: pointOfSaleCountry
+                            });
+                        }
+                        return requestOptions;
                     }
 
                     function translateSearchCriteriaIntoAlternateDatesRequestOptions(searchCriteria) {
@@ -309,7 +325,7 @@ define([ //TODO too long
                         }
                         // Note that such combining of departure dates with all length of stays is the superset of what search criteria specified
                         // (we are producing more combinations), but the interface to Lead Price Calendar does not allow specifying length of stays per departure date
-                        return {
+                        var requestOptions = {
                               origin: searchCriteria.getFirstLeg().origin
                             , destination: searchCriteria.getFirstLeg().destination
                             , departuredate: departureDates.map(function (date) {
@@ -317,6 +333,12 @@ define([ //TODO too long
                             }).join(',')
                             , lengthofstay: lengthOfStays.join(',')
                         };
+                        if (pointOfSaleCountry.length > 0) {
+                            _.extend(requestOptions, {
+                                pointofsalecountry: pointOfSaleCountry
+                            });
+                        }
+                        return requestOptions;
                     }
 
                     function travelInsightsEngineAcceptedLengthOfStayValues(LoS) {
@@ -363,7 +385,7 @@ define([ //TODO too long
                         return leadFaresForRange.reduce(function (acc, leadFare) {
                             var dateKey = moment(leadFare.departureDateTime, moment.ISO_8601).format(ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
                             var leadPrice = (maxStops === 0)? leadFare.lowestNonStopFare: leadFare.lowestFare;
-                            acc[dateKey] = leadPrice;
+                            acc[dateKey] = leadPrice; //TSZ
                             return acc;
                         }, {});
                     }

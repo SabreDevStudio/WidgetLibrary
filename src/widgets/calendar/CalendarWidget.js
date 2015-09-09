@@ -119,7 +119,7 @@ define([
                     }
 
                     $scope.isAnyDataToDisplayAvailable = function () {
-                        return $scope.calendar.hasData();
+                        return $scope.calendar && $scope.calendar.hasData();
                     };
 
                     $scope.anyBusinessErrorMessagesPresent = function () {

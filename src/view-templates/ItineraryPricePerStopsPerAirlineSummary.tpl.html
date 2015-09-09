@@ -9,7 +9,7 @@
                     <th></th>
                     <th class="success">Lowest price</th>
                     <th class="text-center" ng-repeat="item in summary.airlineSummaries">
-                        <img class="SDSAirlineLogo" ng-src="../img/airlineLogos/{{item.airline}}.PNG" fallback-src="../img/airlineLogos/generic_airline.PNG">
+                        <img class="SDSAirlineLogo" ng-src="../widgets/img/airlineLogos/{{item.airline}}.PNG" fallback-src="../widgets/img/airlineLogos/generic_airline.PNG">
                         <div>{{item.airline | airlineFullName}}</div>
                     </th>
                 </thead>
@@ -17,18 +17,18 @@
                 <tbody>
                     <tr>
                         <td>Non-stop</td>
-                        <td class="success">{{summary.totalSummary.nonStopLowestPrice | currency}}</td>
-                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestNonStop === true}">{{item.nonStopLowestPrice | currency}}</td>
+                        <td class="success">{{summary.totalSummary.nonStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</td>
+                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestNonStop === true}">{{item.nonStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</td>
                     </tr>
                     <tr>
                         <td>1 Stop</td>
-                        <td class="success">{{summary.totalSummary.oneStopLowestPrice | currency}}</td>
-                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestOneStopLowestPrice === true}">{{item.oneStopLowestPrice | currency}}</td>
+                        <td class="success">{{summary.totalSummary.oneStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</td>
+                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestOneStopLowestPrice === true}">{{item.oneStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</td>
                     </tr>
                     <tr>
                         <td>2+ Stops</td>
-                        <td class="success">{{summary.totalSummary.twoAndMoreStopsLowestPrice | currency}}</td>
-                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestTowOrMoreStopsLowestPrice === true}">{{item.twoAndMoreStopsLowestPrice | currency}}</td>
+                        <td class="success">{{summary.totalSummary.twoAndMoreStopsLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</td>
+                        <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestTowOrMoreStopsLowestPrice === true}">{{item.twoAndMoreStopsLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</td>
                     </tr>
                 </tbody>
             </table>

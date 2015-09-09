@@ -90,7 +90,10 @@ define([
             });
             itinerary.baseFareAmount = airItineraryPricingInfo.ItinTotalFare.BaseFare.Amount; //TODO: refactor all price related props of itin into Itinerary.pricingInfo: {totalFare: ...} etc. But used also in filters, do later!
             itinerary.baseFareCurrency = airItineraryPricingInfo.ItinTotalFare.BaseFare.CurrencyCode;
+
             itinerary.totalTaxAmount = airItineraryPricingInfo.ItinTotalFare.Taxes.Tax[0].Amount;
+            itinerary.taxCurrency = airItineraryPricingInfo.ItinTotalFare.Taxes.Tax[0].CurrencyCode;
+
             if (airItineraryPricingInfo.ItinTotalFare.Taxes.Tax.length > 1) {
                 throw new Error('parser unsupported');
             }

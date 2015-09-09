@@ -1,7 +1,8 @@
 {
-"adjoining-classes": false,
-"box-sizing": false,
-"compatible-vendor-prefixes": false,
-"qualified-headings": false,
-"font-sizes": false
+     "adjoining-classes": false
+    , "box-sizing": false
+    , "compatible-vendor-prefixes": false
+    , "qualified-headings": false
+    , "font-sizes": false
+    , "regex-selectors": false
 }

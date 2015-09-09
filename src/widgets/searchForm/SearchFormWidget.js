@@ -1,6 +1,5 @@
 define([
           'moment'
-        , 'util/LodashExtensions'
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
@@ -10,7 +9,6 @@ define([
     ],
     function (
           moment
-        ,  _
         , angular
         , angular_bootstrap
         , SDSWidgets
@@ -60,7 +58,7 @@ define([
                 var DEFAULT_PAX_COUNT = 1;
 
                 $scope.generalSearchCriteria = {
-                    ADTPaxCount: DEFAULT_PAX_COUNT
+                      ADTPaxCount: DEFAULT_PAX_COUNT
                 };
 
                 function setReturnDateToDefaultLengthOfStay() {
@@ -127,11 +125,11 @@ define([
 
                     searchCriteria.addPassenger("ADT", $scope.generalSearchCriteria.ADTPaxCount);
 
-                    if ($scope.generalSearchCriteria.dateFlexibility) {
+                    if ($scope.generalSearchCriteria.IsPlusMinus3DaysFlexible) {
                         searchCriteria.dateFlexibilityDays = DEFAULT_DATE_FLEXIBILITY_REQUESTED;
                     }
 
-                    if ($scope.generalSearchCriteria.directFlightsOnly) {
+                    if ($scope.generalSearchCriteria.DirectFlightsOnly) {
                         searchCriteria.maxStops = 0;
                     }
 
@@ -159,6 +157,11 @@ define([
                    scope: true,
                    link: function (scope, element) {
                        scope.optionsPerDay = parseInt(element.attr('options-per-day'));
+
+                       var checkboxesToBeSetAsChecked = element.attr('set-checkboxes-as-checked') && element.attr('set-checkboxes-as-checked').split(',') || [];
+                       checkboxesToBeSetAsChecked.forEach(function (checkbox) {
+                           scope.generalSearchCriteria[checkbox] = true;
+                       });
                    }
                };
             });

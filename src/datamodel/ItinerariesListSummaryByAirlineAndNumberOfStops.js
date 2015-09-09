@@ -26,10 +26,11 @@ define([
                     }
 
                     var itineraryTotalFareAmount = itin.totalFareAmount;
+                    var totalFareCurrency = itin.totalFareCurrency;
                     var itineraryNumberOfStops = itin.getNumberOfStops();
 
-                    updateSummary(totalSummary, itineraryTotalFareAmount, itineraryNumberOfStops);
-                    updateSummary(airlineSummaries[marketingAirline], itineraryTotalFareAmount, itineraryNumberOfStops);
+                    updateSummary(totalSummary, itineraryTotalFareAmount, totalFareCurrency, itineraryNumberOfStops);
+                    updateSummary(airlineSummaries[marketingAirline], itineraryTotalFareAmount, totalFareCurrency, itineraryNumberOfStops);
                 });
 
                 totalSummary =  resetInfinityValuesToUndefined(totalSummary);
@@ -45,7 +46,12 @@ define([
                 };
             }
 
-            function updateSummary(summary, itineraryTotalFareAmount, itineraryNumberOfStops) {
+            function updateSummary(summary, itineraryTotalFareAmount, totalFareCurrency, itineraryNumberOfStops) {
+                if (summary.totalFareCurrency && summary.totalFareCurrency !== totalFareCurrency) {
+                    throw new Error('Unable to compare two prices when they have different currencies');
+                }
+                summary.totalFareCurrency = totalFareCurrency;
+
                 if (itineraryNumberOfStops === 0) {
                     summary.nonStopLowestPrice = Math.min(summary.nonStopLowestPrice, itineraryTotalFareAmount);
                 } else if (itineraryNumberOfStops === 1) {

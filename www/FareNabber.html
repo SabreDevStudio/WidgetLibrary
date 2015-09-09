@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="../bower_components/angular-rangeslider/angular.rangeSlider.css">
     <link rel="stylesheet" href="../bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
 <body>
 
 <div id="mainPageContainer">
+    <partial command="include('partials/navigation.html')"></partial>
     <div>Flight list goes here...</div>
     <!-- when putting widgets together pass as cutoff like 80% of the lowest fare -->
     <button type="button" id="FareNabber" class="btn btn-primary"
@@ -25,6 +28,5 @@
 </div>
 
 <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
-<!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
 </body>
 </html>

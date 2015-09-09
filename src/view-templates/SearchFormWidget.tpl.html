@@ -1,22 +1,22 @@
 <script type="text/ng-template" id="GeneralSearchCriteria">
 
     <div class="row">
-        <div class="col-xs-6">
-            <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.ADTPaxNumber.$invalid}">
+        <div class="SDS-col-element-xxs-12">
+            <div class="form-group SDS-col-element-xxs-12" ng-class="{'has-error':searchForm.$submitted && searchForm.ADTPaxNumber.$invalid}">
                 <label for="SDSSearchForm_ADTPaxNumber" class="input-sm control-label">Adults (12+)</label>
                 <input id="SDSSearchForm_ADTPaxNumber" type="number" name="ADTPaxNumber" value="1" min="1" max="9" required class="form-control input-sm SDSPaxNbrInput" ng-model="generalSearchCriteria.ADTPaxCount">
             </div>
 
             <div class="checkbox input-sm">
                 <label for="SDSSearchForm_IsPlusMinus3DaysFlexible">
-                    <input type="checkbox" name="IsPlusMinus3DaysFlexible" id="SDSSearchForm_IsPlusMinus3DaysFlexible" checked ng-model="generalSearchCriteria.dateFlexibility">
+                    <input type="checkbox" name="IsPlusMinus3DaysFlexible" id="SDSSearchForm_IsPlusMinus3DaysFlexible" checked ng-model="generalSearchCriteria.IsPlusMinus3DaysFlexible">
                     I'm flexible +/- 3 days
                 </label>
             </div>
 
             <div class="checkbox input-sm">
                 <label for="SDSSearchForm_DirectFlightsOnly">
-                    <input type="checkbox" name="DirectFlightsOnly" id="SDSSearchForm_DirectFlightsOnly" ng-model="generalSearchCriteria.directFlightsOnly">
+                    <input type="checkbox" name="DirectFlightsOnly" id="SDSSearchForm_DirectFlightsOnly" ng-model="generalSearchCriteria.DirectFlightsOnly">
                     Direct flights only
                 </label>
             </div>
@@ -25,7 +25,7 @@
 
     <!-- input field validation error messages -->
     <div class="row">
-        <div class="col-xs-6">
+        <div class="TODO-6">
             <div ng-show="searchForm.$submitted && searchForm.ADTPaxNumber.$invalid" class="has-error">
                 <small class="help-block" ng-show="searchForm.ADTPaxNumber.$error.required">Specify number of passengers</small>
             </div>
@@ -34,27 +34,24 @@
 
 
     <div class="row">
-        <div class="col-xs-3 SDSTopBuffer">
+        <div class="TODO-3 SDS-col-element-xxs-12 SDSTopBuffer SDSBottomBuffer">
             <a href="" ng-click="areAdvancedSearchOptionsCollapsed = !areAdvancedSearchOptionsCollapsed" class="input-sm SDSToggleLink">Advanced search options</a>
         </div>
     </div>
 
-    <div collapse="!areAdvancedSearchOptionsCollapsed">
+    <div collapse="!areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer">
         <div class="row">
-            <div class="col-xs-3">
-                <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label">Preferred Airline</label>
+            <div class="TODO-3 SDS-col-element-xs-6 SDS-col-element-sm-3">
+                <div class="form-group">
+                    <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label">Preferred Airline</label>
+                    <select-preferred-airline class="form-control input-sm" id="SDSSearchForm_PreferredAirline" preferred-airline="preferredAirline.selected"></select-preferred-airline>
+                </div>
             </div>
-            <div class="col-xs-3">
-                <label for="SDSSearchForm_PreferredCabin" class="input-sm control-label">Cabin</label>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-3">
-                <select-preferred-airline class="form-control input-sm" id="SDSSearchForm_PreferredAirline" preferred-airline="preferredAirline.selected"></select-preferred-airline>
-            </div>
-            <div class="col-xs-3">
-                <select-preferred-cabin name="PreferredCabin" class="form-control input-sm" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
+            <div class="TODO-3 SDS-col-element-xs-6 SDS-col-element-sm-3">
+                <div class="form-group">
+                    <label for="SDSSearchForm_PreferredCabin" class="input-sm control-label">Cabin</label>
+                    <select-preferred-cabin name="PreferredCabin" class="form-control input-sm" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +65,7 @@
 
 <div class="panel panel-default SDSWidgetNG SDSSearchFormWidget" id="SDSSearchFormWidget_{{::widgetId}}">
     <div class="panel-body container">
-        <form class="form-inline">
+        <form>
             <div class="btn-group">
                 <label class="btn btn-primary" ng-model="tripType" btn-radio="'returnTrip'">Return</label>
                 <label class="btn btn-primary" ng-model="tripType" btn-radio="'oneWay'">One-way</label>
@@ -77,21 +74,21 @@
         </form>
 
         <div ng-hide="tripType === 'multiDestination'">
-            <form name="searchForm" class="form-inline SDSTopBuffer" novalidate ng-submit="createNewSearchCriteria()">
+            <form name="searchForm" class="SDSTopBuffer" novalidate ng-submit="createNewSearchCriteria()">
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Origin.$invalid}">
                                 <label for="SDSSearchForm_Origin" class="input-sm control-label">Leaving from</label>
                                 <input-airport id="SDSSearchForm_Origin" name="Origin" class="form-control input-sm" autofocus required airport="Origin"></input-airport>
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Destination.$invalid}">
                                 <label for="SDSSearchForm_Destination" class="input-sm control-label">Going to</label>
                                 <input-airport id="SDSSearchForm_Destination" name="Destination" class="form-control input-sm" required airport="Destination"></input-airport>
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.DepartureDate.$invalid}">
                                 <label for="SDSSearchForm_DepartureDate" class="input-sm control-label">Leaving on</label>
                                 <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_DepartureDate" name="DepartureDate" required="true"
@@ -99,7 +96,7 @@
                                 </input-date>
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="TODO-3 SDS-col-element-xs-6 SDS-col-element-sm-3">
                             <div class="form-group" ng-show="tripType === 'returnTrip'" ng-class="{'has-error':searchForm.$submitted && searchForm.ReturnDate.$invalid}">
                                 <label for="SDSSearchForm_ReturnDate" class="input-sm control-label">Returning on</label>
                                 <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_ReturnDate" name="ReturnDate" required="true"
@@ -111,22 +108,22 @@
 
                     <!-- input field validation error messages -->
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div ng-show="searchForm.$submitted && searchForm.Origin.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.Origin.$error.required">Type origin airport or city</small>
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div  ng-show="searchForm.$submitted && searchForm.Destination.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.Destination.$error.required">Type destination airport or city</small>
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div ng-show="searchForm.$submitted && searchForm.DepartureDate.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.DepartureDate.$error.required">Choose departure date</small>
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div ng-show="searchForm.$submitted && searchForm.ReturnDate.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.ReturnDate.$error.required">Choose return date</small>
                             </div>
@@ -140,25 +137,25 @@
 
 
         <div ng-show="tripType === 'multiDestination'">
-            <form name="searchFormMultiDestination" class="form-inline SDSTopBuffer" novalidate ng-submit="createNewSearchCriteria()">
+            <form name="searchFormMultiDestination" class="SDSTopBuffer" novalidate ng-submit="createNewSearchCriteria()">
 
                 <div ng-repeat="i in multiDestinationLegs">
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div class="form-group" ng-class="{'has-error':searchFormMultiDestination.$submitted && searchFormMultiDestination.Origin_{{$index}}.$invalid}">
                                 <label for="SDSSearchForm_Origin_{{$index}}" class="input-sm control-label">Leaving from</label>
                                 <input-airport id="SDSSearchForm_Origin_{{$index}}" name="Origin_{{$index}}" class="form-control input-sm" ng-focus="$first" required airport="multiDestinationLegs[$index].Origin"></input-airport>
                             </div>
                         </div>
 
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div class="form-group" ng-class="{'has-error':searchFormMultiDestination.$submitted && searchFormMultiDestination.Destination_{{$index}}.$invalid}">
                                 <label for="SDSSearchForm_Destination_{{$index}}" class="input-sm control-label">Going to</label>
                                 <input-airport id="SDSSearchForm_Destination_{{$index}}" name="Destination_{{$index}}" class="form-control input-sm" required airport="multiDestinationLegs[$index].Destination"></input-airport>
                             </div>
                         </div>
 
-                        <div class="col-xs-6">
+                        <div class="TODO-6">
                             <div class="form-group" ng-class="{'has-error':searchFormMultiDestination.$submitted && searchFormMultiDestination.DepartureDate_{{$index}}.$invalid}">
                                 <label for="SDSSearchForm_DepartureDate_{{$index}}" class="input-sm control-label">Leaving on</label>
                                 <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_DepartureDate_{{$index}}" name="DepartureDate_{{$index}}" required="true"
@@ -171,17 +168,17 @@
 
                     <!-- input field validation error messages -->
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div ng-show="searchFormMultiDestination.$submitted && searchFormMultiDestination.Origin_{{$index}}.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchFormMultiDestination.Origin_{{$index}}.$error.required">Type origin airport or city</small>
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="TODO-3">
                             <div ng-show="searchFormMultiDestination.$submitted && searchFormMultiDestination.Destination_{{$index}}.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchFormMultiDestination.Destination_{{$index}}.$error.required">Type destination airport or city</small>
                             </div>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="TODO-6">
                             <div ng-show="searchFormMultiDestination.$submitted && searchFormMultiDestination.DepartureDate_{{$index}}.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchFormMultiDestination.DepartureDate_{{$index}}.$error.required">Choose departure date</small>
                             </div>

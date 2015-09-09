@@ -7,16 +7,18 @@
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
 <body>
 
 <div id="mainPageContainer">
-    <search-form></search-form>
-    <fare-range></fare-range>
+    <partial command="include('partials/navigation.html')"></partial>
+    <search-form class="embeddedWidget"></search-form>
+    <fare-range class="embeddedWidget"></fare-range>
     <!--<fare-range data-origin="LON" data-destination="NYC" data-departure-date="2015-09-01" data-return-date="2015-09-08" data-current-lowest-fare="1200" data-current-lowest-fare-currency="USD"></fare-range>-->
 
 </div>
 <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
-<!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
 </body>
 </html>

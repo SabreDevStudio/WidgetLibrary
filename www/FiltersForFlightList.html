@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
     <link rel="stylesheet" href="../bower_components/angular-rangeslider/angular.rangeSlider.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <partial command="include('partials/navigation-includes.html')"></partial>
 
     <style>
 
@@ -30,7 +32,9 @@
 </head>
 <body>
     <div id="mainPageContainer">
-        <div id="SearchFormNG" data-search-form></div>
+        <partial command="include('partials/navigation.html')"></partial>
+        <div class="embeddedWidget" data-search-form hide-felx-dates="true"></div>
+
         <div style="max-width: 1200px; margin-left: 200px">
             <filters-panel id="ItineraryListFilterPane">
             </filters-panel>
