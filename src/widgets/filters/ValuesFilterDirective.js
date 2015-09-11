@@ -9,6 +9,7 @@ define([
         , 'widgets/filters/DiscreteValuesListFilter'
         , 'widgets/filters/RangeFilter'
         , 'widgets/filters/RangeDateTimeFilter'
+        , 'widgets/filters/RangeMonetaryAmountFilter'
         , 'widgets/filters/BooleanFilter'
     ],
     function (
@@ -22,6 +23,7 @@ define([
         , DiscreteValuesListFilter
         , RangeFilter
         , RangeDateTimeFilter
+        , RangeMonetaryAmountFilter
         , BooleanFilter
     ) {
         'use strict';
@@ -74,6 +76,8 @@ define([
                                     return new RangeFilter(filterId, attrs.label, attrs.filterablePropertyName);
                                 case 'rangeDateTime':
                                     return new RangeDateTimeFilter(filterId, attrs.label, attrs.filterablePropertyName);
+                                case 'rangeMonetaryAmount':
+                                    return new RangeMonetaryAmountFilter(filterId, attrs.label, attrs.filterablePropertyName, attrs.currencyPropertyName);
                                 case 'boolean':
                                     return new BooleanFilter(filterId, attrs.label, attrs.filterablePropertyName);
                             }
@@ -88,6 +92,7 @@ define([
                         });
 
                         scope.$on(itinerariesStatisticsUpdateNotification, function () {
+                            filtersPanelController.notifyOnStatisticsUpdate();
                             var statistics = ItineraryStatisticsBroadcastingService.statistics;
                             scope.filterInstance.applyStatistics(statistics);
                         });

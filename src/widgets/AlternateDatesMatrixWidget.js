@@ -55,11 +55,20 @@ define([
                             ErrorReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
                             return;
                         }
-                        searchService.getAlternateDatesPriceMatrix(searchCriteria, _.partial(processAltDatesPriceMatrix, searchCriteria));
+                        searchService.getAlternateDatesPriceMatrix(searchCriteria, _.partial(processAltDatesPriceMatrix, searchCriteria), processServiceErrorMessages);
                     };
+
+                    function processServiceErrorMessages(businessErrorMessages) {
+                        $scope.businessErrorMessages = businessErrorMessages;
+                        resetModel();
+                    }
 
                     $scope.isAnyDataToDisplayAvailable = function () {
                         return $scope.altDatesPriceMatrix && $scope.altDatesPriceMatrix.hasAtLeastOnePrice();
+                    };
+
+                    $scope.anyBusinessErrorMessagesPresent = function () {
+                        return !_.isEmpty($scope.businessErrorMessages);
                     };
 
                     $scope.isCentralRequestedDate = function (requestedDepartureDate, requestedReturnDate) {
@@ -68,6 +77,7 @@ define([
                     };
 
                     function processAltDatesPriceMatrix(searchCriteria, altDatesPriceMatrix) {
+                        clearErrorMessages();
                         $scope.isRoundTripTravel = searchCriteria.isRoundTripTravel();
                         $scope.isOneWayTravel = searchCriteria.isOneWayTravel();
 
@@ -84,6 +94,16 @@ define([
                         $scope.altDatesPriceMatrix = altDatesPriceMatrix;
                         $scope.departureAirport = searchCriteria.getFirstLeg().origin;
                         $scope.arrivalAirport = searchCriteria.getFirstLeg().destination;
+                    }
+
+                    function clearErrorMessages() {
+                        _.remove($scope.businessErrorMessages);
+                    };
+
+                    function resetModel() {
+                        $scope.altDatesPriceMatrix = undefined;
+                        $scope.departureAirport = undefined;
+                        $scope.arrivalAirport = undefined;
                     }
 
                 }

@@ -2,13 +2,13 @@ define([
           'angular'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/FareForecastWidget.tpl.html'
-        , 'webservices/SabreDevStudioWebServices'
+        , 'webservices/InformationalServices'
     ],
     function (
           angular
         , SDSWidgets
         , FareForecastWidgetTemplate
-        , SabreDevStudioWebServices
+        , InformationalServices
     ) {
         'use strict';
 

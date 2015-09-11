@@ -72,6 +72,14 @@ define(['lodash'], function (_) {
             }
         });
 
+        Object.defineProperty(this, 'totalFareAmountWithCurrency', {
+            get: function() {
+                return {
+                      amount: this.totalFareAmount
+                    , currency: this.totalFareCurrency
+                };
+            }
+        });
     }
 
     Itinerary.prototype.addLeg = function(leg) {

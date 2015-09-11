@@ -36,7 +36,7 @@ define([
                         case 1:
                             return 'One stop';
                         default:
-                            return 'Two or more stops';
+                            return 'Two+ stops';
                     }
                 };
             })

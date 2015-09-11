@@ -7,7 +7,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
-    <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
     <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
@@ -17,7 +17,7 @@
     <partial command="include('partials/navigation.html')"></partial>
     <div class="embeddedWidget" data-search-form></div>
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <calendar-tabs class="embeddedWidget" tabs-shown="5" active-search-web-service="leadPriceCalendar"></calendar-tabs>
             <!--<calendar-tabs tabs-shown="5" active-search-web-service="leadPriceCalendar"-->
                            <!--origin="DFW" destination="LAX" departure-date="2015-11-01" return-date="2015-11-10"-->
@@ -28,7 +28,7 @@
                            <!--do-not-show-prev-next-month-days="true">-->
             <!--</calendar-tabs>-->
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <itinerary-list class="embeddedWidget" id="ItineraryList"></itinerary-list>
         </div>
     </div>

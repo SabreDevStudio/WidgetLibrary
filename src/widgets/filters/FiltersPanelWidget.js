@@ -30,6 +30,12 @@ define([
                     // the values of this map are all current filtering functions
                     var currentFilteringFunctions = {};
 
+                    var anyStatisticsToCreateFiltersSent;
+
+                    this.notifyOnStatisticsUpdate = function () {
+                        anyStatisticsToCreateFiltersSent = true;
+                    };
+
                     this.updateFilteringFunction = function (filterId, newFilteringFunction) {
                         currentFilteringFunctions[filterId] = newFilteringFunction;
                         FilteringCriteriaChangedBroadcastingService.filteringFunctions = _.values(currentFilteringFunctions);
@@ -40,13 +46,15 @@ define([
                         $scope.$broadcast(resetAllFiltersEvent);
                     };
 
+                    $scope.isAnyDataToDisplayAvailable = function () {
+                        return anyStatisticsToCreateFiltersSent;
+                    };
                 }
             ])
             .directive('filtersPanel', function () {
                 return {
                     restrict: 'EA',
                     replace: true,
-                    transclude: true,
                     scope: true,
                     template: FiltersPanelWidgetTemplate,
                     controller: 'FiltersPanelCtrl'

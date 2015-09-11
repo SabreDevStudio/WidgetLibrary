@@ -159,8 +159,8 @@ define([
                     // map it into array of objects with two properties: date (parsed) and price
                     var leadPricesAndDates = _.map(leadPricesAndDateStrings, function (leadPrice, dateString) {
                         return {
-                            date: moment(dateString, ShoppingData.prototype.DATE_FORMAT_FOR_KEYS)
-                            , leadPrice: leadPrice
+                              date: moment(dateString, ShoppingData.prototype.DATE_FORMAT_FOR_KEYS)
+                            , leadPrice: leadPrice.price
                         };
                     });
                     // we have to explicitly sort the leadPricesAndDates array as the iteration order over object properties (iterating over leadPricesAndDateStrings map) is not guaranteed.

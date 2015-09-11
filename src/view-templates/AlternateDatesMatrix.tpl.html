@@ -1,12 +1,17 @@
-<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
+<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable() || anyBusinessErrorMessagesPresent()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Alternate Dates Lead Fares</h4>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body" ng-if="anyBusinessErrorMessagesPresent()">
+        No prices found.
+        <error-messages messages="businessErrorMessages"></error-messages>
+    </div>
 
-        <table class="table table-bordered" ng-if="isRoundTripTravel">
+    <div class="panel-body" ng-if="isAnyDataToDisplayAvailable()">
+
+        <table class="SDSTable table table-bordered table-condensed" ng-if="isRoundTripTravel">
 
             <caption>Cheapest options for nearby departure and return dates for <em>{{departureAirport | airportFullName}}</em> to <em>{{arrivalAirport| airportFullName}}</em></caption>
 
@@ -38,7 +43,7 @@
         </table>
 
 
-        <table class="table table-bordered" ng-if="isOneWayTravel">
+        <table class="SDSTable table table-bordered table-condensed" ng-if="isOneWayTravel">
 
             <caption>Cheapest options for nearby departure dates for <em>{{departureAirport | airportFullName}}</em> to <em>{{arrivalAirport| airportFullName}}</em></caption>
 

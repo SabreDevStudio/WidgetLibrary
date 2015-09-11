@@ -7,7 +7,7 @@ define([
         , 'text!view-templates/ItinerariesListWidget.tpl.html'
         , 'datamodel/ItinerariesList'
         , 'webservices/BargainFinderMaxWebServices'
-        , 'webservices/SabreDevStudioWebServices'
+        , 'webservices/InstaflightsDataService'
         , 'datamodel/DiversitySwapper'
         , 'widgets/ItinerariesList/ItineraryShortSummary'
         , 'widgets/ItinerariesList/ItineraryPricePerStopsPerAirlineSummary'
@@ -25,7 +25,7 @@ define([
         , ItinerariesListWidgetTemplate
         , ItinerariesList
         , BargainFinderMaxWebServices
-        , SabreDevStudioWebServices
+        , InstaflightsDataService
         , DiversitySwapper
         , ItineraryShortSummary
         , ItineraryPricePerStopsPerAirlineSummary

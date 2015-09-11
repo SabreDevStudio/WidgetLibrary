@@ -2,13 +2,14 @@
     <alert type="success" ng-hide="closed" close="closed=1">
 
         <div>
-            Others paid on average <strong>{{fareRangeSummary.fareDataForRequestedDates.MedianFare | currency}}</strong> for this trip.
+            Others paid on average <strong>{{fareRangeSummary.fareDataForRequestedDates.MedianFare | currency:fareRangeSummary.fareDataForRequestedDates.CurrencyCode}}</strong> for this trip.
             <a href="" ng-click="detailsShown = !detailsShown">Details</a>
         </div>
 
         <div collapse="!detailsShown">
             <p>
-                For the specified travel dates others paid on average {{fareRangeSummary.fareDataForRequestedDates.MedianFare | currency}}, while the maximum was {{fareRangeSummary.fareDataForRequestedDates.MaximumFare | currency}}.
+                For the specified travel dates others paid on average {{fareRangeSummary.fareDataForRequestedDates.MedianFare | currency:fareRangeSummary.fareDataForRequestedDates.CurrencyCode}}
+                , while the maximum was {{fareRangeSummary.fareDataForRequestedDates.MaximumFare | currency:fareRangeSummary.fareDataForRequestedDates.CurrencyCode}}.
             </p>
 
             <p>Based on historical data of
@@ -18,7 +19,8 @@
                     <span ng-switch-when="High">more than {{::10000 | number}}</span>
                 </span>
                 tickets, for travels starting between {{requestedRange.start | amDateFormat:'D MMM'}} and {{requestedRange.end | amDateFormat:'D MMM'}}, and same length of stay,
-                the most commonly paid price was {{fareRangeSummary.overallMedianFare | currency}}, while highest was {{fareRangeSummary.overallMaximumFare | currency}}.
+                the most commonly paid price was {{fareRangeSummary.overallMedianFare | currency:fareRangeSummary.currency}}
+                , while highest was {{fareRangeSummary.overallMaximumFare | currency:fareRangeSummary.currency}}.
             </p>
         </div>
     </alert>

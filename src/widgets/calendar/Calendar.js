@@ -104,8 +104,9 @@ define([
                     var dayKey = day.format(ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
                     if (prices && prices[dayKey]) {
                         noPricesFound = false;
-                        var currPrice = prices[dayKey];
+                        var currPrice = prices[dayKey].price;
                         dayCellData.price = currPrice;
+                        dayCellData.currency = prices[dayKey].currency;
                         dayCellData.priceTier = that.priceClassifier.classifyIntoTier(currPrice);
                     }
                     currentWeek.days.push(dayCellData);
@@ -126,18 +127,20 @@ define([
                 return {
                     monthStartDate: bounds.monthStartDate,
                     noPricesFound: noPricesFound,
-                    monthLeadPrice: monthMinPrices[bounds.monthStartDate],
+                    monthLeadPrice: monthMinPrices[bounds.monthStartDate] && monthMinPrices[bounds.monthStartDate].price,
+                    monthLeadPriceCurrency: monthMinPrices[bounds.monthStartDate] && monthMinPrices[bounds.monthStartDate].currency,
                     weeks: allWeeks
                 };
             };
 
             this.calculateMonthsMinPrices = function(prices) {
-                return _.reduce(prices, function (acc, price, dayKey) {
+                return _.reduce(prices, function (acc, priceAndCurrency, dayKey) {
                     var month = moment(dayKey).startOf('month');
-                    if (_.isUndefined(acc[month.toString()])) {
-                        acc[month.toString()] = price;
-                    } else if (acc[month.toString()] > price) {
-                        acc[month.toString()] = price;
+                    if (acc[month.toString()] && acc[month.toString()].currency !== priceAndCurrency.currency) {
+                        throw new Error('Unable to calculate month min price as currencies for particular day prices are different');
+                    }
+                    if (_.isUndefined(acc[month.toString()]) || (acc[month.toString()].price > priceAndCurrency.price)) {
+                        acc[month.toString()] = priceAndCurrency;
                     }
                     return acc;
                 }, {});
@@ -166,7 +169,7 @@ define([
             this.setLastSearchCriteria(searchCriteria);
 
             // classifier will be needed to assign prices per day into price tiers (cheapest, second cheapest, and so on).
-            this.priceClassifier.train(_.values(leadPrices));
+            this.priceClassifier.train(_.pluck(_.values(leadPrices), 'price'));
             var monthsMinPrices = this.calculateMonthsMinPrices(leadPrices);
             this.months = this.getModelMonths().map(function (month) { //TODO abstraction levels in all functions
                 var monthBounds = that.getMonthBounds(month);

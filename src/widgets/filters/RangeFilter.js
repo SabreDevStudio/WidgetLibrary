@@ -18,6 +18,8 @@ define([
         RangeFilter.prototype.applyListenableStatistics = function (statistics) {
             // constraints for min and max values (of permitted range) will be set once at the beginning, based on the first update //TODO what if list is updates with other itins?
             //if (_.isUndefined(this.minConstraint) && _.isUndefined(this.maxConstraint)) {
+
+            // WARN: beware such assignments will work correct only for primitives. Cannot assign this way references (objects)
                 this.minConstraint = statistics.min;
                 this.maxConstraint = statistics.max;
             //}
@@ -30,6 +32,7 @@ define([
         };
 
         RangeFilter.prototype.reset = function () {
+            // WARN: beware such assignments will work correct only for primitives. Cannot assign this way references (objects
             this.min = this.minConstraint;
             this.max = this.maxConstraint;
         };

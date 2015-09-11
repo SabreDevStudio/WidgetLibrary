@@ -7,7 +7,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
-    <link rel="stylesheet" type="text/css" href="../stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
     <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
@@ -16,11 +16,11 @@
     <partial command="include('partials/navigation.html')"></partial>
     <div class="embeddedWidget" data-search-form></div>
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="advancedCalendar"></div>
             <!--<div id="LeadPriceChart" lead-price-chart data-number-of-weeks-to-display="4" active-search-web-service="leadPriceCalendar"></div>-->
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <itinerary-list id="ItineraryList"></itinerary-list>
         </div>
     </div>

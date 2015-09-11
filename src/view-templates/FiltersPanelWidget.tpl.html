@@ -1,7 +1,6 @@
-<div class="panel panel-default">
+<div class="panel panel-default" ng-show="isAnyDataToDisplayAvailable()">
     <div class="panel-heading">
         <h4 class="panel-title">Filter options</h4>
-        <ng-transclude></ng-transclude>
     </div>
 
     <div class="panel-body">
@@ -17,7 +16,7 @@
 
         <values-filter type="discrete" label="Airline" filterable-property-name="getFirstMarketingAirline" values-display-filter="airlineFullName"></values-filter>
 
-        <values-filter type="range" label="Price" filterable-property-name="totalFareAmount" values-display-filter="currency" can-filter-only-on-max-value="true"></values-filter>
+        <values-filter type="rangeMonetaryAmount" label="Price" filterable-property-name="totalFareAmountWithCurrency" can-filter-only-on-max-value="true"></values-filter>
 
         <values-filter type="rangeDateTime" label="Outbound flight departure" filterable-property-name="getOutboundDepartureDateTime" values-display-filter="amDateFormat" values-display-filter-options="hh:mm a"></values-filter>
 

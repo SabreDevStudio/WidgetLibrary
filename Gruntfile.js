@@ -5,7 +5,8 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         clean: {
-            dist: ['dist/**/*', 'build/**/*']
+              dist: ['dist/**/*', 'build/**/*']
+            , 'dist-no-compile': ['dist/**/*', '!dist/widgets/*.min.js', 'build/**/*'] // TODO exclusion not working
         },
 
         jshint: {
@@ -29,7 +30,7 @@ module.exports = function (grunt) {
             options: {
                 csslintrc: '.csslintrc'
             },
-            src: ['stylesheets/**/*.css', '!stylesheets/reset.css'] // do not css lint reset as it is machine generated and fine
+            src: ['widgets/stylesheets/**/*.css']
         },
 
         bootlint: {
@@ -45,7 +46,7 @@ module.exports = function (grunt) {
                 browsers: ['> 1%'] // more codenames at https://github.com/ai/autoprefixer#browsers
             },
             css: {
-                src: 'stylesheets/**/*.css'
+                src: 'widgets/stylesheets/**/*.css'
             }
         },
 
@@ -153,14 +154,14 @@ module.exports = function (grunt) {
 
         watch: {
             compass: {
-                files: ['style/*.scss'],
+                files: ['widgets/style/*.scss'],
                 tasks: ['compass'],
                 options: {
                     spawn: false
                 }
             },
             'css-pipeline': {
-                files: ['style/*.scss'],
+                files: ['widgets/style/*.scss'],
                 tasks: ['css-pipeline'],
                 options: {
                     spawn: false,
@@ -212,10 +213,12 @@ module.exports = function (grunt) {
             cssbundle: {
                 files: {
                     'dist/widgets/css/SDS.min.css': [
-                          'stylesheets/**/*.css'
+                          'widgets/stylesheets/**/*.css'
                         , 'www/css/**/*.css'
                         , 'bower_components/bootstrap/dist/css/bootstrap.css'
                         , 'bower_components/angular-ui-select/dist/select.css'
+                        , 'bower_components/angular-rangeslider/angular.rangeSlider.css'
+                        , '/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css'
                     ]
                 }
             }
@@ -267,8 +270,15 @@ module.exports = function (grunt) {
         , 'copy:page_img'
     ]);
 
-    /*
-        test if airline logos visible.
-     */
+    grunt.registerTask('dist-no-compile', [
+          'clean:dist-no-compile'
+        , 'css-pipeline'
+        , 'cssmin:cssbundle'
+        , 'copy:bootstrap_glyphicons_fonts'
+        , 'includereplace:htmlPartials'
+        , 'copy:copyHtmlUpdatingLinksAndIncludes'
+        , 'copy:widgets_img'
+        , 'copy:page_img'
+    ]);
 
 };

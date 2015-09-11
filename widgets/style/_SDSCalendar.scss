@@ -1,9 +1,10 @@
 @import "SDSCommon";
 @import "SDSPriceTiered";
 
-.SDSCalendarTable {
+.SDSTable {
   border-collapse: separate;
   border-spacing: 0.1rem;
+  table-layout: fixed; // this is to avoid table to overflow outside of containing div
 }
 
 .SDSCalendarCellPrice {

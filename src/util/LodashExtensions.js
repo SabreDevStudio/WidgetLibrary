@@ -45,7 +45,7 @@ define(['lodash'], function (_) {
          *  which is not desirable for groupingProperty of type other than String.
          *
          */
-        groupByAndGetCountAndMin: function(collection, groupingProperty, propertyToGetMinValue) {
+        groupByAndGetCountAndMin: function(collection, groupingProperty, propertyToGetMinValue, propertyThatMustBeEqualWhenCalculatingMin) {
 
             function processGroupingKey(acc, groupingKey, next) {
                 if (_.isUndefined(acc.keysAcc[groupingKey])) {
@@ -54,8 +54,15 @@ define(['lodash'], function (_) {
                 }
                 acc.valuesAcc[groupingKey].count++;
                 var nextValue = _.result(next, propertyToGetMinValue);
+                var nextValueOfPropertyToBeEqual = _.result(next, propertyThatMustBeEqualWhenCalculatingMin);
+                if (propertyThatMustBeEqualWhenCalculatingMin
+                    && acc.valuesAcc[groupingKey].mustBeEqualPropertyValue
+                    && (acc.valuesAcc[groupingKey].mustBeEqualPropertyValue !== nextValueOfPropertyToBeEqual)) {
+                    throw new Error('Error while calculating min value. The property to be equal "' + propertyThatMustBeEqualWhenCalculatingMin + "' while calculating minimum was different across values");
+                }
                 if (nextValue < acc.valuesAcc[groupingKey].min) {
                     acc.valuesAcc[groupingKey].min = nextValue;
+                    acc.valuesAcc[groupingKey].mustBeEqualPropertyValue = nextValueOfPropertyToBeEqual;
                 }
                 return acc;
             }
@@ -87,9 +94,10 @@ define(['lodash'], function (_) {
 
             var merged = _.map(accumulatorsPair.keysAcc, function (key) {
                 return {
-                    value: accumulatorsPair.keysAcc[key],
-                    count: accumulatorsPair.valuesAcc[key].count,
-                    min: accumulatorsPair.valuesAcc[key].min
+                      value: accumulatorsPair.keysAcc[key]
+                    , count: accumulatorsPair.valuesAcc[key].count
+                    , min: accumulatorsPair.valuesAcc[key].min
+                    , mustBeEqualPropertyValue: accumulatorsPair.valuesAcc[key].mustBeEqualPropertyValue
                 };
             });
 

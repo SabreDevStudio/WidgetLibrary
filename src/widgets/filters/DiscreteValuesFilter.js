@@ -20,6 +20,7 @@ define([
                       propertyValue: statistic.value
                     , minPrice: statistic.minPrice
                     , count: statistic.count
+                    , currency: statistic.currency
                     , permitted: true // by default all selectable values are allowed
                 };
             });

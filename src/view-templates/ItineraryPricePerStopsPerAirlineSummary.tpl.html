@@ -9,7 +9,9 @@
                     <th></th>
                     <th class="success">Lowest price</th>
                     <th class="text-center" ng-repeat="item in summary.airlineSummaries">
-                        <img class="SDSAirlineLogo" ng-src="../widgets/img/airlineLogos/{{item.airline}}.PNG" fallback-src="../widgets/img/airlineLogos/generic_airline.PNG">
+                        <img class="SDSAirlineLogo"
+                             ng-src="../widgets/img/airlineLogos/{{item.airline}}.PNG"
+                             fallback-src="../widgets/img/airlineLogos/generic_airline.PNG">
                         <div>{{item.airline | airlineFullName}}</div>
                     </th>
                 </thead>

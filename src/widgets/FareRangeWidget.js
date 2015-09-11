@@ -6,7 +6,6 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/FareRangeWidget.tpl.html'
-        , 'webservices/SabreDevStudioWebServices'
         , 'datamodel/SearchCriteria'
     ],
     function (
@@ -17,7 +16,6 @@ define([
         , angular_bootstrap
         , SDSWidgets
         , FareRangeWidgetTemplate
-        , SabreDevStudioWebServices
         , SearchCriteria
     ) {
         'use strict';
@@ -159,9 +157,14 @@ define([
                         var fareDataForRequestedDates = getFareDataForRequestedDates(fareRangeWebServiceResponse.FareData, requestedDepartureDate, requestedReturnDate);
                         var medianOfAllMedianFares = _.median(_.pluck(fareRangeWebServiceResponse.FareData, 'MedianFare'));
                         var maximumOfAllMaximumFare = _.max(_.pluck(fareRangeWebServiceResponse.FareData, 'MaximumFare'));
+                        var fareCurrencyCodes = _.uniq(_.pluck(fareRangeWebServiceResponse.FareData, 'CurrencyCode'));
+                        if (fareCurrencyCodes.length > 1) {
+                            throw new Error('Cannot calculate median and max fares for fares in different currencies');
+                        }
                         return {
                               overallMedianFare: medianOfAllMedianFares
                             , overallMaximumFare: maximumOfAllMaximumFare
+                            , currency: _.first(fareCurrencyCodes)
                             , fareDataForRequestedDates: fareDataForRequestedDates
                         };
                     }

@@ -3,12 +3,14 @@ define([
         , 'angular'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/AltDatesMockDataService'
+        , 'webservices/AdvancedCalendarService'
     ],
     function (
           _
         , angular
         , SDSWebServices
         , AltDatesMockDataService
+        , AdvancedCalendarService
     ) {
         'use strict';
 

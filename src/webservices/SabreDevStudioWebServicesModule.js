@@ -2,14 +2,12 @@ define([
           'lodash'
         , 'angular'
         , 'angular_resource'
-        , 'webservices/AuthenticationService'
         , 'ngPromiseExtras'
     ],
     function (
           _
         , angular
         , angular_resource
-        , AuthenticationService
         , ngPromiseExtras
     ) {
         'use strict';
@@ -21,31 +19,18 @@ define([
         return angular.module('sabreDevStudioWebServices', ['ngResource', 'configuration', 'NGPromiseUtils'])
             .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss') // //"2015-04-11T00:00:00",
             .constant('dateFormat', 'YYYY-MM-DD') // //"2015-04-11T00:00:00",
-            .factory('AuthTokenDecoratorHttpInterceptor', [
-                      '$q'
-                    , '$injector'
-                    , 'apiURL'
-                , function (
-                      $q
-                    , $injector
-                    , apiURL
-                ) {
+            .factory('StandardErrorHandler', function () {
                 return {
-                    request: function (config) {
-                        //injected manually to get around circular dependency problem.
-                        var AuthenticationService = $injector.get('AuthenticationService');
-                        if (isNonGetAuthTokenCallToRestAPI(config.url, apiURL)) {
-                            return $q(function(resolve) {
-                                AuthenticationService.getToken().then(function (token) {
-                                    config.headers['Authorization'] = "Bearer " + token;
-                                    resolve(config);
-                                });
-                            });
+                    handleError: function (reason) {
+                        var HTTP_NETWORK_ERROR_MSG = 'Unable to communicate with the Sabre Dev Studio';
+                        if (reason.status == 0) {
+                            return [HTTP_NETWORK_ERROR_MSG];
                         }
-                        return config;
+                        var businessErrorMessage = reason.data.message; //TODO replicate this pattern reason.data.message to all data services
+                        return [businessErrorMessage];
                     }
-                };
-            }])
+                }
+            })
             .factory('ResponseTimeLoggerHttpInterceptor', ['$log', 'apiURL', function ($log, apiURL) {
                     var timeStart, timeEnd;//todo: what is we have 2 concurrent http requests?
                     return {
@@ -66,7 +51,6 @@ define([
                     };
                 }])
             .config(['$httpProvider', function ($httpProvider) {
-                //$httpProvider.interceptors.push('AuthTokenDecoratorHttpInterceptor');
                 $httpProvider.interceptors.push('ResponseTimeLoggerHttpInterceptor');
             }]);
     });

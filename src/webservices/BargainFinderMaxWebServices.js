@@ -3,7 +3,6 @@ define([
         , 'angular'
         , 'moment'
         , 'moment_range'
-        , 'webservices/AuthenticationService' // TODO: seems not needed here but without it and with interceptor modules not not load
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/WebServicesResourceDefinitions'
         , 'webservices/BargainFinderMaxRequestFactory'
@@ -16,7 +15,6 @@ define([
         , angular
         , moment
         , moment_range
-        , AuthenticationService
         , SabreDevStudioWebServicesModule
         , WebServicesResourceDefinitions
         , BargainFinderMaxRequestFactory

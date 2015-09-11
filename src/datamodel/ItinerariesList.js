@@ -34,16 +34,16 @@ define(['util/LodashExtensions'], function (_) {
             return this.getPermittedItineraries().length;
         };
 
-        this.getMinValue = function (propertyName) {
+        this.getMinValue = function (propertyName, propertyFieldToCompareOn) {
             return _.chain(this.getPermittedItineraries())
                 .map(_.ary(_.partialRight(_.result, propertyName), 1))
-                .min().value();
+                .min(propertyFieldToCompareOn).value();
         };
 
-        this.getMaxValue = function (propertyName) {
+        this.getMaxValue = function (propertyName, propertyFieldToCompareOn) {
             return _.chain(this.getPermittedItineraries())
                 .map(_.ary(_.partialRight(_.result, propertyName), 1))
-                .max().value();
+                .max(propertyFieldToCompareOn).value();
         };
 
         this.getRangeStatistics = function (propertyName) {
@@ -53,13 +53,21 @@ define(['util/LodashExtensions'], function (_) {
             };
         };
 
+        this.getMonetaryAmountRangeStatistics = function (propertyName) {
+            return {
+                min: this.getMinValue(propertyName, 'amount'),
+                max: this.getMaxValue(propertyName, 'amount')
+            };
+        };
+
         this.getDiscreteValuesStatistics = function (propertyName) {
             var selectableValues =  _.chain(this.getPermittedItineraries())
-                .groupByAndGetCountAndMin(propertyName, 'totalFareAmount').map(function (groupingItem) {
+                .groupByAndGetCountAndMin(propertyName, 'totalFareAmount', 'totalFareCurrency').map(function (groupingItem) {
                     return {
-                        value: groupingItem.value,
-                        count: groupingItem.count,
-                        minPrice: groupingItem.min
+                          value: groupingItem.value
+                        , count: groupingItem.count
+                        , minPrice: groupingItem.min
+                        , currency: groupingItem.mustBeEqualPropertyValue
                     };
                 })
                 .sortBy('value')
@@ -73,6 +81,9 @@ define(['util/LodashExtensions'], function (_) {
             switch (statisticsSpecification.type) {
                 case 'range': {
                     return this.getRangeStatistics(filterablePropertyName);
+                }
+                case 'rangeMonetaryAmount': {
+                    return this.getMonetaryAmountRangeStatistics(filterablePropertyName);
                 }
                 case 'discrete': {
                     return  this.getDiscreteValuesStatistics(filterablePropertyName);
@@ -159,7 +170,11 @@ define(['util/LodashExtensions'], function (_) {
     };
 
     ItinerariesList.prototype.getLeadPrice = function () {
-        return this.getMinValue('totalFareAmount');
+        var minimumPriceItinerary = _.min(this.getPermittedItineraries(), 'totalFareAmount');
+        return {
+              price: minimumPriceItinerary.totalFareAmount
+            , currency: minimumPriceItinerary.totalFareCurrency
+        };
     };
 
     ItinerariesList.prototype.getCheapestItinerary = function () {

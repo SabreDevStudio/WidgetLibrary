@@ -3,7 +3,7 @@ define([
       , 'util/BaseServices'
       , 'util/CommonDirectives'
       , 'util/CommonFilters'
-      , 'webservices/SabreDevStudioWebServices'
+      , 'webservices/SabreDevStudioWebServicesModule'
       , 'angular_moment'
       , 'angular_animate'
       , 'angular-ui-select'
@@ -22,7 +22,7 @@ define([
         , BaseServices
         , CommonDirectives
         , CommonFilters
-        , SabreDevStudioWebServices
+        , SabreDevStudioWebServicesModule
         , angular_moment
         , angular_animate
         , angular_ui_select

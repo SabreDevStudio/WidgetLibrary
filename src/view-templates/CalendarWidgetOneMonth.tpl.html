@@ -1,5 +1,5 @@
 <script type="text/ng-template" id="CalendarOneMonth">
-    <table class="SDSCalendarTable table table-condensed table-bordered">
+    <table class="SDSTable table table-condensed table-bordered">
         <thead>
             <tr class="text-info">
                 <th ng-repeat="dayOfWeekName in calendar.dayOfWeekNames">{{dayOfWeekName}}</th><!-- Su Mo ... Fr Sa -->
@@ -15,7 +15,7 @@
                                 {{day.day | amDateFormat:'D'}} <!-- day of month: 1 2 ... 30 31 -->
                         </div>
                         <div class="clearfix"></div>
-                        <div ng-show="day.price" class='SDSCalendarCellPrice text-center SDSPriceTier-{{day.priceTier}}'>{{day.price | currency}}</div>
+                        <div ng-show="day.price" class='SDSCalendarCellPrice text-center SDSPriceTier-{{day.priceTier}}'>{{day.price | currency:day.currency}}</div>
                     </div>
                 </td>
 

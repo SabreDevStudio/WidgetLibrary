@@ -2,11 +2,13 @@ define([
           'util/LodashExtensions'
         , 'angular'
         , 'webservices/SabreDevStudioWebServicesModule'
+        , 'webservices/LeadPriceCalendarWebService'
     ],
     function (
           _
         , angular
         , SDSWebServices
+        , LeadPriceCalendarWebService
     ) {
         'use strict';
 
