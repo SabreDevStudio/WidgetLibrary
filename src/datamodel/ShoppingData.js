@@ -1,5 +1,4 @@
 define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], function (moment, ItinerariesList, _) {
-    //TODO: lodash also available thru global object..
     "use strict";
 
     function ShoppingData() {

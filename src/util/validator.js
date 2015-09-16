@@ -4,7 +4,7 @@
  Use: call validator.validateIsSomething(arg, 'error message'); If this is not true, then exception (IllegalArgumentException) will be thrown will the specified error message.
  If validation is true, then true will be also returned (but the concept is that we rely on exception to be thrown, not on return value)
  **/
-define(['util/exceptions', 'validator_lib', 'moment', 'lodash'], function (ex, v, moment, _) {
+define(['util/exceptions', 'moment', 'lodash'], function (ex, moment, _) {
     "use strict";
 
     var CURRENCY_REGEX = new RegExp("^[A-Z]{3}$");

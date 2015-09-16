@@ -1,6 +1,6 @@
 <div ng-transclude>
     <script type="text/ng-template" id="FareNabberSubscriptionFormModal.html.tpl">
-        <div class="SDSWidgetNG SDSFareNabberWidget">
+        <div class="SDSWidget SDSFareNabberWidget">
 
             <div class="modal-header">
                 <h3 class="modal-title">Subscribe to price alerts</h3>
@@ -52,7 +52,13 @@
                         <div class="col-lg-9 col-lg-offset-3">
                             <a href="" class="SDSToggleLink" ng-click="outboundTimeRangePickerShown = !outboundTimeRangePickerShown">Set specific hours for departure flights</a>
                             <div collapse="!outboundTimeRangePickerShown">
-                                <input-departure-or-arrival-switch selected-value="outboundTravelTimeRange.isDepartureOrArrival"></input-departure-or-arrival-switch>
+                                <input-on-off-toggle
+                                        selected-value="outboundTravelTimeRange.isDepartureOrArrival"
+                                        switch-on-text="Arriving"
+                                        switch-off-text="Leaving"
+                                        ng-on-value="'arrival'"
+                                        ng-off-value="'departure'">
+                                </input-on-off-toggle>
                                 <input-time-range-picker class="SDSTravelTimeRangeInput" time-min="outboundTravelTimeRange.min" time-max="outboundTravelTimeRange.max"></input-time-range-picker>
                             </div>
                         </div>
@@ -71,7 +77,13 @@
                             <div class="col-lg-9 col-lg-offset-3">
                                 <a href="" class="SDSToggleLink" ng-click="inboundTimeRangePickerShown = !inboundTimeRangePickerShown">Set specific hours for return flights</a>
                                 <div collapse="!inboundTimeRangePickerShown">
-                                    <input-departure-or-arrival-switch selected-value="inboundTravelTimeRange.isDepartureOrArrival"></input-departure-or-arrival-switch>
+                                    <input-on-off-toggle
+                                            selected-value="inboundTravelTimeRange.isDepartureOrArrival"
+                                            switch-on-text="Arriving"
+                                            switch-off-text="Leaving"
+                                            ng-on-value="'arrival'"
+                                            ng-off-value="'departure'">
+                                    </input-on-off-toggle>
                                     <input-time-range-picker class="SDSTravelTimeRangeInput" time-min="inboundTravelTimeRange.min" time-max="inboundTravelTimeRange.max"></input-time-range-picker>
                                 </div>
                             </div>

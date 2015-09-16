@@ -1,6 +1,7 @@
 define([
           'moment'
         , 'angular'
+        , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/AlternateDatesMatrix.tpl.html'
@@ -10,6 +11,7 @@ define([
     function (
           moment
         , angular
+        , _
         , angular_bootstrap
         , SDSWidgets
         , AlternateDatesMatrixTemplate

@@ -1,6 +1,7 @@
 define([
           'angular'
         , 'moment'
+        , 'lodash'
         , 'datamodel/AlternateDatesRoundTripPriceMatrix'
         , 'webservices/LeadPriceCalendarSearchCriteriaValidator'
         , 'webservices/SabreDevStudioWebServicesModule'
@@ -10,6 +11,7 @@ define([
     function (
           angular
         , moment
+        , _
         , AlternateDatesRoundTripPriceMatrix
         , LeadPriceCalendarSearchCriteriaValidator
         , SabreDevStudioWebServicesModule

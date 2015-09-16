@@ -1,5 +1,6 @@
 define([
           'angular'
+        , 'lodash'
         , 'webservices/AdvancedCalendarSearchCriteriaValidator'
         , 'webservices/AdvancedCalendarRequestFactoryForAltDates'
         , 'webservices/AdvancedCalendarRequestFactory'
@@ -10,6 +11,7 @@ define([
     ],
     function (
           angular
+        , _
         , AdvancedCalendarSearchCriteriaValidator
         , AdvancedCalendarRequestFactoryForAltDates
         , AdvancedCalendarRequestFactory
@@ -86,7 +88,7 @@ define([
                                 var cacheKey = createCacheKey(searchCriteria);
                                 var tripDepartureDay = searchCriteria.getFirstLeg().departureDateTime.clone().startOf('day');
                                 var optionsFromCache = ShoppingOptionsCacheService.getItinerariesList(cacheKey, tripDepartureDay);
-                                if (optionsFromCache.size() > 0) {
+                                if (optionsFromCache && optionsFromCache.size() > 0) {
                                     return resolve(optionsFromCache);
                                 }
                                 var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria);

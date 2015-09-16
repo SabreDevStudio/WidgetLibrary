@@ -9,7 +9,7 @@ define([
         , 'text!view-templates/AirportInput.tpl.html'
         , 'text!view-templates/InputDate.tpl.html'
         , 'text!view-templates/InputTimeRangePickerTemplate.tpl.html'
-        , 'text!view-templates/InputDepartureOrArrivalSwitch.tpl.html'
+        , 'text!view-templates/InputOnOffToggle.tpl.html'
         , 'util/AirportNameLookup'
         , 'AirportNameBestSuggestionComparator'
     ],
@@ -24,7 +24,7 @@ define([
         , AirportInputTemplate
         , InputDateTemplate
         , InputTimeRangePickerTemplate
-        , InputDepartureOrArrivalSwitchTemplate
+        , InputOnOffToggleTemplate
         , AirportNameLookup
         , AirportNameBestSuggestionComparator
     ) {
@@ -39,6 +39,19 @@ define([
                 , minutes: minutesInDay % MINUTES_IN_HOUR
             };
         }
+
+        /**
+         * loads all mappings of airport code into full name, into array of objects expected by jQuery Autocomplete widget: [ {label: 'Krakow (KRK)', code: 'KRK'}, {label: 'Amsterdam Schiphol (AMS)', code: 'AMS'}, .... ]
+         * We want the label to be displayed to user, while aiport code must be passed as field value.
+         */
+        var loadLabelsForAutocomplete = _.memoize(function() {
+            var airportNameLookup = new AirportNameLookup();
+            var output = [];
+            _.each(airportNameLookup.getAllMappings(), function (airportFullName, airportCode) {
+                output.push({fullName: airportFullName, airportCode: airportCode});
+            });
+            return output;
+        });
 
         return angular.module('sdsWidgets')
             .directive('selectPreferredCabin', function () {
@@ -79,7 +92,7 @@ define([
                         });
                         scope.preferredAirline = _.first(scope.allAirlines);
                     }
-                }
+                };
             }])
             .directive('inputAirport', [
                     'AirlineNameLookupService'
@@ -95,21 +108,7 @@ define([
                     },
                     template: AirportInputTemplate,
                     link: function (scope) {
-
                         scope.airports = loadLabelsForAutocomplete();
-
-                        /**
-                         * loads all mappings of airport code into full name, into array of objects expected by jQuery Autocomplete widget: [ {label: 'Krakow (KRK)', code: 'KRK'}, {label: 'Amsterdam Schiphol (AMS)', code: 'AMS'}, .... ]
-                         * We want the label to be displayed to user, while aiport code must be passed as field value.
-                         */
-                        function loadLabelsForAutocomplete() {
-                            var airportNameLookup = new AirportNameLookup();
-                            var output = [];
-                            _.each(airportNameLookup.getAllMappings(), function (airportFullName, airportCode) {
-                                output.push({fullName: airportFullName, airportCode: airportCode});
-                            });
-                            return output;
-                        };
                     }
                 }
             }])
@@ -179,14 +178,26 @@ define([
                     }
                 };
             })
-            .directive('inputDepartureOrArrivalSwitch', function () {
+            .directive('inputOnOffToggle', function () {
                 return {
                     restrict: 'EA',
                     replace: true,
                     scope: {
-                        selectedValue: '='
+                          selectedValue: '='
+                        , switchOnText: '@'
+                        , switchOffText: '@'
+                        , ngOnValue: '@'
+                        , ngOffValue: '@'
                     },
-                    template: InputDepartureOrArrivalSwitchTemplate
+                    template: InputOnOffToggleTemplate,
+                    link: function (scope, element) {
+                        // by default the toggle is in off state
+                        scope.selectedValue = scope.ngOffValue;
+
+                        scope.$watch('value', function(value) {
+                            scope.selectedValue = (value)? scope.ngOnValue: scope.ngOffValue;
+                        });
+                    }
                 }
 
             })

@@ -1,8 +1,10 @@
 define([
-        'widgets/filters/AbstractFilter'
+          'widgets/filters/AbstractFilter'
+        , 'lodash'
     ],
     function (
-        AbstractFilter
+          AbstractFilter
+        , _
     ) {
         'use strict';
 

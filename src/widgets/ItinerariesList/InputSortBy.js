@@ -51,31 +51,35 @@ define([
 
                         var lastSelectedValueIdx;
 
-                        function setSelectDropdownValue(selectedValueLabel, selectedValueIdx) {
-                            var buttonLabelText = "button span.SDSDropdownLabelText";
-                            $(buttonLabelText).text(selectedValueLabel);
-                            $(buttonLabelText).val(selectedValueLabel);
+                        function setSelectDropdownValue(dropdownMenuElement, selectedValueLabel, selectedValueIdx) {
+                            var buttonLabelTextSelector = "button span.SDSDropdownLabelText";
+                            var buttonLabelElement = angular.element(dropdownMenuElement.parentNode.querySelectorAll(buttonLabelTextSelector));
 
-                            var buttonScope = angular.element($(buttonLabelText)).scope();
-                            buttonScope.$apply(function () {
+                            buttonLabelElement.text(selectedValueLabel);
+                            buttonLabelElement.val(selectedValueLabel);
+
+                            var buttonScope = buttonLabelElement.scope();
+                            //buttonScope.$apply(function () {
                                 scope.selectedFirstSortCriterion.selected = scope.availableSortCriteria[selectedValueIdx];
                                 scope.onSortingCriteriaChanged();
-                            });
+                            //});
                         };
 
                         function isAlreadySelectedValue(selectedValueIdx) {
                             return (selectedValueIdx === lastSelectedValueIdx);
                         }
 
-                        angular.element(element).on('click', '.dropdown-menu li a', function () {
-                            var selectedValueLabel = $(this).text();
-                            var selectedValueIdx = $(this).data('criterion-index');
+                        element[0].querySelector('.dropdown-menu').addEventListener('click', function(event) {
+                            var clickedElement = event.target;
+                            var selectedValueLabel = clickedElement.textContent;
+                            var selectedValueIdx = parseInt(clickedElement.getAttribute('data-criterion-index'));
                             if (isAlreadySelectedValue(selectedValueIdx)) {
                                 return;
                             }
-                            setSelectDropdownValue(selectedValueLabel, selectedValueIdx);
+                            var dropdownMenuElement = this;
+                            setSelectDropdownValue(dropdownMenuElement, selectedValueLabel, selectedValueIdx);
                             lastSelectedValueIdx = selectedValueIdx;
-                        });
+                        }, true);
 
                     }
                 };

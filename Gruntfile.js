@@ -6,7 +6,35 @@ module.exports = function (grunt) {
 
         clean: {
               dist: ['dist/**/*', 'build/**/*']
-            , 'dist-no-compile': ['dist/**/*', '!dist/widgets/*.min.js', 'build/**/*'] // TODO exclusion not working
+            , 'dist-no-compile': [
+                  'dist/widgets/css'
+                , 'dist/widgets/fonts'
+                , 'dist/widgets/img'
+                , 'dist/www'
+                , 'dist/index.html'
+                , 'build/**/*'
+            ]
+        },
+
+        lodash: {
+            build: {
+                dest: 'build/lodash/lodash.custom.build.js',
+                options: {
+                    exports: ['amd'],
+                    modifier: 'modern'
+                }
+            }
+        },
+        lodashAutobuild: {
+            customBuild: {
+                src: ['src/**/*.js'],
+                // Default options:
+                options: {
+                    // The name(s) of the lodash object(s)
+                    lodashObjects: [ '_' ],
+                    lodashTargets: [ 'build' ]
+                }
+            }
         },
 
         jshint: {
@@ -172,19 +200,28 @@ module.exports = function (grunt) {
 
         requirejs: {
             compile: {
+                // for all options see https://github.com/jrburke/r.js/blob/master/build/example.build.js
                 options: {
                       name: 'SabreDevStudioSDK'
                     , mainConfigFile: 'src/SabreDevStudioSDK.js'
                     , out: "dist/widgets/SDSWidgets.min.js"
                     , inlineText: true
                     //, findNestedDependencies: true
-                    , optimize: 'uglify2'
+                    , paths: {
+                          lodash: '../build/lodash/lodash.custom.build'
+                        , angular: '../bower_components/angular/angular.min'
+                    }
+                    , pragmas: {
+                        appBuildExclude:true
+                    }
                     , include: ['../node_modules/requirejs/require.js']
-                    , uglify2: { // decreases size by only 3%
-                        compress: {
+                    , mangle: true
+                    , optimize: 'uglify2'
+                    , uglify2: {
+                        compress: { // all those compress options decrease size by round 5%
                             screw_ie8: true,
                             sequences: true,
-                            //properties: true,
+                            properties: true,
                             dead_code: true,
                             drop_debugger: true,
                             comparisons: true,
@@ -197,7 +234,7 @@ module.exports = function (grunt) {
                             if_return: true,
                             join_vars: true,
                             cascade: true,
-                            //negate_iife: true,
+                            negate_iife: true,
                             drop_console: true
                         }
                         //warnings: true
@@ -218,7 +255,7 @@ module.exports = function (grunt) {
                         , 'bower_components/bootstrap/dist/css/bootstrap.css'
                         , 'bower_components/angular-ui-select/dist/select.css'
                         , 'bower_components/angular-rangeslider/angular.rangeSlider.css'
-                        , '/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css'
+                        , 'bower_components/titatoggle/dist/titatoggle-dist.css'
                     ]
                 }
             }
@@ -251,8 +288,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-csslint');
     grunt.loadNpmTasks('grunt-bootlint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-include-replace')
 
-    grunt.loadNpmTasks('grunt-include-replace');
+    grunt.loadNpmTasks('grunt-lodash');
+    grunt.loadNpmTasks('grunt-lodash-autobuild');
 
     grunt.registerTask('test', 'karma');
 
@@ -260,6 +299,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dist', [
           'clean:dist'
+        , 'lodashAutobuild:customBuild'
         , 'requirejs:compile'
         , 'css-pipeline'
         , 'cssmin:cssbundle'

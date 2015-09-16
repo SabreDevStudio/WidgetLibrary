@@ -1,9 +1,11 @@
 define([
           'moment'
+        , 'lodash'
         , 'widgets/filters/RangeFilter'
     ],
     function (
           moment
+        , _
         , RangeFilter
     ) {
         'use strict';

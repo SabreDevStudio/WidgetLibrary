@@ -1,9 +1,11 @@
 define([
           'moment'
+        , 'lodash'
         , 'widgets/filters/AbstractFilter'
     ],
     function (
           moment
+        , _
         , AbstractFilter
     ) {
         'use strict';

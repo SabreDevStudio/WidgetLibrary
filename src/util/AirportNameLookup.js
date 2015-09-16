@@ -1,9 +1,11 @@
 define(['text!dictionaries/market.csv', 'lodash'], function (dictionaryFile, _) {
     "use strict";
 
+    var dictionary;
+
     // TODO: make all lookups singletons
     return function AirportNameLookup() {
-        var dictionary = parseDictionaryFile(dictionaryFile);
+        dictionary = dictionary || parseDictionaryFile(dictionaryFile);
 
         function parseDictionaryFile(dictionaryFile) {
             return _.object(

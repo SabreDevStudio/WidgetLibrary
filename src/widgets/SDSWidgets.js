@@ -11,7 +11,6 @@ define([
       , 'util/Lookups'
       , 'angular-img-fallback'
       , 'angular-rangeslider'
-      , 'angular_bootstrap_switch'
       , 'ngStorage'
       , 'angular_iso_currency'
       , 'text!view-templates/ErrorsModal.tpl.html'
@@ -30,7 +29,6 @@ define([
         , Lookups
         , angular_img_fallback
         , angular_rangeslider
-        , angular_bootstrap_switch
         , ngStorage
         , angular_iso_currency
         , ErrorsModalTemplate
@@ -52,7 +50,6 @@ define([
                 , 'dcbImgFallback'
                 , 'ui-rangeSlider'
                 , 'ngStorage'
-                , 'frapontillo.bootstrap-switch'
                 , 'isoCurrency'
             ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
@@ -66,6 +63,14 @@ define([
                 datepickerConfig.startingDay = 1;
                 datepickerConfig.yearRange = 2;
                 datepickerConfig.showButtonBar = false;
+            }])
+            .config(['$compileProvider', function($compileProvider) {
+                // we need debug enabled effectively to true for development, as these information is needed for the tools (Protractor, Batarang)
+                // for production we will cut off the later setting to true, with requirejs pragmas, to have it effectively disabled on production
+                $compileProvider.debugInfoEnabled(false);
+                //>>excludeStart('appBuildExclude', pragmas.appBuildExclude);
+                $compileProvider.debugInfoEnabled(true);
+                //>>excludeEnd('appBuildExclude');
             }])
             .service('SearchCriteriaBroadcastingService', [
                   '$rootScope'

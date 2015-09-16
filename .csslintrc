@@ -5,4 +5,5 @@
     , "qualified-headings": false
     , "font-sizes": false
     , "regex-selectors": false
+    , "empty-rules": false
 }

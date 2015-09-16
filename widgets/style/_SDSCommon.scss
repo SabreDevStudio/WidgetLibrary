@@ -1,128 +1,8 @@
 @import "compass/css3";
 @import "compass/css3/images";
 
-/* Color palette for all widgets */
-$dataBackgroundColor: white;
-
-/* inactive data are for example Shopping options that cannot be booked, sold out, past dates, not shoppable for any other reason. They will be presented on shaded background  */
-$dataInactiveBackgroundColor: #d3d3d3;
-
-$dataHighlightedBackgroundColor: #C6C700;
-
-$headerBackgroundColor: #0040D0;
-
-$headerFontColor: white;
-
-$widgetFocusPointColor: #f1780b;
-
 $itemsSeparatingLineColor: #D2DDE4;
 $itemsSeparatingLineStyle: solid #D2DDE4 1px;
-
-
-/* structural constants for all widgets */
-/* all widgets will have rounded corners */
-$borderRadius: 0.4em;
-
-/* fonts constants */
-$fontStack: 'Lato', Helvetica Neue, Helvetica, Arial, sans-serif;
-
-$secondaryHeaderFontSize: 0.75rem;
-$primaryHeaderFontSize: 0.85rem;
-
-$primaryDataFontSize: $secondaryHeaderFontSize;
-$secondaryDataFontSize: round($primaryDataFontSize * 0.85 * 10) / 10; // *10 and / 10, to get rounding to 0.1 of em
-
-$focusPointDataFontSize: 1.5 * $primaryDataFontSize;
-
-%InheritRoundedBottomCorners {
-  border-bottom-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-}
-
-%InheritRoundedTopCorners {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-}
-
-/* main placeholder, that all widgets must have this class: you have to put this class to the main element of any widget */
-// this is not a placeholder (and all widgets extending it), because we have to have some class to qualify the CSS resets anyway.
-.SDSWidget {
-  box-sizing: border-box;
-  border-radius: $borderRadius;
-  box-shadow: 4px 4px 1px #888888;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  border: 1px solid $headerBackgroundColor;
-  font-family: $fontStack;
-  font-size: $primaryDataFontSize;
-  font-weight: bold;
-
-  /* inherit bottom borders for all last children, recursively */
-  > :last-child {
-    @extend %InheritRoundedBottomCorners;
-    > :last-child {
-      @extend %InheritRoundedBottomCorners; // WARN it may unnecessarily round also bottom left corner when this child is not at the bottom but in bottom right corner, and similar problems
-      > :last-child {
-        @extend %InheritRoundedBottomCorners;
-      }
-    }
-  }
-
-  > :first-child {
-    @extend %InheritRoundedTopCorners;
-    > :first-child {
-      @extend %InheritRoundedTopCorners;
-      > :first-child {
-        @extend %InheritRoundedTopCorners;
-      }
-    }
-  }
-
-}
-
-/* placeholder to apply to all data elements (captions, list headers, table headers) of all widget headers */
-%SDSHeaderData {
-  background-color: $headerBackgroundColor;
-  color: $headerFontColor;
-  text-align: center;
-}
-
-%SDSHeaderDataPrimary {
-  @extend %SDSHeaderData;
-  font-size: $primaryHeaderFontSize;
-  padding: 4px 2px;
-}
-
-%SDSHeaderDataSecondary {
-  @extend %SDSHeaderData;
-  font-size: $secondaryHeaderFontSize;
-}
-
-/* placeholder to apply to all, primary and secondary data presented by widgets (which are not header) */
-%SDSData {
-  background-color: $dataBackgroundColor;
-  cursor: pointer;
-  font-size: $primaryDataFontSize;
-
-  .SDSTopLevelPrice {
-    font-weight: bold;
-    font-size: $focusPointDataFontSize;
-  }
-
-  /* highlighted data are data under mouse hoover, or highlighted to draw user attention */
-  &.SDSHighlight {
-    background-color: $dataHighlightedBackgroundColor;
-  }
-}
-
-/* to apply to all inactive (primary and secondary) data of all widgets */
-%SDSInactiveData {
-  @extend %SDSData;
-  background-color: $dataInactiveBackgroundColor;
-  &.SDSHighlight {
-    background-color: $dataHighlightedBackgroundColor;
-  }
-}
 
 .SDSTopLevelList > li  {
   border-bottom: solid #D2DDE4 1px;
@@ -155,6 +35,25 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
   padding-bottom: 4px;
 }
 
+.SDSCheckboxToggled {
+  display: inline-flex;
+
+  // fix for titatoggle not presented correctly in bootstrap form-horizontal, see https://github.com/kleinejan/titatoggle/issues/5
+  .checkbox-slider--b input + span:after {
+    margin-top: 7px;
+  }
+  // resetting padding to have no padding after the toggle (by default there is padding, as by default it is used as checkbox. We use it as enumeration of two values, and will adjust padding for those two values */
+  .checkbox-slider--b input + span {
+    padding-left: 20px;
+  }
+  .SDSCheckboxToggledOffText {
+    padding-right: 5px;
+  }
+  .SDSCheckboxToggledOnText {
+    padding-left: 5px;
+  }
+}
+
 /* general class to add to all for all inactive/deactivated elements */
 .SDSInactive {
   @include opacity(0.35);
@@ -175,46 +74,6 @@ $focusPointDataFontSize: 1.5 * $primaryDataFontSize;
   width: (1 / $columnsCount) * 100%;
 }
 
-/* moves specified child to the right within the parent element
-also sets left and right child to inline block */
-@mixin childrenToLeftAndRight($childToLeft, $childToRight) {
-    position: relative;
-    > #{$childToLeft}, > #{$childToRight} {
-      position: absolute;
-      display: inline-block;
-    }
-    > #{$childToRight} {
-      right: 0;
-    }
-}
-
-@mixin childToRight($childToRight) {
-  position: relative;
-  > #{$childToRight} {
-    position: absolute;
-    display: inline-block;
-    right: 0;
-  }
-}
-
-%SDSButton {
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: default;
-    pointer-events: none;
-    border-style: outset;
-  }
-}
-
-%SDSPrimaryButton {
-  @extend %SDSButton;
-  font-size: $focusPointDataFontSize;
-  padding: 0.15rem 1rem;
-}
-
 .SDSNoWrap {
   white-space:nowrap;
 }
@@ -227,7 +86,7 @@ also sets left and right child to inline block */
   }
 }
 
-.SDSWidgetNG { //TODO remove .SDSWidget and replace with SDSWidgetNG
+.SDSWidget {
 
   .SDSPaxNbrInput { //bumping up selector value to override bootstrap
     // needed for FF and IE, otherwise this field far too long for one digit input
@@ -238,6 +97,7 @@ also sets left and right child to inline block */
   .SDSDateInput {
     width: 14rem;
   }
+
 }
 
 .SDSDisableLink {

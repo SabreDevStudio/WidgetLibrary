@@ -1,5 +1,5 @@
-define([],
-    function () {
+define(['lodash'],
+    function (_) {
         'use strict';
 
         function AbstractFilter(filterId, label, filterablePropertyName) {

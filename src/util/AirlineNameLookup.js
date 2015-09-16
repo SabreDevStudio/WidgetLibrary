@@ -1,6 +1,7 @@
 define(['text!dictionaries/carrier.csv', 'lodash'], function (dictionaryFile, _) {
     "use strict";
     return function AirlineNameLookup() {
+        //TODO: parse dict file only once
         var dictionary = parseDictionaryFile(dictionaryFile);
 
         function parseDictionaryFile(dictionaryFile) {

@@ -1,3 +1,12 @@
+//TODO: refactor all with SASS interpolation, mixins and so one
+
+//$breakpoint_xxs: "20em";
+//$breakpoint_xs: "30em";
+//$breakpoint_sm: "40em";
+//$breakpoint_md: "50em";
+//$breakpoint_lg: "60em";
+//$breakpoint_xl: "70em";
+
 .SDSResponsiveElement {
 
   .SDS-col-element-xxs-1, .SDS-col-element-xxs-2, .SDS-col-element-xxs-3, .SDS-col-element-xxs-4,
@@ -245,6 +254,129 @@
     }
     .SDS-col-element-md-12 {
       width: 100%;
+    }
+  }
+
+  .SDS-visible-xs, .SDS-visible-xs-inline-block,
+  .SDS-visible-sm, .SDS-visible-sm-inline-block,
+  .SDS-visible-md, .SDS-visible-md-inline-block,
+  .SDS-visible-lg, .SDS-visible-lg-inline-block,
+  .SDS-visible-xl, .SDS-visible-xl-inline-block {
+    display: none;
+  }
+
+  /* responsive utilities, based on bootstrap
+  WARN: bootstrap convention not followed: there is only one min breakpoint, no max breakpoint for classes (like in grid system)
+  */
+  &[min-width~="30em"] {
+    .SDS-visible-xs {
+      display: block;
+    }
+    .SDS-visible-xs-inline-block {
+      display: inline-block;
+    }
+    .SDS-hidden-xs {
+      display: none;
+    }
+  }
+
+  &[min-width~="40em"] {
+    .SDS-visible-sm {
+      display: block;
+    }
+    .SDS-visible-sm-inline-block {
+      display: inline-block;
+    }
+    .SDS-hidden-sm {
+      display: none;
+    }
+  }
+
+  &[min-width~="50em"] {
+    .SDS-visible-md {
+      display: block;
+    }
+    .SDS-visible-md-inline-block {
+      display: inline-block;
+    }
+    .SDS-hidden-md {
+      display: none;
+    }
+  }
+
+  &[min-width~="60em"] {
+    .SDS-visible-lg {
+      display: block;
+    }
+    .SDS-visible-lg-inline-block {
+      display: inline-block;
+    }
+    .SDS-hidden-lg {
+      display: none;
+    }
+  }
+
+  &[min-width~="70em"] {
+    .SDS-visible-xl {
+      display: block;
+    }
+    .SDS-visible-xl-inline-block {
+      display: inline-block;
+    }
+    .SDS-hidden-xl {
+      display: none;
+    }
+  }
+
+  /* mimicking bootstrap form-inline */
+  &[min-width~="70em"] {
+    .form-xl-inline .form-group {
+      display: inline-block;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+    .form-xl-inline .form-control {
+      display: inline-block;
+      width: auto;
+      vertical-align: middle;
+    }
+    .form-xl-inline .form-control-static {
+      display: inline-block;
+    }
+    .form-xl-inline .input-group {
+      display: inline-table;
+      vertical-align: middle;
+    }
+    .form-xl-inline .input-group .input-group-addon,
+    .form-xl-inline .input-group .input-group-btn,
+    .form-xl-inline .input-group .form-control {
+      width: auto;
+    }
+    .form-xl-inline .input-group > .form-control {
+      width: 100%;
+    }
+    .form-xl-inline .control-label {
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+    .form-xl-inline .radio,
+    .form-xl-inline .checkbox {
+      display: inline-block;
+      margin-top: 0;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+    .form-xl-inline .radio label,
+    .form-xl-inline .checkbox label {
+      padding-left: 0;
+    }
+    .form-xl-inline .radio input[type="radio"],
+    .form-xl-inline .checkbox input[type="checkbox"] {
+      position: relative;
+      margin-left: 0;
+    }
+    .form-xl-inline .has-feedback .form-control-feedback {
+      top: 0;
     }
   }
 

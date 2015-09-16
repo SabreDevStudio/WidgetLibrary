@@ -1,11 +1,8 @@
 require.config({
     paths: {
-          'jquery': "../bower_components/jquery/dist/jquery"
-        , 'jquery_loader': 'util/jquery-loader'
-        , text: '../bower_components/text/text'
-        , moment: '../bower_components/moment/min/moment-with-locales'
+          text: '../bower_components/text/text'
+        , moment: '../bower_components/moment/moment'
         , moment_range: '../bower_components/moment-range/dist/moment-range'
-        , validator_lib: '../bower_components/validator-js/validator'
         , lodash: '../bower_components/lodash/lodash'
         , angular: '../bower_components/angular/angular'
         , 'angular_resource': '../bower_components/angular-resource/angular-resource'
@@ -19,29 +16,18 @@ require.config({
         , 'ngStorage': '../bower_components/ngstorage/ngStorage'
         , 'ngPromiseExtras': '../bower_components/angular-promise-extras/angular-promise-extras'
         ,  chartjs: '../bower_components/Chart.js/Chart'
-        , 'bootstrap_switch': 'lib/bootstrap-switch-AMD'
-        , 'angular_bootstrap_switch': '../bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch'
         , 'angular_iso_currency': '../bower_components/iso-currency/dist/isoCurrency'
+        , 'elementQuery': 'lib/elementQuery' //TODO elementQuery exposing functions on windows... AMD support already requested, see: https://github.com/tysonmatanich/elementQuery/pull/9/commits
     },
-    //map: { // disabled, with it angular is not using jquery but its jqLite
-    //    '*': {'jquery': 'util/jquery-loader'},
-    //    'util/jquery-loader': {'jquery': 'jquery'}
-    //},
     map: {
         '*': {
               'chartjs': 'chartjs-noConflict'
-  //           ,'jquery': 'jquery_loader'
         }
         , 'chartjs-noConflict': { 'chartjs': 'chartjs'}
-//         ,'jquery_loader': {'jquery': 'jquery'}
     },
     shim: {
-        //'jquery': {
-        //    exports: '$'
-        //},
         // angular does not support AMD out of the box, put it in a shim
         'angular': {
-            deps: ['jquery'],
             exports: 'angular'
         },
         angular_resource: {
@@ -77,11 +63,8 @@ require.config({
         'angular_iso_currency': {
             deps: ['angular']
         },
-        'bootstrap_switch': {
-            deps: ['jquery']
-        },
-        'angular_bootstrap_switch': {
-            deps: ['angular', 'bootstrap_switch']
+        'elementQuery': {
+            exports: 'elementQuery'
         }
     },
     config: {
@@ -93,8 +76,7 @@ require.config({
 });
 
 require([
-          "jquery"
-        , 'moment'
+          'moment'
         , 'datamodel/ItinerariesList'
         , 'webservices/BasicSearchCriteriaValidator'
         , 'webservices/InstaflightSearchCriteriaValidator'
@@ -114,9 +96,9 @@ require([
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
         , 'Configuration'
+        , 'elementQuery'
     ], function (
-          $
-        , moment
+          moment
         , ItinerariesList
         , BasicSearchCriteriaValidator
         , InstaflightSearchCriteriaValidator
@@ -136,18 +118,33 @@ require([
         , FiltersPanelWidget
         , DiscreteFilterWidget
         , Configuration
+        , elementQuery
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?
         "use strict";
 
-        function bootstrapNG() {
-            angular.element(document).ready(function () { // TODO: we cannot compile on whole document level..
-            //$(document).ready(function() {
-                angular.bootstrap(document, ['sdsWidgets'], {
-                    strictDi: true
-                });
+    bootstrapNG();
+
+    function bootstrapNG() {
+        angular.element(document).ready(function () {
+            // var beforeNG = performance.now();
+            angular.bootstrap(document, ['sdsWidgets'], { // TODO: we cannot compile on whole document level..
+                strictDi: true
             });
+            // var afterNG = performance.now();
+            // console.log('NG load: ' + (afterNG - beforeNG));
+            parseCssStylesheetsForElementQueries();
+            // var afterCSS = performance.now();
+            // console.log('CSS RWD parse: ' + (afterCSS - afterNG));
+        });
+    }
+
+    function parseCssStylesheetsForElementQueries() {
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf('SDS') > -1) { //TODO: having file part name constant in JS code to limit processing to only own stylesheets. But this infix should be overwritten by build system (Grunt), while doing minfication. Changing the name of minified file in grunt will not change here...
+                // TODO: becasue of how elementQuery script is writted it will parse all stylesheets later anyway itself. And will act on it.
+                elementQuery(document.styleSheets[i], true);
+            }
         }
+    }
 
-        bootstrapNG();
-
-    });
+});

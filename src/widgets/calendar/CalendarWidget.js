@@ -1,7 +1,8 @@
 define([
           'moment'
         , 'angular'
-        , 'util/jQueryExtensions'
+        , 'lodash'
+        , 'util/SelectorEngineExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/CalendarWidgetTabs.tpl.html'
@@ -14,6 +15,7 @@ define([
     function (
           moment
         , angular
+        , _
         , $$
         , angular_bootstrap
         , SDSWidgets
@@ -180,18 +182,18 @@ define([
                   },
                   link: function (scope, element) {
                       var lengthOfStayDays = parseInt(scope.lengthOfStayDays) + 1; // in length of stay highlight we include both departure and return day ( that's why + 1)
-                      $(element).on('mouseenter', 'td', function () {
-                          var allLoSdays = $$(this).nextAllAndFirstLevelCousins(lengthOfStayDays);
+
+                      element[0].addEventListener('mouseenter', function () {
+                          var allLoSdays = $$.nextAllAndFirstLevelCousins(this, lengthOfStayDays);
                           allLoSdays.forEach(function (cell) {
-                              $(cell).addClass(scope.highlightClass);
+                              cell.classList.add(scope.highlightClass);
                           });
                       });
 
-                      $(element).on('mouseleave', 'td', function () {
-                          var allLoSdays = $$(this).nextAllAndFirstLevelCousins(lengthOfStayDays);
+                      element[0].addEventListener('mouseleave', function () {
+                          var allLoSdays = $$.nextAllAndFirstLevelCousins(this, lengthOfStayDays);
                           allLoSdays.forEach(function (cell) {
-                              $(cell).removeClass(scope.highlightClass);
-
+                              cell.classList.remove(scope.highlightClass);
                           });
                       });
                   }

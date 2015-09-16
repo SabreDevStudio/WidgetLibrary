@@ -1,6 +1,7 @@
 define([
           'angular'
         , 'moment'
+        , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/WebServicesResourceDefinitions'
         , 'datamodel/FareForecast'
@@ -9,6 +10,7 @@ define([
     function (
           angular
         , moment
+        , _
         , SabreDevStudioWebServicesModule
         , WebServicesResourceDefinitions
         , FareForecast
