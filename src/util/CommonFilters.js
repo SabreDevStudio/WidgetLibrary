@@ -22,10 +22,9 @@ define([
                     return moment(input, format);
                 };
             })
-            .filter('humanizeMinutesAsHours', function () { //TODO hardcode for no filter composition
-                return function (inputInMinutes) {
-                    var duration = moment.duration(inputInMinutes, 'minutes');
-                    return duration.humanize();
+            .filter('stringJoiner', function () {
+                return function (input, delimiter, prefix, suffix) {
+                    return prefix + (input || []).join(delimiter || ',') + suffix;
                 };
             })
             .filter('humanizeNumberOfStops', function () {

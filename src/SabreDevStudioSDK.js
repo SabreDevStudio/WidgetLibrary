@@ -8,7 +8,6 @@ require.config({
         , 'angular_resource': '../bower_components/angular-resource/angular-resource'
         , 'angular_moment': '../bower_components/angular-moment/angular-moment'
         , 'angular_bootstrap': '../bower_components/angular-bootstrap/ui-bootstrap-tpls'
-        , 'angular_animate': '../bower_components/angular-animate/angular-animate'
         , 'angular-ui-select': '../bower_components/angular-ui-select/dist/select'
         , 'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize'
         , 'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback'
@@ -34,9 +33,6 @@ require.config({
             deps: ['angular'], 'exports': 'ngResource'
         },
         angular_bootstrap: {
-            deps: ['angular']
-        },
-        angular_animate: {
             deps: ['angular']
         },
         'angular-ui-select': {
@@ -92,6 +88,7 @@ require([
         , 'widgets/fareForecast/FareForecastWidget'
         , 'widgets/FareRangeWidget'
         , 'widgets/FareNabberWidget'
+        , 'widgets/DestinationPricerWidget'
         , 'widgets/ItinerariesList/ItinerariesListWidget'
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
@@ -114,6 +111,7 @@ require([
         , FareForecastWidget
         , FareRangeWidget
         , FareNabberWidget
+        , DestinationPricerWidget
         , ItinerariesListWidget
         , FiltersPanelWidget
         , DiscreteFilterWidget
@@ -126,12 +124,12 @@ require([
 
     function bootstrapNG() {
         angular.element(document).ready(function () {
-            // var beforeNG = performance.now();
+            var beforeNG = performance.now();
             angular.bootstrap(document, ['sdsWidgets'], { // TODO: we cannot compile on whole document level..
                 strictDi: true
             });
-            // var afterNG = performance.now();
-            // console.log('NG load: ' + (afterNG - beforeNG));
+            var afterNG = performance.now();
+            console.log('NG load: ' + (afterNG - beforeNG));
             parseCssStylesheetsForElementQueries();
             // var afterCSS = performance.now();
             // console.log('CSS RWD parse: ' + (afterCSS - afterNG));

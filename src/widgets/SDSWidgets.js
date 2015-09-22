@@ -5,13 +5,11 @@ define([
       , 'util/CommonFilters'
       , 'webservices/SabreDevStudioWebServicesModule'
       , 'angular_moment'
-      , 'angular_animate'
       , 'angular-ui-select'
       , 'angular-sanitize'
       , 'util/Lookups'
       , 'angular-img-fallback'
       , 'angular-rangeslider'
-      , 'ngStorage'
       , 'angular_iso_currency'
       , 'text!view-templates/ErrorsModal.tpl.html'
       , 'text!view-templates/ErrorsMessages.tpl.html'
@@ -23,13 +21,11 @@ define([
         , CommonFilters
         , SabreDevStudioWebServicesModule
         , angular_moment
-        , angular_animate
         , angular_ui_select
         , angular_sanitize
         , Lookups
         , angular_img_fallback
         , angular_rangeslider
-        , ngStorage
         , angular_iso_currency
         , ErrorsModalTemplate
         , ErrorMessagesTemplate
@@ -43,13 +39,11 @@ define([
                 , 'commonFilters'
                 , 'angularMoment'
                 , 'ui.bootstrap'
-                , 'ngAnimate'
                 , 'ngSanitize'
                 , 'ui.select'
                 , 'sDSLookups'
                 , 'dcbImgFallback'
                 , 'ui-rangeSlider'
-                , 'ngStorage'
                 , 'isoCurrency'
             ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')

@@ -9,8 +9,7 @@
         <li class="SDSTravelTime">{{itinerary.getFirstLeg().getLegArrivalDateTime() | amDateFormat: 'HH:mm'}}</li>
         <li>
             <strong>
-                <img class="SDSAirlineLogo" ng-src="../widgets/img/airlineLogos/{{itinerary.getFirstLeg().getFirstFlightMarketingAirline()}}.PNG"
-                     fallback-src="../widgets/img/airlineLogos/generic_airline.PNG">
+                <airline-logo airline-code="{{itinerary.getFirstLeg().getFirstFlightMarketingAirline()}}"></airline-logo>
                 {{itinerary.getFirstLeg().getFirstFlightMarketingAirline() | airlineFullName}}
             </strong>
         </li>

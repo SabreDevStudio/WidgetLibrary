@@ -25,7 +25,7 @@ define([
             };
 
             this.parseEquipment = function(segment) {
-                return segment.AirEquipType;
+                return segment.Equipment.AirEquipType;
             };
 
             this.parsePricingSource = function() {

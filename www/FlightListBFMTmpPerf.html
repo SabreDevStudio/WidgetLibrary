@@ -11,16 +11,19 @@
     <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
 <body>
     <div id="mainPageContainer">
         <partial command="include('partials/navigation.html')"></partial>
-        <div class="embeddedWidget" data-search-form></div>
-        <!--<div class="embeddedWidget" data-search-form options-per-day="1"></div>-->
-        <!-- TODO: ability to present both flight lists next to each other -->
-        <!--<itinerary-list id="ItineraryList" active-search="true" active-search-web-service="bfm"></itinerary-list>-->
-        <itinerary-list class="embeddedWidget" id="ItineraryList2" active-search="true" active-search-web-service="bfm"></itinerary-list>
+        <!--<div class="embeddedWidget" data-search-form></div>-->
+        <itinerary-list class="embeddedWidget" id="ItineraryList2" active-search="true" active-search-web-service="instaflights" origin="FRA" destination="NYC" departure-date="2015-10-01" return-date="2015-10-10"></itinerary-list>
+        <!--<itinerary-list-tmp-perf class="embeddedWidget" id="ItineraryList2" active-search="true" active-search-web-service="instaflights"-->
+                <!--origin="FRA"-->
+                <!--destination="BKK"-->
+                <!--departure-date="2015-10-10"-->
+                <!--return-date="2015-10-14"></itinerary-list-tmp-perf>-->
     </div>
 
     <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>

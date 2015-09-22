@@ -115,3 +115,17 @@ $itemsSeparatingLineStyle: solid #D2DDE4 1px;
 .SDSBottomBuffer {
   margin-bottom: 1rem;
 }
+
+.SDSPreferredAirlineSelect {
+  .ui-select-toggle {
+    width: 100%;
+    min-width: 200px;
+    max-width: 200px;
+  }
+  .ui-select-match-text {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+

@@ -15,6 +15,7 @@ define([
         , 'datamodel/SearchCriteria'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
         , 'webservices/OneDaySearchStrategyFactory'
+        , 'util/CommonDisplayDirectives'
     ],
     function (
           _
@@ -33,6 +34,7 @@ define([
         , SearchCriteria
         , ItinerariesListSortCriteria
         , OneDaySearchStrategyFactory
+        , CommonDisplayDirectives
     ) {
         'use strict';
 
@@ -278,7 +280,8 @@ define([
                     var ngOrderByPredicatesArray = sortingCriteriaArray.map(function (criterion) {
                         return (criterion.reverse? '-': '+') + criterion.propertyName;
                     });
-                    return orderBy(values, ngOrderByPredicatesArray);
+                    var orderBy2 = orderBy(values, ngOrderByPredicatesArray);
+                    return orderBy2;
                 };
             }]);
     });

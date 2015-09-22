@@ -73,8 +73,8 @@ define([
 
             function saveLastSearchCriteria(searchCriteria) {
                 that.lastSearchCriteria = searchCriteria;
-                that.lastSearchCriteriaAirports.departureAirport = searchCriteria.getFirstLeg().origin;
-                that.lastSearchCriteriaAirports.arrivalAirport = searchCriteria.getFirstLeg().destination;
+                that.lastSearchCriteriaAirports.departureAirport = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().origin: searchCriteria.origin;
+                that.lastSearchCriteriaAirports.arrivalAirport = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().destination: searchCriteria.destination;
             }
         }
 

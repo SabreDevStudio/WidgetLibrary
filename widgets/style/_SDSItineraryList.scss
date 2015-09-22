@@ -22,23 +22,28 @@
   background: url("../img/sabre.png") -109px -161px no-repeat;
   width: 2px;
   height: 14px;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
-.SDSTravelDateLong {
-  width: 10%;
-  min-width: 9.5rem;
-  margin-left: 1rem;
+.SDSIconRedEye {
+  content:url("../img/icons/moon_16_16.png");
+}
+
+.SDSIconHurryUpShortConnection {
+  content:url("../img/icons/running_16_16.png");
+}
+
+.SDSIconLongConnection {
+  content:url("../img/icons/clock_16_16.png");
+}
+
+.SDSIconFewSeatsLeft {
+  content:url("../img/icons/attention_16_16.png");
 }
 
 .SDSLegSummary {
   padding-bottom: 0.5rem;
-  > .SDSIconAirplaneArrow {
-    margin-left: 3rem;
-    margin-right: 1.5rem;
-  }
-  > .SDTravelDepartureArrivalTime {
-    width: 4%;
-  }
 }
 
 .SDSLegShortSummary {
@@ -56,6 +61,21 @@
   width: 5%;
   min-width: 4rem;
   margin-right: 0.5rem;
+}
+
+.SDSTravelDateLong {
+  width: 10%;
+  min-width: 9.5rem;
+}
+
+.SDSTravelDateTime {
+  width: 10%;
+  min-width: 15rem;
+}
+
+.SDSFullAirportName {
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
 }
 
 .SDSAirport {

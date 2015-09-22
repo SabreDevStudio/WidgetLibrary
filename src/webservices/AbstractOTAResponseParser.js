@@ -3,6 +3,7 @@ define([
         , 'moment'
         , 'datamodel/Itinerary'
         , 'datamodel/Leg'
+        , 'datamodel/Segment'
         , 'datamodel/ItinerariesList'
         , 'datamodel/AlternateDatesOneWayPriceMatrix'
         , 'datamodel/AlternateDatesRoundTripPriceMatrix'
@@ -12,6 +13,7 @@ define([
         , moment
         , Itinerary
         , Leg
+        , Segment
         , ItinerariesList
         , AlternateDatesOneWayPriceMatrix
         , AlternateDatesRoundTripPriceMatrix
@@ -125,7 +127,7 @@ define([
                 if (segment.Equipment.length > 1) {
                     throw new Error('parser unsupported'); //TODO: UT on complex responses
                 }
-                return {
+                return new Segment({
                     departureAirport: segment.DepartureAirport.LocationCode,
                     departureDateTime: moment(segment.DepartureDateTime, moment.ISO_8601),
                     arrivalAirport: segment.ArrivalAirport.LocationCode,
@@ -136,7 +138,7 @@ define([
                     marketingAirline: segment.MarketingAirline.Code,
                     operatingFlightNumber: segment.OperatingAirline.FlightNumber,
                     operatingAirline: segment.OperatingAirline.Code
-                };
+                });
             });
             return leg;
         };

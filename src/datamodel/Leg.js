@@ -1,14 +1,20 @@
 define([
-        'lodash'
+          'lodash'
+        , 'moment'
     ],
     function (
-        _
+          _
+        , moment
     ) {
         'use strict';
 
         function Leg() {
             this.segments = [];
         }
+
+        Leg.prototype.addSegment = function(segment) {
+            this.segments.push(segment);
+        };
 
         // returns departure (origin) for the whole leg: that is the departure airport of the first segment of the leg
         Leg.prototype.getLegDepartureAirport = function() {
@@ -42,6 +48,16 @@ define([
             return _.first(this.segments).marketingAirline;
         };
 
+        /* returns unique list of all marketing airlines, in the order as they first appear in leg */
+        Leg.prototype.getAllMarketingAirlines = function() {
+            var allMktAirlines = [];
+            this.segments.forEach(function (segment) {
+                allMktAirlines.push(segment.marketingAirline);
+            });
+            return _.uniq(allMktAirlines);
+        };
+
+
         Leg.prototype.hasConnection = function () {
           return this.segments.length > 1;
         };
@@ -59,15 +75,60 @@ define([
             });
         };
 
-        Leg.prototype.getSegmentFlightStructure = function (s) { //TODO introduce segment domain object
-            return [s.departureDateTime.format(), s.departureAirport, s.arrivalDateTime, s.arrivalAirport, s.cabin, s.marketingAirline, s.marketingFlightNumber, s.operatingAirline, s.operatingFlightNumber].join('|');
+        // returns moment.duration
+        Leg.prototype.getConnectionTime = function(segmentIdx) {
+            if (this.hasConnection() && segmentIdx < (this.segments.length - 1)) { //all segments but not the last one
+                var thisFlightArrival = this.segments[segmentIdx].arrivalDateTime;
+                var nextFlightDeparture = this.segments[segmentIdx + 1].departureDateTime;
+                var connectionTimeMillis = nextFlightDeparture.diff(thisFlightArrival);
+                return moment.duration(connectionTimeMillis);
+            }
         };
 
         Leg.prototype.getFlightStructure = function () {
             var that = this;
             return this.segments.map(function (segment) {
-                return that.getSegmentFlightStructure(segment);
+                return segment.getFlightStructure();
             }).join('||');
+        };
+
+        Leg.prototype.hasRedEyeFlight = function () {
+            return this.segments.some(function (segment) {
+                return segment.flightTimeCrossesMidnight();
+            });
+        };
+
+        Leg.prototype.getConnectionTimeToNextFlight = function(flightIdx) {
+            var thisFlight = this.segments[flightIdx];
+            var nextFlight = this.segments[flightIdx + 1];
+            return nextFlight.departureDateTime.diff(thisFlight.arrivalDateTime, 'minutes');
+        };
+
+        Leg.prototype.hasLongConnection = function () {
+            var LONG_CONNECTION_MIN_MINUTES = 300; //TODO: make it 300 for Domestic and 780 for international. Need to do lookups for airports to get airports counties
+            for (var flightIdx = 0; flightIdx < this.segments.length - 1; flightIdx++) {
+                var connectionTime =  this.getConnectionTimeToNextFlight(flightIdx);
+                if (connectionTime >=  LONG_CONNECTION_MIN_MINUTES) {
+                    return true;
+                }
+            }
+        };
+
+        // returns indicator that warns customer that they need to hurry up at some connection airport.
+        Leg.prototype.hasShortConnection = function () {
+            var SHORT_CONNECTION_MIN_MINUTES = 60; //WARN: this is very dependent on airport layout, whether both gates are in the same terminal, whether visa formalities need to be done (like at US gateway), flight delays
+            for (var flightIdx = 0; flightIdx < this.segments.length - 1; flightIdx++) {
+                var connectionTime =  this.getConnectionTimeToNextFlight(flightIdx);
+                if (connectionTime <=  SHORT_CONNECTION_MIN_MINUTES) {
+                    return true;
+                }
+            }
+        };
+
+        Leg.prototype.hasLowSeatsRemaining = function () {
+            return this.segments.some(function (segment) {
+                return segment.hasLowSeatsRemaining();
+            });
         };
 
         return Leg;

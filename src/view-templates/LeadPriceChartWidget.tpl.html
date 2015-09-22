@@ -5,7 +5,7 @@
     </div>
 
     <div class="panel-body" ng-show="ctrl.isAnyDataToDisplayAvailable() && !ctrl.anyBusinessErrorMessagesPresent()">
-        <h5>Prices from <em>{{ctrl.lastSearchCriteriaAirports.departureAirport | airportFullName}}</em> to <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | airportFullName}}</em>,
+        <h5>Prices from <em>{{ctrl.lastSearchCriteriaAirports.departureAirport | cityAndAirportFullName}}</em> to <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}</em>,
             from <strong>{{ctrl.minDateAndPricePair.totalFareAmount | currency:ctrl.minDateAndPricePair.currency}}</strong> at <strong>{{ctrl.minDateAndPricePair.date | amDateFormat:'D MMM'}}</strong>
         </h5>
 
@@ -15,7 +15,7 @@
 
     <div class="panel-body" ng-show="ctrl.anyBusinessErrorMessagesPresent()">
         <h5>
-            No prices found for <em>{{ctrl.lastSearchCriteriaAirports.departureAirport | airportFullName}}</em> to <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | airportFullName}}</em>
+            No prices found for <em>{{ctrl.lastSearchCriteriaAirports.departureAirport | cityAndAirportFullName}}</em> to <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}</em>
         </h5>
     </div>
 

@@ -41,16 +41,17 @@
 
     <div collapse="!areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer">
         <div class="row">
-            <div class="TODO-3 SDS-col-element-xs-6 SDS-col-element-sm-3">
-                <div class="form-group">
-                    <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label">Preferred Airline</label>
-                    <select-preferred-airline class="form-control input-sm" id="SDSSearchForm_PreferredAirline" preferred-airline="preferredAirline.selected"></select-preferred-airline>
+            <div class="SDS-col-element-xs-6 SDS-col-element-lg-3">
+                <div class="form-group SDS-form-inline-exclude">
+                    <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label SDS-form-inline-exclude">Preferred Airline</label>
+                    <select-preferred-airline class="input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredAirline" preferred-airline="preferredAirline"></select-preferred-airline>
+                    <!-- WARN: Lack of 'form-control' class is intentional. The component used in select preferred airline directive - the angular ui-select, is already styled as bootstrap button. Wrapping it in form-control here breaks the style (we get unnecessary wrapping. This issue is reported to ui-select and recognized as issue. No fix yet.  -->
                 </div>
             </div>
-            <div class="TODO-3 SDS-col-element-xs-6 SDS-col-element-sm-3">
-                <div class="form-group">
-                    <label for="SDSSearchForm_PreferredCabin" class="input-sm control-label">Cabin</label>
-                    <select-preferred-cabin name="PreferredCabin" class="form-control input-sm" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
+            <div class="SDS-col-element-xs-6 SDS-col-element-lg-3">
+                <div class="form-group SDS-form-inline-exclude">
+                    <label for="SDSSearchForm_PreferredCabin" class="input-sm control-label SDS-form-inline-exclude">Cabin</label>
+                    <select-preferred-cabin name="PreferredCabin" class="form-control input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
                 </div>
             </div>
         </div>
@@ -78,7 +79,7 @@
             <div class="SDSTopBuffer"></div>
             <form class="form-xl-inline" name="searchForm" class="SDSTopBuffer" novalidate ng-submit="createNewSearchCriteria()">
                     <div class="row">
-                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
+                        <div class="SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Origin.$invalid}">
                                 <label for="SDSSearchForm_Origin" class="input-sm control-label">Leaving from</label>
                                 <input-airport id="SDSSearchForm_Origin" name="Origin" class="form-control input-sm" autofocus required airport="Origin"></input-airport>
@@ -87,7 +88,7 @@
                                 <small class="help-block" ng-show="searchForm.Origin.$error.required">Type origin airport or city</small>
                             </div>
                         </div>
-                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
+                        <div class="SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Destination.$invalid}">
                                 <label for="SDSSearchForm_Destination" class="input-sm control-label">Going to</label>
                                 <input-airport id="SDSSearchForm_Destination" name="Destination" class="form-control input-sm" required airport="Destination"></input-airport>
@@ -96,7 +97,7 @@
                                 <small class="help-block" ng-show="searchForm.Destination.$error.required">Type destination airport or city</small>
                             </div>
                         </div>
-                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
+                        <div class="SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.DepartureDate.$invalid}">
                                 <label for="SDSSearchForm_DepartureDate" class="input-sm control-label">Leaving on</label>
                                 <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_DepartureDate" name="DepartureDate" required="true"
@@ -107,7 +108,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
+                        <div class="SDS-col-element-sm-3">
                             <div class="form-group" ng-show="tripType === 'returnTrip'" ng-class="{'has-error':searchForm.$submitted && searchForm.ReturnDate.$invalid}">
                                 <label for="SDSSearchForm_ReturnDate" class="input-sm control-label">Returning on</label>
                                 <input-date class="input-group input-group-sm SDSDateInput" id="SDSSearchForm_ReturnDate" name="ReturnDate" required="true"

@@ -137,8 +137,8 @@ define([
                         searchCriteria.preferredCabin = $scope.generalSearchCriteria.preferredCabin;
                     }
 
-                    if ($scope.preferredAirline.selected && $scope.preferredAirline.selected.code) {
-                        searchCriteria.addPreferredAirline($scope.preferredAirline.selected.code);
+                    if ($scope.preferredAirline.selected && $scope.preferredAirline.selected.AirlineCode) {
+                        searchCriteria.addPreferredAirline($scope.preferredAirline.selected.AirlineCode);
                     }
 
                     if ($scope.optionsPerDay) {

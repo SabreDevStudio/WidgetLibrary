@@ -4,12 +4,15 @@ define([
     , 'datamodel/Itinerary'
     , 'datamodel/ItinerariesList'
     , 'datamodel/Leg'
+    , 'datamodel/Segment'
     ], function (
       _
     , moment
     , Itinerary
     , ItinerariesList
-    , Leg) {
+    , Leg
+    , Segment
+) {
     "use strict";
 
     // TODO: move it to src-test: but problems with require-js to load it from src-test. The same with util CalendarTestPricesGenerator
@@ -26,7 +29,7 @@ define([
             itin.totalTaxAmount = Math.floor(0.3 * itin.totalFareAmount);
 
             var firstLeg = new Leg();
-            firstLeg.segments = [
+            firstLeg.segments = [new Segment(
                 {
                     departureDateTime: moment('2015-04-30T07:32:00').clone().add(_.random(0,2), 'hours'),
                     departureAirport: 'LAX',
@@ -40,8 +43,8 @@ define([
                     operatingAirline: 'NK',
                     operatingFlightNumber: 867,
                     seatsRemaining: 4
-                },
-                {
+                }),
+                new Segment({
                     departureAirport: 'DFW',
                     departureDateTime: moment('2015-04-30T10:32:00').clone().add(_.random(0,2), 'hours'),
                     arrivalAirport: 'MIA',
@@ -54,13 +57,13 @@ define([
                     operatingAirline: 'NK',
                     operatingFlightNumber: 867,
                     seatsRemaining: 4
-                }
+                })
             ];
             itin.addLeg(firstLeg);
 
             var secondLeg = new Leg();
             secondLeg.segments = [
-                    {
+                new Segment({
                         departureAirport: 'MIA',
                         departureDateTime: moment('2015-05-01T20:32:00').clone().add(_.random(0,2), 'hours'),
                         arrivalAirport: 'LAX',
@@ -73,7 +76,7 @@ define([
                         operatingAirline: 'DL',
                         operatingFlightNumber: 453,
                         seatsRemaining: 3
-                    }
+                    })
                 ];
             itin.addLeg(secondLeg);
 

@@ -10,7 +10,6 @@ define([
         , 'text!view-templates/InputDate.tpl.html'
         , 'text!view-templates/InputTimeRangePickerTemplate.tpl.html'
         , 'text!view-templates/InputOnOffToggle.tpl.html'
-        , 'util/AirportNameLookup'
         , 'AirportNameBestSuggestionComparator'
     ],
     function (
@@ -25,7 +24,6 @@ define([
         , InputDateTemplate
         , InputTimeRangePickerTemplate
         , InputOnOffToggleTemplate
-        , AirportNameLookup
         , AirportNameBestSuggestionComparator
     ) {
         'use strict';
@@ -40,25 +38,10 @@ define([
             };
         }
 
-        /**
-         * loads all mappings of airport code into full name, into array of objects expected by jQuery Autocomplete widget: [ {label: 'Krakow (KRK)', code: 'KRK'}, {label: 'Amsterdam Schiphol (AMS)', code: 'AMS'}, .... ]
-         * We want the label to be displayed to user, while aiport code must be passed as field value.
-         */
-        var loadLabelsForAutocomplete = _.memoize(function() {
-            var airportNameLookup = new AirportNameLookup();
-            var output = [];
-            _.each(airportNameLookup.getAllMappings(), function (airportFullName, airportCode) {
-                output.push({fullName: airportFullName, airportCode: airportCode});
-            });
-            return output;
-        });
-
         return angular.module('sdsWidgets')
             .directive('selectPreferredCabin', function () {
                 return {
-                    restrict: 'EA',
                     replace: true,
-                    transclude: true,
                     scope: {
                         cabinSelected: '='
                     },
@@ -66,49 +49,53 @@ define([
                 }
             })
             .directive('selectPreferredAirline', [
-                    'AirlineNameLookupService'
+                    'AirlineLookupDataService'
                 , function (
-                    AirlineNameLookupService
+                    AirlineLookupDataService
                 ) {
+
                 return {
-                    restrict: 'EA',
-                    replace: true,
-                    transclude: true,
                     scope: {
                         preferredAirline: '='
                     },
                     template: PreferredAirlineSelectTemplate,
                     link: function (scope) {
-                        scope.allAirlines = _.map(AirlineNameLookupService.getAllMappings(), function (airlineName, airlineCode) {
-                            return {
-                                  name: airlineName
-                                , code: airlineCode
-                            };
+                        AirlineLookupDataService.getAirlineAndAirlineCodesList().then(function (airlineAndAirlineCodesList) {
+                            // add empty airline to all airlines model to denote no airline preference
+                            airlineAndAirlineCodesList.splice(0, 0, {
+                                AirlineName: 'No airline preference'
+                                , AirlineCode: undefined
+                            });
+                            scope.preferredAirline.selected = _.first(airlineAndAirlineCodesList);
+                            scope.allAirlines = airlineAndAirlineCodesList;
                         });
-                        // add empty airline to all airlines model to denote no airline preference
-                        scope.allAirlines.splice(0, 0, {
-                              name: ''
-                            , code: undefined
-                        });
-                        scope.preferredAirline = _.first(scope.allAirlines);
                     }
                 };
             }])
-            .directive('inputAirport', [
-                    'AirlineNameLookupService'
-                , function (
-                    AirlineNameLookupService
-                ) {
+            .directive('inputAirport', ['AirportLookupDataService', function (AirportLookupDataService) {
+                var globalAirportsDictionary = null;
+
                 return {
-                    restrict: 'EA',
                     replace: true,
-                    transclude: true,
                     scope: {
                         airport: '='
                     },
                     template: AirportInputTemplate,
                     link: function (scope) {
-                        scope.airports = loadLabelsForAutocomplete();
+                        if (globalAirportsDictionary) {
+                            scope.airports = globalAirportsDictionary;
+                            return;
+                        }
+                        AirportLookupDataService.getAirportsDictionary().then(function (dictionary) {
+                            globalAirportsDictionary = _.map(dictionary, function (airportDescription, airportCode) {
+                                var airportAndCityName = (airportDescription.airportName === airportDescription.cityName)? airportDescription.cityName: airportDescription.airportName + ', ' + airportDescription.cityName;
+                                return {
+                                      fullName: airportAndCityName
+                                    , airportCode: airportCode
+                                };
+                            });
+                            scope.airports = globalAirportsDictionary;
+                        });
                     }
                 }
             }])
@@ -118,9 +105,7 @@ define([
                         restrict: 'EA',
                         replace: true,
                         scope: {
-                              id: '@'
-                            , name: '@'
-                            , required: '@'
+                             required: '@'
                             , dateFormat: '@'
                             , minDate: '@'
                             , date: '='
@@ -131,8 +116,6 @@ define([
 
                             scope.dateFormat = scope.dateFormat || 'dd-MMM-yyyy';
 
-                            element.removeAttr('id');
-                            element.removeAttr('name');
                             element.removeAttr('required');
                             element.removeAttr('date');
                             element.removeAttr('on-date-change');

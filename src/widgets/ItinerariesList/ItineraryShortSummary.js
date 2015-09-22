@@ -3,12 +3,14 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/ItineraryShortSummary.tpl.html'
+        , 'util/CommonDisplayDirectives'
     ],
     function (
           angular
         , angular_bootstrap
         , SDSWidgets
         , ItineraryShortSummaryTemplate
+        , CommonDisplayDirectives
 
     ) {
         'use strict';

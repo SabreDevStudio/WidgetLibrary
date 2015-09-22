@@ -9,12 +9,22 @@
 
 .SDSResponsiveElement {
 
+  .SDS_row {
+    &:before, &:after {
+      display: table;
+      content: " ";
+    }
+    &:after {
+      clear: both;
+    }
+  }
+
   .SDS-col-element-xxs-1, .SDS-col-element-xxs-2, .SDS-col-element-xxs-3, .SDS-col-element-xxs-4,
   .SDS-col-element-xxs-5, .SDS-col-element-xxs-6, .SDS-col-element-xxs-7, .SDS-col-element-xxs-8,
   .SDS-col-element-xxs-9, .SDS-col-element-xxs-10, .SDS-col-element-xxs-11, .SDS-col-element-xxs-12 {
     min-height: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
     position: relative;
   }
 
@@ -22,8 +32,8 @@
   .SDS-col-element-xs-5, .SDS-col-element-xs-6, .SDS-col-element-xs-7, .SDS-col-element-xs-8,
   .SDS-col-element-xs-9, .SDS-col-element-xs-10, .SDS-col-element-xs-11, .SDS-col-element-xs-12 {
     min-height: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
     position: relative;
   }
 
@@ -39,6 +49,15 @@
   .SDS-col-element-md-1, .SDS-col-element-md-2, .SDS-col-element-md-3, .SDS-col-element-md-4,
   .SDS-col-element-md-5, .SDS-col-element-md-6, .SDS-col-element-md-7, .SDS-col-element-md-8,
   .SDS-col-element-md-9, .SDS-col-element-md-10, .SDS-col-element-md-11, .SDS-col-element-md-12 {
+    min-height: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+  }
+
+  .SDS-col-element-lg-1, .SDS-col-element-lg-2, .SDS-col-element-lg-3, .SDS-col-element-lg-4,
+  .SDS-col-element-lg-5, .SDS-col-element-lg-6, .SDS-col-element-lg-7, .SDS-col-element-lg-8,
+  .SDS-col-element-lg-9, .SDS-col-element-lg-10, .SDS-col-element-lg-11, .SDS-col-element-lg-12 {
     min-height: 1px;
     padding-left: 10px;
     padding-right: 10px;
@@ -257,6 +276,60 @@
     }
   }
 
+  &[min-width~="60em"] {
+    .SDS-col-element-lg-1,
+    .SDS-col-element-lg-2,
+    .SDS-col-element-lg-3,
+    .SDS-col-element-lg-4,
+    .SDS-col-element-lg-5,
+    .SDS-col-element-lg-6,
+    .SDS-col-element-lg-7,
+    .SDS-col-element-lg-8,
+    .SDS-col-element-lg-9,
+    .SDS-col-element-lg-10,
+    .SDS-col-element-lg-11 {
+      float: left;
+    }
+
+    .SDS-col-element-lg-1 {
+      width: 8.333333333333332%;
+    }
+    .SDS-col-element-lg-2 {
+      width: 16.666666666666664%;
+    }
+    .SDS-col-element-lg-3 {
+      width: 25%;
+    }
+    .SDS-col-element-lg-4 {
+      width: 33.33333333333333%;
+    }
+    .SDS-col-element-lg-5 {
+      width: 41.66666666666667%;
+    }
+    .SDS-col-element-lg-6 {
+      width: 50%;
+    }
+    .SDS-col-element-lg-7 {
+      width: 58.333333333333336%;
+    }
+    .SDS-col-element-lg-8 {
+      width: 66.66666666666666%;
+    }
+    .SDS-col-element-lg-9 {
+      width: 75%;
+    }
+    .SDS-col-element-lg-10 {
+      width: 83.33333333333334%;
+    }
+    .SDS-col-element-lg-11 {
+      width: 91.66666666666666%;
+    }
+    .SDS-col-element-lg-12 {
+      width: 100%;
+    }
+  }
+
+
   .SDS-visible-xs, .SDS-visible-xs-inline-block,
   .SDS-visible-sm, .SDS-visible-sm-inline-block,
   .SDS-visible-md, .SDS-visible-md-inline-block,
@@ -330,20 +403,20 @@
 
   /* mimicking bootstrap form-inline */
   &[min-width~="70em"] {
-    .form-xl-inline .form-group {
+    .form-xl-inline .form-group:not(.SDS-form-inline-exclude) {
       display: inline-block;
       margin-bottom: 0;
       vertical-align: middle;
     }
-    .form-xl-inline .form-control {
+    .form-xl-inline .form-control:not(.SDS-form-inline-exclude) {
       display: inline-block;
       width: auto;
       vertical-align: middle;
     }
-    .form-xl-inline .form-control-static {
+    .form-xl-inline .form-control-static:not(.SDS-form-inline-exclude) {
       display: inline-block;
     }
-    .form-xl-inline .input-group {
+    .form-xl-inline .input-group:not(.SDS-form-inline-exclude) {
       display: inline-table;
       vertical-align: middle;
     }

@@ -1,4 +1,4 @@
-define(['lodash'], function (_) {
+define(['util/LodashExtensions'], function (__) {
     "use strict";
 
     function Itinerary() {
@@ -33,6 +33,7 @@ define(['lodash'], function (_) {
 
         // returns the sum of trip durations for all legs, in minutes
         // This includes connection times on all legs (but does not include stopovers, in particular the stopover in the turnaround point at destination of round trip travel)
+        var durationCnt = 0;
         Object.defineProperty(this, 'duration', {
             get: function() {
                 return this.legs.reduce(function (total, leg) {
@@ -43,7 +44,7 @@ define(['lodash'], function (_) {
 
         Object.defineProperty(this, 'outboundLegDuration', {
             get: function() {
-                return _.first(this.legs).getDuration();
+                return __.first(this.legs).getDuration();
             }
         });
 
@@ -84,6 +85,40 @@ define(['lodash'], function (_) {
 
     Itinerary.prototype.addLeg = function(leg) {
         this.legs.push(leg);
+        this.updateLegsChangeOfAirportAtDeparture();
+        this.updateLegsChangeOfAirportAtArrival();
+    };
+
+    Itinerary.prototype.updateLegsChangeOfAirportAtDeparture = function () {
+        if (this.isOneWayTravel()) {
+            return;
+        }
+        var that = this;
+        this.legs.forEach(function (leg, idx, allLegs) {
+            if (idx === 0) {
+                leg.hasAirportChangeAtDeparture = !that.isDepartureAndReturnSameAirport();
+            } else {
+                leg.hasAirportChangeAtDeparture = leg.getLegDepartureAirport() !== allLegs[idx - 1].getLegArrivalAirport();
+            }
+        });
+    };
+
+    Itinerary.prototype.updateLegsChangeOfAirportAtArrival = function () {
+        if (this.isOneWayTravel()) {
+            return;
+        }
+        var that = this;
+        this.legs.forEach(function (leg, idx, allLegs) {
+            if (that.isLastLeg(idx)) {
+                leg.hasAirportChangeAtArrival = !that.isDepartureAndReturnSameAirport();
+            } else {
+                leg.hasAirportChangeAtArrival = leg.getLegArrivalAirport() !== allLegs[idx + 1].getLegDepartureAirport();
+            }
+        });
+    };
+
+    Itinerary.prototype.isLastLeg = function (legIdx) {
+        return legIdx === (this.legs.length - 1);
     };
 
     Itinerary.prototype.setCabin = function(segmentNumber, cabin) {
@@ -97,28 +132,28 @@ define(['lodash'], function (_) {
     };
 
     Itinerary.prototype.getOutboundDepartureDateTime =  function() {
-        var outboundLeg = _.first(this.legs);
-        return _.first(outboundLeg.segments).departureDateTime;
+        var outboundLeg = __.first(this.legs);
+        return __.first(outboundLeg.segments).departureDateTime;
     };
 
     Itinerary.prototype.getOutboundArrivalDateTime =  function() {
-        var outboundLeg = _.first(this.legs);
-        return _.last(outboundLeg.segments).arrivalDateTime;
+        var outboundLeg = __.first(this.legs);
+        return __.last(outboundLeg.segments).arrivalDateTime;
     };
 
     Itinerary.prototype.getInboundDepartureDateTime =  function() {
-        var inboundLeg = _.last(this.legs);
-        return _.first(inboundLeg.segments).arrivalDateTime;
+        var inboundLeg = __.last(this.legs);
+        return __.first(inboundLeg.segments).arrivalDateTime;
     };
 
     Itinerary.prototype.getInboundArrivalDateTime =  function() {
-        var inboundLeg = _.last(this.legs);
-        return _.last(inboundLeg.segments).arrivalDateTime;
+        var inboundLeg = __.last(this.legs);
+        return __.last(inboundLeg.segments).arrivalDateTime;
     };
 
     // returns maximum number of connections on all legs
     Itinerary.prototype.getNumberOfStops = function() {
-        return _.max(this.legs.map(function (leg) {
+        return __.max(this.legs.map(function (leg) {
             return leg.getNumberOfStops();
         }));
     };
@@ -130,34 +165,58 @@ define(['lodash'], function (_) {
     };
 
     Itinerary.prototype.getFirstLeg = function () {
-      return _.first(this.legs);
+      return __.first(this.legs);
     };
 
     Itinerary.prototype.getFirstMarketingAirline = function() {
         return this.legs[0].segments[0].marketingAirline;
     };
 
+    /* returns unique list of all marketing airlines, in the order as they first appear in the journey */
+    Itinerary.prototype.getAllMarketingAirlines = function() {
+        var allMktAirlines = [];
+        this.legs.forEach(function (leg) {
+            __.pushAll(allMktAirlines, leg.getAllMarketingAirlines());
+        });
+        return __.uniq(allMktAirlines);
+    };
+
     Itinerary.prototype.getConnectionAirports = function () {
         var legsConnectionAirportsLists = this.legs.map(function (leg) {
             return leg.getConnectionAirports();
         });
-        return _.union(_.flatten(legsConnectionAirportsLists));
+        return __.union(__.flatten(legsConnectionAirportsLists));
     };
 
     Itinerary.prototype.getTripDepartureAirport = function () {
-        return _.first(this.legs).getLegDepartureAirport();
+        return __.first(this.legs).getLegDepartureAirport();
     };
 
     Itinerary.prototype.getTripArrivalAirport= function () {
-        return _.last(this.legs).getLegArrivalAirport();
+        return __.last(this.legs).getLegArrivalAirport();
     };
 
     Itinerary.prototype.getFirstLegArrivalAirport = function () {
-        return _.first(this.legs).getLegArrivalAirport();
+        return __.first(this.legs).getLegArrivalAirport();
     };
 
     Itinerary.prototype.isDepartureAndReturnSameAirport = function () {
         return this.getTripDepartureAirport() === this.getTripArrivalAirport();
+    };
+
+    Itinerary.prototype.isOneWayTravel = function () {
+        return (this.legs.length === 1);
+    };
+
+    Itinerary.prototype.hasChangeOfAirportsAtAnyStopover = function () {
+        if (this.isOneWayTravel()) {
+            return;
+        }
+        return this.legs.some(function (leg, idx, allLegs) {
+            return (((idx === 0) && (leg.hasAirportChangeAtArrival)) // first leg
+                || (((idx > 0) && (idx < (allLegs.length - 1))) && (leg.hasAirportChangeAtDeparture || leg.hasAirportChangeAtArrival)) // middle legs
+                || ((idx > 0) && (leg.hasAirportChangeAtDeparture))); // last leg
+        })
     };
 
     Itinerary.prototype.getPricingSource = function () {
@@ -168,6 +227,30 @@ define(['lodash'], function (_) {
         return this.legs.map(function (leg) {
             return leg.getFlightStructure();
         }).join(' ||| ');
+    };
+
+    Itinerary.prototype.hasRedEyeFlight = function () {
+        return this.legs.some(function (leg) {
+            return leg.hasRedEyeFlight();
+        });
+    };
+
+    Itinerary.prototype.hasShortConnection = function () {
+        return this.legs.some(function (leg) {
+            return leg.hasShortConnection();
+        });
+    };
+
+    Itinerary.prototype.hasLongConnection = function () {
+        return this.legs.some(function (leg) {
+            return leg.hasLongConnection();
+        });
+    };
+
+    Itinerary.prototype.hasLowSeatsRemaining = function () {
+        return this.legs.some(function (leg) {
+            return leg.hasLowSeatsRemaining();
+        });
     };
 
     return Itinerary;

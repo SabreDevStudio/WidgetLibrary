@@ -3,12 +3,14 @@ define([
         , 'angular'
         , 'angular_resource'
         , 'ngPromiseExtras'
+        , 'ngStorage'
     ],
     function (
           _
         , angular
         , angular_resource
         , ngPromiseExtras
+        , ngStorage
     ) {
         'use strict';
 
@@ -16,7 +18,7 @@ define([
             return (_.startsWith(currentURL, apiURL) && !_.startsWith(currentURL, 'https://api.test.sabre.com/v1/auth/token')); //todo tmp hardcode
         }
 
-        return angular.module('sabreDevStudioWebServices', ['ngResource', 'configuration', 'NGPromiseUtils'])
+        return angular.module('sabreDevStudioWebServices', ['ngResource', 'configuration', 'NGPromiseUtils', 'ngStorage'])
             .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss') // //"2015-04-11T00:00:00",
             .constant('dateFormat', 'YYYY-MM-DD') // //"2015-04-11T00:00:00",
             .factory('StandardErrorHandler', function () {

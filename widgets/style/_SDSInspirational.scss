@@ -1,0 +1,18 @@
+.SDSInspirationalList {
+
+  .SDSInspirationalTile {
+    display: block;
+    padding: 4px;
+    margin: 5px 0;
+
+    // based on bootstrap thumbnail and panel
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+ }
+
+}
