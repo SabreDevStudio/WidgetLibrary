@@ -4,7 +4,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/InputSortBy.tpl.html'
+        , 'text!view-templates/partials/InputSortBy.tpl.html'
     ],
     function (
           _

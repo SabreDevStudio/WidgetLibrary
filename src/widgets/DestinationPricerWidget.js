@@ -5,7 +5,7 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
-        , 'text!view-templates/DestinationPricer.tpl.html'
+        , 'text!view-templates/widgets/DestinationPricer.tpl.html'
         , 'webservices/InspirationalServices'
     ],
     function (
@@ -25,8 +25,8 @@ define([
                       '$scope'
                     , 'DestinationPricerDataService'
                     , 'ValidationErrorsReportingService'
-                    , 'newSearchCriteriaEvent'
-                    , 'SearchCriteriaBroadcastingService'
+                    , 'newInspirationalSearchCriteriaEvent'
+                    , 'InspirationalSearchCriteriaBroadcastingService'
                 , function (
                         $scope
                       , DestinationPricerDataService
@@ -69,7 +69,6 @@ define([
                     this.isAnyDataToDisplayAvailable = function () {
                         return !(_.isEmpty($scope.modelPricesToDestination.FareInfo));
                     };
-
                 }
             ])
             .directive('destinationPricer', function (

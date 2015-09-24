@@ -5,7 +5,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'datamodel/SearchCriteria'
         , 'datamodel/SearchCriteriaLeg'
-        , 'text!view-templates/SearchFormWidget.tpl.html'
+        , 'text!view-templates/widgets/SearchFormWidget.tpl.html'
     ],
     function (
           moment
@@ -20,17 +20,6 @@ define([
 
         return angular.module('sdsWidgets')
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
-            .service('SearchCriteriaBroadcastingService', [ //TODO dup with SDSWidgets
-                '$rootScope'
-                , 'newSearchCriteriaEvent'
-                , function ($rootScope, newSearchCriteriaEvent) {
-                    var service = {};
-                    service.searchCriteria = undefined;
-                    service.broadcast = function () {
-                        $rootScope.$broadcast(newSearchCriteriaEvent);
-                    };
-                    return service;
-            }])
             .controller('SearchFormCtrl' , [
                   '$scope'
                 , 'DateService'
@@ -151,7 +140,6 @@ define([
             }])
             .directive('searchForm', function () {
                return {
-                   restrict: 'AE',
                    template: SearchFormWidgetTemplate, //TODO will it use templateCache this way?
                    controller: 'SearchFormCtrl',
                    scope: true,

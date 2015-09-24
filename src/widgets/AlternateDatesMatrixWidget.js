@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/AlternateDatesMatrix.tpl.html'
+        , 'text!view-templates/widgets/AlternateDatesMatrix.tpl.html'
         , 'datamodel/SearchCriteria'
         , 'webservices/AlternateDatesSearchStrategyFactory'
     ],

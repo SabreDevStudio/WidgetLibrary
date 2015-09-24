@@ -5,7 +5,7 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
-        , 'text!view-templates/LowFareHistory.tpl.html'
+        , 'text!view-templates/widgets/LowFareHistory.tpl.html'
         , 'widgets/GlobalChartsConfiguration'
     ],
     function (

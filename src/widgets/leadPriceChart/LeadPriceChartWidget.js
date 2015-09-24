@@ -7,7 +7,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
         , 'widgets/GlobalChartsConfiguration'
-        , 'text!view-templates/LeadPriceChartWidget.tpl.html'
+        , 'text!view-templates/widgets/LeadPriceChartWidget.tpl.html'
         , 'datamodel/ShoppingData'
         , 'webservices/DaysRangeSearchStrategyFactory'
     ],

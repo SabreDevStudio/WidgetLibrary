@@ -35,13 +35,13 @@ define([
                    getAircraftDictionary: function () {
                        return $q(function (resolve, reject) {
                            if ($localStorage.aircraftDictionary) {
-                               return resolve($localStorage.aircraftDictionary);
+                               return resolve(_.clone($localStorage.aircraftDictionary));
                            }
                            EquipmentLookupWebService.get().$promise.then(
                                function (response) {
                                    var aircraftDictionary = parseEquipmentLookupServiceResponse(response);
                                    $localStorage.aircraftDictionary = aircraftDictionary;
-                                   resolve(aircraftDictionary);
+                                   resolve(_.clone(aircraftDictionary));
                                }
                                , function (error) {
                                    reject(StandardErrorHandler.handleError(error));
@@ -73,7 +73,7 @@ define([
                             .replace(/Inc\.?/gi, '')
                             .replace(/AG/gi, '')
                             .replace(/Pty/gi, '')
-                            .replace(/Co\.?/gi, '')
+                            .replace(/Co\./gi, '')
                             .replace(/C\.?A\.?/gi, '')
                             .replace(/.*Lan.*Ecuador.*/g, 'Lan Ecuador')
                             .replace(/.*Lan.*Equador.*/g, 'Lan Equador')
@@ -122,13 +122,13 @@ define([
 
                             return $q(function (resolve, reject) {
                                 if ($localStorage.airlinesDictionary) {
-                                    return resolve($localStorage.airlinesDictionary);
+                                    return resolve(_.clone($localStorage.airlinesDictionary));
                                 }
                                 AirlineLookupWebService.get().$promise.then(
                                     function (response) {
                                         var airlinesDictionary = parseAirlineLookupResponse(response)
                                         $localStorage.airlinesDictionary = airlinesDictionary;
-                                        resolve(airlinesDictionary);
+                                        resolve(_.clone(airlinesDictionary));
                                     }
                                     , function (error) {
                                         reject(StandardErrorHandler.handleError(error));
@@ -177,13 +177,13 @@ define([
                     getAirportsDictionary: function () {
                         return $q(function (resolve, reject) {
                             if ($localStorage.airportsDictionary) {
-                                return resolve($localStorage.airportsDictionary);
+                                return resolve(_.clone($localStorage.airportsDictionary));
                             }
                             AirportsLookupService.get().$promise.then(
                                 function (response) {
                                     var airportsDictionary = parseAirportLookupResponse(response);
                                     $localStorage.airportsDictionary = airportsDictionary;
-                                    resolve(airportsDictionary);
+                                    resolve(_.clone(airportsDictionary));
                                 }
                                 , function (error) {
                                     reject(StandardErrorHandler.handleError(error));
@@ -193,5 +193,46 @@ define([
                     }
                 }
 
-            }]);
+            }])
+            .factory('PointOfSaleCountryLookupDataService', [
+                    'PointOfSaleCountryLookupWebService'
+                    , '$q'
+                    , 'StandardErrorHandler'
+                    , '$localStorage'
+                , function (
+                      PointOfSaleCountryLookupWebService
+                    , $q
+                    , StandardErrorHandler
+                    , $localStorage
+                ) {
+                    function parsePointOfSaleCountriesResponse(response) {
+                        return response.Countries.map(function (country) {
+                            return {
+                                  countryCode: country.CountryCode
+                                , countryName: country.CountryName
+                            };
+                        });
+                    }
+
+                    return {
+                        getPointOfSaleCountries: function () {
+                            return $q(function (resolve, reject) {
+                                if ($localStorage.pointOfSaleCountries) {
+                                    return resolve(_.clone($localStorage.pointOfSaleCountries));
+                                }
+                                PointOfSaleCountryLookupWebService.get().$promise.then(
+                                    function (response) {
+                                        var pointOfSaleCountries = parsePointOfSaleCountriesResponse(response);
+                                        $localStorage.pointOfSaleCountries = pointOfSaleCountries;
+                                        resolve(_.clone(pointOfSaleCountries));
+                                    }
+                                    , function (error) {
+                                        reject(StandardErrorHandler.handleError(error));
+                                    }
+                                );
+                            });
+                        }
+                    };
+                }
+            ])
     });

@@ -1,7 +1,7 @@
 define([
           'angular'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/FareNabberWidget.tpl.html'
+        , 'text!view-templates/widgets/FareNabberWidget.tpl.html'
     ],
     function (
           angular

@@ -15,8 +15,9 @@
 <body>
     <div id="mainPageContainer" class="container-fluid">
         <partial command="include('partials/navigation.html')"></partial>
-        <!--<div class="embeddedWidget" data-search-form></div>-->
-        <div class="embeddedWidget" destination-pricer destination="NYC" pointOfSaleCountry="GB"></div>
+        <search-form-inspirational class="embeddedWidget"></search-form-inspirational>
+        <!--<div class="embeddedWidget" destination-pricer destination="NYC" pointOfSaleCountry="GB"></div>-->
+        <destination-pricer class="embeddedWidget"></destination-pricer>
     </div>
 
     <script data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>

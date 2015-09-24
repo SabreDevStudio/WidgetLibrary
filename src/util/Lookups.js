@@ -1,9 +1,11 @@
 define([
           'angular'
+        , 'lodash'
         , 'webservices/LookupServices'
     ],
     function (
           angular
+        , _
         , LookupServices
     ) {
         'use strict';
@@ -49,6 +51,9 @@ define([
                         return airportCode; // if dictionary is not loaded yet, then just pass thru the value to be filtered.
                     }
                     var entryFound = dictionary[airportCode];
+                    if (_.isUndefined(entryFound)) {
+                        return airportCode;
+                    }
                     if (entryFound.airportName !== entryFound.cityName) {
                         return entryFound.airportName + ', ' + entryFound.cityName;
                     } else {
@@ -76,7 +81,7 @@ define([
                         return airportCode; // if dictionary is not loaded yet, then just pass thru the value to be filtered.
                     }
                     var entryFound = dictionary[airportCode];
-                    return entryFound.countryName;
+                    return (entryFound)? entryFound.countryName: airportCode;
                 };
                 filter.$stateful = true; // this is stateful filter so we have to let NG know that it needs to keep executing it on every digest cycle. (Normally filters are executed only if the filtered value changes).
                 return filter;

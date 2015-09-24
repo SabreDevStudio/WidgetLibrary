@@ -288,7 +288,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-csslint');
     grunt.loadNpmTasks('grunt-bootlint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-include-replace')
+    grunt.loadNpmTasks('grunt-include-replace');
 
     grunt.loadNpmTasks('grunt-lodash');
     grunt.loadNpmTasks('grunt-lodash-autobuild');

@@ -1,456 +1,160 @@
-//TODO: refactor all with SASS interpolation, mixins and so one
+$numberOfGridColumns: 12 !default;
 
-//$breakpoint_xxs: "20em";
-//$breakpoint_xs: "30em";
-//$breakpoint_sm: "40em";
-//$breakpoint_md: "50em";
-//$breakpoint_lg: "60em";
-//$breakpoint_xl: "70em";
+@mixin createGridColumnsForAllBreakpoints() {
+  @include createGridColumnsForBreakpoint('20em', 'xxs', 10px);
+  @include createGridColumnsForBreakpoint('30em', 'xs', 10px);
+  @include createGridColumnsForBreakpoint('40em', 'sm', 20px);
+  @include createGridColumnsForBreakpoint('50em', 'md', 20px);
+  @include createGridColumnsForBreakpoint('60em', 'lg', 20px);
+  @include createGridColumnsForBreakpoint('70em', 'xl', 20px);
+  @include createGridColumnsForBreakpoint('80em', 'xxl', 20px);
+}
 
-.SDSResponsiveElement {
+@mixin createFormInlineForAllBreakpoints {
+  @include createFormInlineForBreakpoint('40em', 'sm');
+  @include createFormInlineForBreakpoint('50em', 'md');
+  @include createFormInlineForBreakpoint('60em', 'lg');
+  @include createFormInlineForBreakpoint('70em', 'xl');
+}
 
-  .SDS_row {
-    &:before, &:after {
-      display: table;
-      content: " ";
+@mixin createGridColumnsForBreakpoint($breakpoint, $sizeShortcut, $gutterWidth) {
+  @include setColumnsGutter($sizeShortcut, $gutterWidth);
+  @include setColumnsFloat($breakpoint, $sizeShortcut);
+  @include setColumnsWidth($breakpoint, $sizeShortcut);
+  @include createResponsiveUtilities($breakpoint, $sizeShortcut);
+}
+
+@mixin setColumnsGutter($sizeShortcut, $gutterWidth) {
+  @for $i from 1 through $numberOfGridColumns {
+    .SDS-col-element-#{$sizeShortcut}-#{$i} {
+      min-height: 1px;
+      padding-left: #{$gutterWidth / 2};
+      padding-right: #{$gutterWidth / 2};
+      position: relative;
     }
-    &:after {
-      clear: both;
-    }
   }
+}
 
-  .SDS-col-element-xxs-1, .SDS-col-element-xxs-2, .SDS-col-element-xxs-3, .SDS-col-element-xxs-4,
-  .SDS-col-element-xxs-5, .SDS-col-element-xxs-6, .SDS-col-element-xxs-7, .SDS-col-element-xxs-8,
-  .SDS-col-element-xxs-9, .SDS-col-element-xxs-10, .SDS-col-element-xxs-11, .SDS-col-element-xxs-12 {
-    min-height: 1px;
-    padding-left: 5px;
-    padding-right: 5px;
-    position: relative;
-  }
-
-  .SDS-col-element-xs-1, .SDS-col-element-xs-2, .SDS-col-element-xs-3, .SDS-col-element-xs-4,
-  .SDS-col-element-xs-5, .SDS-col-element-xs-6, .SDS-col-element-xs-7, .SDS-col-element-xs-8,
-  .SDS-col-element-xs-9, .SDS-col-element-xs-10, .SDS-col-element-xs-11, .SDS-col-element-xs-12 {
-    min-height: 1px;
-    padding-left: 5px;
-    padding-right: 5px;
-    position: relative;
-  }
-
-  .SDS-col-element-sm-1, .SDS-col-element-sm-2, .SDS-col-element-sm-3, .SDS-col-element-sm-4,
-  .SDS-col-element-sm-5, .SDS-col-element-sm-6, .SDS-col-element-sm-7, .SDS-col-element-sm-8,
-  .SDS-col-element-sm-9, .SDS-col-element-sm-10, .SDS-col-element-sm-11, .SDS-col-element-sm-12 {
-    min-height: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
-    position: relative;
-  }
-
-  .SDS-col-element-md-1, .SDS-col-element-md-2, .SDS-col-element-md-3, .SDS-col-element-md-4,
-  .SDS-col-element-md-5, .SDS-col-element-md-6, .SDS-col-element-md-7, .SDS-col-element-md-8,
-  .SDS-col-element-md-9, .SDS-col-element-md-10, .SDS-col-element-md-11, .SDS-col-element-md-12 {
-    min-height: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
-    position: relative;
-  }
-
-  .SDS-col-element-lg-1, .SDS-col-element-lg-2, .SDS-col-element-lg-3, .SDS-col-element-lg-4,
-  .SDS-col-element-lg-5, .SDS-col-element-lg-6, .SDS-col-element-lg-7, .SDS-col-element-lg-8,
-  .SDS-col-element-lg-9, .SDS-col-element-lg-10, .SDS-col-element-lg-11, .SDS-col-element-lg-12 {
-    min-height: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
-    position: relative;
-  }
-
-  &[min-width~="20em"] {
-    .SDS-col-element-xxs-1,
-    .SDS-col-element-xxs-2,
-    .SDS-col-element-xxs-3,
-    .SDS-col-element-xxs-4,
-    .SDS-col-element-xxs-5,
-    .SDS-col-element-xxs-6,
-    .SDS-col-element-xxs-7,
-    .SDS-col-element-xxs-8,
-    .SDS-col-element-xxs-9,
-    .SDS-col-element-xxs-10,
-    .SDS-col-element-xxs-11 {
+@mixin setColumnsFloat($breakpoint, $sizeShortcut) {
+  @for $i from 1 through $numberOfGridColumns {
+    &[min-width~="#{$breakpoint}"] .SDS-col-element-#{$sizeShortcut}-#{$i} {
       float: left;
     }
+  }
+}
 
-    .SDS-col-element-xxs-1 {
-      width: 8.333333333333332%;
-    }
-    .SDS-col-element-xxs-2 {
-      width: 16.666666666666664%;
-    }
-    .SDS-col-element-xxs-3 {
-      width: 25%;
-    }
-    .SDS-col-element-xxs-4 {
-      width: 33.33333333333333%;
-    }
-    .SDS-col-element-xxs-5 {
-      width: 41.66666666666667%;
-    }
-    .SDS-col-element-xxs-6 {
-      width: 50%;
-    }
-    .SDS-col-element-xxs-7 {
-      width: 58.333333333333336%;
-    }
-    .SDS-col-element-xxs-8 {
-      width: 66.66666666666666%;
-    }
-    .SDS-col-element-xxs-9 {
-      width: 75%;
-    }
-    .SDS-col-element-xxs-10 {
-      width: 83.33333333333334%;
-    }
-    .SDS-col-element-xxs-11 {
-      width: 91.66666666666666%;
-    }
-    .SDS-col-element-xxs-12 {
-      width: 100%;
+@mixin setColumnsWidth($breakpoint, $sizeShortcut) {
+  @for $i from 1 through $numberOfGridColumns {
+    &[min-width~="#{$breakpoint}"] .SDS-col-element-#{$sizeShortcut}-#{$i} {
+      width: percentage($i/$numberOfGridColumns);
     }
   }
+}
 
-  &[min-width~="30em"] {
-    .SDS-col-element-xs-1,
-    .SDS-col-element-xs-2,
-    .SDS-col-element-xs-3,
-    .SDS-col-element-xs-4,
-    .SDS-col-element-xs-5,
-    .SDS-col-element-xs-6,
-    .SDS-col-element-xs-7,
-    .SDS-col-element-xs-8,
-    .SDS-col-element-xs-9,
-    .SDS-col-element-xs-10,
-    .SDS-col-element-xs-11 {
-      float: left;
-    }
-
-    .SDS-col-element-xs-1 {
-      width: 8.333333333333332%;
-    }
-    .SDS-col-element-xs-2 {
-      width: 16.666666666666664%;
-    }
-    .SDS-col-element-xs-3 {
-      width: 25%;
-    }
-    .SDS-col-element-xs-4 {
-      width: 33.33333333333333%;
-    }
-    .SDS-col-element-xs-5 {
-      width: 41.66666666666667%;
-    }
-    .SDS-col-element-xs-6 {
-      width: 50%;
-    }
-    .SDS-col-element-xs-7 {
-      width: 58.333333333333336%;
-    }
-    .SDS-col-element-xs-8 {
-      width: 66.66666666666666%;
-    }
-    .SDS-col-element-xs-9 {
-      width: 75%;
-    }
-    .SDS-col-element-xs-10 {
-      width: 83.33333333333334%;
-    }
-    .SDS-col-element-xs-11 {
-      width: 91.66666666666666%;
-    }
-    .SDS-col-element-xs-12 {
-      width: 100%;
-    }
-  }
-
-  &[min-width~="40em"] {
-    .SDS-col-element-sm-1,
-    .SDS-col-element-sm-2,
-    .SDS-col-element-sm-3,
-    .SDS-col-element-sm-4,
-    .SDS-col-element-sm-5,
-    .SDS-col-element-sm-6,
-    .SDS-col-element-sm-7,
-    .SDS-col-element-sm-8,
-    .SDS-col-element-sm-9,
-    .SDS-col-element-sm-10,
-    .SDS-col-element-sm-11 {
-      float: left;
-    }
-
-    .SDS-col-element-sm-1 {
-      width: 8.333333333333332%;
-    }
-    .SDS-col-element-sm-2 {
-      width: 16.666666666666664%;
-    }
-    .SDS-col-element-sm-3 {
-      width: 25%;
-    }
-    .SDS-col-element-sm-4 {
-      width: 33.33333333333333%;
-    }
-    .SDS-col-element-sm-5 {
-      width: 41.66666666666667%;
-    }
-    .SDS-col-element-sm-6 {
-      width: 50%;
-    }
-    .SDS-col-element-sm-7 {
-      width: 58.333333333333336%;
-    }
-    .SDS-col-element-sm-8 {
-      width: 66.66666666666666%;
-    }
-    .SDS-col-element-sm-9 {
-      width: 75%;
-    }
-    .SDS-col-element-sm-10 {
-      width: 83.33333333333334%;
-    }
-    .SDS-col-element-sm-11 {
-      width: 91.66666666666666%;
-    }
-    .SDS-col-element-sm-12 {
-      width: 100%;
-    }
-  }
-
-  &[min-width~="50em"] {
-    .SDS-col-element-md-1,
-    .SDS-col-element-md-2,
-    .SDS-col-element-md-3,
-    .SDS-col-element-md-4,
-    .SDS-col-element-md-5,
-    .SDS-col-element-md-6,
-    .SDS-col-element-md-7,
-    .SDS-col-element-md-8,
-    .SDS-col-element-md-9,
-    .SDS-col-element-md-10,
-    .SDS-col-element-md-11 {
-      float: left;
-    }
-
-    .SDS-col-element-md-1 {
-      width: 8.333333333333332%;
-    }
-    .SDS-col-element-md-2 {
-      width: 16.666666666666664%;
-    }
-    .SDS-col-element-md-3 {
-      width: 25%;
-    }
-    .SDS-col-element-md-4 {
-      width: 33.33333333333333%;
-    }
-    .SDS-col-element-md-5 {
-      width: 41.66666666666667%;
-    }
-    .SDS-col-element-md-6 {
-      width: 50%;
-    }
-    .SDS-col-element-md-7 {
-      width: 58.333333333333336%;
-    }
-    .SDS-col-element-md-8 {
-      width: 66.66666666666666%;
-    }
-    .SDS-col-element-md-9 {
-      width: 75%;
-    }
-    .SDS-col-element-md-10 {
-      width: 83.33333333333334%;
-    }
-    .SDS-col-element-md-11 {
-      width: 91.66666666666666%;
-    }
-    .SDS-col-element-md-12 {
-      width: 100%;
-    }
-  }
-
-  &[min-width~="60em"] {
-    .SDS-col-element-lg-1,
-    .SDS-col-element-lg-2,
-    .SDS-col-element-lg-3,
-    .SDS-col-element-lg-4,
-    .SDS-col-element-lg-5,
-    .SDS-col-element-lg-6,
-    .SDS-col-element-lg-7,
-    .SDS-col-element-lg-8,
-    .SDS-col-element-lg-9,
-    .SDS-col-element-lg-10,
-    .SDS-col-element-lg-11 {
-      float: left;
-    }
-
-    .SDS-col-element-lg-1 {
-      width: 8.333333333333332%;
-    }
-    .SDS-col-element-lg-2 {
-      width: 16.666666666666664%;
-    }
-    .SDS-col-element-lg-3 {
-      width: 25%;
-    }
-    .SDS-col-element-lg-4 {
-      width: 33.33333333333333%;
-    }
-    .SDS-col-element-lg-5 {
-      width: 41.66666666666667%;
-    }
-    .SDS-col-element-lg-6 {
-      width: 50%;
-    }
-    .SDS-col-element-lg-7 {
-      width: 58.333333333333336%;
-    }
-    .SDS-col-element-lg-8 {
-      width: 66.66666666666666%;
-    }
-    .SDS-col-element-lg-9 {
-      width: 75%;
-    }
-    .SDS-col-element-lg-10 {
-      width: 83.33333333333334%;
-    }
-    .SDS-col-element-lg-11 {
-      width: 91.66666666666666%;
-    }
-    .SDS-col-element-lg-12 {
-      width: 100%;
-    }
-  }
-
-
-  .SDS-visible-xs, .SDS-visible-xs-inline-block,
-  .SDS-visible-sm, .SDS-visible-sm-inline-block,
-  .SDS-visible-md, .SDS-visible-md-inline-block,
-  .SDS-visible-lg, .SDS-visible-lg-inline-block,
-  .SDS-visible-xl, .SDS-visible-xl-inline-block {
+/* responsive utilities, based on bootstrap */
+@mixin createResponsiveUtilities($breakpoint, $sizeShortcut) {
+  .SDS-visible-#{$sizeShortcut}, .SDS-visible-#{$sizeShortcut}-inline-block {
     display: none;
   }
-
-  /* responsive utilities, based on bootstrap
-  WARN: bootstrap convention not followed: there is only one min breakpoint, no max breakpoint for classes (like in grid system)
-  */
-  &[min-width~="30em"] {
-    .SDS-visible-xs {
+  // WARN: bootstrap convention not followed: there is only one min breakpoint, no max breakpoint for classes (like in grid system)
+  &[min-width~="#{$breakpoint}"] {
+    .SDS-visible-#{$sizeShortcut} {
       display: block;
     }
-    .SDS-visible-xs-inline-block {
+    .SDS-visible-#{$sizeShortcut}-inline-block {
       display: inline-block;
     }
-    .SDS-hidden-xs {
+    .SDS-hidden-#{$sizeShortcut} {
       display: none;
     }
   }
 
-  &[min-width~="40em"] {
-    .SDS-visible-sm {
-      display: block;
-    }
-    .SDS-visible-sm-inline-block {
-      display: inline-block;
-    }
-    .SDS-hidden-sm {
-      display: none;
-    }
-  }
+}
 
-  &[min-width~="50em"] {
-    .SDS-visible-md {
-      display: block;
-    }
-    .SDS-visible-md-inline-block {
-      display: inline-block;
-    }
-    .SDS-hidden-md {
-      display: none;
-    }
-  }
+@mixin createGridRow {
+    .SDS-row {
+      margin-right: -5px;
+      margin-left: -5px;
 
-  &[min-width~="60em"] {
-    .SDS-visible-lg {
-      display: block;
+      &:before, &:after {
+        display: table;
+        content: " ";
+      }
+      &:after {
+        clear: both;
+      }
     }
-    .SDS-visible-lg-inline-block {
-      display: inline-block;
-    }
-    .SDS-hidden-lg {
-      display: none;
-    }
-  }
+}
 
-  &[min-width~="70em"] {
-    .SDS-visible-xl {
-      display: block;
-    }
-    .SDS-visible-xl-inline-block {
-      display: inline-block;
-    }
-    .SDS-hidden-xl {
-      display: none;
-    }
-  }
-
-  /* mimicking bootstrap form-inline */
-  &[min-width~="70em"] {
-    .form-xl-inline .form-group:not(.SDS-form-inline-exclude) {
+/* mimicking bootstrap form-inline */
+@mixin createFormInlineForBreakpoint($breakpoint, $sizeShortcut) {
+  &[min-width~="#{$breakpoint}"] {
+    .SDS-form-#{$sizeShortcut}-inline .form-group:not(.SDS-form-inline-exclude) {
       display: inline-block;
       margin-bottom: 0;
       vertical-align: middle;
     }
-    .form-xl-inline .form-control:not(.SDS-form-inline-exclude) {
+    .SDS-form-#{$sizeShortcut}-inline .form-control:not(.SDS-form-inline-exclude) {
       display: inline-block;
       width: auto;
       vertical-align: middle;
     }
-    .form-xl-inline .form-control-static:not(.SDS-form-inline-exclude) {
+    .SDS-form-#{$sizeShortcut}-inline .form-control-static:not(.SDS-form-inline-exclude) {
       display: inline-block;
     }
-    .form-xl-inline .input-group:not(.SDS-form-inline-exclude) {
+    .SDS-form-#{$sizeShortcut}-inline .input-group:not(.SDS-form-inline-exclude) {
       display: inline-table;
       vertical-align: middle;
     }
-    .form-xl-inline .input-group .input-group-addon,
-    .form-xl-inline .input-group .input-group-btn,
-    .form-xl-inline .input-group .form-control {
+    .SDS-form-#{$sizeShortcut}-inline .input-group .input-group-addon,
+    .SDS-form-#{$sizeShortcut}-inline .input-group .input-group-btn,
+    .SDS-form-#{$sizeShortcut}-inline .input-group .form-control {
       width: auto;
     }
-    .form-xl-inline .input-group > .form-control {
+    .SDS-form-#{$sizeShortcut}-inline .input-group > .form-control {
       width: 100%;
     }
-    .form-xl-inline .control-label {
+    .SDS-form-#{$sizeShortcut}-inline .control-label {
       margin-bottom: 0;
       vertical-align: middle;
     }
-    .form-xl-inline .radio,
-    .form-xl-inline .checkbox {
+    .SDS-form-#{$sizeShortcut}-inline .radio,
+    .SDS-form-#{$sizeShortcut}-inline .checkbox {
       display: inline-block;
       margin-top: 0;
       margin-bottom: 0;
       vertical-align: middle;
     }
-    .form-xl-inline .radio label,
-    .form-xl-inline .checkbox label {
+    .SDS-form-#{$sizeShortcut}-inline .radio label,
+    .SDS-form-#{$sizeShortcut}-inline .checkbox label {
       padding-left: 0;
     }
-    .form-xl-inline .radio input[type="radio"],
-    .form-xl-inline .checkbox input[type="checkbox"] {
+    .SDS-form-#{$sizeShortcut}-inline .radio input[type="radio"],
+    .SDS-form-#{$sizeShortcut}-inline .checkbox input[type="checkbox"] {
       position: relative;
       margin-left: 0;
     }
-    .form-xl-inline .has-feedback .form-control-feedback {
+    .SDS-form-#{$sizeShortcut}-inline .has-feedback .control-feedback {
       top: 0;
     }
+    // below add-ons to bootstrap form-inline
+    .SDS-form-#{$sizeShortcut}-inline .btn.SDS-form-inline-button {
+      margin-left: 10px;
+    }
   }
+}
 
+.SDSResponsiveElement {
+  @include createGridColumnsForAllBreakpoints;
+  @include createGridRow;
+  @include createFormInlineForAllBreakpoints;
+
+  .SDS-row-no-padding {
+    margin-left: 0;
+    margin-right: 0;
+      [class*="SDS-col-element-"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+  }
 }

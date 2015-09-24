@@ -19,6 +19,15 @@ define([
         }
 
         return angular.module('sabreDevStudioWebServices', ['ngResource', 'configuration', 'NGPromiseUtils', 'ngStorage'])
+            // making sure works with CORS. Needed?
+            //.config(['$httpProvider', function($httpProvider) {
+            //    $httpProvider.defaults.useXDomain = true;
+            //    $httpProvider.defaults.withCredentials = true;
+            //    delete $httpProvider.defaults.headers.common["X-Requested-With"];
+            //    $httpProvider.defaults.headers.common["Accept"] = "application/json";
+            //    $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+            //}
+            //])
             .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss') // //"2015-04-11T00:00:00",
             .constant('dateFormat', 'YYYY-MM-DD') // //"2015-04-11T00:00:00",
             .factory('StandardErrorHandler', function () {

@@ -3,7 +3,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/ItineraryPricePerStopsPerAirlineSummary.tpl.html'
+        , 'text!view-templates/widgets/ItineraryPricePerStopsPerAirlineSummary.tpl.html'
     ],
     function (
           _

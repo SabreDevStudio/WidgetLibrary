@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/FiltersPanelWidget.tpl.html'
+        , 'text!view-templates/widgets/FiltersPanelWidget.tpl.html'
     ],
     function (
           moment

@@ -4,12 +4,12 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/PreferredCabinSelect.tpl.html'
-        , 'text!view-templates/PreferredAirlineSelect.tpl.html'
-        , 'text!view-templates/AirportInput.tpl.html'
-        , 'text!view-templates/InputDate.tpl.html'
-        , 'text!view-templates/InputTimeRangePickerTemplate.tpl.html'
-        , 'text!view-templates/InputOnOffToggle.tpl.html'
+        , 'text!view-templates/partials/PreferredCabinSelect.tpl.html'
+        , 'text!view-templates/partials/PreferredAirlineSelect.tpl.html'
+        , 'text!view-templates/partials/AirportInput.tpl.html'
+        , 'text!view-templates/partials/InputDate.tpl.html'
+        , 'text!view-templates/partials/InputTimeRangePickerTemplate.tpl.html'
+        , 'text!view-templates/partials/InputOnOffToggle.tpl.html'
         , 'AirportNameBestSuggestionComparator'
     ],
     function (

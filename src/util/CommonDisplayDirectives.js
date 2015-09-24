@@ -3,7 +3,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/AirlineLogo.tpl.html'
+        , 'text!view-templates/partials/AirlineLogo.tpl.html'
     ],
     function (moment
         , angular

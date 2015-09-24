@@ -11,8 +11,8 @@ define([
       , 'angular-img-fallback'
       , 'angular-rangeslider'
       , 'angular_iso_currency'
-      , 'text!view-templates/ErrorsModal.tpl.html'
-      , 'text!view-templates/ErrorsMessages.tpl.html'
+      , 'text!view-templates/partials/ErrorsModal.tpl.html'
+      , 'text!view-templates/partials/ErrorsMessages.tpl.html'
     ],
     function (
           NG
@@ -47,6 +47,7 @@ define([
                 , 'isoCurrency'
             ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
+            .constant('newInspirationalSearchCriteriaEvent', 'newInspirationalSearchCriteriaEvent')
             .constant('filteringCriteriaChangedEvent', 'filteringCriteriaChangedEvent')
             .constant('itinerariesStatisticsUpdateNotification', 'itinerariesStatisticsUpdateNotification')
             .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
@@ -77,6 +78,18 @@ define([
                 };
                 return service;
             }])
+            .service('InspirationalSearchCriteriaBroadcastingService', [
+                '$rootScope'
+                , 'newInspirationalSearchCriteriaEvent'
+                , function ($rootScope, newSearchCriteriaEvent) {
+                    var service = {};
+                    service.searchCriteria = undefined;
+                    service.broadcast = function () {
+                        $rootScope.$broadcast(newSearchCriteriaEvent);
+                    };
+                    return service;
+                }])
+
             .service('DateSelectedBroadcastingService', [
                 '$rootScope'
                 , 'dateSelectedEvent'

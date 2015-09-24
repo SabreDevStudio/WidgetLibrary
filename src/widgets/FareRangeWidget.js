@@ -5,7 +5,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/FareRangeWidget.tpl.html'
+        , 'text!view-templates/widgets/FareRangeWidget.tpl.html'
         , 'datamodel/SearchCriteria'
     ],
     function (

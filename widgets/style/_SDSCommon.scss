@@ -69,21 +69,8 @@ $itemsSeparatingLineStyle: solid #D2DDE4 1px;
   display: none;
 }
 
-/* very simple grid system */
-@mixin oneOfNColumns($columnsCount) {
-  width: (1 / $columnsCount) * 100%;
-}
-
 .SDSNoWrap {
   white-space:nowrap;
-}
-
-%SDSClearFix {
-  &:after { // by http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best
-    content:"";
-    display:table;
-    clear:both;
-  }
 }
 
 .SDSWidget {
@@ -98,14 +85,14 @@ $itemsSeparatingLineStyle: solid #D2DDE4 1px;
     width: 14rem;
   }
 
+  .SDSBadgeInfo, .panel-default>.panel-heading .badge.SDSBadgeInfo {
+    background-color: #3a87ad;
+  }
+
 }
 
 .SDSDisableLink {
   pointer-events: none;
-}
-
-.SDSBadgeInfo, .panel-default .panel-heading .badge.SDSBadgeInfo {
-  background-color: #3a87ad;
 }
 
 .SDSTopBuffer {

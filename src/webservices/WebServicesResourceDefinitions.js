@@ -227,8 +227,6 @@ define([
                     $resource
                     , apiURL
                 ) {
-                    //TODO tmp remove
-                    apiURL = 'http://ctovm2455.dev.sabre.com:8080/cto-fse-http-proxy/darhlc005/8080/cto-darwin-raf';
                     var endpointURL = apiURL + '/v1/shop/flights/cheapest/fares/:destination';
                     return $resource(endpointURL, {destination: '@_destination'}, {
                         get: {
@@ -278,6 +276,22 @@ define([
                     , apiURL
                 ) {
                     var endpointURL = apiURL + '/v1/lists/utilities/airlines/';
+                    return $resource(endpointURL, {}, {
+                        get: {
+                            method:'GET'
+                            , cache: true
+                            , headers: generalHeaders
+                        }
+                    });
+                }])
+            .factory('PointOfSaleCountryLookupWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v1/lists/supported/pointofsalecountries/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'

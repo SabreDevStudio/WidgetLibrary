@@ -4,7 +4,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/ValuesFilterDirective.tpl.html'
+        , 'text!view-templates/widgets/ValuesFilterDirective.tpl.html'
         , 'widgets/filters/DiscreteValuesFilter'
         , 'widgets/filters/DiscreteValuesListFilter'
         , 'widgets/filters/RangeFilter'

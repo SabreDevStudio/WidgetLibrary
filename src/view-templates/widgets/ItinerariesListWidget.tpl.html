@@ -20,13 +20,34 @@
 <div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading">
-        <div class="row">
-            <div class="SDS-col-element-lg-3">
+        <div class="SDS-row SDS-row-no-padding">
+            <div class="SDS-col-element-xxl-3">
                 <strong>{{itineraries.size()}} options found for {{searchCriteriaDepartureAirport | cityAndAirportFullName}} to {{searchCriteriaArrivalAirport | cityAndAirportFullName}}</strong>
             </div>
 
-            <div class="SDS-col-element-lg-6">
-                <tabset>
+            <div class="SDS-col-element-xxl-7">
+                <!-- using show and hide and not the tabset tat is already responsive as the available repsonsive tabs components require jQuery -->
+                <accordion class="SDS-hidden-lg" close-others="false">
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            <span class="text-info">Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency:bestItinerariesSummary.cheapest.totalFareCurrency}}</span>
+                        </accordion-heading>
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.cheapest"></itinerary-short-summary>
+                    </accordion-group>
+                    <accordion-group>
+                        <accordion-heading>
+                            <span class="text-info">Best: {{bestItinerariesSummary.best.totalFareAmount | currency:bestItinerariesSummary.best.totalFareCurrency}}</span>
+                        </accordion-heading>
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.best"></itinerary-short-summary>
+                    </accordion-group>
+                    <accordion-group>
+                        <accordion-heading>
+                            <span class="text-info">Shortest: {{bestItinerariesSummary.shortest.totalFareAmount | currency:bestItinerariesSummary.shortest.totalFareCurrency}}</span>
+                        </accordion-heading>
+                        <itinerary-short-summary itinerary="bestItinerariesSummary.shortest"></itinerary-short-summary>
+                    </accordion-group>
+                </accordion>
+                <tabset class="SDS-visible-lg">
                     <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency:bestItinerariesSummary.cheapest.totalFareCurrency}}">
                         <itinerary-short-summary itinerary="bestItinerariesSummary.cheapest"></itinerary-short-summary>
                     </tab>
@@ -39,7 +60,7 @@
                 </tabset>
             </div>
 
-            <div class="SDS-col-element-lg-3">
+            <div class="SDS-col-element-xxl-2">
                 <input-sort-by class="pull-right"
                                available-sort-criteria="sortCriteria.availableSortCriteria"
                                selected-first-sort-criterion="selectedFirstCriterion"
@@ -58,7 +79,7 @@
 
                 <ul class="SDSLegList list-unstyled">
                     <li>
-                        <div class="SDS_row">
+                        <div class="SDS-row">
                             <ul class="SDS-col-element-xxs-12 SDS-hidden-xs list-inline list-unstyled">
                                 <li>
                                         <airline-logo airline-code="{{itinerary.getAllMarketingAirlines()[0]}}"></airline-logo>
@@ -88,7 +109,7 @@
                         </div>
                     </li>
                     <li ng-repeat="leg in itinerary.legs">
-                        <div class="SDSLegSummary SDS_row">
+                        <div class="SDSLegSummary SDS-row">
                             <div class="SDS-col-element-xxs-4 SDS-col-element-md-4 SDS-col-element-lg-5">
                                 <span class="SDS-visible-xl-inline-block SDSTravelDateLong">{{leg.getLegDepartureDateTime() | amDateFormat: 'ddd, DD MMM' }}</span><!-- format: Sun, 05 Dec -->
                                 <span class="SDSTravelTime">{{leg.getLegDepartureDateTime() | amDateFormat: 'HH:mm'}}</span><!-- format: 14:34 -->
@@ -130,7 +151,7 @@
                                     <!--{{flight.duration | amDurationFormat : 'minute'}}-->
                                     <!--</li>-->
                                     <li>
-                                        <div class="SDS_row">
+                                        <div class="SDS-row">
                                             <strong>
                                                 <airline-logo airline-code="{{flight.marketingAirline}}"></airline-logo>
                                                 {{flight.marketingAirline}} {{flight.marketingFlightNumber}} {{flight.marketingAirline | airlineFullName}}
@@ -138,7 +159,7 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <div class="SDS_row SDSFlightDepartureOrArrival">
+                                        <div class="SDS-row SDSFlightDepartureOrArrival">
                                             <div class="SDS-col-element-sm-4">
                                                 <span class="SDSLabelForTravelDate">Depart:</span>
                                                 {{flight.departureDateTime | amDateFormat: 'ddd, DD MMM HH:mm'}}
@@ -150,7 +171,7 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <div class="SDS_row SDSFlightDepartureOrArrival">
+                                        <div class="SDS-row SDSFlightDepartureOrArrival">
                                             <div class="SDS-col-element-sm-4">
                                                 <span class="SDSLabelForTravelDate">Arrive:</span>
                                                 {{flight.arrivalDateTime | amDateFormat: 'ddd, DD MMM HH:mm'}}

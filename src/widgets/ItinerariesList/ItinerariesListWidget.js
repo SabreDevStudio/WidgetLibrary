@@ -4,7 +4,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/ItinerariesListWidget.tpl.html'
+        , 'text!view-templates/widgets/ItinerariesListWidget.tpl.html'
         , 'datamodel/ItinerariesList'
         , 'webservices/BargainFinderMaxWebServices'
         , 'webservices/InstaflightsDataService'

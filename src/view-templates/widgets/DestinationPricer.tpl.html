@@ -5,22 +5,18 @@
                 <h4 class="panel-title">Cheapest Prices To Destination</h4>
             </div>
 
-            <div class="panel-body" ng-hide="ctrl.anyBusinessErrorMessagesPresent()">
-                <h5>
-                    Cheapest Flights to <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}</em>
-                </h5>
+            <div class="panel-body" ng-show="ctrl.isAnyDataToDisplayAvailable() && !ctrl.anyBusinessErrorMessagesPresent()">
 
                 <ul class="list-unstyled SDSTopLevelList">
                     <div class="row">
                         <li ng-repeat="offerItem in modelPricesToDestination.FareInfo">
                             <div class="SDS-col-element-lg-6">
                                 <div class="SDSInspirationalTile">
-                                    <!--<a href="{{modelPricesToDestination.Links[1]}}">&lt;!&ndash; TODO hardcode: recognize rel &ndash;&gt;-->
-                                        <div class="SDS_row">
+                                        <div class="SDS-row">
                                             <div class="SDS-col-element-xs-4">
                                                 <ul class="list-inline list-unstyled">
                                                     <li>
-                                                        <div ng-repeat="airline in offerItem.LowestFare.AirlineCodes" ng-if="$first"><!--TODO only first one shown -->
+                                                        <div ng-repeat="airline in offerItem.LowestFare.AirlineCodes" ng-if="$first"><!--WARN: only first airline shown -->
                                                             <airline-logo airline-code="{{airline}}"></airline-logo>
                                                             <strong>{{airline | airlineFullName}}</strong>
                                                         </div>
@@ -44,10 +40,6 @@
                                                 <div class="pull-right">
                                                     <small>from </small><strong>{{offerItem.LowestFare.Fare | currency:offerItem.CurrencyCode}}</strong>
                                                 </div>
-                                                <!--<div class="clearfix"></div>-->
-                                                <!--<div class="pull-right" ng-show="detailsShown">-->
-                                                    <!--<small>round trip</small>-->
-                                                <!--</div>-->
                                                 <div class="clearfix"></div>
                                                 <a class="pull-right" href=""
                                                    popover-template="'DestinationPricerDetailsPopover'"
@@ -57,7 +49,6 @@
                                                 </a>
                                             </div>
                                         </div>
-                                    <!--</a>-->
                                 </div>
                             </div>
                         </li>
@@ -67,7 +58,7 @@
             </div>
 
 
-            <div class="panel-body" ng-show="ctrl.anyBusinessErrorMessagesPresent()">
+            <div class="panel-body" ng-if="ctrl.anyBusinessErrorMessagesPresent()">
                 <h5>
                     Cheapest Prices to destination <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}</em> not available.
                 </h5>

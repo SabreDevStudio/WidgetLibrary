@@ -2,7 +2,7 @@ define([
           'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/ItineraryShortSummary.tpl.html'
+        , 'text!view-templates/widgets/ItineraryShortSummary.tpl.html'
         , 'util/CommonDisplayDirectives'
     ],
     function (

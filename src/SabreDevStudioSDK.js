@@ -83,6 +83,7 @@ require([
         , 'widgets/leadPriceChart/LeadPriceChartWidget'
         , 'widgets/LowFareHistoryWidget'
         , 'widgets/searchForm/SearchFormWidget'
+        , 'widgets/searchForm/SearchFormInspirationalWidget'
         , 'widgets/searchForm/SearchFormInputControls'
         , 'widgets/ItinerariesList/InputSortBy'
         , 'widgets/fareForecast/FareForecastWidget'
@@ -106,6 +107,7 @@ require([
         , LeadPriceChartWidget
         , LowFareHistoryWidget
         , SearchFormWidget
+        , SearchFormInspirationalWidget
         , SearchFormInputControls
         , InputSortBy
         , FareForecastWidget
