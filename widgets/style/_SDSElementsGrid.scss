@@ -125,8 +125,9 @@ $numberOfGridColumns: 12 !default;
       margin-bottom: 0;
       vertical-align: middle;
     }
-    .SDS-form-#{$sizeShortcut}-inline .radio label,
-    .SDS-form-#{$sizeShortcut}-inline .checkbox label {
+
+    .SDS-form-#{$sizeShortcut}-inline .radio label:not(.btn), // do not to decrease padding left when labels are styled as buttons, inside button groups
+    .SDS-form-#{$sizeShortcut}-inline .checkbox label:not(.btn) {
       padding-left: 0;
     }
     .SDS-form-#{$sizeShortcut}-inline .radio input[type="radio"],

@@ -10,7 +10,7 @@
                  ng-repeat="month in calendar.months | startFrom: (paginationSettings.currentPage - 1) * numberOfMonthsShownAtOnce | limitTo: numberOfMonthsShownAtOnce"
                  disable="month.noPricesFound">
 
-                    <h4 class="text-center">{{month.monthStartDate | amDateFormat:'MMMM'}}</h4><!-- January February -->
+                    <h4 class="text-center">{{month.monthStartDate.format('MMMM')}}</h4><!-- January February -->
                     <ng-include src="'CalendarOneMonth'"></ng-include>
 
             </div>

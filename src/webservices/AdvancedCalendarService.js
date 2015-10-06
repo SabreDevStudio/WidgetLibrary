@@ -1,22 +1,26 @@
 define([
           'angular'
         , 'lodash'
+        , 'moment'
+        , 'moment_range'
         , 'webservices/AdvancedCalendarSearchCriteriaValidator'
-        , 'webservices/AdvancedCalendarRequestFactoryForAltDates'
         , 'webservices/AdvancedCalendarRequestFactory'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/WebServicesResourceDefinitions'
+        , 'webservices/AdvancedCalendarRequestDatesExpander'
         , 'datamodel/ShoppingData'
         , 'webservices/OTAResponseParser'
     ],
     function (
           angular
         , _
+        , moment
+        , moment_range
         , AdvancedCalendarSearchCriteriaValidator
-        , AdvancedCalendarRequestFactoryForAltDates
         , AdvancedCalendarRequestFactory
         , SabreDevStudioWebServicesModule
         , WebServicesResourceDefinitions
+        , AdvancedCalendarRequestDatesExpander
         , ShoppingData
         , OTAResponseParser
     ) {
@@ -34,8 +38,11 @@ define([
                     , ShoppingOptionsCacheService
                     , StandardErrorHandler
                 ) {
+
+                    var requestDatesExpander = new AdvancedCalendarRequestDatesExpander();
+                    var requestBuilderForDateRanges = new AdvancedCalendarRequestFactory(requestDatesExpander);
+
                     var requestBuilder = new AdvancedCalendarRequestFactory();
-                    var requestBuilderForAltDates = new AdvancedCalendarRequestFactoryForAltDates();
 
                     var responseParser = new OTAResponseParser();
 
@@ -45,7 +52,11 @@ define([
                         var keyElements = [
                             searchCriteria.getFirstLeg().origin
                             , searchCriteria.getFirstLeg().destination
-                            , searchCriteria.getLengthOfStay()
+                            , JSON.stringify(searchCriteria.getMinMaxLengthOfStay()) || searchCriteria.getLengthOfStay()
+                            , JSON.stringify(searchCriteria.getDepartureDateFrom())
+                            , JSON.stringify(searchCriteria.getDepartureDateTo())
+                            , JSON.stringify(searchCriteria.getReturnDateFrom())
+                            , JSON.stringify(searchCriteria.getReturnDateTo())
                             , JSON.stringify(searchCriteria.preferredAirlines)
                             , searchCriteria.maxStops
                             , JSON.stringify(searchCriteria.passengerSpecifications)
@@ -61,7 +72,7 @@ define([
                                 if (_.size(optionsFromCache) > 0) {
                                     return resolve(optionsFromCache);
                                 }
-                                var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria);
+                                var advancedCalendarRequest = requestBuilderForDateRanges.createRequest(searchCriteria);
                                 AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
                                     function (response) {
                                         var itinerariesList = responseParser.parse(response);
@@ -83,42 +94,25 @@ define([
                                 );
                             });
                         },
-                        getItineraries : function (searchCriteria) { //TODO near all dup with previous. When works refactor
+                        getItineraries : function (searchCriteria) {
                             return $q(function(resolve, reject) {
-                                var cacheKey = createCacheKey(searchCriteria);
-                                var tripDepartureDay = searchCriteria.getFirstLeg().departureDateTime.clone().startOf('day');
-                                var optionsFromCache = ShoppingOptionsCacheService.getItinerariesList(cacheKey, tripDepartureDay);
-                                if (optionsFromCache && optionsFromCache.size() > 0) {
-                                    return resolve(optionsFromCache);
-                                }
                                 var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria);
                                 AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
                                     function (response) {
                                         var itinerariesList = responseParser.parse(response);
-
-                                        var shoppingData = new ShoppingData();
-                                        shoppingData.markRequestedData(cacheKey, range.start, range.end);//TODO range is not defined!!
-                                        itinerariesList.getItineraries().forEach(function(itineary) {
-                                            shoppingData.addItinerary(cacheKey, itineary, itineary.getOutboundDepartureDateTime());
-                                        });
-                                        shoppingData.updateLeadPrices(cacheKey);
-
-                                        ShoppingOptionsCacheService.addUpdate(shoppingData);
-                                        var itineraries = shoppingData.getItinerariesList(cacheKey, tripDepartureDay);
-                                        return resolve(itineraries);
+                                        return resolve(itinerariesList);
                                     },
                                     function (error) {
-                                        return reject(error);
+                                        return reject(StandardErrorHandler.handleError(error));
                                     }
                                 );
-
                             });
                         },
                         getAlternateDatesPriceMatrix: function (searchCriteria) {
                             if (!searchCriteria.isAlternateDatesRequest()) {
                                 throw new Error('Calling Alternative Dates service for non alternative dates request');
                             }
-                            var advancedCalendarRequest = requestBuilderForAltDates.createRequest(searchCriteria);
+                            var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria);
                             return $q(function(resolve, reject) {
                                 AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
                                     function (response) {
@@ -140,7 +134,7 @@ define([
                             var cacheKey = createCacheKey(searchCriteria);
                             var minDateAndPricePair = ShoppingOptionsCacheService.getMinDateAndPricePair(cacheKey);
                             return {
-                                  totalFareAmount: minDateAndPricePair.totalFareAmount
+                                totalFareAmount: minDateAndPricePair.totalFareAmount
                                 , currency: minDateAndPricePair.totalFareCurrency
                                 , date: minDateAndPricePair.date
                             }

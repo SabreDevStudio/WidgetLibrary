@@ -4,7 +4,6 @@ define([
       , 'util/CommonDirectives'
       , 'util/CommonFilters'
       , 'webservices/SabreDevStudioWebServicesModule'
-      , 'angular_moment'
       , 'angular-ui-select'
       , 'angular-sanitize'
       , 'util/Lookups'
@@ -20,7 +19,6 @@ define([
         , CommonDirectives
         , CommonFilters
         , SabreDevStudioWebServicesModule
-        , angular_moment
         , angular_ui_select
         , angular_sanitize
         , Lookups
@@ -37,7 +35,6 @@ define([
                 , 'sabreDevStudioWebServices'
                 , 'commonDirectives'
                 , 'commonFilters'
-                , 'angularMoment'
                 , 'ui.bootstrap'
                 , 'ngSanitize'
                 , 'ui.select'

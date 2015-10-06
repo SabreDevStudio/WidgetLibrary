@@ -10,7 +10,6 @@ define(['util/LodashExtensions'], function (_) {
         };
 
         this.getPermittedItineraries = function () {
-            //console.log('getPermittedItineraries called');
           return _.reject(itineraries, 'filteredOut');
         };
 

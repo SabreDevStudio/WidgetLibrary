@@ -9,7 +9,7 @@ define([],
             var requestedItinsCount = searchCriteria.optionsPerDay || 100;
             return {
                 'OTA_AirLowFareSearchRQ': {
-                      'OriginDestinationInformation': this.createOriginDestinationInfos(searchCriteria.legs, searchCriteria.getLengthOfStay(), searchCriteria.preferredAirlines, searchCriteria.dateFlexibilityDays)
+                      'OriginDestinationInformation': this.createOriginDestinationInfos(searchCriteria)
                     , 'POS': this.createPOS()
                     , 'TPA_Extensions': this.createRequestTPAExtensions(requestedItinsCount, searchCriteria.dateFlexibilityDays)
                     , 'TravelPreferences': this.createTravelPreferences(requestedItinsCount, searchCriteria.preferredCabin, searchCriteria.maxStops)

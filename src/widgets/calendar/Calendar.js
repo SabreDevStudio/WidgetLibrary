@@ -45,7 +45,7 @@ define([
             this.priceClassifier = new PriceClassifier();
 
             this.prepareDataModel = function (searchCriteria) {
-                var requestedMonth = searchCriteria.getFirstLeg().departureDateTime;
+                var requestedMonth = searchCriteria.getFirstLeg().departureDateTime || searchCriteria.earliestDepartureLatestReturnDatesFlexibility.earliestDepartureDateTime;
                 var rangeOfMonthsToShow = createRangeOfMonthsToShow(requestedMonth);
                 modelMonths = createModelMonths(rangeOfMonthsToShow);
                 this.requestedMonthSeqNumber = calculateRequestedMonthSeqNumber(requestedMonth, modelMonths);

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Alternate Dates Lead Fares</title>
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
     <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
@@ -17,9 +17,14 @@
 <div id="mainPageContainer">
     <partial command="include('partials/navigation.html')"></partial>
 
-    <div class="embeddedWidget" data-search-form options-per-day="1" set-checkboxes-as-checked="IsPlusMinus3DaysFlexible"></div>
+    <div class="embeddedWidget"
+         data-search-form options-per-day="1"
+         show-date-flexibility-criteria="plusMinusConstantDaysFlexibility, plusMinusVariableDaysFlexibility, earliestDepartureLatestReturn.losDays, earliestDepartureLatestReturn.daysOfWeekAtDestination"
+         preselect-date-flexibility-criterion="plusMinusConstantDaysFlexibility"
+         plus-minus-days-flexibility-max-days="5">
+    </div>
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-10">
             <alternate-dates-matrix active-search-web-service="advancedCalendar"></alternate-dates-matrix>
             <!--<alternate-dates-matrix-->
                     <!--active-search-web-service="advancedCalendar"-->
@@ -29,9 +34,6 @@
                     <!--return-date="2015-09-10"-->
                     <!--alt-dates-plus-minus="3">-->
             <!--</alternate-dates-matrix>-->
-        </div>
-        <div class="col-lg-8">
-            <itinerary-list id="ItineraryList"></itinerary-list>
         </div>
     </div>
 </div>

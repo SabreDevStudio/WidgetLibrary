@@ -14,45 +14,44 @@ define([
          * @param arrivalDateTime: moment object, not String or plain Javascript Date
          * @constructor
          */
-        function SearchCriteriaLeg(origin, destination, departureDateTime, arrivalDateTime) {
+        function SearchCriteriaLeg(legOnDAndDates) {
 
             var that = this;
 
-            var originNormalized = origin.toUpperCase();
+            var originNormalized = legOnDAndDates.origin.toUpperCase();
             validateAirportRegex(originNormalized);
             this.origin = originNormalized;
 
-            var destinationNormalized = destination.toUpperCase();
+            var destinationNormalized = legOnDAndDates.destination.toUpperCase();
             validateAirportRegex(destinationNormalized);
             this.destination = destinationNormalized;
 
             var _departureDateTime;
+
             Object.defineProperty(this, 'departureDateTime', {
                 enumerable: true,
                 get: function() {
-                    return _departureDateTime.clone();}, // defensive cloning to avoid many errors resulting from moment objects mutable
+                    return _departureDateTime && _departureDateTime.clone();}, // defensive cloning to avoid many errors resulting from moment objects mutable
                 set: function(departureDateTime) {
-                    _departureDateTime = departureDateTime.clone();}
+                    _departureDateTime = departureDateTime && departureDateTime.clone();}
             });
 
-            this.departureDateTime = departureDateTime;
+            this.departureDateTime = legOnDAndDates.departureDateTime;
 
             var _arrivalDateTime;
             Object.defineProperty(this, 'arrivalDateTime', {
                 enumerable: true,
                 get: function() {
-                    if (_arrivalDateTime) {
-                        return _arrivalDateTime.clone(); // defensive cloning to avoid many errors resulting from moment objects mutable
-                    }
+                    return _arrivalDateTime && _arrivalDateTime.clone(); // defensive cloning to avoid many errors resulting from moment objects mutable
                 },
                 set: function(arrivalDateTime) {
                     if (arrivalDateTime) {
-                        _arrivalDateTime = arrivalDateTime.clone();
+                        _arrivalDateTime = arrivalDateTime && arrivalDateTime.clone();
                     }
                 }
             });
 
-            this.arrivalDateTime = arrivalDateTime;
+            this.arrivalDateTime = legOnDAndDates.arrivalDateTime;
 
             function validateAirportRegex(airportString) {
                 if (_.isUndefined(airportString) || airportString.length === 0) {

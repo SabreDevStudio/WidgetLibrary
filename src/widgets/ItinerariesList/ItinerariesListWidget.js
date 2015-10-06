@@ -1,5 +1,5 @@
 define([
-          'util/LodashExtensions'
+          'lodash'
         , 'moment'
         , 'angular'
         , 'angular_bootstrap'
@@ -11,10 +11,11 @@ define([
         , 'datamodel/DiversitySwapper'
         , 'widgets/ItinerariesList/ItineraryShortSummary'
         , 'widgets/ItinerariesList/ItineraryPricePerStopsPerAirlineSummary'
+        , 'widgets/ItinerariesList/ItineraryDirective'
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
         , 'datamodel/SearchCriteria'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
-        , 'webservices/OneDaySearchStrategyFactory'
+        , 'webservices/ItinerariesSearchStrategyFactory'
         , 'util/CommonDisplayDirectives'
     ],
     function (
@@ -30,10 +31,11 @@ define([
         , DiversitySwapper
         , ItineraryShortSummary
         , ItineraryPricePerStopsPerAirlineSummary
+        , ItineraryDirective
         , ItinerariesListSummaryByAirlineAndNumberOfStops
         , SearchCriteria
         , ItinerariesListSortCriteria
-        , OneDaySearchStrategyFactory
+        , ItinerariesSearchStrategyFactory
         , CommonDisplayDirectives
     ) {
         'use strict';
@@ -41,7 +43,8 @@ define([
         return angular.module('sdsWidgets')
             .controller('ItineraryListCtrl', [
                       '$scope'
-                    , 'OneDaySearchStrategyFactory'
+                    , '$filter'
+                    , 'ItinerariesSearchStrategyFactory'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'
                     , 'StatisticsGatheringRequestsRegistryService'
@@ -55,6 +58,7 @@ define([
                     , 'noResultsFoundEvent'
                 , function (
                       $scope
+                    , $filter
                     , searchStrategyFactory
                     , SearchCriteriaBroadcastingService
                     , newSearchCriteriaEvent
@@ -77,6 +81,9 @@ define([
 
                     resetNavigationAndSortCriteria();
 
+                    var itineraries;
+                    var permittedItineraries;
+
                     function resetNavigationAndSortCriteria() {
                         $scope.sortCriteria.resetSortCriteria();
                         $scope.selectedFirstCriterion.selected =  _.first($scope.sortCriteria.availableSortCriteria);
@@ -88,6 +95,7 @@ define([
 
                     $scope.onSortingCriteriaChanged = function () {
                         $scope.sortCriteria.setSortCriteria($scope.selectedFirstCriterion.selected);
+                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
 
                         // when changing sorting criteria, which will trigger resorting of itineraries list, reset current page to 1.
                         // The customer expectation upon changing sort criteria, is to see, at the very top of the list,
@@ -97,20 +105,29 @@ define([
                     };
 
                     function recalculateSummaries() {
-                        var permittedItineraries = $scope.itineraries.getPermittedItineraries();
                         $scope.bestItinerariesSummary = {
-                            cheapest: $scope.itineraries.getCheapestItinerary(),
-                            best: _.last(permittedItineraries.sort(DiversitySwapper.comparator)),
-                            shortest: $scope.itineraries.getShortestItinerary()
+                            cheapest: itineraries.getCheapestItinerary(),
+                            best: _.last($scope.permittedItinerariesSorted.slice().sort(DiversitySwapper.comparator)),// have to sort on copy, not original, not to mutate original array which is the source for displaying the itineraries list
+                            shortest: itineraries.getShortestItinerary()
                         };
-                        $scope.summaryPerStopsPerAirline = (new ItinerariesListSummaryByAirlineAndNumberOfStops(permittedItineraries)).getSummaries();
+                        $scope.summaryPerStopsPerAirline = (new ItinerariesListSummaryByAirlineAndNumberOfStops($scope.permittedItinerariesSorted)).getSummaries();
                     }
 
                     function processNewItineraries(newSearchCriteria, itins) {
                         $scope.businessErrorMessages = [];
                         resetNavigationAndSortCriteria();
 
-                        $scope.itineraries = itins;
+                        itineraries = itins;
+                        //// for performance measuring and optimizations
+                        //for (var i = 0; i < 4; i++) {
+                        //    var copy = _.cloneDeep(itins);
+                        //    copy.getItineraries()
+                        //        .forEach(itineraries.add);
+                        //
+                        //}
+                        ////
+                        permittedItineraries = itineraries.getPermittedItineraries();
+                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
 
                         recalculateAndBroadcastStatistics();
                         recalculateSummaries();
@@ -119,14 +136,17 @@ define([
 
                     function updateWithNewItineraries(newSearchCriteria, itinerariesList) {
                         resetNavigationAndSortCriteria();
-                        $scope.itineraries.addItinerariesListWithDedup(itinerariesList);
+                        var mergedItinerariesLists = itineraries.addItinerariesListWithDedup(itinerariesList);
+                        permittedItineraries = mergedItinerariesLists.getPermittedItineraries();
+                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
                         recalculateAndBroadcastStatistics();
                         recalculateSummaries();
                         updateSearchAirports(newSearchCriteria);
                     }
 
                     function clearModel() {
-                        $scope.itineraries = undefined;
+                        itineraries = undefined;
+                        $scope.permittedItinerariesSorted = undefined;
                     }
 
                     function processServiceErrorMessages(newSearchCriteria, businessErrorMessages) { //accepts array or just one string
@@ -180,7 +200,9 @@ define([
                     // @Controller
                     $scope.$on(filteringCriteriaChangedEvent, function () {
                         var currentFilteringFunctions = FilteringCriteriaChangedBroadcastingService.filteringFunctions;
-                        $scope.itineraries.applyFilters(currentFilteringFunctions);
+                        itineraries.applyFilters(currentFilteringFunctions);
+                        permittedItineraries = itineraries.getPermittedItineraries();
+                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
                         recalculateSummaries();
                         // by applying filters we changed internal state of the $scope.itineraries object. NG is not watching its internal state (result of getPermittedItineraries() call in view)
                         $scope.safeApply(); //TODO this is temporary trigger to angular, as discrete values filter already trigger apply, thru some sideeffect, while rangeSliders not. Also while rest all filters is clicked apply is already in progress. Debug NG what triggers apply in case of dicreate values filters
@@ -221,7 +243,7 @@ define([
 
                     function recalculateAndBroadcastStatistics() {
                         var requestedStatisticsDescriptions = StatisticsGatheringRequestsRegistryService.getAll();
-                        var statistics = $scope.itineraries.getCurrentValuesBounds(requestedStatisticsDescriptions);
+                        var statistics = itineraries.getCurrentValuesBounds(requestedStatisticsDescriptions);
                         ItineraryStatisticsBroadcastingService.statistics = statistics;
                         ItineraryStatisticsBroadcastingService.broadcast();
                     }
@@ -237,24 +259,24 @@ define([
                     };
 
                     $scope.isAnyDataToDisplayAvailable = function () {
-                        if (_.isUndefined($scope.itineraries)) {
+                        if (_.isUndefined(itineraries)) {
                             return false;
                         }
-                        return ($scope.itineraries.size() > 0);
+                        return ($scope.permittedItinerariesSorted.length > 0);
                     };
 
                 }])
-            .directive('itineraryList', function () {
+            .directive('itineraryList', ['$templateCache', function ($templateCache) {
                 return {
                     restrict: 'EA',
                     scope: {
-                        activeSearch: '@'
+                        activeSearch: '@' //TODO: activeSearchWebService not enough to decide
                         , activeSearchWebService: '@'
                     },
                     template: ItinerariesListWidgetTemplate,
+                    //templateUrl: '../src/view-templates/widgets/ItinerariesListWidget.tpl.html', // element queries do not work. BTW: use https://thinkster.io/templatecache-tutorial https://www.npmjs.com/package/grunt-angular-templatecache
                     controller: 'ItineraryListCtrl',
                     link: function (scope, element) {
-
                         var predefinedSearchCriteria = buildSearchCriteriaFromPredefinedParameters();
                         if (predefinedSearchCriteria) {
                             scope.processSearchCriteria(predefinedSearchCriteria);
@@ -273,15 +295,15 @@ define([
                     }
 
                 };
-            })
+            }])
             .filter('sortByCriteria', ['$filter', function ($filter) {
                 var orderBy = $filter('orderBy');
                 return function (values, sortingCriteriaArray) {
                     var ngOrderByPredicatesArray = sortingCriteriaArray.map(function (criterion) {
-                        return (criterion.reverse? '-': '+') + criterion.propertyName;
+                        return (criterion.reverse ? '-' : '+') + criterion.propertyName;
                     });
-                    var orderBy2 = orderBy(values, ngOrderByPredicatesArray);
-                    return orderBy2;
+                    var valuesSorted = orderBy(values, ngOrderByPredicatesArray);
+                    return valuesSorted;
                 };
             }]);
     });

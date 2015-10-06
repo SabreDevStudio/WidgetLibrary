@@ -11,12 +11,14 @@ define([
         'use strict';
 
         return angular.module('sabreDevStudioWebServices')
-            .factory('OneDaySearchStrategyFactory', [
+            .factory('ItinerariesSearchStrategyFactory', [
                   'BargainFinderMaxDataService'
                 , 'InstaflightsDataService' //, 'ShoppingMockDateService'
+                , 'AdvancedCalendarDataService'
             , function (
                   BargainFinderMaxDataService
                 , InstaflightsDataService
+                , AdvancedCalendarDataService
             ) {
                 return {
                     createSearchStrategy: function (activeSearchWebService) {
@@ -88,6 +90,16 @@ define([
                                     },
                                     validateSearchCriteria: function (searchCriteria) {
                                         return collectValidationErrors(searchCriteria, InstaflightsDataService, BargainFinderMaxDataService);
+                                    }
+                                };
+                            }
+                            case 'advancedCalendar': {
+                                return {
+                                    search: function (searchCriteria, successCallback, failureCallback) {
+                                        AdvancedCalendarDataService.getItineraries(searchCriteria).then(successCallback, failureCallback);
+                                    },
+                                    validateSearchCriteria: function (searchCriteria) {
+                                        return collectValidationErrors(searchCriteria, AdvancedCalendarDataService);
                                     }
                                 };
                             }

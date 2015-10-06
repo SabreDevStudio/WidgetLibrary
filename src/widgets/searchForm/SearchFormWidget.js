@@ -1,20 +1,32 @@
 define([
-          'moment'
+         'lodash'
+        , 'moment'
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
+        , 'widgets/searchForm/TravelDatesFlexibilitySelectionMode'
         , 'datamodel/SearchCriteria'
         , 'datamodel/SearchCriteriaLeg'
+        , 'datamodel/DaysOfWeekAtDestination'
+        , 'datamodel/PlusMinusDaysTravelDatesFlexibility'
+        , 'datamodel/EarliestDepartureLatestReturnTravelDatesFlexibility'
         , 'text!view-templates/widgets/SearchFormWidget.tpl.html'
+        , 'util/DOMManipulationUtils'
     ],
     function (
-          moment
+          _
+        , moment
         , angular
         , angular_bootstrap
         , SDSWidgets
+        , TravelDatesFlexibilitySelectionMode  
         , SearchCriteria
         , SearchCriteriaLeg
+        , DaysOfWeekAtDestination
+        , PlusMinusDaysTravelDatesFlexibility
+        , EarliestDepartureLatestReturnTravelDatesFlexibility
         , SearchFormWidgetTemplate
+        , domUtils
     ) {
         'use strict';
 
@@ -22,27 +34,20 @@ define([
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .controller('SearchFormCtrl' , [
                   '$scope'
-                , 'DateService'
                 , 'WidgetIdGeneratorService'
                 , 'SearchCriteriaBroadcastingService'
             , function (
                   $scope
-                , $DateService
                 , widgetIdGenerator
                 , SearchCriteriaBroadcastingService
                 ) {
-
-                var DEFAULT_ADVANCE_PURCHASE_DAYS = 14;
-                var DEFAULT_LENGTH_OF_STAY = 14;
-                var DEFAULT_DATE_FLEXIBILITY_REQUESTED = 3;
-
-                $scope.earliestTravelStart = $DateService.now().startOf('day').toDate();
 
                 $scope.widgetId = widgetIdGenerator.next();
 
                 $scope.tripType = 'returnTrip';
 
                 $scope.multiDestinationLegs = [{}, {}, {}];
+                $scope.simpleTrip = {};
 
                 var DEFAULT_PAX_COUNT = 1;
 
@@ -50,46 +55,48 @@ define([
                       ADTPaxCount: DEFAULT_PAX_COUNT
                 };
 
-                function setReturnDateToDefaultLengthOfStay() {
-                    $scope.ReturnDate = moment($scope.DepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days').toDate();
-                }
-
-                var returnDateWasEverChanged = false;
-
-                $scope.onDepartureDateChange = function () {
-                    if (!returnDateWasEverChanged) {
-                        setReturnDateToDefaultLengthOfStay();
-                    }
-                };
-
-                $scope.onReturnDateChange = function () {
-                    returnDateWasEverChanged = true;
-                };
-
-                $scope.DepartureDate = $DateService.now().startOf('day').add(DEFAULT_ADVANCE_PURCHASE_DAYS, 'days').toDate();
-                setReturnDateToDefaultLengthOfStay();
-
                 $scope.preferredAirline = {}; // cannot keep here simple scope property like just $scope.preferredAirline, as the angular-ui-select is unable to assign to scope simple property, but only to property of the object, see http://stackoverflow.com/questions/25937098/ng-model-is-not-getting-changed-in-ui-select
+
+                $scope.lengthsOfStay = {
+                    selected: {}
+                };
+
 
                 function createLegs(tripType) {
                     switch (tripType) {
                         case 'oneWay': {
-                            var firstLegDepartureDate = moment($scope.DepartureDate);
-                            var firstLeg = new SearchCriteriaLeg($scope.Origin.airportCode, $scope.Destination.airportCode, firstLegDepartureDate);
+                            var firstLeg = new SearchCriteriaLeg({
+                                origin: $scope.simpleTrip.Origin.airportCode
+                                , destination: $scope.simpleTrip.Destination.airportCode
+                                , departureDateTime: moment($scope.simpleTrip.DepartureDate)
+                            });
                             return [firstLeg];
                         }
                         case 'returnTrip': {
-                            var firstLegDepartureDate = moment($scope.DepartureDate);
-                            var firstLeg = new SearchCriteriaLeg($scope.Origin.airportCode, $scope.Destination.airportCode, firstLegDepartureDate);
+                            var firstLeg = new SearchCriteriaLeg({
+                                origin: $scope.simpleTrip.Origin.airportCode
+                                , destination: $scope.simpleTrip.Destination.airportCode
+                            });
+                            var secondLeg = new SearchCriteriaLeg({
+                                origin: $scope.simpleTrip.Destination.airportCode
+                                , destination: $scope.simpleTrip.Origin.airportCode
+                            });
 
-                            var secondLegDepartureDate = moment($scope.ReturnDate);
-                            var secondLeg = new SearchCriteriaLeg($scope.Destination.airportCode, $scope.Origin.airportCode, secondLegDepartureDate);
+                            if (!($scope.flexDatesMode.isEarliestDepartureLatestReturnActive())) {
+                                firstLeg.departureDateTime = moment($scope.simpleTrip.DepartureDate);
+                                secondLeg.departureDateTime = moment($scope.simpleTrip.ReturnDate);
+                            }
+
                             return [firstLeg, secondLeg];
                         }
                         case 'multiDestination': {
                             return $scope.multiDestinationLegs.map(function (leg) {
                                 var departureDate = moment(leg.DepartureDate);
-                                return new SearchCriteriaLeg(leg.Origin.airportCode, leg.Destination.airportCode, departureDate);
+                                return new SearchCriteriaLeg({
+                                      origin: leg.Origin.airportCode
+                                    , destination: leg.Destination.airportCode
+                                    , departureDateTime: departureDate
+                                });
                             });
                         }
                         default: throw new Error('Trip type: ' + $scope.tripType + ' not recognized');
@@ -112,11 +119,36 @@ define([
                         searchCriteria.addLeg(searchCriteriaLeg);
                     });
 
-                    searchCriteria.addPassenger("ADT", $scope.generalSearchCriteria.ADTPaxCount);
-
-                    if ($scope.generalSearchCriteria.IsPlusMinus3DaysFlexible) {
-                        searchCriteria.dateFlexibilityDays = DEFAULT_DATE_FLEXIBILITY_REQUESTED;
+                    if ($scope.flexDatesMode.activeMode === 'earliestDepartureLatestReturn.daysOfWeekAtDestination') {
+                        var daysOfWeekAtDestination = new DaysOfWeekAtDestination($scope.daysOfWeekAtDestination.selected);
+                        searchCriteria.earliestDepartureLatestReturnDatesFlexibility = new EarliestDepartureLatestReturnTravelDatesFlexibility({
+                              earliestDepartureDateTime: moment($scope.simpleTrip.EarliestDepartureDate)
+                            , latestReturnDateTime: moment($scope.simpleTrip.LatestReturnDate)
+                            , minDays: daysOfWeekAtDestination.lengthOfStay()
+                            , maxDays: daysOfWeekAtDestination.lengthOfStay()
+                            , daysOfWeekAtDestination: daysOfWeekAtDestination
+                        });
                     }
+
+                    if ($scope.flexDatesMode.activeMode === 'earliestDepartureLatestReturn.losDays') {
+                        searchCriteria.earliestDepartureLatestReturnDatesFlexibility = new EarliestDepartureLatestReturnTravelDatesFlexibility({
+                              earliestDepartureDateTime: moment($scope.simpleTrip.EarliestDepartureDate)
+                            , latestReturnDateTime: moment($scope.simpleTrip.LatestReturnDate)
+                            , minDays: $scope.lengthsOfStay.selected.minDays
+                            , maxDays: $scope.lengthsOfStay.selected.maxDays
+                            , departureDaysOfWeek: $scope.departureDaysOfWeek.selected
+                            , returnDaysOfWeek: $scope.returnDaysOfWeek.selected
+                        });
+                    }
+
+                    if ($scope.flexDatesMode.activeMode === 'plusMinusConstantDaysFlexibility') {
+                        var DEFAULT_DATE_FLEXIBILITY_REQUESTED = 3;
+                        searchCriteria.dateFlexibilityDays = PlusMinusDaysTravelDatesFlexibility.prototype.buildConstantDaysFlexibility(DEFAULT_DATE_FLEXIBILITY_REQUESTED);
+                    } else if ($scope.flexDatesMode.activeMode === 'plusMinusVariableDaysFlexibility') {
+                        searchCriteria.dateFlexibilityDays = $scope.advancedDateFlexibility;
+                    }
+
+                    searchCriteria.addPassenger("ADT", $scope.generalSearchCriteria.ADTPaxCount);
 
                     if ($scope.generalSearchCriteria.DirectFlightsOnly) {
                         searchCriteria.maxStops = 0;
@@ -137,20 +169,126 @@ define([
                     SearchCriteriaBroadcastingService.searchCriteria = searchCriteria;
                     SearchCriteriaBroadcastingService.broadcast();
                 };
+
+                $scope.plusMinusConstantDateFlexibilityCheckboxClicked = function () {
+                    if ($scope.flexDatesMode.activeMode !== 'plusMinusConstantDaysFlexibility') {
+                        $scope.flexDatesMode.activeMode = 'plusMinusConstantDaysFlexibility'
+                    } else { // when the checkbox is being unchecked
+                        $scope.flexDatesMode.activeMode = undefined;
+                    }
+                };
             }])
-            .directive('searchForm', function () {
+            .directive('searchForm', ['DateService', '$timeout', function (DateService, $timeout) {
                return {
-                   template: SearchFormWidgetTemplate, //TODO will it use templateCache this way?
+                   template: SearchFormWidgetTemplate,
                    controller: 'SearchFormCtrl',
                    scope: true,
                    link: function (scope, element) {
-                       scope.optionsPerDay = parseInt(element.attr('options-per-day'));
 
-                       var checkboxesToBeSetAsChecked = element.attr('set-checkboxes-as-checked') && element.attr('set-checkboxes-as-checked').split(',') || [];
-                       checkboxesToBeSetAsChecked.forEach(function (checkbox) {
-                           scope.generalSearchCriteria[checkbox] = true;
-                       });
+                       var DEFAULT_LENGTH_OF_STAY = 14;
+                       var DEFAULT_ADVANCE_PURCHASE_DAYS = 14;
+
+                       parseSearchOptionsDefaults();
+
+                       parseAdvancedDateFlexibilityOptions();
+
+                       calculateTravelDatesDefaults();
+
+                       setUpTravelDatesOnChangeListeners();
+
+                       scheduleDeferredElementsLoad();
+
+                       function parseSearchOptionsDefaults() {
+                           scope.optionsPerDay = parseInt(element.attr('options-per-day'));
+
+                           var checkboxesToBeSetAsChecked = element.attr('set-checkboxes-as-checked') && element.attr('set-checkboxes-as-checked').split(',') || [];
+                           checkboxesToBeSetAsChecked.forEach(function (checkbox) {
+                               scope.generalSearchCriteria[checkbox] = true;
+                           });
+                       }
+
+                       function calculateTravelDatesDefaults() {
+                           scope.earliestTravelStart = DateService.now().startOf('day').toDate();
+
+                           scope.simpleTrip.DepartureDate = DateService.now().startOf('day').add(DEFAULT_ADVANCE_PURCHASE_DAYS, 'days').toDate();
+                           scope.simpleTrip.EarliestDepartureDate = DateService.now().startOf('day').add(DEFAULT_ADVANCE_PURCHASE_DAYS, 'days').toDate();
+
+                           scope.simpleTrip.ReturnDate = moment(scope.simpleTrip.DepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days').toDate();
+                           scope.simpleTrip.LatestReturnDate = moment(scope.simpleTrip.EarliestDepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days').toDate();
+                       }
+
+                       function setUpTravelDatesOnChangeListeners() {
+                           var returnDateWasEverChanged = false;
+                           var latestReturnDateWasEverChanged = false;
+
+                           scope.onDepartureDateChange = function () {
+                               if (!returnDateWasEverChanged) {
+                                   scope.simpleTrip.ReturnDate = moment(scope.simpleTrip.DepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days').toDate();
+                               }
+                           };
+
+                           scope.onEarliestDepartureDateChange = function () {
+                               if (!latestReturnDateWasEverChanged) {
+                                   scope.simpleTrip.LatestReturnDate = moment(scope.simpleTrip.EarliestDepartureDate).add(DEFAULT_LENGTH_OF_STAY, 'days').toDate();
+                               }
+                           };
+
+                           scope.onReturnDateChange = function () {
+                               returnDateWasEverChanged = true;
+                           };
+
+                           scope.onLatestReturnDateChange = function () {
+                               latestReturnDateWasEverChanged = true;
+                           };
+                       }
+
+                       function parseAdvancedDateFlexibilityOptions() {
+                           var advancedDateFlexibilityCriteriaToShow = element.attr('show-date-flexibility-criteria') && element.attr('show-date-flexibility-criteria').split(',').map(_.trim) || [];
+                           scope.flexDatesMode = new TravelDatesFlexibilitySelectionMode(advancedDateFlexibilityCriteriaToShow);
+
+                           var preselectedFlexDatesMode = element.attr('preselect-date-flexibility-criterion');
+                           if (preselectedFlexDatesMode) {
+                               scope.flexDatesMode.activeMode = preselectedFlexDatesMode;
+                           }
+
+                           // prepare model structures for various date flexibility options:
+                           if (scope.flexDatesMode.isSelectableBy('plusMinusVariableDaysFlexibility')) {
+                               var plusMinusDaysMaxDaysArg = parseInt(element.attr('plus-minus-days-flexibility-max-days'));
+                               if (_.isFinite(plusMinusDaysMaxDaysArg)) {
+                                   scope.plusMinusDaysMaxDays = plusMinusDaysMaxDaysArg;
+                               }
+
+                               var DEFAULT_DATE_FLEXIBILITY_REQUESTED = 3;
+                               scope.advancedDateFlexibility = new PlusMinusDaysTravelDatesFlexibility({
+                                   departureMinusDays: DEFAULT_DATE_FLEXIBILITY_REQUESTED
+                                   , departurePlusDays: DEFAULT_DATE_FLEXIBILITY_REQUESTED
+                                   , returnMinusDays: DEFAULT_DATE_FLEXIBILITY_REQUESTED
+                                   , returnPlusDays: DEFAULT_DATE_FLEXIBILITY_REQUESTED
+                               });
+                           }
+
+                           if (scope.flexDatesMode.isSelectableByEarliestDepartureLatestReturn()) {
+
+                               scope.departureDaysOfWeek = {
+                                   selected: []
+                               };
+                               scope.returnDaysOfWeek = {
+                                   selected: []
+                               };
+
+                               scope.daysOfWeekAtDestination = {
+                                   selected: []
+                               };
+                           }
+                       }
+
+                       function scheduleDeferredElementsLoad() {
+                           //performance optimization fo form load time: loading date pickers in deferred mode, saving 50ms
+                           $timeout(function () {
+                               scope.loadDeferredElements = true;
+                           }, 1);
+                       }
                    }
                };
-            });
+            }]);
     });

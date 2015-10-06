@@ -18,11 +18,11 @@
 
         <values-filter type="rangeMonetaryAmount" label="Price" filterable-property-name="totalFareAmountWithCurrency" can-filter-only-on-max-value="true"></values-filter>
 
-        <values-filter type="rangeDateTime" label="Outbound flight departure" filterable-property-name="getOutboundDepartureDateTime" values-display-filter="amDateFormat" values-display-filter-options="hh:mm a"></values-filter>
+        <values-filter type="rangeDateTime" label="Outbound flight departure" filterable-property-name="getOutboundDepartureDateTime" values-display-filter="makeMomentAndFormat" values-display-filter-options="hh:mm a"></values-filter>
 
-        <values-filter type="rangeDateTime" label="Inbound flight departure" filterable-property-name="getInboundArrivalDateTime" values-display-filter="amDateFormat" values-display-filter-options="hh:mm a"></values-filter>
+        <values-filter type="rangeDateTime" label="Inbound flight departure" filterable-property-name="getInboundArrivalDateTime" values-display-filter="makeMomentAndFormat" values-display-filter-options="hh:mm a"></values-filter>
 
-        <values-filter type="range" label="Travel duration" filterable-property-name="outboundLegDuration" values-display-filter="amDurationFormat" values-display-filter-options="minute" can-filter-only-on-max-value="true"></values-filter>
+        <values-filter type="range" label="Travel duration" filterable-property-name="outboundLegDuration" values-display-filter="makeMomentDurationAndFormat" values-display-filter-options="minute" can-filter-only-on-max-value="true"></values-filter>
     </div>
 
     <div class="panel-footer text-center">

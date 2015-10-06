@@ -1,5 +1,6 @@
 define([
-          'util/LodashExtensions'
+         'lodash'
+        , 'util/LodashExtensions'
         , 'moment'
         , 'angular'
         , 'angular_bootstrap'
@@ -10,10 +11,15 @@ define([
         , 'text!view-templates/partials/InputDate.tpl.html'
         , 'text!view-templates/partials/InputTimeRangePickerTemplate.tpl.html'
         , 'text!view-templates/partials/InputOnOffToggle.tpl.html'
+        , 'text!view-templates/partials/PlusMinusDaysSelection.tpl.html'
+        , 'text!view-templates/partials/SelectMonths.tpl.html'
+        , 'text!view-templates/partials/SelectDaysOfWeek.tpl.html'
+        , 'text!view-templates/partials/SelectLengthsOfStay.tpl.html'
         , 'AirportNameBestSuggestionComparator'
     ],
     function (
           _
+        , __
         , moment
         , angular
         , angular_bootstrap
@@ -24,6 +30,10 @@ define([
         , InputDateTemplate
         , InputTimeRangePickerTemplate
         , InputOnOffToggleTemplate
+        , PlusMinusDaysSelectionTemplate
+        , SelectMonthsTemplate
+        , SelectDaysOfWeekTemplate
+        , SelectLengthsOfStayTemplate
         , AirportNameBestSuggestionComparator
     ) {
         'use strict';
@@ -102,25 +112,24 @@ define([
             .directive('inputDate', [
                 function () {
                     return {
-                        restrict: 'EA',
                         replace: true,
                         scope: {
-                             required: '@'
+                              isDisabled: '@'
+                            , required: '@'
                             , dateFormat: '@'
                             , minDate: '@'
                             , date: '='
                             , onDateChange: '&'
                         },
                         template: InputDateTemplate,
-                        link: function (scope, element) {
-
+                        link: function (scope) {
                             scope.dateFormat = scope.dateFormat || 'dd-MMM-yyyy';
 
-                            element.removeAttr('required');
-                            element.removeAttr('date');
-                            element.removeAttr('on-date-change');
-                            element.removeAttr('min-date'); //TODO these two are not removed
-                            element.removeAttr('date-format'); //TODO these two are not removed
+                            //element.removeAttr('required');
+                            //element.removeAttr('date');
+                            //element.removeAttr('on-date-change');
+                            //element.removeAttr('min-date'); //TODO these two are not removed
+                            //element.removeAttr('date-format'); //TODO these two are not removed
 
                             scope.openDatePicker = function($event) {
                                 $event.preventDefault();
@@ -131,6 +140,88 @@ define([
                     };
                 }
             ])
+            .directive('selectMonths', ['$locale', function ($locale) {
+                return {
+                    replace: true,
+                    scope: {
+                        value: '='
+                    },
+                    transclude: true,
+                    template: SelectMonthsTemplate,
+                    link: function (scope) {
+                        scope.allMonths = _.clone($locale.DATETIME_FORMATS.MONTH);
+                    }
+                };
+            }])
+            .directive('selectDaysOfWeek', ['$locale', function ($locale) {
+                return {
+                    replace: true,
+                    scope: {
+                        value: '=' // here the 7 element array of booleans will be returned.
+                        , innerFormName: '@name'
+                    },
+                    transclude: true,
+                    template: SelectDaysOfWeekTemplate,
+                    link: function (scope, element) {
+                        var doNotAllowToCheckAll = element.attr('do-not-allow-to-check-all') && scope.$eval(element.attr('do-not-allow-to-check-all'));
+                        scope.daysOfWeek = _.clone($locale.DATETIME_FORMATS.SHORTDAY); //WARN: this will print short week days according to locale. Please also mind that first day of week is also locale specific. For US it is Sunday. Next logic does not take it into account. There is no way to recognize it in NG, you could use moment.js: moment().startOf("week").day()
+                        scope.daysSelected = [false, false, false, false, false, false, false];
+                        scope.$watchCollection('daysSelected', function (newVal, oldVal) {
+                           if (doNotAllowToCheckAll) {
+                               //TODO: invalidate this field in form - but need to know form name and field name
+                           }
+                           if (newVal !== oldVal) {
+                               scope.value = newVal;
+                           }
+                        });
+                    }
+                };
+            }])
+            .directive('selectLengthsOfStay', [function () {
+                return {
+                    replace: true,
+                    scope: {
+                        lengthOfStay: '=value'
+                    },
+                    transclude: true,
+                    template: SelectLengthsOfStayTemplate,
+                    link: function (scope) {
+                        scope.predefinedLengthOfStayDays = [1, 2, 7, 14];
+                        scope.selectedPredefinedLengthOfStayDays = {
+                            value: _.last(scope.predefinedLengthOfStayDays)
+                        };
+
+                        scope.lengthOfStay = scope.lengthOfStay || {
+                              minDays: 13
+                            , maxDays: 15
+                        };
+
+                        function resetMinMaxDays(los) {
+                            scope.lengthOfStay.minDays = los;
+                            scope.lengthOfStay.maxDays = los;
+                        }
+
+                        scope.$watch('selectedPredefinedLengthOfStayDays.value', function (predefinedLoS) {
+                            predefinedLoS && resetMinMaxDays(predefinedLoS);
+                        });
+
+                        // if min starts exceeding max, then increase max as well
+                        scope.$watch('lengthOfStay.minDays', function (minDays, oldMinDays) {
+                            if (minDays === oldMinDays) return;
+                            if (minDays > scope.lengthOfStay.maxDays) {
+                                scope.lengthOfStay.maxDays = minDays;
+                            }
+                        });
+                        // if max decreases below min, then decrease min as well
+                        scope.$watch('lengthOfStay.maxDays', function (maxDays, oldMaxDays) {
+                            if (maxDays === oldMaxDays) return;
+                            if (maxDays < scope.lengthOfStay.minDays) {
+                                scope.lengthOfStay.minDays = maxDays;
+                            }
+                        });
+                    }
+                };
+            }])
             .directive('inputTimeRangePicker', function () {
                 return {
                     restrict: 'EA',
@@ -166,7 +257,7 @@ define([
                     restrict: 'EA',
                     replace: true,
                     scope: {
-                          selectedValue: '='
+                        selectedValue: '='
                         , switchOnText: '@'
                         , switchOffText: '@'
                         , ngOnValue: '@'
@@ -180,6 +271,31 @@ define([
                         scope.$watch('value', function(value) {
                             scope.selectedValue = (value)? scope.ngOnValue: scope.ngOffValue;
                         });
+                    }
+                }
+
+            })
+            .directive('plusMinusDaysSelection', function () {
+                return {
+                    replace: true,
+                    transclude: true,
+                    scope: {
+                          days: '='
+                        , maxDays: '@'
+                    },
+                    template: PlusMinusDaysSelectionTemplate,
+                    link: function (scope) {
+                        var DEFAULT_PLUS_MINUS_DAYS_MAX_DAYS = 3;
+                        var maxDays = parseInt(scope.maxDays) || DEFAULT_PLUS_MINUS_DAYS_MAX_DAYS;
+
+                        var plusMinusDaysList = [];
+                        plusMinusDaysList.push('');
+                        for (var i = 1; i <= maxDays; i++) {
+                            plusMinusDaysList.push(i)
+                        }
+                        scope.plusMinusDaysList = plusMinusDaysList;
+
+                        scope.days = scope.days || scope.plusMinusDaysList[0];
                     }
                 }
 
@@ -208,7 +324,7 @@ define([
             })
             .filter('airportNameWithIATACode', function () {
                 return function (airportAndIATACode) {
-                    if (_.isDefined(airportAndIATACode)) {
+                    if (__.isDefined(airportAndIATACode)) {
                         return airportAndIATACode.fullName + ' (' + airportAndIATACode.airportCode + ')';
                     }
                 };

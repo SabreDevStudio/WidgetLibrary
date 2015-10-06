@@ -19,10 +19,9 @@ define([
             .directive('itineraryShortSummary', function () {
                 return {
                     scope: {
-                        itinerary: '='
+                        itinerary: '=itin'
                     },
-                    template: ItineraryShortSummaryTemplate,
-                    transclude: true
+                    template: ItineraryShortSummaryTemplate
                 }
             });
     });

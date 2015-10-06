@@ -22,8 +22,8 @@ define([
              * statistics are coming as Moment objects, as the properties we filter on are Moment objects.
              * Before we send them to any range filter visualization (for example slider), we have to convert them to numbers (slider cannot operate on Moment dates).
              * It is done by converting to milliseconds since start of epoch.
-             * This is also convenient for any later operations on these values, like formatting to display using amDateFormat directive (which is first creating moment object from this milliseconds (default).
-             * If we stored in any other unit, like seconds since start of epoch, we would have to first convert to moment (before applying amDateFormat), so effectively have two filters chained to be passed to filter directive of range-slider (and again need to create own filter factory which would accept two or more filters (and its arguments and so on)
+             * This is also convenient for any later operations on these values, like formatting to display using momentDateFormat directive.
+             * If we stored in any other unit, like seconds since start of epoch, we would have to first convert to moment (before applying momentDateFormat), so effectively have two filters chained to be passed to filter directive of range-slider (and again need to create own filter factory which would accept two or more filters (and its arguments and so on)
              */
             var unixMilliSecondsMin = statistics.min.unix() * 1000; // in milliseconds since start of epoch
             var unixMilliSecondsMax = statistics.max.unix() * 1000; // in milliseconds since start of epoch

@@ -15,7 +15,7 @@
                     ng-click="cellClicked(day.day)">
                         <div class="SDSCalendarCellContent" ng-hide="day.isPrevOrNextMonthDay && doNotShowPrevNextMonthDays">
                             <div class='SDSCalendarDateNumber pull-right'>
-                                    {{day.day | amDateFormat:'D'}} <!-- day of month: 1 2 ... 30 31 -->
+                                    {{day.day.format('D')}} <!-- day of month: 1 2 ... 30 31 -->
                             </div>
                             <div class="clearfix"></div>
                             <div ng-show="day.price" class='SDSCalendarCellPrice text-center SDSPriceTier-{{day.priceTier}}'>{{day.price | currency:day.currency}}</div>

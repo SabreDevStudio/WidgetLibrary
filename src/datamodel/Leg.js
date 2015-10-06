@@ -75,14 +75,23 @@ define([
             });
         };
 
-        // returns moment.duration
-        Leg.prototype.getConnectionTime = function(segmentIdx) {
+        Leg.prototype.getConnectionTimeMillis = function(segmentIdx) {
             if (this.hasConnection() && segmentIdx < (this.segments.length - 1)) { //all segments but not the last one
                 var thisFlightArrival = this.segments[segmentIdx].arrivalDateTime;
                 var nextFlightDeparture = this.segments[segmentIdx + 1].departureDateTime;
                 var connectionTimeMillis = nextFlightDeparture.diff(thisFlightArrival);
-                return moment.duration(connectionTimeMillis);
+                return connectionTimeMillis;
             }
+        };
+
+        // returns moment.duration
+        Leg.prototype.getConnectionTime = function(segmentIdx) {
+            return moment.duration(this.getConnectionTimeMillis(segmentIdx));
+        };
+
+        // perf optimisation: utility func to avoid formatting in the view
+        Leg.prototype.getConnectionTimeMinutes = function(segmentIdx) {
+            return this.getConnectionTimeMillis(segmentIdx) / 1000 / 60;
         };
 
         Leg.prototype.getFlightStructure = function () {
@@ -105,7 +114,7 @@ define([
         };
 
         Leg.prototype.hasLongConnection = function () {
-            var LONG_CONNECTION_MIN_MINUTES = 300; //TODO: make it 300 for Domestic and 780 for international. Need to do lookups for airports to get airports counties
+            var LONG_CONNECTION_MIN_MINUTES = 300;
             for (var flightIdx = 0; flightIdx < this.segments.length - 1; flightIdx++) {
                 var connectionTime =  this.getConnectionTimeToNextFlight(flightIdx);
                 if (connectionTime >=  LONG_CONNECTION_MIN_MINUTES) {

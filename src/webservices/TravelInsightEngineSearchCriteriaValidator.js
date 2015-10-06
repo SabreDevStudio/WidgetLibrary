@@ -13,9 +13,8 @@ define([
 
         }
 
-        TravelInsightEngineSearchCriteriaValidator.prototype.validateLengthOfStay = function(searchCriteria) {
+        TravelInsightEngineSearchCriteriaValidator.prototype.validateLengthOfStay = function(lengthOfStay) {
             var errors = [];
-            var lengthOfStay = searchCriteria.getLengthOfStay();
             if (lengthOfStay < 0) {
                 errors.push("Length of stay must be non-negative");
             }
@@ -35,7 +34,9 @@ define([
             var roundTripTravelValidationErrors = this.basicValidator.validateRoundTripTravelSpecification(searchCriteria);
             _.pushAll(errors, roundTripTravelValidationErrors);
 
-            _.pushAll(errors, this.validateLengthOfStay(searchCriteria));
+            _.pushAll(errors, this.validateLengthOfStay(searchCriteria.getLengthOfStay()));
+            _.pushAll(errors, this.validateLengthOfStay(searchCriteria.getMinLengthOfStay()));
+            _.pushAll(errors, this.validateLengthOfStay(searchCriteria.getMaxLengthOfStay()));
 
             if (!searchCriteria.isEconomyCabinRequested()) {
                 errors.push('Travel Insight Engine services support only Economy cabin requests, or requests without cabin preference - then economy fares will be returned)');

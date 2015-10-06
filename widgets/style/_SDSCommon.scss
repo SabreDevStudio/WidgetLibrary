@@ -95,8 +95,16 @@ $itemsSeparatingLineStyle: solid #D2DDE4 1px;
   pointer-events: none;
 }
 
-.SDSTopBuffer {
+.SDSTopBuffer-xs {
   margin-top: 1rem;
+}
+
+.SDSTopBuffer-sm {
+  margin-top: 2rem;
+}
+
+.SDSTopBuffer-md {
+  margin-top: 3rem;
 }
 
 .SDSBottomBuffer {

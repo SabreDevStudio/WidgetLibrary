@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable() || anyBusinessErrorMessagesPresent()">
+<div class="SDSAlternateDatesMatrixWidget panel panel-default" ng-if="isAnyDataToDisplayAvailable() || anyBusinessErrorMessagesPresent()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Alternate Dates Lead Fares</h4>
@@ -20,7 +20,7 @@
                     <tr class="text-info">
                         <th></th><!-- empty cell to match first column with departure dates -->
                         <th ng-repeat="returnDate in requestedReturnDates">
-                            {{returnDate | amDateFormat:'ddd D MMM'}}<!-- Mon 1 Sep -->
+                            {{returnDate.format('ddd D MMM')}}<!-- Mon 1 Sep -->
                         </th>
                     </tr>
                 </thead>
@@ -28,7 +28,7 @@
                 <tbody>
                     <tr ng-repeat="requestedDepartureDate in requestedDepartureDates">
                         <th class="text-info"><!-- first columns with departure dates -->
-                            {{requestedDepartureDate | amDateFormat:'ddd D MMM'}}<!-- Mon 1 Sep -->
+                            {{requestedDepartureDate.format('ddd D MMM')}}<!-- Mon 1 Sep -->
                         </th>
                         <td ng-repeat="requestedReturnDate in requestedReturnDates"
                             ng-init="leadFareForDates = altDatesPriceMatrix.getLeadFareForTravelDates(requestedDepartureDate, requestedReturnDate)"
@@ -52,7 +52,7 @@
                 <thead>
                     <tr class="text-info">
                         <th ng-repeat="requestedDepartureDate in requestedDepartureDates">
-                            {{requestedDepartureDate | amDateFormat:'ddd D MMM'}}<!-- Mon 1 Sep -->
+                            {{requestedDepartureDate.format('ddd D MMM')}}<!-- Mon 1 Sep -->
                         </th>
                     </tr>
                 </thead>

@@ -3,7 +3,6 @@ define([
         , 'moment_range'
         , 'lodash'
         , 'angular'
-        , 'angular_moment'
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
         , 'widgets/GlobalChartsConfiguration'
@@ -16,7 +15,6 @@ define([
         , moment_range
         , _
         , angular
-        , angular_moment
         , SDSWidgets
         , BaseController
         , GlobalChartsConfiguration

@@ -15,9 +15,9 @@ define([
         BargainFinderMaxRequestFactory.prototype.constructor = BargainFinderMaxRequestFactory;
 
 
-        BargainFinderMaxRequestFactory.prototype.createOriginDestinationInfos = function(legs, lengthOfStay, preferredAirlines, dateFlexibilityDays) {
+        BargainFinderMaxRequestFactory.prototype.createOriginDestinationInfos = function(searchCriteria) {
             var that = this;
-            return legs.map(function (leg, legIdx) {
+            return searchCriteria.legs.map(function (leg, legIdx) {
                 return {
                     "DepartureDateTime": leg.departureDateTime.format(that.dateTimeFormat),
                     "DestinationLocation": {
@@ -27,7 +27,7 @@ define([
                         "LocationCode": leg.origin
                     },
                     "RPH": "" + legIdx + 1,
-                    "TPA_Extensions": that.createLegTPAExtensions(preferredAirlines, dateFlexibilityDays)
+                    "TPA_Extensions": that.createLegTPAExtensions(searchCriteria.preferredAirlines, searchCriteria.dateFlexibilityDays)
                 };
             });
         };

@@ -23,8 +23,8 @@ define([
                 };
 
                 function createBarChart(element, chartData) {
-                    var canvas = angular.element(element).find('canvas'); //WARN: template must have canvas element already.
-                    var ctx = canvas.get(0).getContext("2d");
+                    var canvas = angular.element(element).find('canvas')[0]; //WARN: template must have canvas element already.
+                    var ctx = canvas.getContext("2d");
 
                     adjustCanvasCSSStyleToMatchParent(canvas);
 
@@ -40,9 +40,9 @@ define([
                     // For this calculation we need to include padding (because of the border-box sizing model)
                     var leftPadding = 10;
 
-                    var parentWidth = parseInt(canvas.parent().width());
-                    canvas.css('max-width', (parentWidth - leftPadding) + 'px'); //setting max-width, as width is them overwritten
-                    canvas.css('padding-left', leftPadding + 'px');
+                    var parentWidth = parseInt((angular.element(canvas)).parent()[0].getBoundingClientRect().width); // getBoundingClientRect().width is replacement for jQuery width()
+                    canvas.style['max-width'] = (parentWidth - leftPadding) + 'px'; //setting max-width, as width is them overwritten
+                    canvas.style['padding-left'] = leftPadding + 'px';
                 }
 
                 return {

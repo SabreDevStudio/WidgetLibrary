@@ -7,16 +7,15 @@
 
         <div class="SDS-col-element-xl-9">
             <ul class="list-inline list-unstyled">
-                <li class="SDSTravelDateLong">{{itinerary.getFirstLeg().getLegDepartureDateTime() | amDateFormat: 'ddd, DD MMM' }}</li>
-                <li class="SDSTravelTime">{{itinerary.getFirstLeg().getLegDepartureDateTime() | amDateFormat: 'HH:mm'}}</li>
+                <li class="SDSTravelDateLong">{{itinerary.getFirstLeg().getLegDepartureDateTime().format('ddd, DD MMM')}}</li>
+                <li class="SDSTravelTime">{{itinerary.getFirstLeg().getLegDepartureDateTime().format('HH:mm')}}</li>
                 <li class="SDSAirport badge SDSBadgeInfo">{{itinerary.getFirstLeg().getLegDepartureAirport()}}</li>
                 <li class="SDSIconAirplaneArrow"></li>
-                <!--<li class="SDSTravelDateLong">{{itinerary.getFirstLeg().getLegArrivalDateTime() | amDateFormat: 'ddd, DD MMM' }}</li>-->
-                <li class="SDSTravelTime">{{itinerary.getFirstLeg().getLegArrivalDateTime() | amDateFormat: 'HH:mm'}}</li>
+                <!--<li class="SDSTravelDateLong">{{itinerary.getFirstLeg().getLegArrivalDateTime().format('ddd, DD MMM' )}}</li>-->
+                <li class="SDSTravelTime">{{itinerary.getFirstLeg().getLegArrivalDateTime().format('HH:mm')}}</li>
                 <li class="SDSAirport badge SDSBadgeInfo">{{itinerary.getFirstLeg().getLegArrivalAirport()}}</li>
                 <!--<button type="button" class="SDSCheckoutButton btn btn-primary btn-xs pull-right">Select</button>-->
             </ul>
         </div>
     </div>
 </div>
-<ng-transclude></ng-transclude>

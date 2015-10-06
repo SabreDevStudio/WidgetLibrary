@@ -1,6 +1,6 @@
 <ui-select class="SDSPreferredAirlineSelect" ng-model="preferredAirline.selected" theme="bootstrap">
     <ui-select-match placeholder="type airline name or code">{{$select.selected.AirlineName}}</ui-select-match>
-    <ui-select-choices repeat="airline in allAirlines | filter: $select.search | limitTo:300">
+    <ui-select-choices repeat="airline in allAirlines | filter: $select.search | limitTo:30">
         <!-- WARN: limitTo is very needed for performance reasons.
         Without it the delay between clicking on the select and showing the list is even 2s on fast browser.
         Anyway there is no need to show all the list, it will be filtered anyway after typing,

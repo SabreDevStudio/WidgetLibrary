@@ -8,79 +8,122 @@ define([
     ) {
         'use strict';
 
-        /* factory method which builds objects that perform translation of user search criteria (origin, destination, travel dates) into Advanced Calendar web service request options (first day to search, last day to search, calculate length of stay)
-         So this is the business logic what to present to customer upon their search criteria (what date ranges to present in particular).
-         */
-
-        function AdvancedCalendarRequestFactory() {
+        function AdvancedCalendarRequestFactory(requestDatesExpander) {
+            this.requestDatesExpander = requestDatesExpander;
         }
 
         AdvancedCalendarRequestFactory.prototype = Object.create(OTARequestFactory.prototype);
         AdvancedCalendarRequestFactory.prototype.constructor = AdvancedCalendarRequestFactory;
 
-        AdvancedCalendarRequestFactory.prototype.MAX_ADVANCE_PURCHASE_DAYS_FROM_NOW = 192;
-
         AdvancedCalendarRequestFactory.prototype.dateFormat = 'YYYY-MM-DD';
 
-        AdvancedCalendarRequestFactory.prototype.createOriginDestinationInfos = function(legs, lengthOfStay, preferredAirlines) {
+        AdvancedCalendarRequestFactory.prototype.createOriginDestinationInfos = function(searchCriteria) {
+
+            function createWeekDaysString(selectedDaysOfWeekArray) {
+                // WARN: locale specific: we base on first day being Sunday
+                var DAY_SYMBOLS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+                var DAY_NOT_SELECTED_MARKER = '_';
+                return selectedDaysOfWeekArray.map(function (isDaySelected, dayIndex) {
+                    return (isDaySelected)? DAY_SYMBOLS[dayIndex]: DAY_NOT_SELECTED_MARKER;
+                }).join('');
+            }
+
+            function dayIndexIntoWeekDaysString(dayIndex) {
+                var DAYS_IN_WEEK = 7;
+                var selectedDaysOfWeekArray = [];
+                for (var i = 0; i < DAYS_IN_WEEK; i++) {
+                    selectedDaysOfWeekArray.push(false);
+                }
+                selectedDaysOfWeekArray[dayIndex] = true;
+                return createWeekDaysString(selectedDaysOfWeekArray);
+            }
 
             var that = this;
 
-            var today = moment().startOf('day');
-            var lastTravelDateAvailableInWebService = today.clone().add(this.MAX_ADVANCE_PURCHASE_DAYS_FROM_NOW, 'days');
+            var departureDaysRange = {
+                FromDate: searchCriteria.getDepartureDateFrom(),
+                ToDate: searchCriteria.getDepartureDateTo()
+            };
+            if (this.requestDatesExpander) {
+                departureDaysRange = this.requestDatesExpander.expandDepartureDaysRange(departureDaysRange);
+            }
+
+            var departureDaysRangeFormatted = {
+                FromDate: departureDaysRange.FromDate.format(this.dateFormat),
+                ToDate: departureDaysRange.ToDate.format(this.dateFormat)
+            };
+
+            if (searchCriteria.hasAnyDepartureDaysOfWeekDefined()) { // to cale do getDepartureDaysOfWeek na Search Criteria
+                departureDaysRangeFormatted.WeekDays = createWeekDaysString(searchCriteria.getDepartureDaysOfWeek());
+            } else if (searchCriteria.hasAnyDaysAtDestinationDefined()) {
+                var departureAndReturnDaysOfWeekIndexes = searchCriteria.departureAndReturnDaysOfWeekIndexes();
+                departureDaysRangeFormatted.WeekDays = dayIndexIntoWeekDaysString(departureAndReturnDaysOfWeekIndexes.departureDayOfWeekIndex);
+            }
 
             var firstOriginDestinationInfo = {
                 "DepartureDates" :
                 {
-                    "dayOrDaysRange": [
-                        {
-                            "DaysRange": {
-                                "FromDate": today.format(this.dateFormat),
-                                "ToDate": lastTravelDateAvailableInWebService.format(this.dateFormat)
-                            }
-                        }
-                    ]
+                    "DaysRange": [departureDaysRangeFormatted]
                 },
                 "DestinationLocation" :
                 {
-                    "LocationCode" : legs[0].destination
+                    "LocationCode" : searchCriteria.legs[0].destination
                 },
 
                 "OriginLocation": {
-                    "LocationCode": legs[0].origin
+                    "LocationCode": searchCriteria.legs[0].origin
                 },
                 "RPH": "1",
-                "TPA_Extensions": that.createLegTPAExtensions(preferredAirlines)
+                "TPA_Extensions": that.createLegTPAExtensions(searchCriteria.preferredAirlines)
             };
+
+
+            var returnDaysRange = {
+                FromDate: searchCriteria.getReturnDateFrom(),
+                ToDate: searchCriteria.getReturnDateTo()
+            };
+
+            if (this.requestDatesExpander) {
+                returnDaysRange = this.requestDatesExpander.expandReturnDaysRange(returnDaysRange);
+            }
+
+            var returnDaysRangeFormatted = {
+                FromDate: returnDaysRange.FromDate.format(this.dateFormat),
+                ToDate: returnDaysRange.ToDate.format(this.dateFormat)
+            };
+
+            if (searchCriteria.hasAnyReturnDaysOfWeekDefined()) {
+                returnDaysRangeFormatted.WeekDays = createWeekDaysString(searchCriteria.getReturnDaysOfWeek());
+            } else if (searchCriteria.hasAnyDaysAtDestinationDefined()) {
+                var departureAndReturnDaysOfWeekIndexes = searchCriteria.departureAndReturnDaysOfWeekIndexes();
+                returnDaysRangeFormatted.WeekDays = dayIndexIntoWeekDaysString(departureAndReturnDaysOfWeekIndexes.returnDayOfWeekIndex);
+            }
 
             var secondOriginDestinationInfo = {
                 "DepartureDates" :
                 {
-                    "lengthOfStayOrLengthOfStayRange": [
-                        {
-                            "LengthOfStayRange": {
-                                "MinDays": "" + lengthOfStay,
-                                "MaxDays": "" + lengthOfStay
-                            }
-                        }
-                    ]
+                    "DaysRange": [returnDaysRangeFormatted]
                 },
                 "DestinationLocation" :
                 {
-                    "LocationCode" : legs[1].destination
+                    "LocationCode" : searchCriteria.legs[1].destination
                 },
                 "OriginLocation" :
                 {
-                    "LocationCode" : legs[1].origin
+                    "LocationCode" : searchCriteria.legs[1].origin
                 },
-                "RPH" : 2,
-                "TPA_Extensions": that.createLegTPAExtensions(preferredAirlines)
+                "RPH" : "2",
+                "TPA_Extensions": that.createLegTPAExtensions(searchCriteria.preferredAirlines)
             };
 
+            if (!searchCriteria.isPlusMinusDaysDateFlexibilityRequest()) {
+                secondOriginDestinationInfo.DepartureDates.LengthOfStayRange = [{
+                    "MinDays": searchCriteria.getMinLengthOfStay() || searchCriteria.getLengthOfStay(),
+                    "MaxDays": searchCriteria.getMaxLengthOfStay() || searchCriteria.getLengthOfStay()
+                }];
+            }
             return [firstOriginDestinationInfo, secondOriginDestinationInfo];
         };
-
-
 
 
         AdvancedCalendarRequestFactory.prototype.getRequestType = function (requestedItinsCount) {
@@ -90,7 +133,7 @@ define([
         AdvancedCalendarRequestFactory.prototype.createNumTrips = function (requestedItinsCount) {
             return {
                   "PerDateMin": 1
-                , "PerDateMax": "" + requestedItinsCount
+                , "PerDateMax": requestedItinsCount
             };
         };
 

@@ -41,7 +41,7 @@ define(['util/LodashExtensions'], function (__) {
             }
 
             return {
-                nextAllAndFirstLevelCousins: nextAllAndFirstLevelCousins
+                  nextAllAndFirstLevelCousins: nextAllAndFirstLevelCousins
             };
 
         }

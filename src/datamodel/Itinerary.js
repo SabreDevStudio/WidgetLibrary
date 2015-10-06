@@ -1,4 +1,10 @@
-define(['util/LodashExtensions'], function (__) {
+define([
+    'lodash'
+    , 'util/LodashExtensions'
+], function (
+    _
+    , __
+) {
     "use strict";
 
     function Itinerary() {
@@ -33,12 +39,12 @@ define(['util/LodashExtensions'], function (__) {
 
         // returns the sum of trip durations for all legs, in minutes
         // This includes connection times on all legs (but does not include stopovers, in particular the stopover in the turnaround point at destination of round trip travel)
-        var durationCnt = 0;
         Object.defineProperty(this, 'duration', {
             get: function() {
-                return this.legs.reduce(function (total, leg) {
+                var duration = this.legs.reduce(function (total, leg) {
                     return total + leg.getDuration();
                 }, 0);
+                return duration;
             }
         });
 
@@ -173,12 +179,16 @@ define(['util/LodashExtensions'], function (__) {
     };
 
     /* returns unique list of all marketing airlines, in the order as they first appear in the journey */
+    // WARN: performance optimisation, assuming Itinerary object is not changed after creation (and adding all legs in the beginning)
     Itinerary.prototype.getAllMarketingAirlines = function() {
-        var allMktAirlines = [];
-        this.legs.forEach(function (leg) {
-            __.pushAll(allMktAirlines, leg.getAllMarketingAirlines());
-        });
-        return __.uniq(allMktAirlines);
+        if (_.isUndefined(this.allMktAirlines)) {
+            var allMktAirlines = [];
+            this.legs.forEach(function (leg) {
+                __.pushAll(allMktAirlines, leg.getAllMarketingAirlines());
+            });
+            this.allMktAirlines = __.uniq(allMktAirlines);
+        }
+        return this.allMktAirlines;
     };
 
     Itinerary.prototype.getConnectionAirports = function () {
@@ -208,15 +218,19 @@ define(['util/LodashExtensions'], function (__) {
         return (this.legs.length === 1);
     };
 
+    // WARN: performance optimisation, assuming Itinerary object is not changed after creation (and adding all legs in the beginning)
     Itinerary.prototype.hasChangeOfAirportsAtAnyStopover = function () {
         if (this.isOneWayTravel()) {
             return;
         }
-        return this.legs.some(function (leg, idx, allLegs) {
-            return (((idx === 0) && (leg.hasAirportChangeAtArrival)) // first leg
+        if (_.isUndefined(this.hasChangeOfAirportsAtAnyStopover)) {
+            this.hasChangeOfAirportsAtAnyStopover = this.legs.some(function (leg, idx, allLegs) {
+                return (((idx === 0) && (leg.hasAirportChangeAtArrival)) // first leg
                 || (((idx > 0) && (idx < (allLegs.length - 1))) && (leg.hasAirportChangeAtDeparture || leg.hasAirportChangeAtArrival)) // middle legs
                 || ((idx > 0) && (leg.hasAirportChangeAtDeparture))); // last leg
-        })
+            });
+        }
+        return this.hasChangeOfAirportsAtAnyStopover;
     };
 
     Itinerary.prototype.getPricingSource = function () {
@@ -229,10 +243,14 @@ define(['util/LodashExtensions'], function (__) {
         }).join(' ||| ');
     };
 
+    // WARN: performance optimisation, assuming Itinerary object is not changed after creation (and adding all legs in the beginning)
     Itinerary.prototype.hasRedEyeFlight = function () {
-        return this.legs.some(function (leg) {
-            return leg.hasRedEyeFlight();
-        });
+        if (_.isUndefined(this.hasRedEyeFlight)) {
+            this.hasRedEyeFlight = this.legs.some(function (leg) {
+                return leg.hasRedEyeFlight();
+            });
+        }
+        return this.hasRedEyeFlight;
     };
 
     Itinerary.prototype.hasShortConnection = function () {

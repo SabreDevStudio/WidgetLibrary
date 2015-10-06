@@ -21,7 +21,6 @@ define([
                     scope: {
                         summary: '='
                     },
-                    transclude: true,
                     template: ItineraryPricePerStopsPerAirlineSummaryTemplate,
                     controller: ['$scope', function ($scope) {
 

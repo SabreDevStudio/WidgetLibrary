@@ -13,7 +13,7 @@ exports.config = {
     multiCapabilities: [
     {
         browserName: 'chrome',
-        maxInstances: 2
+        maxInstances: 1
     }
     //,{
     //    browserName: 'firefox',
@@ -21,7 +21,8 @@ exports.config = {
     //}
     ],
 
-    baseUrl: 'http://localhost:63342/SabreDevStudioDemo/e2e-test/www/',
+    baseUrl: 'http://localhost:63342/SabreDevStudioDemo/www/',
+    //baseUrl: 'http://localhost:63342/SabreDevStudioDemo/e2e-test/www/',
 
     framework: 'jasmine',
 

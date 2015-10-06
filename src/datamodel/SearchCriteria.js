@@ -1,9 +1,11 @@
 define([
           'lodash'
+        , 'util/LodashExtensions'
         , 'moment'
         , 'datamodel/SearchCriteriaLeg'
     ], function (
           _
+        , __
         , moment
         , SearchCriteriaLeg
     ) {
@@ -56,15 +58,6 @@ define([
 
         this.passengerSpecifications = [];
 
-        // date flexibility defined on whole travel level, not per leg. So if defined, the same number applies to all legs.
-        // possible to define only same + and minus days
-        var _dateFlexibilityDays;
-        Object.defineProperty(this, 'dateFlexibilityDays', {
-            enumerable: true,
-            get: function() { return _dateFlexibilityDays;},
-            set: function(dateFlexibilityDays) { _dateFlexibilityDays = dateFlexibilityDays;}
-        });
-
         Object.defineProperty(this, 'returnAlternateDatesOnly', {
             enumerable: true,
             writable: true
@@ -111,14 +104,35 @@ define([
         }, 0);
     };
 
+    SearchCriteria.prototype.isAnyLengthOfStayDefined = function () {
+        return __.isDefined(this.lengthOfStay) || __.isDefined(this.earliestDepartureLatestReturnDatesFlexibility);
+    };
+
     // returns length of stay for round trip travels
     SearchCriteria.prototype.getLengthOfStay = function () {
-        if (this.legs.length === 1) { // There is no length of stay for one way travel
-            return undefined;
+        if (this.isOneWayTravel()) { // There is no length of stay for one way travel
+            return;
+        }
+        if (__.isDefined(this.lengthOfStay)) {
+            return this.lengthOfStay;
         }
         var firstLegDepartureDateTime = this.legs[0].departureDateTime;
         var secondLegDepartureDateTime = this.legs[1].departureDateTime;
-        return this.lengthOfStay || secondLegDepartureDateTime.diff(firstLegDepartureDateTime, 'days');
+        if (firstLegDepartureDateTime && secondLegDepartureDateTime) {
+            return this.lengthOfStay || secondLegDepartureDateTime.diff(firstLegDepartureDateTime, 'days');
+        }
+    };
+
+    SearchCriteria.prototype.getMinMaxLengthOfStay = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility && this.earliestDepartureLatestReturnDatesFlexibility.minMaxLengthOfStay;
+    };
+
+    SearchCriteria.prototype.getMinLengthOfStay = function () {
+        return this.getMinMaxLengthOfStay() && this.getMinMaxLengthOfStay().minDays;
+    };
+
+    SearchCriteria.prototype.getMaxLengthOfStay = function () {
+        return this.getMinMaxLengthOfStay() && this.getMinMaxLengthOfStay().maxDays;
     };
 
     SearchCriteria.prototype.toString = function () {
@@ -179,21 +193,68 @@ define([
     };
 
     SearchCriteria.prototype.isAlternateDatesRequest = function () {
-        return this.dateFlexibilityDays > 0;
+        return this.isPlusMinusDaysDateFlexibilityRequest() || this.isEarliestDepartureLatestReturnDateFlexibilityRequest();
+    };
+
+    SearchCriteria.prototype.isPlusMinusDaysDateFlexibilityRequest = function () {
+        return this.dateFlexibilityDays;
+    };
+
+    SearchCriteria.prototype.hasAtLeastOnePlusMinusDayDefined = function () {
+        return _.values(this.dateFlexibilityDays).some(function (plusMinusDay) {
+            return plusMinusDay > 0;
+        });
     };
 
     SearchCriteria.prototype.getRequestedDepartureDates = function () {
-        return this.generateAlternateDates(this.getFirstLeg().departureDateTime);
+        if (this.earliestDepartureLatestReturnDatesFlexibility) {
+            return this.generateDepartureAltDatesForEarliestDepartureLatestReturn(
+                  this.earliestDepartureLatestReturnDatesFlexibility.getEarliestDepartureDateTime()
+                , this.earliestDepartureLatestReturnDatesFlexibility.getLatestReturnDateTime()
+                , this.earliestDepartureLatestReturnDatesFlexibility.minMaxLengthOfStay.minDays
+            );
+        }
+        return this.generateAlternateDates(this.getFirstLeg().departureDateTime, {
+              minusDays: this.dateFlexibilityDays.departureMinusDays
+            , plusDays: this.dateFlexibilityDays.departurePlusDays
+        });
     };
 
     SearchCriteria.prototype.getRequestedReturnDates = function () {
-        return this.generateAlternateDates(this.getSecondLeg().departureDateTime);
+        if (this.earliestDepartureLatestReturnDatesFlexibility) {
+            return this.generateReturnAltDatesForEarliestDepartureLatestReturn(
+                this.earliestDepartureLatestReturnDatesFlexibility.getEarliestDepartureDateTime()
+                , this.earliestDepartureLatestReturnDatesFlexibility.getLatestReturnDateTime()
+                , this.earliestDepartureLatestReturnDatesFlexibility.minMaxLengthOfStay.minDays
+            );
+        }
+        return this.generateAlternateDates(this.getSecondLeg().departureDateTime, {
+              minusDays: this.dateFlexibilityDays.returnMinusDays
+            , plusDays: this.dateFlexibilityDays.returnPlusDays
+        });
+    };
+
+    SearchCriteria.prototype.generateDepartureAltDatesForEarliestDepartureLatestReturn = function (earliestDepartureDateTime, latestReturnDateTime, lengthOfStay) {
+        var latestDepartureDateTime = latestReturnDateTime.clone().subtract(lengthOfStay, 'days');
+        var allAltDates = [];
+        moment.range(earliestDepartureDateTime, latestDepartureDateTime).by('days', function (day) {
+            allAltDates.push(day);
+        });
+        return allAltDates;
+    };
+
+    SearchCriteria.prototype.generateReturnAltDatesForEarliestDepartureLatestReturn = function (earliestDepartureDateTime, latestReturnDateTime, lengthOfStay) {
+        var earliestReturnDateTime = earliestDepartureDateTime.clone().add(lengthOfStay, 'days');
+        var allAltDates = [];
+        moment.range(earliestReturnDateTime, latestReturnDateTime).by('days', function (day) {
+            allAltDates.push(day);
+        });
+        return allAltDates;
     };
 
     SearchCriteria.prototype.getRequestedLengthOfStayValues = function () {
         var departureDates = this.getRequestedDepartureDates();
         var returnDates = this.getRequestedReturnDates();
-        //TODO write functional reduce!!
         var allLoS = [];
         departureDates.forEach(function (departureDate) {
             returnDates.forEach(function (returnDate) {
@@ -214,14 +275,92 @@ define([
         return _.last(this.legs).departureDateTime;
     };
 
+    SearchCriteria.prototype.isEarliestDepartureLatestReturnDateFlexibilityRequest = function () {
+        return __.isDefined(this.earliestDepartureLatestReturnDatesFlexibility);
+    };
+
+    SearchCriteria.prototype.getEarliestDepartureDateTime = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility && this.earliestDepartureLatestReturnDatesFlexibility.getEarliestDepartureDateTime();
+    };
+
+    SearchCriteria.prototype.getLatestReturnDateTime = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility && this.earliestDepartureLatestReturnDatesFlexibility.getLatestReturnDateTime();
+    };
+
+    SearchCriteria.prototype.hasAnyDepartureDaysOfWeekDefined = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility && _.contains(this.earliestDepartureLatestReturnDatesFlexibility.departureDaysOfWeek, true);
+    };
+
+    SearchCriteria.prototype.getDepartureDaysOfWeek = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility.departureDaysOfWeek;
+    };
+
+    SearchCriteria.prototype.hasAnyReturnDaysOfWeekDefined = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility && _.contains(this.earliestDepartureLatestReturnDatesFlexibility.returnDaysOfWeek, true);
+    };
+
+    SearchCriteria.prototype.getReturnDaysOfWeek = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility.returnDaysOfWeek;
+    };
+
+    SearchCriteria.prototype.hasAnyDaysAtDestinationDefined = function () {
+      return this.earliestDepartureLatestReturnDatesFlexibility
+          && this.earliestDepartureLatestReturnDatesFlexibility.daysOfWeekAtDestination
+          && this.earliestDepartureLatestReturnDatesFlexibility.daysOfWeekAtDestination.hasAnyDaysAtDestinationDefined();
+    };
+
+    SearchCriteria.prototype.departureAndReturnDaysOfWeekIndexes = function () {
+        return this.earliestDepartureLatestReturnDatesFlexibility.daysOfWeekAtDestination.departureAndReturnDaysOfWeekIndexes();
+    };
+
+    SearchCriteria.prototype.getDepartureDateFrom = function () {
+        if (this.isPlusMinusDaysDateFlexibilityRequest()) {
+            var departureDateMinusFlexibilityDays = this.legs[0].departureDateTime && this.legs[0].departureDateTime.clone().subtract(this.dateFlexibilityDays.departureMinusDays, 'days');
+        }
+        return this.getEarliestDepartureDateTime() || departureDateMinusFlexibilityDays || this.legs[0].departureDateTime;
+    };
+
+    SearchCriteria.prototype.getDepartureDateTo = function () {
+        if (this.isPlusMinusDaysDateFlexibilityRequest()) {
+            var departureDatePlusFlexibilityDays =  this.legs[0].departureDateTime && this.legs[0].departureDateTime.clone().add(this.dateFlexibilityDays.departurePlusDays, 'days');
+        }
+        var latestReturnDateMinusLengthOfStay = this.getLatestReturnDateTime() && this.getLatestReturnDateTime().clone().subtract(this.getMinLengthOfStay(), 'days');
+        return latestReturnDateMinusLengthOfStay || departureDatePlusFlexibilityDays || this.legs[0].departureDateTime;
+    };
+
+    SearchCriteria.prototype.getReturnDateFrom = function () {
+        if (this.isPlusMinusDaysDateFlexibilityRequest()) {
+            var returnDateMinusFlexibilityDays = this.legs[1].departureDateTime && this.legs[1].departureDateTime.clone().subtract(this.dateFlexibilityDays.returnMinusDays, 'days');
+        }
+        var earliestDepartureDatePlusLengthOfStay = this.getEarliestDepartureDateTime() && this.getEarliestDepartureDateTime().clone().add(this.getMinLengthOfStay(), 'days');
+        return earliestDepartureDatePlusLengthOfStay || returnDateMinusFlexibilityDays || this.legs[1].departureDateTime;
+    };
+
+    SearchCriteria.prototype.getReturnDateTo = function () {
+        if (this.isPlusMinusDaysDateFlexibilityRequest()) {
+            var returnDatePlusFlexibilityDays =  this.legs[1].departureDateTime && this.legs[1].departureDateTime.clone().add(this.dateFlexibilityDays.returnPlusDays, 'days');
+        }
+        return this.getLatestReturnDateTime() || returnDatePlusFlexibilityDays || this.legs[1].departureDateTime;
+    };
+
     // utility static factory method
     SearchCriteria.prototype.buildRoundTripTravelSearchCriteria = function (origin, destination, departureDateString, returnDateString) {
         var departureDateTime = moment(departureDateString, moment.ISO_8601);
         var returnDateTime = moment(returnDateString, moment.ISO_8601);
 
 
-        var firstLeg = new SearchCriteriaLeg(origin, destination, departureDateTime, returnDateTime);
-        var secondLeg = new SearchCriteriaLeg(destination, origin, returnDateTime, departureDateTime);
+        var firstLeg = new SearchCriteriaLeg({
+              origin: origin
+            , destination: destination
+            , departureDateTime: departureDateTime
+            , returnDateTime: returnDateTime
+        });
+        var secondLeg = new SearchCriteriaLeg({
+            origin: destination
+            , destination: origin
+            , departureDateTime: returnDateTime
+            , returnDateTime: departureDateTime
+        });
 
         var searchCriteria = new SearchCriteria();
         searchCriteria.addLeg(firstLeg);
@@ -246,7 +385,12 @@ define([
         originDestinationPairs.forEach(function (originDestinationPair, idx) {
             var departureDateTime = moment().add((idx) * lengthOfStay, 'days');
             var returnDateTime = departureDateTime.clone().add(lengthOfStay, 'days');
-            var leg = new SearchCriteriaLeg(originDestinationPair.origin, originDestinationPair.destination, departureDateTime, returnDateTime);
+            var leg = new SearchCriteriaLeg({
+                  origin: originDestinationPair.origin
+                , destination: originDestinationPair.destination
+                , departureDateTime: departureDateTime
+                , returnDateTime: returnDateTime
+            });
             searchCriteria.addLeg(leg);
         });
 
@@ -255,12 +399,12 @@ define([
         return searchCriteria;
     };
 
-    SearchCriteria.prototype.generateAlternateDates = function (centralDate) {
+    SearchCriteria.prototype.generateAlternateDates = function (centralDate, plusMinusDays) {
         if (!this.isAlternateDatesRequest()) {
             return centralDate;
         }
         var alternateDates = [];
-        var offsets = generateAltDatesOffsets(this.dateFlexibilityDays);
+        var offsets = generateAltDatesOffsets(plusMinusDays);
         offsets.forEach(function (offset) {
             var alternateDate = centralDate.clone().add(offset, 'days');
             alternateDates.push(alternateDate);
@@ -274,10 +418,12 @@ define([
         return alternateDates;
     };
 
-    function generateAltDatesOffsets(dateFlexibilityDays) {
+    function generateAltDatesOffsets(plusMinusDays) {
         var offsets = [];
-        for (var i = 1; i <= dateFlexibilityDays; i++) {
-            offsets.splice(0, 0, -i);
+        for (var i = -plusMinusDays.minusDays ; i <= plusMinusDays.plusDays; i++) {
+            if (i===0) { //central date
+                continue;
+            }
             offsets.push(i);
         }
         return offsets;

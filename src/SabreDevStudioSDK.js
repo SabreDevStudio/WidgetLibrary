@@ -6,7 +6,6 @@ require.config({
         , lodash: '../bower_components/lodash/lodash'
         , angular: '../bower_components/angular/angular'
         , 'angular_resource': '../bower_components/angular-resource/angular-resource'
-        , 'angular_moment': '../bower_components/angular-moment/angular-moment'
         , 'angular_bootstrap': '../bower_components/angular-bootstrap/ui-bootstrap-tpls'
         , 'angular-ui-select': '../bower_components/angular-ui-select/dist/select'
         , 'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize'
@@ -131,7 +130,7 @@ require([
                 strictDi: true
             });
             var afterNG = performance.now();
-            console.log('NG load: ' + (afterNG - beforeNG));
+            console.log('NG load: ' + parseInt(afterNG - beforeNG));
             parseCssStylesheetsForElementQueries();
             // var afterCSS = performance.now();
             // console.log('CSS RWD parse: ' + (afterCSS - afterNG));

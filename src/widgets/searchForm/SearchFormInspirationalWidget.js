@@ -39,7 +39,6 @@ define([
                             noPointOfSaleCountryPreference
                         ];
                         PointOfSaleCountryLookupDataService.getPointOfSaleCountries().then(function (pointOfSaleCountries) {
-                            console.log(pointOfSaleCountries);
                             __.pushAll(scope.pointOfSaleCountries, pointOfSaleCountries);
                         });
 
