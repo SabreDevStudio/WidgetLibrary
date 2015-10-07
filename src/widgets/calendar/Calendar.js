@@ -136,10 +136,11 @@ define([
             this.calculateMonthsMinPrices = function(prices) {
                 return _.reduce(prices, function (acc, priceAndCurrency, dayKey) {
                     var month = moment(dayKey).startOf('month');
-                    if (acc[month.toString()] && acc[month.toString()].currency !== priceAndCurrency.currency) {
+                    var accEntryForMonth = acc[month.toString()];
+                    if (accEntryForMonth && accEntryForMonth.currency !== priceAndCurrency.currency) {
                         throw new Error('Unable to calculate month min price as currencies for particular day prices are different');
                     }
-                    if (_.isUndefined(acc[month.toString()]) || (acc[month.toString()].price > priceAndCurrency.price)) {
+                    if (_.isUndefined(accEntryForMonth) || (accEntryForMonth.price > priceAndCurrency.price)) {
                         acc[month.toString()] = priceAndCurrency;
                     }
                     return acc;

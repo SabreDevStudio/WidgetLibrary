@@ -75,7 +75,8 @@ define([
             };
 
             this.datesAreSameDay = function(first, second) {
-                return first.clone().startOf('day').isSame(second.clone().startOf('day'));
+                // WARN: other methods of comparing, like moment dayOfYear() or first.clone().startOf('day').isSame(second.clone().startOf('day')) are 10-20 times slower.
+                return (first.date() === second.date()) && (first.month() === second.month()) && (first.year() === second.year());
             };
 
             this.hasAtLeastOnePrice = function () {

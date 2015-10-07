@@ -51,6 +51,7 @@ define([
             }
 
             var that = this;
+
             this.getPricedItinerariesArray(response).forEach(function(itin) {
                 var parsedItinerary = that.parseItinerary(itin);
                 itins.add(parsedItinerary);
@@ -68,6 +69,7 @@ define([
             }
 
             var that = this;
+
             this.getPricedItinerariesArray(response).forEach(function(itin) {
                 var travelDatesWithLeadPrice = that.getTravelDatesWithLeadPrice(itin);
                 altDatePriceMatrix.addLeadFareForDate(travelDatesWithLeadPrice);
@@ -119,6 +121,18 @@ define([
             return travelDatesWithLeadPrice;
         };
 
+        /**
+         * WARN: For performance purposes, the implementation below uses native Date ISO datetime strings parsing, instead of moment(datetime) or moment(datetime, moment.ISO_8601) implementation.
+         * Thanks to it the render time of 100 itineraries response (flight list) decreases from 180 to 100 ms (desktop, Chrome, Intel i5).
+         * WARN: native Date parsing is inconsistent in older browsers, see http://dygraphs.com/date-formats.html
+         * see: http://momentjs.com/docs/#/parsing/
+         * http://dygraphs.com/date-formats.html
+         * https://github.com/moment/moment/issues/731
+         * http://jsperf.com/moment-js-parse-iso-date/9
+         *
+         * @param responseLeg
+         * @returns {Leg}
+         */
         AbstractOTAResponseParser.prototype.parseLeg = function(responseLeg) {
             var that = this;
             var leg = new Leg();
@@ -129,9 +143,15 @@ define([
                 }
                 return new Segment({
                     departureAirport: segment.DepartureAirport.LocationCode,
-                    departureDateTime: moment(segment.DepartureDateTime, moment.ISO_8601),
+
+                    // departureDateTime: moment(segment.DepartureDateTime, moment.ISO_8601),
+                    departureDateTime: moment(new Date(segment.DepartureDateTime)),
+
                     arrivalAirport: segment.ArrivalAirport.LocationCode,
-                    arrivalDateTime: moment(segment.ArrivalDateTime, moment.ISO_8601),
+
+                    // arrivalDateTime: moment(segment.ArrivalDateTime, moment.ISO_8601),
+                    arrivalDateTime: moment(new Date(segment.ArrivalDateTime)),
+
                     elapsedTime: segment.ElapsedTime,
                     equipment: that.parseEquipment(segment),
                     marketingFlightNumber: segment.FlightNumber,
