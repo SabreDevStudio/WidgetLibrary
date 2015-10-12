@@ -74,7 +74,7 @@ define([
                             .replace(/AG/gi, '')
                             .replace(/Pty/gi, '')
                             .replace(/Co\./gi, '')
-                            .replace(/C\.?A\.?/gi, '')
+                            .replace(/C\.?A\.?/g, '') //WARN Air Canada
                             .replace(/.*Lan.*Ecuador.*/g, 'Lan Ecuador')
                             .replace(/.*Lan.*Equador.*/g, 'Lan Equador')
                             .replace(/.*SWISS.*/g, 'SWISS')

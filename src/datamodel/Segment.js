@@ -29,10 +29,5 @@ define([
             return this.arrivalDateTime.isAfter(firstMidnight); //TODO WARN timezone changes!! flight times in local time
         };
 
-        Segment.prototype.hasLowSeatsRemaining = function () {
-            var LOW_SEATS_REMAINING_THRESHOLD = 4;
-            return (this.seatsRemaining <= LOW_SEATS_REMAINING_THRESHOLD);
-        };
-
         return Segment;
     });

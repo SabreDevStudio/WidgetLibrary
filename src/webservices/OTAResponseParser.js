@@ -8,6 +8,10 @@ define([
     ) {
         'use strict';
 
+        /**
+         * Parser used for BFM and Advanced Calendar responses
+         * @constructor
+         */
         function OTAResponseParser() {
 
             AbstractOTAResponseParser.apply(this, arguments);
@@ -20,7 +24,7 @@ define([
                 return _.has(response, 'OTA_AirLowFareSearchRS', 'Success');
             };
 
-            this.getAirItineraryPricingInfo = function(itin) {
+            this.getItineraryPricingInfoResponsePart = function(itin) {
                 return itin.AirItineraryPricingInfo[0];
             };
 
@@ -48,7 +52,7 @@ define([
             };
 
             this.parsePricingSource = function(itinerary) {
-                return 'BFM';
+                return 'BFM'; //TODO: parse from response
                 // or more detailed parsing:
                 //var pricingInfo = itinerary.AirItineraryPricingInfo[0];
                 //if (pricingInfo.PricingSource === 'ADVJR1' && pricingInfo.PricingSubSource === 'MIP') {

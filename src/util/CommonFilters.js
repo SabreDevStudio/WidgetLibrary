@@ -1,10 +1,12 @@
 define([
           'lodash'
+        , 'util/LodashExtensions'
         , 'moment'
         , 'angular'
     ],
     function (
           _
+        , __
         , moment
         , angular
     ) {
@@ -26,6 +28,63 @@ define([
                 return function (input, delimiter, prefix, suffix) {
                     return prefix + (input || []).join(delimiter || ',') + suffix;
                 };
+            })
+            .filter('cabin', function () {
+                return function (cabinSymbol) {
+                    switch (cabinSymbol) {
+                        case 'Y': return 'Economy';
+                        case 'S': return 'Premium Economy';
+                        case 'C': return 'Business';
+                        case 'J': return 'Premium Business';
+                        case 'F': return 'First';
+                        case 'P': return 'Premium First';
+                        default: return cabinSymbol;
+                    };
+                };
+            })
+            .filter('ticketRefundability', function () {
+                return function (nonRefundableIndicator) {
+                    return (nonRefundableIndicator)? 'Non-refundable ticket': 'Refundable ticket'
+                }
+            })
+            .filter('baggageAllowance', function () {
+                return function (allowanceObj) {
+                    if (__.isDefined(allowanceObj.Pieces)) {
+                        var allowedPieces;
+                        switch (allowanceObj.Pieces) {
+                            case 0: allowedPieces = '0 pieces'; break;
+                            case 1: allowedPieces = '1 piece'; break;
+                            default : allowedPieces = allowanceObj.Pieces + ' pieces'; break;
+                        }
+                    }
+                    if (allowanceObj.Weight && allowanceObj.Unit) {
+                        var allowedWeight = allowanceObj.Weight + ' ' + allowanceObj.Unit;
+                    }
+                    return [allowedPieces, allowedWeight].filter(__.isDefined).join(', ');
+                }
+            })
+            .filter('meal', function () {
+
+                var mealCodeMappings = {};
+                mealCodeMappings['P'] = 'Alcoholic beverages for purchase';
+                mealCodeMappings['B'] = 'Breakfast';
+                mealCodeMappings['O'] = 'Cold meal';
+                mealCodeMappings['C'] = 'Complimentary alcoholic beverages';
+                mealCodeMappings['K'] = 'Continental Breakfast';
+                mealCodeMappings['D'] = 'Dinner ';
+                mealCodeMappings['F'] = 'Food for purchase';
+                mealCodeMappings['G'] = 'Food and Beverage / for purchase';
+                mealCodeMappings['H'] = 'Hot Meal';
+                mealCodeMappings['L'] = 'Lunch';
+                mealCodeMappings['M'] = 'Meal';
+                mealCodeMappings['N'] = 'No meal service';
+                mealCodeMappings['R'] = 'Refreshment';
+                mealCodeMappings['V'] = 'Refreshment / for purchase';
+                mealCodeMappings['S'] = 'Snack';
+
+                return function (mealCode) {
+                    return mealCodeMappings[mealCode];
+                }
             })
             .filter('humanizeNumberOfStops', function () {
                 return function (numberOfStops) {

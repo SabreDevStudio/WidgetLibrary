@@ -134,11 +134,5 @@ define([
             }
         };
 
-        Leg.prototype.hasLowSeatsRemaining = function () {
-            return this.segments.some(function (segment) {
-                return segment.hasLowSeatsRemaining();
-            });
-        };
-
         return Leg;
     });

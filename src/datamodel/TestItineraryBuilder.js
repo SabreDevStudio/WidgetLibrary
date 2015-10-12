@@ -2,6 +2,7 @@ define([
       'lodash'
     , 'moment'
     , 'datamodel/Itinerary'
+    , 'datamodel/ItineraryPricingInfo'
     , 'datamodel/ItinerariesList'
     , 'datamodel/Leg'
     , 'datamodel/Segment'
@@ -9,6 +10,7 @@ define([
       _
     , moment
     , Itinerary
+    , ItineraryPricingInfo
     , ItinerariesList
     , Leg
     , Segment
@@ -22,11 +24,19 @@ define([
     TestItineraryBuilder.prototype.buildSampleItinerary = function(spec) {
             var itin = new Itinerary();
             // creates boilerplate itinerary. Fields that matter are marked in comments
-            itin.totalFareAmount = spec.totalFareAmount || 243.43;
-            itin.totalFareCurrency = 'USD';
-            itin.baseFareAmount = Math.floor(0.7 * itin.totalFareAmount);
-            itin.baseFareCurrency = 'USD';
-            itin.totalTaxAmount = Math.floor(0.3 * itin.totalFareAmount);
+            itin.itineraryPricingInfo = new ItineraryPricingInfo();
+            itin.itineraryPricingInfo.fareAmounts.totalFare = {
+                amount: spec.totalFareAmount || 243.43,
+                currency: 'USD'
+            };
+            itin.itineraryPricingInfo.fareAmounts.baseFare = {
+                amount: Math.floor(0.7 * itin.totalFareAmount),
+                currency: 'USD'
+            };
+            itin.itineraryPricingInfo.fareAmounts.totalTax = {
+                amount: Math.floor(0.3 * itin.totalFareAmount),
+                currency: 'USD'
+            };
 
             var firstLeg = new Leg();
             firstLeg.segments = [new Segment(
@@ -41,8 +51,7 @@ define([
                     marketingAirline: spec.airline || 'LX', // airline
                     marketingFlightNumber: 999,
                     operatingAirline: 'NK',
-                    operatingFlightNumber: 867,
-                    seatsRemaining: 4
+                    operatingFlightNumber: 867
                 }),
                 new Segment({
                     departureAirport: 'DFW',
@@ -55,8 +64,7 @@ define([
                     marketingAirline: 'DL', // WARN: setting marketing airline to other airline on purpose. In such case marketing airlines from both legs must be allowed, for the itinerary to be allowed
                     marketingFlightNumber: 3442,
                     operatingAirline: 'NK',
-                    operatingFlightNumber: 867,
-                    seatsRemaining: 4
+                    operatingFlightNumber: 867
                 })
             ];
             itin.addLeg(firstLeg);
@@ -74,8 +82,7 @@ define([
                         marketingAirline: spec.airline || 'LX', // airline
                         marketingFlightNumber: 123,
                         operatingAirline: 'DL',
-                        operatingFlightNumber: 453,
-                        seatsRemaining: 3
+                        operatingFlightNumber: 453
                     })
                 ];
             itin.addLeg(secondLeg);

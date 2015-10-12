@@ -3,7 +3,7 @@ define([
         , 'webservices/BasicSearchCriteriaValidator'
     ],
     function (
-          _
+          __
         , BasicSearchCriteriaValidator
     ) {
         'use strict';
@@ -32,18 +32,33 @@ define([
                 return errors;
             }
             var roundTripTravelValidationErrors = this.basicValidator.validateRoundTripTravelSpecification(searchCriteria);
-            _.pushAll(errors, roundTripTravelValidationErrors);
+            __.pushAll(errors, roundTripTravelValidationErrors);
 
-            _.pushAll(errors, this.validateLengthOfStay(searchCriteria.getLengthOfStay()));
-            _.pushAll(errors, this.validateLengthOfStay(searchCriteria.getMinLengthOfStay()));
-            _.pushAll(errors, this.validateLengthOfStay(searchCriteria.getMaxLengthOfStay()));
+            __.pushAll(errors, this.validateLengthOfStay(searchCriteria.getLengthOfStay()));
+            __.pushAll(errors, this.validateLengthOfStay(searchCriteria.getMinLengthOfStay()));
+            __.pushAll(errors, this.validateLengthOfStay(searchCriteria.getMaxLengthOfStay()));
 
             if (!searchCriteria.isEconomyCabinRequested()) {
                 errors.push('Travel Insight Engine services support only Economy cabin requests, or requests without cabin preference - then economy fares will be returned)');
             }
 
+            var paxCountAndTypeErrors = this.validatePaxCountAndType(searchCriteria);
+            __.pushAll(errors, paxCountAndTypeErrors);
+
             return errors;
         };
+
+        TravelInsightEngineSearchCriteriaValidator.prototype.validatePaxCountAndType = function (searchCriteria) {
+            var errors = [];
+            if (searchCriteria.passengerSpecifications.length > 1) {
+                errors.push('Travel Insight Engine services do not support multiple passenger type definitions. Use only 1 passenger type definition (for example 1 ADT).');
+            }
+            if ((searchCriteria.passengerSpecifications[0].count) > 1 || searchCriteria.passengerSpecifications[0].passengerTypeCode !== 'ADT') {
+                errors.push('Travel Insight Engine services support only 1 passenger number and only of type ADT. The only supported passenger type is 1 ADT.')
+            }
+            return errors;
+        };
+
 
         TravelInsightEngineSearchCriteriaValidator.prototype.MAX_LENGTH_OF_STAY_DAYS = 16;
 

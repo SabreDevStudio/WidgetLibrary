@@ -14,6 +14,7 @@ define([
         BargainFinderMaxRequestFactory.prototype = Object.create(OTARequestFactory.prototype);
         BargainFinderMaxRequestFactory.prototype.constructor = BargainFinderMaxRequestFactory;
 
+        BargainFinderMaxRequestFactory.prototype.requestBrandedFares = false;
 
         BargainFinderMaxRequestFactory.prototype.createOriginDestinationInfos = function(searchCriteria) {
             var that = this;
@@ -26,7 +27,7 @@ define([
                     "OriginLocation": {
                         "LocationCode": leg.origin
                     },
-                    "RPH": "" + legIdx + 1,
+                    "RPH": "" + (legIdx + 1),
                     "TPA_Extensions": that.createLegTPAExtensions(searchCriteria.preferredAirlines, searchCriteria.dateFlexibilityDays)
                 };
             });
@@ -68,6 +69,24 @@ define([
             return {
                 "Number": requestedItinsCount
             };
+        };
+
+        BargainFinderMaxRequestFactory.prototype.createPriceRequestInformation = function () {
+            if (this.requestBrandedFares) {
+                return {
+                    "TPA_Extensions": {
+                        "BrandedFareIndicators": {
+                            "ReturnCheapestUnbrandedFare": { // TN brands may return also cheapest unbranded fare, it will work as single branded fare (SingleBrandedFare). Also this indicator may be used for International Branded Fares
+                                Ind: true
+                            },
+                            "SingleBrandedFare": true, // return main fare (as plain BFM works) + decorate this fare with brand information (with the first brand that is applicable to that fare).
+                            "MultipleBrandedFares": true // return main brand (as main fare) and additional brands (as additional fares).
+                        }
+                    }
+                };
+            } else {
+                return OTARequestFactory.prototype.createPriceRequestInformation.call(this);
+            }
         };
 
         return BargainFinderMaxRequestFactory;

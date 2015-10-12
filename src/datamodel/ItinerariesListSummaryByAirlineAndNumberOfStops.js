@@ -25,8 +25,8 @@ define([
                         airlineSummaries[marketingAirline] = createEmptySummary();
                     }
 
-                    var itineraryTotalFareAmount = itin.totalFareAmount;
-                    var totalFareCurrency = itin.totalFareCurrency;
+                    var itineraryTotalFareAmount = itin.totalFareAmountWithCurrency.amount;
+                    var totalFareCurrency = itin.totalFareAmountWithCurrency.currency;
                     var itineraryNumberOfStops = itin.getNumberOfStops();
 
                     updateSummary(totalSummary, itineraryTotalFareAmount, totalFareCurrency, itineraryNumberOfStops);

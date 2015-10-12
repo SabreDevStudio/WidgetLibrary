@@ -12,28 +12,7 @@ define([
 
         var that = this;
 
-        /**
-         * Based on overall segment index (index of segment among all segments, from all legs), calculates leg index and segment index for this segment
-         * @param segmentOverallIdx
-         */
-        this.calculateLegAndSegmentIndices = function(segmentOverallIdx) {
-            var cnt = 0;
-            var retLegIdx;
-            var retSegmentIdx;
-            that.legs.some(function (leg, legIdx) {
-                return leg.segments.some(function (segment, segmentIdx) {
-                    if (cnt++ === segmentOverallIdx) {
-                        retLegIdx = legIdx;
-                        retSegmentIdx = segmentIdx;
-                        return true;
-                    }
-                });
-            });
-            return {
-                legIdx: retLegIdx,
-                segmentIdx: retSegmentIdx
-            };
-        };
+        this.itineraryPricingInfo = undefined;
 
         // convenience property-style getters, needed for angular sorting of itineraries list
 
@@ -81,10 +60,43 @@ define([
 
         Object.defineProperty(this, 'totalFareAmountWithCurrency', {
             get: function() {
-                return {
-                      amount: this.totalFareAmount
-                    , currency: this.totalFareCurrency
-                };
+                return this.itineraryPricingInfo.fareAmounts.totalFare;
+            }
+        });
+
+        Object.defineProperty(this, 'totalFareAmount', {
+            get: function() {
+                return this.itineraryPricingInfo.fareAmounts.totalFare.amount;
+            }
+        });
+
+        Object.defineProperty(this, 'totalFareCurrency', {
+            get: function() {
+                return this.itineraryPricingInfo.fareAmounts.totalFare.currency;
+            }
+        });
+
+        Object.defineProperty(this, 'baseFareAmount', {
+            get: function() {
+                return this.itineraryPricingInfo.fareAmounts.baseFare.amount;
+            }
+        });
+
+        Object.defineProperty(this, 'baseFareCurrency', {
+            get: function() {
+                return this.itineraryPricingInfo.fareAmounts.baseFare.currency;
+            }
+        });
+
+        Object.defineProperty(this, 'totalTaxAmount', {
+            get: function() {
+                return this.itineraryPricingInfo.fareAmounts.totalTax.amount;
+            }
+        });
+
+        Object.defineProperty(this, 'totalTaxCurrency', {
+            get: function() {
+                return this.itineraryPricingInfo.fareAmounts.totalTax.currency;
             }
         });
     }
@@ -93,6 +105,19 @@ define([
         this.legs.push(leg);
         this.updateLegsChangeOfAirportAtDeparture();
         this.updateLegsChangeOfAirportAtArrival();
+    };
+
+    /**
+     * returns array with numbers of segments per leg. Array length is number of legs.
+     * Needed for parsing FareInfos and matching the absolute (within whole itinerary) segment numbers into relative (within given leg) segment numbers
+     *
+     * Example return array: two legs, first leg has 2 flights, second leg has one flight:
+     * [2, 1]
+     */
+    Itinerary.prototype.getLegsSegmentCounts = function () {
+        return this.legs.map(function (leg) {
+            return leg.segments.length;
+        });
     };
 
     Itinerary.prototype.updateLegsChangeOfAirportAtDeparture = function () {
@@ -125,16 +150,6 @@ define([
 
     Itinerary.prototype.isLastLeg = function (legIdx) {
         return legIdx === (this.legs.length - 1);
-    };
-
-    Itinerary.prototype.setCabin = function(segmentNumber, cabin) {
-        var legAndSegmentIndices = this.calculateLegAndSegmentIndices(segmentNumber);
-        this.legs[legAndSegmentIndices.legIdx].segments[legAndSegmentIndices.segmentIdx].cabin = cabin;
-    };
-
-    Itinerary.prototype.setSeatsRemaining = function(segmentNumber, seatsRemaining) {
-        var legAndSegmentIndices = this.calculateLegAndSegmentIndices(segmentNumber);
-        this.legs[legAndSegmentIndices.legIdx].segments[legAndSegmentIndices.segmentIdx].seatsRemaining = seatsRemaining;
     };
 
     Itinerary.prototype.getOutboundDepartureDateTime =  function() {
@@ -223,14 +238,14 @@ define([
         if (this.isOneWayTravel()) {
             return;
         }
-        if (_.isUndefined(this.hasChangeOfAirportsAtAnyStopover)) {
-            this.hasChangeOfAirportsAtAnyStopover = this.legs.some(function (leg, idx, allLegs) {
+        if (_.isUndefined(this.hasChangeOfAirportsAtAnyStopoverIndicator)) {
+            this.hasChangeOfAirportsAtAnyStopoverIndicator = this.legs.some(function (leg, idx, allLegs) {
                 return (((idx === 0) && (leg.hasAirportChangeAtArrival)) // first leg
                 || (((idx > 0) && (idx < (allLegs.length - 1))) && (leg.hasAirportChangeAtDeparture || leg.hasAirportChangeAtArrival)) // middle legs
                 || ((idx > 0) && (leg.hasAirportChangeAtDeparture))); // last leg
             });
         }
-        return this.hasChangeOfAirportsAtAnyStopover;
+        return this.hasChangeOfAirportsAtAnyStopoverIndicator;
     };
 
     Itinerary.prototype.getPricingSource = function () {
@@ -243,14 +258,14 @@ define([
         }).join(' ||| ');
     };
 
-    // WARN: performance optimisation, assuming Itinerary object is not changed after creation (and adding all legs in the beginning)
+   // WARN: performance optimisation, assuming Itinerary object is not changed after creation (all legs are added in batch, after object creation, and before querying this hasRedEyeFlight property) //TODO: change into client (parser) to call method .build() on Itinerary, and that method will call update all stats and indicators
     Itinerary.prototype.hasRedEyeFlight = function () {
-        if (_.isUndefined(this.hasRedEyeFlight)) {
-            this.hasRedEyeFlight = this.legs.some(function (leg) {
+        if (_.isUndefined(this.hasRedEyeFlightIndicator)) {
+            this.hasRedEyeFlightIndicator = this.legs.some(function (leg) {
                 return leg.hasRedEyeFlight();
             });
         }
-        return this.hasRedEyeFlight;
+        return this.hasRedEyeFlightIndicator;
     };
 
     Itinerary.prototype.hasShortConnection = function () {
@@ -265,10 +280,24 @@ define([
         });
     };
 
+    Itinerary.prototype.getSeatsRemaining = function (legIdx, segmentIdx) {
+        return this.itineraryPricingInfo.getSeatsRemaining(legIdx, segmentIdx);
+    };
+
+    Itinerary.prototype.getCabin = function (legIdx, segmentIdx) {
+        return this.itineraryPricingInfo.getCabin(legIdx, segmentIdx);
+    };
+
+    Itinerary.prototype.getMeals = function (legIdx, segmentIdx) {
+        return this.itineraryPricingInfo.getMeals(legIdx, segmentIdx);
+    };
+
+    Itinerary.prototype.getBaggageAllowance = function (legIdx, segmentIdx) {
+        return this.itineraryPricingInfo.getBaggageAllowance(legIdx, segmentIdx);
+    };
+
     Itinerary.prototype.hasLowSeatsRemaining = function () {
-        return this.legs.some(function (leg) {
-            return leg.hasLowSeatsRemaining();
-        });
+        return this.itineraryPricingInfo.hasLowSeatsRemaining();
     };
 
     return Itinerary;

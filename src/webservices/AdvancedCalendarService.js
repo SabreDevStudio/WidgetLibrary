@@ -134,8 +134,8 @@ define([
                             var cacheKey = createCacheKey(searchCriteria);
                             var minDateAndPricePair = ShoppingOptionsCacheService.getMinDateAndPricePair(cacheKey);
                             return {
-                                totalFareAmount: minDateAndPricePair.totalFareAmount
-                                , currency: minDateAndPricePair.totalFareCurrency
+                                totalFareAmount: minDateAndPricePair.totalFareAmountWithCurrency.amount
+                                , currency: minDateAndPricePair.totalFareAmountWithCurrency.currency
                                 , date: minDateAndPricePair.date
                             }
                         },

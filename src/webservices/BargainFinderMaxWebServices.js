@@ -6,7 +6,8 @@ define([
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/WebServicesResourceDefinitions'
         , 'webservices/BargainFinderMaxRequestFactory'
-        , 'webservices/OTAResponseParser'
+        , 'webservices/BFMResponseParser'
+        , 'webservices/BrandedBFMResponseParser'
         , 'datamodel/ItinerariesList'
         , 'util/NGPromiseUtils'
     ],
@@ -18,7 +19,8 @@ define([
         , SabreDevStudioWebServicesModule
         , WebServicesResourceDefinitions
         , BargainFinderMaxRequestFactory
-        , OTAResponseParser
+        , BFMResponseParser
+        , BrandedBFMResponseParser
         , ItinerariesList
         , NGPromiseUtils
     ) {
@@ -52,6 +54,26 @@ define([
                         }
                     }
 
+                    var bfmBrandedRequestFactory = new BargainFinderMaxRequestFactory();
+                    bfmBrandedRequestFactory.requestBrandedFares = true;
+                    var brandedItinerariesParser = new BrandedBFMResponseParser();
+
+                    function getBrandedItineraries(searchCriteria) {
+                        var bfmBrandedRequest = bfmBrandedRequestFactory.createRequest(searchCriteria);
+                        return $q(function(resolve, reject) {
+                            bfmWebService.sendRequest(bfmBrandedRequest).then(
+                                function (response) {
+                                    var itinerariesList = brandedItinerariesParser.parse(response);
+                                    resolve(itinerariesList);
+                                },
+                                function (reason) {
+                                    var businessErrorMessages = brandedItinerariesParser.getBusinessErrorMessages(reason.data.message);
+                                    reject(businessErrorMessages);
+                                }
+                            );
+                        });
+                    }
+
                     function getAlternateDatesPriceMatrix(searchCriteria) {
                         if (!searchCriteria.isAlternateDatesRequest()) {
                             throw new Error('Calling Alternative Dates service for non alternative dates request');
@@ -73,7 +95,7 @@ define([
 
                     var bfmRequestFactory = new BargainFinderMaxRequestFactory();
 
-                    var parser = new OTAResponseParser();
+                    var parser = new BFMResponseParser();
 
                     function getDataFromService(webService, searchCriteria) {
                         var bfmRequest = bfmRequestFactory.createRequest(searchCriteria);
@@ -103,6 +125,7 @@ define([
 
                     return {
                         getItineraries: getItineraries,
+                        getBrandedItineraries: getBrandedItineraries,
                         getAlternateDatesPriceMatrix: getAlternateDatesPriceMatrix,
                         validateSearchCriteria: function () {}
                     };

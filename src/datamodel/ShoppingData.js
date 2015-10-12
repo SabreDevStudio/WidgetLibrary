@@ -22,16 +22,16 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
         }
     };
 
-    ShoppingData.prototype.updateMinDateAndPricePair = function (key, candidateDate, candidateTotalFareAmount, candidateTotalFareCurrency) {
+    ShoppingData.prototype.updateMinDateAndPricePair = function (key, candidateDate, candidateTotalFareAmountWithCurrency) {
         var currentMinDateAndPricePair = this.minDateAndPricePairs[key];
-        if (currentMinDateAndPricePair && currentMinDateAndPricePair.totalFareCurrency && (candidateTotalFareCurrency !== currentMinDateAndPricePair.totalFareCurrency)) {
+        if (currentMinDateAndPricePair && currentMinDateAndPricePair.totalFareAmountWithCurrency.currency && (candidateTotalFareAmountWithCurrency.currency !== currentMinDateAndPricePair.totalFareAmountWithCurrency.currency)) {
             throw new Error('Unable to update minimum price as currencies different');
         }
-        if (_.isUndefined(currentMinDateAndPricePair) || ((candidateTotalFareAmount <= currentMinDateAndPricePair.totalFareAmount) && (candidateDate.isBefore(currentMinDateAndPricePair.date)))) { // prefer more close dates when two dates have same price
+        if (_.isUndefined(currentMinDateAndPricePair)
+            || ((candidateTotalFareAmountWithCurrency.amount <= currentMinDateAndPricePair.totalFareAmountWithCurrency.amount) && (candidateDate.isBefore(currentMinDateAndPricePair.date)))) { // prefer more close dates when two dates have same price
             this.minDateAndPricePairs[key] = {
                   date: candidateDate
-                , totalFareAmount: candidateTotalFareAmount
-                , totalFareCurrency: candidateTotalFareCurrency
+                , totalFareAmountWithCurrency: candidateTotalFareAmountWithCurrency
             };
         }
     };
@@ -92,7 +92,7 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
 
         this.data[key][monthKey][dayKey].itinerariesList.add(itinerary);
         this.updateMaxAvailableDate(key, date);
-        this.updateMinDateAndPricePair(key, date, itinerary.totalFareAmount, itinerary.totalFareCurrency);
+        this.updateMinDateAndPricePair(key, date, itinerary.totalFareAmountWithCurrency);
     };
 
     ShoppingData.prototype.getItinerariesList = function (key, day) {

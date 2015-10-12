@@ -20,7 +20,7 @@ define([
                 return _.has(response, 'PricedItineraries');
             };
 
-            this.getAirItineraryPricingInfo = function(itin) {
+            this.getItineraryPricingInfoResponsePart = function(itin) {
                 return itin.AirItineraryPricingInfo;
             };
 

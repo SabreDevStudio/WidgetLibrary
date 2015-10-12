@@ -4,7 +4,7 @@ define([
         , 'webservices/TravelInsightEngineSearchCriteriaValidator'
     ],
     function (
-          _
+          __
         , moment
         , TravelInsightEngineSearchCriteriaValidator
     ) {
@@ -18,11 +18,12 @@ define([
             var errors = [];
 
             var tieValidatorErrors = this.travelInsightEngineSearchCriteriaValidator.validate(searchCriteria);
-            _.pushAll(errors, tieValidatorErrors);
+            __.pushAll(errors, tieValidatorErrors);
 
             if (searchCriteria.isAlternateDatesRequest()) {
                 errors.push('Instaflight does not support alt dates requests (date flexibility)');
             }
+
             return errors; 
         };
 

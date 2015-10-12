@@ -16,6 +16,7 @@ define([
         , 'datamodel/SearchCriteria'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
         , 'webservices/ItinerariesSearchStrategyFactory'
+        , 'webservices/BrandedItinerariesSearchStrategyFactory'
         , 'util/CommonDisplayDirectives'
     ],
     function (
@@ -36,6 +37,7 @@ define([
         , SearchCriteria
         , ItinerariesListSortCriteria
         , ItinerariesSearchStrategyFactory
+        , BrandedItinerariesSearchStrategyFactory
         , CommonDisplayDirectives
     ) {
         'use strict';
@@ -45,6 +47,7 @@ define([
                       '$scope'
                     , '$filter'
                     , 'ItinerariesSearchStrategyFactory'
+                    , 'BrandedItinerariesSearchStrategyFactory'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'
                     , 'StatisticsGatheringRequestsRegistryService'
@@ -59,7 +62,8 @@ define([
                 , function (
                       $scope
                     , $filter
-                    , searchStrategyFactory
+                    , itinerariesSearchStrategyFactory
+                    , brandedItinerariesSearchStrategyFactory
                     , SearchCriteriaBroadcastingService
                     , newSearchCriteriaEvent
                     , StatisticsGatheringRequestsRegistryService
@@ -160,6 +164,8 @@ define([
                         clearModel();
                         updateSearchAirports(newSearchCriteria);
                     }
+
+                    var searchStrategyFactory = ($scope.requestBrandedItineraries)? brandedItinerariesSearchStrategyFactory: itinerariesSearchStrategyFactory;
 
                     var searchStrategy = searchStrategyFactory.createSearchStrategy($scope.activeSearchWebService);
 
@@ -270,8 +276,9 @@ define([
                 return {
                     restrict: 'EA',
                     scope: {
-                        activeSearch: '@' //TODO: activeSearchWebService not enough to decide
-                        , activeSearchWebService: '@'
+                        activeSearch: '@?' //TODO: activeSearchWebService not enough to decide
+                        , activeSearchWebService: '@?'
+                        , requestBrandedItineraries: '=?'
                     },
                     template: ItinerariesListWidgetTemplate,
                     //templateUrl: '../src/view-templates/widgets/ItinerariesListWidget.tpl.html', // element queries do not work. BTW: use https://thinkster.io/templatecache-tutorial https://www.npmjs.com/package/grunt-angular-templatecache

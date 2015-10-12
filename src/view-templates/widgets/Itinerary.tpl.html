@@ -30,7 +30,7 @@
                 <!--<div class="clearfix"></div>-->
             </div>
         </li>
-        <li ng-repeat="leg in itinerary.legs">
+        <li ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">
             <div class="SDSLegSummary SDS-row">
                 <div class="SDS-col-element-xxs-4 SDS-col-element-md-4 SDS-col-element-lg-5">
                     <span class="SDS-visible-xl-inline-block SDSTravelDateLong">{{leg.getLegDepartureDateTime().format('ddd, DD MMM')}}</span><!-- format: Sun, 05 Dec -->
@@ -67,7 +67,7 @@
                                 Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
                             </span>
             <ul class="list-group" ng-if="details.flightDetailsShown" ng-click="details.flightDetailsShown = false; details.priceDetailsExpanded = false">
-                <li class="list-group-item" ng-repeat-start="flight in leg.segments">
+                <li class="list-group-item" ng-repeat-start="flight in leg.segments" ng-init="segmentIndex = $index">
                     <ul class="list-unstyled">
                         <!--<li>-->
                         <!--{{flight.duration | humanizeMinutes}}-->
@@ -110,38 +110,156 @@
                                     <small>{{flight.equipment | aircraftName}}</small>
                                 </li>
                                 <li>
-                                    <small>{{flight.seatsRemaining}} seats left</small>
+                                    <small>{{itinerary.getSeatsRemaining(legIndex, segmentIndex)}} seats left</small>
+                                </li>
+                                <li>
+                                    <small>{{itinerary.getCabin(legIndex, segmentIndex) | cabin}}</small>
+                                </li>
+                                <li ng-if="itinerary.getMeals(legIndex, segmentIndex)">
+                                    <small>Meal: {{itinerary.getMeals(legIndex, segmentIndex) | meal}}</small>
+                                </li>
+                                <li>
+                                    <!--<small>Baggage allowance: {{itinerary.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}}</small>-->
+                                </li>
+                                <li ng-if="itinerary.getBrandsMatchedToFlight(legIndex, segmentIndex).length > 0">
+                                    <small>Brands matched:
+                                        <span ng-repeat="matchedBrand in itinerary.getBrandsMatchedToFlight(legIndex, segmentIndex)">
+                                            {{matchedBrand}},
+                                        </span>
+                                    </small>
                                 </li>
                             </ul>
                         </li>
                     </ul>
                 </li>
                 <li ng-repeat-end ng-if="!$last" class="list-group-item">
-                    Connection {{leg.getConnectionTimeMinutes($index) | humanizeMinutes}}
+                    Connection {{leg.getConnectionTimeMinutes(segmentIndex) | humanizeMinutes}}
                 </li>
             </ul>
         </li>
-                            <span ng-if="itinerary.hasChangeOfAirportsAtAnyStopover()" class="SDS-visible-lg text-warning">
-                                Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
-                            </span>
-                            <span ng-if="!itinerary.isDepartureAndReturnSameAirport()" class="SDS-visible-lg text-warning">
-                                Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
-                            </span>
+        <li>
+            <ul class="list-group" ng-show="details.brandDetailsShown" ng-click="details.brandDetailsShown = !details.brandDetailsShown">
+                <li class="list-group-item">
+                    <table class="SDSTable table table-bordered table-condensed ">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Brands</th>
+                                <th class="text-center">Main fare:
+                                    <span ng-repeat="brandToSegmentMatchingItem in itinerary.itineraryPricingInfo.brandToSegmentMatchings"> {{brandToSegmentMatchingItem.brandName}},</span>
+                                </th>
+                                <th class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
+                                    <span ng-repeat="brandToSegmentMatchingItem in brand.brandToSegmentMatchings"> {{brandToSegmentMatchingItem.brandName}},</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">Total fare</td>
+                                <td class="text-center"><strong>{{itinerary.totalFareAmountWithCurrency.amount | currency:itinerary.totalFareAmountWithCurrency.currency}}</strong></td>
+                                <td class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
+                                    <strong>{{brand.fareAmounts.totalFare.amount | currency: brand.fareAmounts.totalFare.currency}}</strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center">Cabins</td>
+                                <td class="text-center">
+                                    <span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">
+                                        <span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">
+                                        {{itinerary.itineraryPricingInfo.getCabin(legIndex, segmentIndex) | cabin}},
+                                        </span>
+                                    </span>
+                                </td>
+                                <td class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
+                                    <span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">
+                                        <span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">
+                                        {{brand.getCabin(legIndex, segmentIndex) | cabin}},
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center">Ticket refundable</td>
+                                <td class="text-center">{{itinerary.itineraryPricingInfo.nonRefundableIndicator | ticketRefundability}}</td>
+                                <td class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
+                                    {{brand.nonRefundableIndicator | ticketRefundability}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center">OB Fees</td>
+                                <td class="text-center">
+                                    <span ng-repeat="obFee in itinerary.itineraryPricingInfo.OBFees">{{obFee.amount | currency: obFee.currency}}</span>
+                                </td>
+                                <td class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
+                                    <span ng-repeat="obFee in brand.OBFees">{{obFee.amount | currency: obFee.currency}}</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center">Baggage allowance</td>
+                                <td class="text-center">
+                                    <!--<span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">-->
+                                        <!--<span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">-->
+                                        <!--{{itinerary.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}},-->
+                                        <!--</span>-->
+                                    <!--</span>-->
+                                </td>
+                                <td class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
+                                    <!--<span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">-->
+                                        <!--<span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">-->
+                                        <!--{{brand.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}},-->
+                                        <!--</span>-->
+                                    <!--</span>-->
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center">Meals</td>
+                                <td class="text-center">
+                                    <span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">
+                                        <span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">
+                                        {{itinerary.itineraryPricingInfo.getMeals(legIndex, segmentIndex) | meal}},
+                                        </span>
+                                    </span>
+                                </td>
+                                <td class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
+                                    <span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">
+                                        <span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">
+                                            {{brand.getMeals(legIndex, segmentIndex) | meal}},
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        </li>
+        <span ng-if="itinerary.hasChangeOfAirportsAtAnyStopover()" class="SDS-visible-lg text-warning">
+            Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
+        </span>
+        <span ng-if="!itinerary.isDepartureAndReturnSameAirport()" class="SDS-visible-lg text-warning">
+            Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
+        </span>
     </ul>
     <div class="SDSPriceSummary TODO-col-lg-3">
         <div class="pull-left">
             <a href="" ng-hide="details.flightDetailsShown" class="SDS-hidden-lg SDSItinListShowPriceDetails" ng-click="details.flightDetailsShown = true; details.priceDetailsExpanded = true">Show Details</a>
             <a href="" ng-show="details.flightDetailsShown" class="SDS-hidden-lg SDSItinListHidePriceDetails" ng-click="details.flightDetailsShown = false; details.priceDetailsExpanded = false">Hide Details</a>
             <a href="" class="SDS-visible-lg" ng-click="details.flightDetailsShown = !details.flightDetailsShown">Flight Details</a>
+            <a href="" class="SDS-visible-lg" ng-show="itinerary.hasMultipleBrands()" ng-click="details.brandDetailsShown = !details.brandDetailsShown">Brand Details</a>
         </div>
         <div>
             <ul class="list-unstyled pull-right">
-                <li>Total price: <strong >{{itinerary.totalFareAmount | currency:itinerary.totalFareCurrency}}</strong></li>
+                <li>Total price: <strong >{{itinerary.totalFareAmountWithCurrency.amount | currency:itinerary.totalFareAmountWithCurrency.currency}}</strong></li>
                 <li>
                     <a href="" class="SDS-visible-lg ng-show SDSItinListTogglePriceDetails">Price Details</a>
                 </li>
                 <li class="SDSItinListPriceDetails ng-hide SDSItinListTogglePriceDetails">Base fare: {{itinerary.baseFareAmount | currency:itinerary.baseFareCurrency}}</li>
-                <li class="SDSItinListPriceDetails ng-hide SDSItinListTogglePriceDetails">Taxes: {{itinerary.totalTaxAmount | currency:itinerary.taxCurrency}}</li>
+                <li class="SDSItinListPriceDetails ng-hide SDSItinListTogglePriceDetails">Taxes: {{itinerary.totalTaxAmount | currency:itinerary.totalTaxCurrency}}</li>
             </ul>
         </div>
         <div class="clearfix"></div>

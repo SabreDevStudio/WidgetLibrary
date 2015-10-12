@@ -30,31 +30,31 @@
                 <accordion class="SDS-hidden-lg" close-others="false">
                     <accordion-group is-open="true">
                         <accordion-heading>
-                            <span class="text-info">Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency:bestItinerariesSummary.cheapest.totalFareCurrency}}</span>
+                            <span class="text-info">Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount.currency}}</span>
                         </accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.cheapest"></itinerary-short-summary>
                     </accordion-group>
                     <accordion-group>
                         <accordion-heading>
-                            <span class="text-info">Best: {{bestItinerariesSummary.best.totalFareAmount | currency:bestItinerariesSummary.best.totalFareCurrency}}</span>
+                            <span class="text-info">Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}</span>
                         </accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.best"></itinerary-short-summary>
                     </accordion-group>
                     <accordion-group>
                         <accordion-heading>
-                            <span class="text-info">Shortest: {{bestItinerariesSummary.shortest.totalFareAmount | currency:bestItinerariesSummary.shortest.totalFareCurrency}}</span>
+                            <span class="text-info">Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}</span>
                         </accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.shortest"></itinerary-short-summary>
                     </accordion-group>
                 </accordion>
                 <tabset class="SDS-visible-lg">
-                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmount | currency:bestItinerariesSummary.cheapest.totalFareCurrency}}">
+                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.cheapest"></itinerary-short-summary>
                     </tab>
-                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmount | currency:bestItinerariesSummary.best.totalFareCurrency}}">
+                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.best"></itinerary-short-summary>
                     </tab>
-                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmount | currency:bestItinerariesSummary.shortest.totalFareCurrency}}">
+                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.shortest"></itinerary-short-summary>
                     </tab>
                 </tabset>

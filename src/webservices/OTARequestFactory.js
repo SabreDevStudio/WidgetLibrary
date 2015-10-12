@@ -69,7 +69,8 @@ define([],
                             };
                         })
                     }
-                ]
+                ],
+                "PriceRequestInformation": this.createPriceRequestInformation()
             };
         };
 
@@ -81,6 +82,10 @@ define([],
                     }
                 }
             };
+        };
+
+        OTARequestFactory.prototype.createPriceRequestInformation = function () {
+            return {};
         };
 
 

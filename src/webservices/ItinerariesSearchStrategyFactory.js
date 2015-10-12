@@ -4,7 +4,7 @@ define([
         , 'webservices/SabreDevStudioWebServicesModule'
     ],
     function (
-          _
+          __
         , angular
         , SDSWebServices
     ) {
@@ -34,7 +34,7 @@ define([
                                 }
                             )
                                 .reduce(function (acc, curr) {
-                                    return _.pushAll(acc, curr);
+                                    return __.pushAll(acc, curr);
                                 }, []);
                         }
 

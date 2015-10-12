@@ -4,6 +4,8 @@ define([
         , 'datamodel/Itinerary'
         , 'datamodel/Leg'
         , 'datamodel/Segment'
+        , 'datamodel/ItineraryPricingInfo'
+        , 'datamodel/MonetaryAmount'
         , 'datamodel/ItinerariesList'
         , 'datamodel/AlternateDatesOneWayPriceMatrix'
         , 'datamodel/AlternateDatesRoundTripPriceMatrix'
@@ -14,6 +16,8 @@ define([
         , Itinerary
         , Leg
         , Segment
+        , ItineraryPricingInfo
+        , MonetaryAmount
         , ItinerariesList
         , AlternateDatesOneWayPriceMatrix
         , AlternateDatesRoundTripPriceMatrix
@@ -52,7 +56,7 @@ define([
 
             var that = this;
 
-            this.getPricedItinerariesArray(response).forEach(function(itin) {
+            this.getPricedItinerariesArray(response).forEach(function(itin, idx) {
                 var parsedItinerary = that.parseItinerary(itin);
                 itins.add(parsedItinerary);
             });
@@ -78,36 +82,65 @@ define([
             return altDatePriceMatrix;
         };
 
-        AbstractOTAResponseParser.prototype.parseItinerary = function (itin) {
+        AbstractOTAResponseParser.prototype.parseItinerary = function (responseItin) {
             var that = this;
             var itinerary = new Itinerary();
-            itin.AirItinerary.OriginDestinationOptions.OriginDestinationOption.forEach(function (leg) {
+            responseItin.AirItinerary.OriginDestinationOptions.OriginDestinationOption.forEach(function (leg) {
                 itinerary.addLeg(that.parseLeg(leg));
             });
-            if (itin.AirItineraryPricingInfo.length > 1) {
+            if (responseItin.AirItineraryPricingInfo.length > 1) {
                 throw new Error('parser unsupported');
             }
-            var airItineraryPricingInfo = this.getAirItineraryPricingInfo(itin);
-            airItineraryPricingInfo.FareInfos.FareInfo.forEach(function (fareInfo, index) {
-                itinerary.setCabin(index, fareInfo.TPA_Extensions.Cabin.Cabin);
-                itinerary.setSeatsRemaining(index, fareInfo.TPA_Extensions.SeatsRemaining.Number);
-            });
-            itinerary.baseFareAmount = airItineraryPricingInfo.ItinTotalFare.BaseFare.Amount; //TODO: refactor all price related props of itin into Itinerary.pricingInfo: {totalFare: ...} etc. But used also in filters, do later!
-            itinerary.baseFareCurrency = airItineraryPricingInfo.ItinTotalFare.BaseFare.CurrencyCode;
+            var itineraryPricingInfoResponsePart = this.getItineraryPricingInfoResponsePart(responseItin);
+            var legsSegmentCounts = itinerary.getLegsSegmentCounts();
+            itinerary.itineraryPricingInfo = this.parseItineraryPricingInfo(itineraryPricingInfoResponsePart, legsSegmentCounts);
 
-            itinerary.totalTaxAmount = airItineraryPricingInfo.ItinTotalFare.Taxes.Tax[0].Amount;
-            itinerary.taxCurrency = airItineraryPricingInfo.ItinTotalFare.Taxes.Tax[0].CurrencyCode;
-
-            if (airItineraryPricingInfo.ItinTotalFare.Taxes.Tax.length > 1) {
-                throw new Error('parser unsupported');
-            }
-            var totalFareAmountFromResponse = airItineraryPricingInfo.ItinTotalFare.TotalFare.Amount;
-            itinerary.totalFareAmount = _.isString(totalFareAmountFromResponse)? parseFloat(totalFareAmountFromResponse): totalFareAmountFromResponse;
-            itinerary.totalFareCurrency = airItineraryPricingInfo.ItinTotalFare.TotalFare.CurrencyCode;
-
-            itinerary.pricingSource = this.parsePricingSource(itin);
+            itinerary.pricingSource = this.parsePricingSource(responseItin);
 
             return itinerary;
+        };
+
+        AbstractOTAResponseParser.prototype.parseItineraryPricingInfo = function (itineraryPricingInfoResponsePart, legsSegmentCounts) {
+            var itineraryPricingInfo = new ItineraryPricingInfo(legsSegmentCounts);
+
+            this.parseCabinAndSeatsRemaining(itineraryPricingInfo, itineraryPricingInfoResponsePart.FareInfos.FareInfo);
+
+            var itinFare = itineraryPricingInfoResponsePart.ItinTotalFare;
+            itineraryPricingInfo.fareAmounts = this.parseFareAmounts(itinFare);
+
+            return itineraryPricingInfo;
+        };
+
+        // WARN: this function updates the itineraryPricingInfo argument
+        AbstractOTAResponseParser.prototype.parseCabinAndSeatsRemaining = function (itineraryPricingInfo, fareInfos) {
+            fareInfos.forEach(function (fareInfo, index) {
+                itineraryPricingInfo.setCabin(index, fareInfo.TPA_Extensions.Cabin.Cabin);
+                fareInfo.TPA_Extensions.Meal && itineraryPricingInfo.setMeal(index, fareInfo.TPA_Extensions.Meal.Code);
+                itineraryPricingInfo.setSeatsRemaining(index, fareInfo.TPA_Extensions.SeatsRemaining.Number);
+            });
+        };
+
+        AbstractOTAResponseParser.prototype.parseOBFees = function (obFeesResponsePart) {
+            return obFeesResponsePart.OBFee.map(function (obFee) {
+                return new MonetaryAmount(obFee.Amount, obFee.CurrencyCode);
+            });
+        };
+
+        AbstractOTAResponseParser.prototype.parseFareAmounts = function (itinFare) {
+            var fareAmounts = {};
+            fareAmounts.baseFare = new MonetaryAmount(itinFare.BaseFare.Amount, itinFare.BaseFare.CurrencyCode);
+
+            if (itinFare.Taxes.Tax.length > 1) {
+                throw new Error('parser unsupported');
+            }
+
+            fareAmounts.totalTax = new MonetaryAmount(itinFare.Taxes.Tax[0].Amount, itinFare.Taxes.Tax[0].CurrencyCode);
+
+            var totalFareAmountFromResponse = itinFare.TotalFare.Amount;
+            var totalFareAmount = _.isString(totalFareAmountFromResponse)? parseFloat(totalFareAmountFromResponse): totalFareAmountFromResponse;
+            fareAmounts.totalFare = new MonetaryAmount(totalFareAmount, itinFare.TotalFare.CurrencyCode);
+
+            return fareAmounts;
         };
 
         AbstractOTAResponseParser.prototype.getTravelDatesWithLeadPrice = function (itin) {
@@ -115,8 +148,8 @@ define([
             var travelDatesWithLeadPrice = {
                   departureDate: itinerary.getOutboundDepartureDateTime()
                 , returnDate: itinerary.getInboundDepartureDateTime()
-                , price: itinerary.totalFareAmount
-                , currency: itinerary.totalFareCurrency
+                , price: itinerary.totalFareAmountWithCurrency.amount
+                , currency: itinerary.totalFareAmountWithCurrency.currency
             };
             return travelDatesWithLeadPrice;
         };

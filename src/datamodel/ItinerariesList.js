@@ -172,8 +172,8 @@ define(['util/LodashExtensions'], function (_) {
     ItinerariesList.prototype.getLeadPrice = function () {
         var minimumPriceItinerary = _.min(this.getPermittedItineraries(), 'totalFareAmount');
         return {
-              price: minimumPriceItinerary.totalFareAmount
-            , currency: minimumPriceItinerary.totalFareCurrency
+              price: minimumPriceItinerary.totalFareAmountWithCurrency.amount
+            , currency: minimumPriceItinerary.totalFareAmountWithCurrency.amount.currency
         };
     };
 
