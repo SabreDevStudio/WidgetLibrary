@@ -92,7 +92,7 @@ require([
         , 'widgets/ItinerariesList/ItinerariesListWidget'
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
-        , 'widgets/HighLowMedianCurrentChart'
+        , 'widgets/HighLowMedianCurrentChartDirective'
         , 'Configuration'
         , 'elementQuery'
     ], function (
@@ -117,7 +117,7 @@ require([
         , ItinerariesListWidget
         , FiltersPanelWidget
         , DiscreteFilterWidget
-        , HighLowMedianCurrentChart
+        , HighLowMedianCurrentChartDirective
         , Configuration
         , elementQuery
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?

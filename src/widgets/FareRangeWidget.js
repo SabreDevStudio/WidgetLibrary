@@ -7,7 +7,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'text!view-templates/widgets/FareRangeWidget.tpl.html'
         , 'datamodel/SearchCriteria'
-        , 'widgets/HighLowMedianCurrentChart'
+        , 'widgets/HighLowMedianCurrentChartDirective'
     ],
     function (
           moment
@@ -18,7 +18,7 @@ define([
         , SDSWidgets
         , FareRangeWidgetTemplate
         , SearchCriteria
-        , HighLowMedianCurrentChart
+        , HighLowMedianCurrentChartDirective
     ) {
         'use strict';
 
