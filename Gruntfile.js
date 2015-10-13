@@ -1,4 +1,6 @@
 module.exports = function (grunt) {
+//    require('time-grunt')(grunt);
+    require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
 
@@ -208,8 +210,8 @@ module.exports = function (grunt) {
                     , inlineText: true
                     //, findNestedDependencies: true
                     , paths: {
-                          lodash: '../build/lodash/lodash.custom.build'
-                        , angular: '../bower_components/angular/angular.min'
+                          //lodash: '../build/lodash/lodash.custom.build' // skipped lodash custom builds to save build time
+                         angular: '../bower_components/angular/angular.min'
                     }
                     , pragmas: {
                         appBuildExclude:true
@@ -273,25 +275,18 @@ module.exports = function (grunt) {
                 src: ['index.html', 'www/**/*.html', '!www/partials/**/*'],
                 dest: 'build/www/'
             }
+        },
+
+        jsdoc : {
+            dist : {
+                src: ['src/**/*.js', 'README.md'],
+                options: {
+                    destination: 'doc'
+                }
+            }
         }
 
     });
-
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-compass');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-autoprefixer');
-    grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-csslint');
-    grunt.loadNpmTasks('grunt-bootlint');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-include-replace');
-
-    grunt.loadNpmTasks('grunt-lodash');
-    grunt.loadNpmTasks('grunt-lodash-autobuild');
 
     grunt.registerTask('test', 'karma');
 
@@ -299,7 +294,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dist', [
           'clean:dist'
-        , 'lodashAutobuild:customBuild'
+        //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'requirejs:compile'
         , 'css-pipeline'
         , 'cssmin:cssbundle'

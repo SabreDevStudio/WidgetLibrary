@@ -52,7 +52,7 @@ define([
                 ) {
 
                 return {
-                    restrict: 'EA',
+                    restrict: 'E',
                     require: '^filtersPanel',
                     replace: true,
                     scope: {

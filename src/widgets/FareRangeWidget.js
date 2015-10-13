@@ -7,6 +7,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'text!view-templates/widgets/FareRangeWidget.tpl.html'
         , 'datamodel/SearchCriteria'
+        , 'widgets/HighLowMedianCurrentChart'
     ],
     function (
           moment
@@ -17,6 +18,7 @@ define([
         , SDSWidgets
         , FareRangeWidgetTemplate
         , SearchCriteria
+        , HighLowMedianCurrentChart
     ) {
         'use strict';
 
@@ -41,7 +43,7 @@ define([
 
                     var rangeDays = $scope.rangeDays | 15;
 
-                    // main model object
+                    // main business model object
                     $scope.fareRangeSummary = {};
 
                     if ($scope.origin && $scope.destination && $scope.departureDate && $scope.returnDate) {
@@ -62,10 +64,14 @@ define([
                                 $scope.fareRangeSummary = FareRangeSummaryService.getSummary(response, searchCriteria.getFirstLeg().departureDateTime, searchCriteria.getSecondLeg().departureDateTime);
                                 $scope.requestedRange = requestedRange;
                                 clearErrorMessages();
+                                $scope.origin = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().origin: searchCriteria.origin;
+                                $scope.destination = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().destination: searchCriteria.destination;
                             },
                             function (errors) {
                                 $scope.businessErrorMessages = errors;
                                 clearModel();
+                                $scope.origin = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().origin: searchCriteria.origin;
+                                $scope.destination = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().destination: searchCriteria.destination;
                             }
                         );
                     }
@@ -129,15 +135,15 @@ define([
                 }])
             .directive('fareRange', function () {
                 return {
-                    restrict: 'AE',
+                    //replace: true,
                     scope: {
-                          origin: '@'
-                        , destination: '@'
-                        , departureDate: '@'
-                        , returnDate: '@'
-                        , currentLowestFare: '@'
-                        , currentLowestFareCurrency: '@'
-                        , rangeDays: '@'
+                          origin: '@?'
+                        , destination: '@?'
+                        , departureDate: '@?'
+                        , returnDate: '@?'
+                        , currentLowestFare: '@?'
+                        , currentLowestFareCurrency: '@?'
+                        , rangeDays: '@?'
                     },
                     template: FareRangeWidgetTemplate,
                     controller: 'FareRangeCtrl'
@@ -156,6 +162,7 @@ define([
                     getSummary: function (fareRangeWebServiceResponse, requestedDepartureDate, requestedReturnDate) {
                         var fareDataForRequestedDates = getFareDataForRequestedDates(fareRangeWebServiceResponse.FareData, requestedDepartureDate, requestedReturnDate);
                         var medianOfAllMedianFares = _.median(_.pluck(fareRangeWebServiceResponse.FareData, 'MedianFare'));
+                        var minimumOfAllMaximumFare = _.min(_.pluck(fareRangeWebServiceResponse.FareData, 'MinimumFare'));
                         var maximumOfAllMaximumFare = _.max(_.pluck(fareRangeWebServiceResponse.FareData, 'MaximumFare'));
                         var fareCurrencyCodes = _.uniq(_.pluck(fareRangeWebServiceResponse.FareData, 'CurrencyCode'));
                         if (fareCurrencyCodes.length > 1) {
@@ -163,6 +170,7 @@ define([
                         }
                         return {
                               overallMedianFare: medianOfAllMedianFares
+                            , overallMinimumFare: minimumOfAllMaximumFare
                             , overallMaximumFare: maximumOfAllMaximumFare
                             , currency: _.first(fareCurrencyCodes)
                             , fareDataForRequestedDates: fareDataForRequestedDates

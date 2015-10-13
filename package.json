@@ -26,6 +26,7 @@
     "grunt-contrib-requirejs": "~0.4.4",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-include-replace": "^3.2.0",
+    "grunt-jsdoc": "^1.0.0",
     "grunt-karma": "~0.10.1",
     "grunt-lodash": "^0.4.0",
     "grunt-lodash-autobuild": "^0.3.0",
@@ -39,8 +40,10 @@
     "karma-phantomjs-launcher": "~0.1.4",
     "karma-requirejs": "~0.2.2",
     "karma-safari-launcher": "~0.1.1",
+    "load-grunt-tasks": "^3.3.0",
     "lodash-cli": "^3.10.1",
-    "protractor": "^2.1.0"
+    "protractor": "^2.1.0",
+    "time-grunt": "^1.2.1"
   },
   "pretest": {
     "update-webdriver": "node_modules/protractor/bin/webdriver-manager update"

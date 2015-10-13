@@ -7,6 +7,7 @@
     <title>Fare Range</title>
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
     <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
     <partial command="include('partials/navigation-includes.html')"></partial>
@@ -16,8 +17,10 @@
 <div id="mainPageContainer">
     <partial command="include('partials/navigation.html')"></partial>
     <search-form class="embeddedWidget"></search-form>
-    <fare-range class="embeddedWidget"></fare-range>
-    <!--<fare-range data-origin="LON" data-destination="NYC" data-departure-date="2015-09-01" data-return-date="2015-09-08" data-current-lowest-fare="1200" data-current-lowest-fare-currency="USD"></fare-range>-->
+    <fare-range class="embeddedWidget fareRangeWidget"></fare-range>
+    <!-- see also with specifying current lowest fare -->
+    <!--<fare-range data-origin="FRA" data-destination="BKK" data-departure-date="2015-10-27" data-return-date="2015-11-10" data-current-lowest-fare="400" data-current-lowest-fare-currency="USD"></fare-range>-->
+    </div>
 
 </div>
 <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
