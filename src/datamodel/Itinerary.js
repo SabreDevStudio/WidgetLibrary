@@ -229,6 +229,13 @@ define([
         return this.getTripDepartureAirport() === this.getTripArrivalAirport();
     };
 
+    Itinerary.prototype.departureAndArrivalDifferentForComplexTravel = function () {
+        if (this.isOneWayTravel()) {
+            return;
+        }
+        return !this.isDepartureAndReturnSameAirport();
+    };
+
     Itinerary.prototype.isOneWayTravel = function () {
         return (this.legs.length === 1);
     };

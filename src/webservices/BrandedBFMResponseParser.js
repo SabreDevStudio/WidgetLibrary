@@ -1,15 +1,19 @@
 define([
           'lodash'
+        , 'util/LodashExtensions'
         , 'datamodel/BrandedItinerary'
         , 'datamodel/BrandToSegmentMatchingItem'
         , 'datamodel/ItineraryPricingInfo'
+        , 'datamodel/ItineraryPricingInfoNotReturnedFare'
         , 'webservices/BFMResponseParser'
     ],
     function (
           _
+        , __
         , BrandedItinerary
         , BrandToSegmentMatchingItem
         , ItineraryPricingInfo
+        , ItineraryPricingInfoNotReturnedFare
         , BFMResponseParser
     ) {
         'use strict';
@@ -56,8 +60,11 @@ define([
 
         BrandedBFMResponseParser.prototype.parseItineraryPricingInfo = function (itineraryPricingInfoResponsePart, legsSegmentCounts) {
             if (itineraryPricingInfoResponsePart.FareReturned === false) {
-                console.log(itineraryPricingInfoResponsePart.FareStatus);
-                return new ItineraryPricingInfo(); //TODO: null object??
+                var itinPricingInfoNotReturnedFares = new ItineraryPricingInfoNotReturnedFare(legsSegmentCounts);
+                itinPricingInfoNotReturnedFares.fareStatus = itineraryPricingInfoResponsePart.FareStatus;
+                var brandToSegmentMatchingPart = itineraryPricingInfoResponsePart.TPA_Extensions.Legs;
+                itinPricingInfoNotReturnedFares.brandToSegmentMatchings = this.parseBrandToSegmentMatchingForNotReturnedFare(brandToSegmentMatchingPart);
+                return itinPricingInfoNotReturnedFares;
             }
 
             var itineraryPricingInfo = BFMResponseParser.prototype.parseItineraryPricingInfo.call(this, itineraryPricingInfoResponsePart, legsSegmentCounts);
@@ -75,6 +82,29 @@ define([
             }
 
             return itineraryPricingInfo;
+        };
+
+        // mind that this method implementation is different than parseBrandToSegmentMatching, because for not returned fare, the brand information is provided per every segments, not per leg.
+        BrandedBFMResponseParser.prototype.parseBrandToSegmentMatchingForNotReturnedFare = function (brandToSegmentMatchingPart) {
+            var matchingsOnLegLevel = _.flatten(brandToSegmentMatchingPart.Leg);
+            return matchingsOnLegLevel.reduce(function (allMatchings, thisLegMatchings) {
+                var legIndex = thisLegMatchings.Number - 1;// normalizing into 0-based index
+                var brandToSegmentMatchingsForLeg = parseBrandToSegmentMatchingsForLeg(legIndex, thisLegMatchings);
+                return __.pushAll(allMatchings, brandToSegmentMatchingsForLeg);
+            }, []);
+
+            function parseBrandToSegmentMatchingsForLeg(legIndex, thisLegMatchings) {
+                return thisLegMatchings.Segment
+                    .filter(function (segmentMatchingItem) {
+                        return segmentMatchingItem.BrandName;
+                    })
+                    .map(function (segmentMatchingItem) {
+                        var matchingItem = new BrandToSegmentMatchingItem(segmentMatchingItem.BrandName);
+                        var segmentIndex = segmentMatchingItem.Number - 1; // normalizing into 0-based index
+                        matchingItem.addMatchedSegment(legIndex, segmentIndex);
+                        return matchingItem;
+                    });
+            }
         };
 
         return BrandedBFMResponseParser;

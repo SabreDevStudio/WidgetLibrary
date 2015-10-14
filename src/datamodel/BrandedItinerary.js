@@ -28,9 +28,13 @@ define([
         BrandedItinerary.prototype.getBrandsMatchedToFlight = function (legIndex, segmentIndex) {
             var mainFareBrand = this.itineraryPricingInfo.getBrandMatchedToFlight(legIndex, segmentIndex);
 
-            var additionalFaresBrands = this.additionalFaresPricingInfos.map(function (additionalFare) {
-                return additionalFare.getBrandMatchedToFlight(legIndex, segmentIndex);
-            });
+            var additionalFaresBrands = this.additionalFaresPricingInfos
+                .filter(function (additionalFare) {
+                    return additionalFare.fareReturned();
+                })
+                .map(function (additionalFare) {
+                    return additionalFare.getBrandMatchedToFlight(legIndex, segmentIndex);
+                });
 
             return [mainFareBrand].concat(additionalFaresBrands).filter(__.isDefined); // main fare brand may be also undefined
         };

@@ -63,7 +63,7 @@
                             <span ng-if="itinerary.hasChangeOfAirportsAtAnyStopover() && $first && details.flightDetailsShown" class="SDS-hidden-lg text-warning">
                                 Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
                             </span>
-                            <span ng-if="!itinerary.isDepartureAndReturnSameAirport() && $first && details.flightDetailsShown" class="SDS-hidden-lg text-warning">
+                            <span ng-if="itinerary.departureAndArrivalDifferentForComplexTravel() && $first && details.flightDetailsShown" class="SDS-hidden-lg text-warning">
                                 Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
                             </span>
             <ul class="list-group" ng-if="details.flightDetailsShown" ng-click="details.flightDetailsShown = false; details.priceDetailsExpanded = false">
@@ -148,7 +148,10 @@
                                     <span ng-repeat="brandToSegmentMatchingItem in itinerary.itineraryPricingInfo.brandToSegmentMatchings"> {{brandToSegmentMatchingItem.brandName}},</span>
                                 </th>
                                 <th class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
-                                    <span ng-repeat="brandToSegmentMatchingItem in brand.brandToSegmentMatchings"> {{brandToSegmentMatchingItem.brandName}},</span>
+                                    <span ng-repeat="brandToSegmentMatchingItem in brand.brandToSegmentMatchings">
+                                        {{brandToSegmentMatchingItem.brandName}},
+                                    </span>
+                                    <span ng-if="!brand.fareReturned()">Fare not returned for brands. {{brand.getTranslatedFareStatus()}}</span>
                                 </th>
                             </tr>
                         </thead>
@@ -241,7 +244,7 @@
         <span ng-if="itinerary.hasChangeOfAirportsAtAnyStopover()" class="SDS-visible-lg text-warning">
             Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
         </span>
-        <span ng-if="!itinerary.isDepartureAndReturnSameAirport()" class="SDS-visible-lg text-warning">
+        <span ng-if="itinerary.departureAndArrivalDifferentForComplexTravel()" class="SDS-visible-lg text-warning">
             Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
         </span>
     </ul>

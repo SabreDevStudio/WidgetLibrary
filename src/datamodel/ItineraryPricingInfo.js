@@ -55,6 +55,13 @@ define([
                 }
             };
 
+            /**
+             * For discrimination between this and its accompanying null object ItineraryPricingInfoNotReturnedFares. Always returns false.
+             * @returns {boolean}
+             */
+            ItineraryPricingInfo.prototype.fareReturned = function () {
+                return true;
+            };
 
             ItineraryPricingInfo.prototype.setCabin = function (segmentNumber, cabin) {
                 var legAndSegmentIndices = this.calculateLegAndSegmentRelativeIndices(segmentNumber);
