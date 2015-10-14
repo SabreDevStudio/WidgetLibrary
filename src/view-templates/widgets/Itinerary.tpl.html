@@ -105,30 +105,30 @@
                             </div>
                         </li>
                         <li>
-                            <ul class="list-inline list-unstyled">
-                                <li>
+                            <div class="SDS-row">
+                                <div class="SDS-col-element-lg-2">
                                     <small>{{flight.equipment | aircraftName}}</small>
-                                </li>
-                                <li>
+                                </div>
+                                <div class="SDS-col-element-lg-2 SDS-col-element-xl-1">
                                     <small>{{itinerary.getSeatsRemaining(legIndex, segmentIndex)}} seats left</small>
-                                </li>
-                                <li>
+                                </div>
+                                <div class="SDS-col-element-lg-1 SDS-col-element-xl-1">
                                     <small>{{itinerary.getCabin(legIndex, segmentIndex) | cabin}}</small>
-                                </li>
-                                <li ng-if="itinerary.getMeals(legIndex, segmentIndex)">
+                                </div>
+                                <div class="SDS-col-element-lg-2 SDS-col-element-xl-1" ng-if="itinerary.getMeals(legIndex, segmentIndex)">
                                     <small>Meal: {{itinerary.getMeals(legIndex, segmentIndex) | meal}}</small>
-                                </li>
-                                <li>
-                                    <!--<small>Baggage allowance: {{itinerary.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}}</small>-->
-                                </li>
-                                <li ng-if="itinerary.getBrandsMatchedToFlight(legIndex, segmentIndex).length > 0">
+                                </div>
+                                <div class="SDS-col-element-lg-3 SDS-col-element-xl-2" ng-if="itinerary.getBaggageAllowance(legIndex, segmentIndex)">
+                                    <small>Baggage allowance: {{itinerary.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}}</small>
+                                </div>
+                                <div class="SDS-col-element-lg-2 SDS-col-element-xl-2" ng-if="itinerary.getBrandsMatchedToFlight(legIndex, segmentIndex).length > 0">
                                     <small>Brands matched:
                                         <span ng-repeat="matchedBrand in itinerary.getBrandsMatchedToFlight(legIndex, segmentIndex)">
                                             {{matchedBrand}},
                                         </span>
                                     </small>
-                                </li>
-                            </ul>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </li>
@@ -203,18 +203,18 @@
                             <tr>
                                 <td class="text-center">Baggage allowance</td>
                                 <td class="text-center">
-                                    <!--<span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">-->
-                                        <!--<span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">-->
-                                        <!--{{itinerary.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}},-->
-                                        <!--</span>-->
-                                    <!--</span>-->
+                                    <span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">
+                                        <span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">
+                                        {{itinerary.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}},
+                                        </span>
+                                    </span>
                                 </td>
                                 <td class="text-center" ng-repeat="brand in itinerary.additionalFaresPricingInfos">
-                                    <!--<span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">-->
-                                        <!--<span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">-->
-                                        <!--{{brand.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}},-->
-                                        <!--</span>-->
-                                    <!--</span>-->
+                                    <span ng-repeat="leg in itinerary.legs" ng-init="legIndex = $index">
+                                        <span ng-repeat="segment in leg.segments" ng-init="segmentIndex = $index">
+                                        {{brand.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}},
+                                        </span>
+                                    </span>
                                 </td>
                             </tr>
 

@@ -49,6 +49,9 @@ define([
             })
             .filter('baggageAllowance', function () {
                 return function (allowanceObj) {
+                    if (_.isUndefined(allowanceObj)) {
+                        return allowanceObj;
+                    }
                     if (__.isDefined(allowanceObj.Pieces)) {
                         var allowedPieces;
                         switch (allowanceObj.Pieces) {
@@ -83,7 +86,7 @@ define([
                 mealCodeMappings['S'] = 'Snack';
 
                 return function (mealCode) {
-                    return mealCodeMappings[mealCode];
+                    return mealCodeMappings[mealCode] || mealCode;
                 }
             })
             .filter('humanizeNumberOfStops', function () {

@@ -9,4 +9,5 @@ target/
 tmp*/
 # *.iml
 TODO
+doc/
 www-customer-page-downloaded

@@ -1,8 +1,10 @@
 define([
-        'lodash'
+          'lodash'
+        , 'datamodel/SegmentBaggageAllowance'
     ],
     function (
-        _
+          _
+        , SegmentBaggageAllowance
     ) {
         'use strict';
 
@@ -106,8 +108,19 @@ define([
                 return this.segmentMeals[legIdx] && this.segmentMeals[legIdx][segmentIdx];
             };
 
+            ItineraryPricingInfo.prototype.setBaggageAllowance = function (baggageAllowanceForSegments) {
+                this.baggageAllowance = new SegmentBaggageAllowance();
+                var that = this;
+                baggageAllowanceForSegments.forEach(function (segmentsAllowance) {
+                    segmentsAllowance.segmentsAbsoluteIndexes.forEach(function (absoluteIdx) {
+                        var legAndSegmentIndices = that.calculateLegAndSegmentRelativeIndices(absoluteIdx);
+                        that.baggageAllowance.addLegSegmentsAllowance(legAndSegmentIndices.legIdx, legAndSegmentIndices.relativeSegmentIdx, segmentsAllowance.allowance);
+                    });
+                });
+            };
+
             ItineraryPricingInfo.prototype.getBaggageAllowance = function (legIdx, segmentIdx) {
-                return this.baggageAllowance.getSegmentAllowance(legIdx, segmentIdx);
+                return this.baggageAllowance && this.baggageAllowance.getSegmentAllowance(legIdx, segmentIdx);
             };
 
             ItineraryPricingInfo.prototype.hasLowSeatsRemaining = function () {

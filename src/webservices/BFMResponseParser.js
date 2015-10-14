@@ -1,10 +1,8 @@
 define([
           'webservices/OTAResponseParser'
-        , 'datamodel/SegmentBaggageAllowance'
     ],
     function (
           OTAResponseParser
-        , SegmentBaggageAllowance
     ) {
         'use strict';
 
@@ -28,21 +26,33 @@ define([
             var obFeesResponsePart = ptcFareBreakdown.PassengerFare.OBFees;
             itineraryPricingInfo.OBFees = obFeesResponsePart && this.parseOBFees(obFeesResponsePart);
 
-            itineraryPricingInfo.baggageAllowance = this.parseBaggageAllowance(ptcFareBreakdown.PassengerFare.TPA_Extensions.BaggageInformationList);
+            var baggageAllowanceForSegments = this.parseBaggageAllowance(ptcFareBreakdown.PassengerFare.TPA_Extensions.BaggageInformationList);
+
+            itineraryPricingInfo.setBaggageAllowance(baggageAllowanceForSegments);
 
             return itineraryPricingInfo;
         };
 
+        /**
+         * returns array of objects
+         * {
+         *     allowance: Allowance_from_web_service
+         *   , segmentsAbsoluteIndexes" [3,4,5]
+         * }
+         * @param baggageInformationList
+         * @returns {SegmentBaggageAllowance}
+         */
         BFMResponseParser.prototype.parseBaggageAllowance = function (baggageInformationList) {
-            var segmentBaggageAllowance = new SegmentBaggageAllowance();
-            baggageInformationList.BaggageInformation.forEach(function (allowanceInfo, legIndex) { //TODO it is NOT leg index??
-                var legAllowanceInfo = allowanceInfo.Allowance;
-                var legSegmentsRelativeIndexes = allowanceInfo.Segment.map(function (segment) {
+            return baggageInformationList.BaggageInformation.map(function (allowanceInfo) {
+                var segmentsAllowance = allowanceInfo.Allowance;
+                var segmentsAbsoluteIndexes = allowanceInfo.Segment.map(function (segment) {
                     return segment.Id;
                 });
-                segmentBaggageAllowance.addLegAllowance(legIndex, legAllowanceInfo, legSegmentsRelativeIndexes);
+                return {
+                      allowance: segmentsAllowance
+                    , segmentsAbsoluteIndexes: segmentsAbsoluteIndexes
+                };
             });
-            return segmentBaggageAllowance;
         };
 
         return BFMResponseParser;

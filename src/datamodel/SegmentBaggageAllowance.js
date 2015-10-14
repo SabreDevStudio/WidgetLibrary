@@ -6,20 +6,26 @@ define([
     ) {
         'use strict';
 
+        /**
+         * Represents baggage allowance per segment (flight).
+         * @constructor
+         */
         function SegmentBaggageAllowance() {
             this.legSegmentBaggageAllowance = {}; // two level mapping of leg and segment (relative) indexes into matched baggage allowance
         }
 
-        SegmentBaggageAllowance.prototype.addLegAllowance = function (legIndex, allowanceInfo, legSegmentsRelativeIndexes) {
+        SegmentBaggageAllowance.prototype.addLegSegmentsAllowance = function (legIndex, segmentIndex, allowanceInfo) {
             if (_.isUndefined(this.legSegmentBaggageAllowance[legIndex])) {
                 this.legSegmentBaggageAllowance[legIndex] = {};
             }
-            var that = this;
-            legSegmentsRelativeIndexes.forEach(function (legSegmentRelativeIndex) {
-                that.legSegmentBaggageAllowance[legIndex][legSegmentRelativeIndex] = allowanceInfo;
-            });
+            this.legSegmentBaggageAllowance[legIndex][segmentIndex] = allowanceInfo;
         };
 
+        /**
+         * @param legIndex
+         * @param segmentIndex
+         * @returns {*} Baggage allowance object for given leg segment pair.
+         */
         SegmentBaggageAllowance.prototype.getSegmentAllowance = function (legIndex, segmentIndex) {
             return this.legSegmentBaggageAllowance[legIndex][segmentIndex];
         };
