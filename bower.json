@@ -1,16 +1,35 @@
 {
-  "name": "SabreDevStudioDemo",
-  "version": "0.1.0",
+  "name": "sabre-dev-studio-widgets",
+  "version": "1.0.0",
   "authors": [
     "Tomasz Szymanski <Tomasz.Szymanski@sabre.com>"
   ],
+  "main": [
+	"dist/widgets/SDSWidgets.min.js",
+	"dist/widgets/css/SDS.min.css"
+  ],
   "description": "Widgets demonstrating capabilities of Sabre Dev Studio",
-  "main": "www\\index.html",
+  "ignore": [
+	"**/.*",
+	"e2e-test",
+	"src",
+	"src-test",
+	"widgets",
+	"www",
+	"!dist/widgets/**/*",
+	"www-customer-page-workarea",
+	"config.rb",
+	"Gruntfile.js",
+	"index.html",
+	"karma.conf.js",
+	"package.json",
+	"SabreDevStudioDemo.iml"
+  ],
   "moduleType": [
     "amd"
   ],
   "keywords": [
-    "SabreDevStudio"
+    "sabre-dev-studio-widgets"
   ],
   "license": "MIT",
   "private": true,
