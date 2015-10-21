@@ -19,10 +19,3 @@
     </div>
 
 </div>
-
-<div ng-if="anyBusinessErrorMessagesPresent()">
-    <div class="panel-body">
-        Fare Range from {{origin | cityAndAirportFullName}} to {{destination | cityAndAirportFullName}} not available.
-        <error-messages messages="businessErrorMessages"></error-messages>
-    </div>
-</div>

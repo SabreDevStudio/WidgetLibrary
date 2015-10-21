@@ -95,7 +95,7 @@ define([
 
                             modalInstance.result.then(function (fareNabberSubscriptionRequest) {
                                 console.log(fareNabberSubscriptionRequest); // here do fare nabber web service call with this data
-                                // TODO: how to present web service errors to the user?
+                                // TODO: present also web service errors to the user
                             });
                         }
                     }

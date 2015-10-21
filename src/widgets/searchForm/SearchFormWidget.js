@@ -73,7 +73,7 @@ define([
                             return [firstLeg];
                         }
                         case 'returnTrip': {
-                            var firstLeg = new SearchCriteriaLeg({
+                            firstLeg = new SearchCriteriaLeg({
                                 origin: $scope.simpleTrip.Origin.airportCode
                                 , destination: $scope.simpleTrip.Destination.airportCode
                             });
@@ -111,6 +111,7 @@ define([
                     $scope.multiDestinationLegs.pop();
                 };
 
+                /* jshint maxcomplexity:9 */
                 $scope.createNewSearchCriteria = function () {
                     var searchCriteria = new SearchCriteria();
 
@@ -243,6 +244,7 @@ define([
                        }
 
                        function parseAdvancedDateFlexibilityOptions() {
+                           /*jshint maxcomplexity:7 */
                            var advancedDateFlexibilityCriteriaToShow = element.attr('show-date-flexibility-criteria') && element.attr('show-date-flexibility-criteria').split(',').map(_.trim) || [];
                            scope.flexDatesMode = new TravelDatesFlexibilitySelectionMode(advancedDateFlexibilityCriteriaToShow);
 

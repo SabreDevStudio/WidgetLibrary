@@ -4,7 +4,7 @@ define([
     , 'moment_range'
     , 'widgets/calendar/CalendarMonthBounds'
     , 'util/PriceClassifier'
-    , 'util/momentRangeUtils' //TODO works also without it...
+    , 'util/momentRangeUtils'
     , 'datamodel/ShoppingData'
     ],
     function (
@@ -59,7 +59,7 @@ define([
                 }
             }
 
-            function createRangeOfMonthsToShow (firstMonthToShow) {
+            function createRangeOfMonthsToShow(firstMonthToShow) {
                 var firstMonthShown = firstMonthToShow.clone().startOf('month');
                 var lastMonthShown = firstMonthShown.clone().add(numberOfMonths - 1, 'month');
                 var requestedRange = moment.range(firstMonthShown, lastMonthShown);
@@ -81,80 +81,9 @@ define([
                 return modelMonths;
             }
 
-            this.updateMonthModelWithLeadPrices = function(prices, monthMinPrices, bounds) {
-                var that = this;
-                var allWeeks = [];
-                var currentWeek = {days: []};
-
-                var createDataForPrevNextMonthDays = function (dayNumber) {
-                    return {
-                        day: dayNumber,
-                        isPrevOrNextMonthDay: true
-                    };
-                };
-
-                // 1. add days of last week of previous month (in the same week as the 1st day of current month)
-                currentWeek.days = bounds.prevMonthDaysOfLastWeek.map(createDataForPrevNextMonthDays);
-
-                // 2. add this month all days and prices
-                var noPricesFound = true;
-                moment().range(bounds.monthStartDate, bounds.monthEndDate).by('days', function (day) {
-                    var dayCellData = {};
-                    dayCellData.day = day;
-                    var dayKey = day.format(ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
-                    if (prices && prices[dayKey]) {
-                        noPricesFound = false;
-                        var currPrice = prices[dayKey].price;
-                        dayCellData.price = currPrice;
-                        dayCellData.currency = prices[dayKey].currency;
-                        dayCellData.priceTier = that.priceClassifier.classifyIntoTier(currPrice);
-                    }
-                    currentWeek.days.push(dayCellData);
-                    if (currentWeek.days.length === 7) {
-                        allWeeks.push(currentWeek);
-                        currentWeek = {days: []};
-                    }
-                });
-
-                if (currentWeek.days.length < 7) {
-                    // 3. add days of first week of next month
-                    currentWeek.days = currentWeek.days.concat(
-                        bounds.nextMonthDaysOfFirstWeek.map(createDataForPrevNextMonthDays)
-                    );
-                    allWeeks.push(currentWeek);
-                }
-
-                return {
-                    monthStartDate: bounds.monthStartDate,
-                    noPricesFound: noPricesFound,
-                    monthLeadPrice: monthMinPrices[bounds.monthStartDate] && monthMinPrices[bounds.monthStartDate].price,
-                    monthLeadPriceCurrency: monthMinPrices[bounds.monthStartDate] && monthMinPrices[bounds.monthStartDate].currency,
-                    weeks: allWeeks
-                };
-            };
-
-            this.calculateMonthsMinPrices = function(prices) {
-                return _.reduce(prices, function (acc, priceAndCurrency, dayKey) {
-                    var month = moment(dayKey).startOf('month');
-                    var accEntryForMonth = acc[month.toString()];
-                    if (accEntryForMonth && accEntryForMonth.currency !== priceAndCurrency.currency) {
-                        throw new Error('Unable to calculate month min price as currencies for particular day prices are different');
-                    }
-                    if (_.isUndefined(accEntryForMonth) || (accEntryForMonth.price > priceAndCurrency.price)) {
-                        acc[month.toString()] = priceAndCurrency;
-                    }
-                    return acc;
-                }, {});
-            };
-
             function minOrMaxDateConstraintPresent() {
                 return that.minDate || that.maxDate;
             }
-
-            this.getMonthBounds = _.memoize(function(month) {
-                return new CalendarMonthBounds(month);
-            });
-
         }
 
         Calendar.prototype.hasData = function () {
@@ -172,11 +101,81 @@ define([
             // classifier will be needed to assign prices per day into price tiers (cheapest, second cheapest, and so on).
             this.priceClassifier.train(_.pluck(_.values(leadPrices), 'price'));
             var monthsMinPrices = this.calculateMonthsMinPrices(leadPrices);
-            this.months = this.getModelMonths().map(function (month) { //TODO abstraction levels in all functions
+            this.months = this.getModelMonths().map(function (month) {
                 var monthBounds = that.getMonthBounds(month);
                 return that.updateMonthModelWithLeadPrices(leadPrices, monthsMinPrices, monthBounds);
             });
             this.months = trimLeadingAndTrailingMonthsWithNoPrices(this.months);
+        };
+
+        Calendar.prototype.getMonthBounds = _.memoize(function(month) {
+            return new CalendarMonthBounds(month);
+        });
+
+        Calendar.prototype.updateMonthModelWithLeadPrices = function(prices, monthMinPrices, bounds) {
+            var that = this;
+            var allWeeks = [];
+            var currentWeek = {days: []};
+
+            var createDataForPrevNextMonthDays = function (dayNumber) {
+                return {
+                    day: dayNumber,
+                    isPrevOrNextMonthDay: true
+                };
+            };
+
+            // 1. add days of last week of previous month (in the same week as the 1st day of current month)
+            currentWeek.days = bounds.prevMonthDaysOfLastWeek.map(createDataForPrevNextMonthDays);
+
+            // 2. add this month all days and prices
+            var noPricesFound = true;
+            moment().range(bounds.monthStartDate, bounds.monthEndDate).by('days', function (day) {
+                var dayCellData = {};
+                dayCellData.day = day;
+                var dayKey = day.format(ShoppingData.prototype.DATE_FORMAT_FOR_KEYS);
+                if (prices && prices[dayKey]) {
+                    noPricesFound = false;
+                    var currPrice = prices[dayKey].price;
+                    dayCellData.price = currPrice;
+                    dayCellData.currency = prices[dayKey].currency;
+                    dayCellData.priceTier = that.priceClassifier.classifyIntoTier(currPrice);
+                }
+                currentWeek.days.push(dayCellData);
+                if (currentWeek.days.length === 7) {
+                    allWeeks.push(currentWeek);
+                    currentWeek = {days: []};
+                }
+            });
+
+            if (currentWeek.days.length < 7) {
+                // 3. add days of first week of next month
+                currentWeek.days = currentWeek.days.concat(
+                    bounds.nextMonthDaysOfFirstWeek.map(createDataForPrevNextMonthDays)
+                );
+                allWeeks.push(currentWeek);
+            }
+
+            return {
+                monthStartDate: bounds.monthStartDate,
+                noPricesFound: noPricesFound,
+                monthLeadPrice: monthMinPrices[bounds.monthStartDate] && monthMinPrices[bounds.monthStartDate].price,
+                monthLeadPriceCurrency: monthMinPrices[bounds.monthStartDate] && monthMinPrices[bounds.monthStartDate].currency,
+                weeks: allWeeks
+            };
+        };
+
+        Calendar.prototype.calculateMonthsMinPrices = function(prices) {
+            return _.reduce(prices, function (acc, priceAndCurrency, dayKey) {
+                var month = moment(dayKey).startOf('month');
+                var accEntryForMonth = acc[month.toString()];
+                if (accEntryForMonth && accEntryForMonth.currency !== priceAndCurrency.currency) {
+                    throw new Error('Unable to calculate month min price as currencies for particular day prices are different');
+                }
+                if (_.isUndefined(accEntryForMonth) || (accEntryForMonth.price > priceAndCurrency.price)) {
+                    acc[month.toString()] = priceAndCurrency;
+                }
+                return acc;
+            }, {});
         };
 
         function trimLeadingAndTrailingMonthsWithNoPrices(months) {

@@ -92,18 +92,18 @@ define([
                             });
                     }
 
-                    function moreThanOneFulfilled(values) {
-                        for (var i = 0; i++; i < values.length) { //TODO make it working also with values as object, not only arr
-                            if (values[i].state === 'fulfilled') {
-                                if (otherFulfilledAlreadyFound) {
-                                    return true;
-                                } else {
-                                    var otherFulfilledAlreadyFound = true;
-                                }
-                            }
-                        }
-                        return false;
-                    }
+                    //function moreThanOneFulfilled(values) {
+                    //    for (var i = 0; i++; i < values.length) { //TODO make it working also with values as object, not only arr
+                    //        if (values[i].state === 'fulfilled') {
+                    //            if (otherFulfilledAlreadyFound) {
+                    //                return true;
+                    //            } else {
+                    //                var otherFulfilledAlreadyFound = true;
+                    //            }
+                    //        }
+                    //    }
+                    //    return false;
+                    //}
 
 
                     return $q;

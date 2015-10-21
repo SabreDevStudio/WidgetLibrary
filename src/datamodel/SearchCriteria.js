@@ -17,10 +17,10 @@ define([
 
         this.legs = [];
 
-        // Preferred airline are defined on whole travel level, not on particular leg level.
+        // Preferred airlines, defined on whole travel level (not on particular leg level).
         this.preferredAirlines = [];
 
-        // Preferred cabin are defined on whole travel level, not on particular leg level. By default Economy
+        // Preferred cabin is defined on whole travel level, not on particular leg level. By default Economy
         var _preferredCabin = this.CabinEnum.Economy;
         Object.defineProperty(this, 'preferredCabin', {
             enumerable: true,
@@ -53,7 +53,7 @@ define([
         Object.defineProperty(this, 'maxStops', {
             enumerable: true,
             get: function() { return _maxStops;},
-            set: function(maxStops) { _maxStops = maxStops}
+            set: function(maxStops) { _maxStops = maxStops;}
         });
 
         this.passengerSpecifications = [];
@@ -81,7 +81,7 @@ define([
     };
 
     /**
-     * @param airlineCode as two alphanumeric IATA airline code
+     * @param airlineCode as two-character alphanumeric IATA airline code, for example AA
      */
     SearchCriteria.prototype.addPreferredAirline = function (airlineCode) {
       this.preferredAirlines.push(airlineCode);
@@ -91,6 +91,12 @@ define([
         return this.preferredAirlines;
     };
 
+    /** Adds to the search criteria the passenger type code specification, for example:
+     * {
+         passengerTypeCode: 'ADT'
+        , count: 1
+      }
+     */
     SearchCriteria.prototype.addPassenger = function(passengerTypeCode, count) {
         this.passengerSpecifications.push({
               passengerTypeCode: passengerTypeCode
@@ -108,7 +114,9 @@ define([
         return __.isDefined(this.lengthOfStay) || __.isDefined(this.earliestDepartureLatestReturnDatesFlexibility);
     };
 
-    // returns length of stay for round trip travels
+    /**
+     * returns length of stay for round trip travels
+      */
     SearchCriteria.prototype.getLengthOfStay = function () {
         if (this.isOneWayTravel()) { // There is no length of stay for one way travel
             return;
@@ -137,6 +145,14 @@ define([
 
     SearchCriteria.prototype.toString = function () {
         return JSON.stringify(this);
+    };
+
+    SearchCriteria.prototype.getTripOrigin = function () {
+        return this.getFirstLeg().origin;
+    };
+
+    SearchCriteria.prototype.getTripDestination = function () {
+        return this.getFirstLeg().destination;
     };
 
     SearchCriteria.prototype.isRoundTripTravel = function () {
@@ -176,16 +192,16 @@ define([
         }
     });
 
-    SearchCriteria.prototype.getCopyAdjustedToOtherDepartureDate = function(date) {
+    SearchCriteria.prototype.cloneWithDatesAdjustedToOtherDepartureDate = function(date) {
         var newCriteria = _.extend(Object.create(SearchCriteria.prototype), this);
         var daysOffset = date.diff(this.getFirstLeg().departureDateTime, 'days');
         newCriteria.legs.forEach(function (leg) {
-            leg.moveDates(daysOffset);
+            leg.addDaysToDepartureDate(daysOffset);
         });
         return newCriteria;
     };
 
-    SearchCriteria.prototype.getCopyWithoutDateFlexibility = function () {
+    SearchCriteria.prototype.cloneWithoutDateFlexibility = function () {
         var copy = _.extend(Object.create(SearchCriteria.prototype), this);
         copy.dateFlexibilityDays = undefined;
         copy.returnAlternateDatesOnly = undefined;
@@ -292,7 +308,11 @@ define([
     };
 
     SearchCriteria.prototype.getDepartureDaysOfWeek = function () {
-        return this.earliestDepartureLatestReturnDatesFlexibility.departureDaysOfWeek;
+        if (this.hasAnyDepartureDaysOfWeekDefined()) {
+            return this.earliestDepartureLatestReturnDatesFlexibility.departureDaysOfWeek;
+        } else if (this.hasAnyDaysAtDestinationDefined()) {
+            return this.dayIndexIntoWeekDaysArray(this.departureAndReturnDaysOfWeekIndexes());
+        }
     };
 
     SearchCriteria.prototype.hasAnyReturnDaysOfWeekDefined = function () {
@@ -300,7 +320,25 @@ define([
     };
 
     SearchCriteria.prototype.getReturnDaysOfWeek = function () {
-        return this.earliestDepartureLatestReturnDatesFlexibility.returnDaysOfWeek;
+        if (this.hasAnyReturnDaysOfWeekDefined()) {
+            return this.earliestDepartureLatestReturnDatesFlexibility.returnDaysOfWeek;
+        } else if (this.hasAnyDaysAtDestinationDefined()) {
+            return this.dayIndexIntoWeekDaysArray(this.departureAndReturnDaysOfWeekIndexes());
+        }
+    };
+
+    /**
+     * translate day of week index (for example 0, representing Sunday in US locale) into an array of booleans with this one day set to true
+     * dayIndexIntoWeekDaysArray(0) returns [true, false, false, false, false, false, false]
+     */
+    SearchCriteria.prototype.dayIndexIntoWeekDaysArray = function(dayIndex) {
+        var DAYS_IN_WEEK = 7;
+        var selectedDaysOfWeekArray = [];
+        for (var i = 0; i < DAYS_IN_WEEK; i++) {
+            selectedDaysOfWeekArray.push(false);
+        }
+        selectedDaysOfWeekArray[dayIndex] = true;
+        return selectedDaysOfWeekArray;
     };
 
     SearchCriteria.prototype.hasAnyDaysAtDestinationDefined = function () {
@@ -343,7 +381,14 @@ define([
         return this.getLatestReturnDateTime() || returnDatePlusFlexibilityDays || this.legs[1].departureDateTime;
     };
 
-    // utility static factory method
+    /**
+     * Static factory producing simple, minimal SearchCriteria for round trip travel  
+     * @param origin 3 letter alphanumeric IATA airport or city code
+     * @param destination
+     * @param departureDateString
+     * @param returnDateString
+     * @returns {SearchCriteria}
+     */
     SearchCriteria.prototype.buildRoundTripTravelSearchCriteria = function (origin, destination, departureDateString, returnDateString) {
         var departureDateTime = moment(departureDateString, moment.ISO_8601);
         var returnDateTime = moment(returnDateString, moment.ISO_8601);
@@ -367,8 +412,6 @@ define([
         searchCriteria.addLeg(secondLeg);
 
         searchCriteria.addPassenger('ADT', 1);
-
-//        searchCriteria.maxStops = 1;
 
         return searchCriteria;
     };

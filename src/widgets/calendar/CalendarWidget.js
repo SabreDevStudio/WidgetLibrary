@@ -10,7 +10,7 @@ define([
         , 'text!view-templates/widgets/CalendarWidgetOneMonth.tpl.html'
         , 'datamodel/SearchCriteria'
         , 'widgets/calendar/Calendar'
-        , 'webservices/DaysRangeSearchStrategyFactory'
+        , 'webservices/common/searchStrategyFactories/DaysRangeSearchStrategyFactory'
     ],
     function (
           moment
@@ -32,7 +32,6 @@ define([
             .controller('CalendarWidgetCtrl', [
                       '$scope'
                     , 'DaysRangeSearchStrategyFactory'
-                    , 'ValidationErrorsReportingService'
                     , 'newSearchCriteriaEvent'
                     , 'SearchCriteriaBroadcastingService'
                     , 'DateSelectedBroadcastingService'
@@ -40,7 +39,6 @@ define([
                 , function (
                       $scope
                     , DaysRangeSearchStrategyFactory
-                    , ValidationErrorsReportingService
                     , newSearchCriteriaEvent
                     , SearchCriteriaBroadcastingService
                     , DateSelectedBroadcastingService
@@ -73,11 +71,6 @@ define([
                     });
 
                      function processSearchCriteria(searchCriteria) {
-                        var validationErrors = searchService.validateSearchCriteria(searchCriteria);
-                        if (validationErrors.length > 0) {
-                            ValidationErrorsReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
-                            return;
-                        }
                         // there are two calls to calendar prepareDataModel and then updateWithLeadPrices. It is necessary of we have to use Calendar domain logic to construct the months to request, so that later to know which months to request from te web service.
                         resetModel();
                         $scope.calendar.prepareDataModel(searchCriteria);
@@ -87,11 +80,10 @@ define([
                             function (leadPrices) {
                                 processLeadPrices(searchCriteria, leadPrices);
                                 lastSearchCriteria = searchCriteria;
-                                clearErrorMessages();
                             },
                             processServiceErrorMessages
                         );
-                    };
+                    }
 
                     function processLeadPrices(newSearchCriteria, leadPrices) {
                         var maxAvailableDate = searchService.getMaxAvailableDate(newSearchCriteria);
@@ -104,7 +96,6 @@ define([
                     }
 
                     function processServiceErrorMessages(businessErrorMessages) {
-                        $scope.businessErrorMessages = businessErrorMessages;
                         resetModel();
                         NoResultsFoundBroadcastingService.broadcast();
                     }
@@ -116,20 +107,12 @@ define([
                         });
                     }
 
-                    function clearErrorMessages() {
-                        _.remove($scope.businessErrorMessages);
-                    }
-
                     $scope.isAnyDataToDisplayAvailable = function () {
                         return $scope.calendar && $scope.calendar.hasData();
                     };
 
-                    $scope.anyBusinessErrorMessagesPresent = function () {
-                        return !_.isEmpty($scope.businessErrorMessages);
-                    };
-
                     $scope.cellClicked = function (day) {
-                        DateSelectedBroadcastingService.newSearchCriteria = lastSearchCriteria.getCopyAdjustedToOtherDepartureDate(day);
+                        DateSelectedBroadcastingService.newSearchCriteria = lastSearchCriteria.cloneWithDatesAdjustedToOtherDepartureDate(day);
                         DateSelectedBroadcastingService.originalDataSourceWebService = searchService;
                         DateSelectedBroadcastingService.broadcast();
                     };
@@ -147,7 +130,7 @@ define([
                     template: CalendarWidgetTabsTemplate,
                     controller: 'CalendarWidgetCtrl',
                     link: function (scope, element, attrs) {
-                        scope.numberOfMonths = parseInt(scope.numberOfMonths) | 1;
+                        scope.numberOfMonths = parseInt(scope.numberOfMonths) || 1;
                         $compile(CalendarWidgetOneMonthTemplate); //hackish, to source external template into template cache, so that it is accessible for including for the both calendar view templates
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
                     }

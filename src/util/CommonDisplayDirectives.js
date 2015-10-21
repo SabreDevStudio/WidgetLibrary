@@ -21,6 +21,6 @@ define([
                     link: function (scope, element, attrs) {
                         scope.airlineCode = attrs.airlineCode;
                     }
-                }
+                };
             });
     });

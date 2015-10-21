@@ -1,10 +1,10 @@
-<div class="SDSLeadPriceChart panel panel-default" ng-show="ctrl.isAnyDataToDisplayAvailable() || ctrl.anyBusinessErrorMessagesPresent()">
+<div class="SDSLeadPriceChart panel panel-default" ng-show="ctrl.isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Lead Prices</h4>
     </div>
 
-    <div class="panel-body" ng-show="ctrl.isAnyDataToDisplayAvailable() && !ctrl.anyBusinessErrorMessagesPresent()">
+    <div class="panel-body" ng-show="ctrl.isAnyDataToDisplayAvailable()">
         <h5>Prices from <em>{{ctrl.lastSearchCriteriaAirports.departureAirport | cityAndAirportFullName}}</em> to <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}</em>,
             from <strong>{{ctrl.minDateAndPricePair.totalFareAmountWithCurrency.amount | currency:ctrl.minDateAndPricePair.totalFareAmountWithCurrency.currency}}</strong> at <strong>{{ctrl.minDateAndPricePair.date.format('D MMM')}}</strong>
         </h5>
@@ -13,14 +13,8 @@
 
     </div>
 
-    <div class="panel-body" ng-show="ctrl.anyBusinessErrorMessagesPresent()">
-        <h5>
-            No prices found for <em>{{ctrl.lastSearchCriteriaAirports.departureAirport | cityAndAirportFullName}}</em> to <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}</em>
-        </h5>
-    </div>
-
     <div class="panel-footer">
-        <nav ng-show="ctrl.isAnyDataToDisplayAvailable() && !ctrl.anyBusinessErrorMessagesPresent()">
+        <nav ng-show="ctrl.isAnyDataToDisplayAvailable()">
             <!-- For navigation we could simplify much by reusing pager component from angular-ui, like we did in navigable calendar.
                 However, using pager component requires to have all navigable items (prices for all dates) all ready upfront.
                 This enforces getting all the data at the beginning.

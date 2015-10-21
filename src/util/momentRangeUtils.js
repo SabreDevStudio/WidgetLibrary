@@ -1,4 +1,4 @@
-define(['moment', 'moment_range' ], function (moment, moment_range) {
+define(['moment'], function (moment) {
     /**
      * Extending moment library with additional moment range functions.
      */
@@ -32,7 +32,7 @@ define(['moment', 'moment_range' ], function (moment, moment_range) {
     // check if months to render validate min and max dates, if not then shift and trim.
     // modifies requestedRange and returns it.
 
-    function fullyWithin(requestedRange, allowedRange) { //TODO extend moment_range?
+    function fullyWithin(requestedRange, allowedRange) {
         return requestedRange.start.within(allowedRange) && requestedRange.end.within(allowedRange);
     }
     function shiftIntoAllowedRange(requestedRange, allowedRange) {

@@ -1,15 +1,15 @@
     <div class="SDSWidget SDSResponsiveElement SDSInspirationalList">
-        <div class="panel panel-default" ng-show="ctrl.isAnyDataToDisplayAvailable() || ctrl.anyBusinessErrorMessagesPresent()">
+        <div class="panel panel-default" ng-show="ctrl.isAnyDataToDisplayAvailable()">
 
             <div class="panel-heading text-center">
                 <h4 class="panel-title">Cheapest Flights To Destination</h4>
             </div>
 
-            <div class="panel-body" ng-show="ctrl.isAnyDataToDisplayAvailable() && !ctrl.anyBusinessErrorMessagesPresent()">
+            <div class="panel-body">
 
                 <ul class="list-unstyled SDSTopLevelList">
                     <div class="row">
-                        <li ng-repeat="offerItem in modelPricesToDestination.FareInfo">
+                        <li ng-repeat="offerItem in ctrl.modelPricesToDestination.FareInfo">
                             <div class="SDS-col-element-lg-6">
                                 <div class="SDSInspirationalTile">
                                         <div class="SDS-row">
@@ -57,15 +57,6 @@
 
             </div>
 
-
-            <div class="panel-body" ng-if="ctrl.anyBusinessErrorMessagesPresent()">
-                <h5>
-                    Cheapest flights to destination <em>{{ctrl.lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}</em> not available.
-                </h5>
-
-                <error-messages messages="ctrl.businessErrorMessages"></error-messages>
-            </div>
-
         </div>
 </div>
 
@@ -75,7 +66,7 @@
             <small>Departure {{offerItem.DepartureDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{offerItem.OriginLocation | cityAndAirportFullName}}</small><!-- format: Sun, 05 Dec-->
         </li>
         <li>
-            <small>Return {{offerItem.ReturnDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{modelPricesToDestination.DestinationLocation | cityAndAirportFullName}}</small><!-- format: Sun, 05 Dec-->
+            <small>Return {{offerItem.ReturnDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{ctrl.modelPricesToDestination.DestinationLocation | cityAndAirportFullName}}</small><!-- format: Sun, 05 Dec-->
         </li>
     </ul>
 </script>

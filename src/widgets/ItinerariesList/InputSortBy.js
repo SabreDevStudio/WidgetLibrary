@@ -17,7 +17,12 @@ define([
         'use strict';
 
         return angular.module('sdsWidgets')
-            .directive('inputSortBy', function () {
+            /* directive for a button with drop-down. On choosing value from dropdown this value is presented on the button.
+            *  May be used for example for choosing itineraries list sorting criteria.
+            *  TODO refactor general component, not only for sort criteria.
+            **/
+            .directive('inputSelectDropdown', function () {
+
                 return {
                     restrict: 'EA',
                     replace: true,
@@ -58,12 +63,12 @@ define([
                             buttonLabelElement.text(selectedValueLabel);
                             buttonLabelElement.val(selectedValueLabel);
 
-                            var buttonScope = buttonLabelElement.scope();
+                            // var buttonScope = buttonLabelElement.scope();
                             //buttonScope.$apply(function () {
                                 scope.selectedFirstSortCriterion.selected = scope.availableSortCriteria[selectedValueIdx];
                                 scope.onSortingCriteriaChanged();
                             //});
-                        };
+                        }
 
                         function isAlreadySelectedValue(selectedValueIdx) {
                             return (selectedValueIdx === lastSelectedValueIdx);

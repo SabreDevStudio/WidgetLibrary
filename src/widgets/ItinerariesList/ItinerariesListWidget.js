@@ -6,8 +6,9 @@ define([
         , 'widgets/SDSWidgets'
         , 'text!view-templates/widgets/ItinerariesListWidget.tpl.html'
         , 'datamodel/ItinerariesList'
-        , 'webservices/BargainFinderMaxWebServices'
-        , 'webservices/InstaflightsDataService'
+        , 'util/ItinerariesStatisticsCalculator'
+        , 'webservices/bargainFinderMax/BargainFinderMaxWebServices'
+        , 'webservices/instaflights/InstaflightsDataService'
         , 'datamodel/DiversitySwapper'
         , 'widgets/ItinerariesList/ItineraryShortSummary'
         , 'widgets/ItinerariesList/ItineraryPricePerStopsPerAirlineSummary'
@@ -15,8 +16,8 @@ define([
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
         , 'datamodel/SearchCriteria'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
-        , 'webservices/ItinerariesSearchStrategyFactory'
-        , 'webservices/BrandedItinerariesSearchStrategyFactory'
+        , 'webservices/common/searchStrategyFactories/ItinerariesSearchStrategyFactory'
+        , 'webservices/common/searchStrategyFactories/BrandedItinerariesSearchStrategyFactory'
         , 'util/CommonDisplayDirectives'
     ],
     function (
@@ -27,6 +28,7 @@ define([
         , SDSWidgets
         , ItinerariesListWidgetTemplate
         , ItinerariesList
+        , ItinerariesStatisticsCalculator
         , BargainFinderMaxWebServices
         , InstaflightsDataService
         , DiversitySwapper
@@ -56,7 +58,6 @@ define([
                     , 'FilteringCriteriaChangedBroadcastingService'
                     , 'DateSelectedBroadcastingService'
                     , 'dateSelectedEvent'
-                    , 'ValidationErrorsReportingService'
                     , 'BargainFinderMaxDataService'
                     , 'noResultsFoundEvent'
                 , function (
@@ -72,13 +73,12 @@ define([
                     , FilteringCriteriaChangedBroadcastingService
                     , DateSelectedBroadcastingService
                     , dateSelectedEvent
-                    , ErrorReportingService
                     , BargainFinderMaxDataService
                     , noResultsFoundEvent
                 ) {
 
                     $scope.sortCriteria = new ItinerariesListSortCriteria();
-                    $scope.selectedFirstCriterion = { // must be object so that the scope of inputSortBy can update the parent scope object, not its copy (like when it was a scalar)
+                    $scope.selectedFirstCriterion = { // must be object so that the scope of inputSelectDropdown can update the parent scope object, not its copy (like when it was a scalar)
                         selected: _.first($scope.sortCriteria.availableSortCriteria)
                     };
                     $scope.paginationSettings = {};
@@ -99,6 +99,7 @@ define([
 
                     $scope.onSortingCriteriaChanged = function () {
                         $scope.sortCriteria.setSortCriteria($scope.selectedFirstCriterion.selected);
+                        // filtering in controller, not in view filter for performance reasons
                         $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
 
                         // when changing sorting criteria, which will trigger resorting of itineraries list, reset current page to 1.
@@ -108,6 +109,11 @@ define([
                         $scope.paginationSettings.currentPage = 1;
                     };
 
+                    /**
+                     * Recalculates itinerary list summaries:
+                     * 1. _short_ summary, that is the cheapest itinerary, shortest and the best.
+                     * 2. summary per stops per airline, which is the lowest price for every airline returned, for every stop count
+                     */
                     function recalculateSummaries() {
                         $scope.bestItinerariesSummary = {
                             cheapest: itineraries.getCheapestItinerary(),
@@ -118,7 +124,6 @@ define([
                     }
 
                     function processNewItineraries(newSearchCriteria, itins) {
-                        $scope.businessErrorMessages = [];
                         resetNavigationAndSortCriteria();
 
                         itineraries = itins;
@@ -143,7 +148,7 @@ define([
                         var mergedItinerariesLists = itineraries.addItinerariesListWithDedup(itinerariesList);
                         permittedItineraries = mergedItinerariesLists.getPermittedItineraries();
                         $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
-                        recalculateAndBroadcastStatistics();
+                        recalculateAndBroadcastStatistics(); //TODO dup in sequence of invocations
                         recalculateSummaries();
                         updateSearchAirports(newSearchCriteria);
                     }
@@ -153,16 +158,9 @@ define([
                         $scope.permittedItinerariesSorted = undefined;
                     }
 
-                    function processServiceErrorMessages(newSearchCriteria, businessErrorMessages) { //accepts array or just one string
-                        // array holding error messages from processing of last search criteria sent.
-                        // like error messages from validation of search criteria or errors returned from the last web service call
-                        if (_.isString(businessErrorMessages)) {
-                            businessErrorMessages = [businessErrorMessages];
-                        }
-                        $scope.businessErrorMessages = businessErrorMessages;
+                    function processServiceErrorMessages(newSearchCriteria, businessErrorMessages) {
                         // clear model from previous search
                         clearModel();
-                        updateSearchAirports(newSearchCriteria);
                     }
 
                     var searchStrategyFactory = ($scope.requestBrandedItineraries)? brandedItinerariesSearchStrategyFactory: itinerariesSearchStrategyFactory;
@@ -179,11 +177,6 @@ define([
                         if (!$scope.activeSearch) { //active search disabled
                             return;
                         }
-                        var validationErrors = searchStrategy.validateSearchCriteria(searchCriteria);
-                        if (validationErrors.length > 0) {
-                            ErrorReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
-                            return;
-                        }
 
                         searchStrategy.search(searchCriteria,
                             _.partial(processNewItineraries, searchCriteria),
@@ -191,10 +184,11 @@ define([
                             _.partial(updateWithNewItineraries, searchCriteria));
                     };
 
+
                     //TODO tmp here https://coderwall.com/p/ngisma/safe-apply-in-angular-js , move to general package
                     $scope.safeApply = function (fn) {
                         var phase = this.$root.$$phase;
-                        if (phase == '$apply' || phase == '$digest') {
+                        if (phase == '$apply' || phase == '$digest') { // jshint ignore:line
                             if (fn && (typeof(fn) === 'function')) {
                                 fn();
                             }
@@ -249,8 +243,8 @@ define([
 
                     function recalculateAndBroadcastStatistics() {
                         var requestedStatisticsDescriptions = StatisticsGatheringRequestsRegistryService.getAll();
-                        var statistics = itineraries.getCurrentValuesBounds(requestedStatisticsDescriptions);
-                        ItineraryStatisticsBroadcastingService.statistics = statistics;
+                        var statisticsCalculator = new ItinerariesStatisticsCalculator(itineraries.getPermittedItineraries());
+                        ItineraryStatisticsBroadcastingService.statistics = statisticsCalculator.getCurrentValuesBounds(requestedStatisticsDescriptions);
                         ItineraryStatisticsBroadcastingService.broadcast();
                     }
 
@@ -259,10 +253,6 @@ define([
                         $scope.searchCriteriaDepartureAirport = newSearchCriteria.getFirstLeg().origin;
                         $scope.searchCriteriaArrivalAirport = newSearchCriteria.getFirstLeg().destination;
                     }
-
-                    $scope.anyBusinessErrorMessagesPresent = function () {
-                        return !_.isEmpty($scope.businessErrorMessages);
-                    };
 
                     $scope.isAnyDataToDisplayAvailable = function () {
                         if (_.isUndefined(itineraries)) {

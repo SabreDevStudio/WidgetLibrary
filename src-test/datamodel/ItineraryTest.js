@@ -1,4 +1,4 @@
-define(['moment', 'datamodel/Itinerary', 'datamodel/TestItineraryBuilder']
+define(['moment', 'datamodel/Itinerary', 'TestItineraryBuilder']
     , function (moment, Itinerary, ItineraryBuilder) {
     "use strict";
 

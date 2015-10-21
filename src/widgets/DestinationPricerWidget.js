@@ -6,7 +6,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
         , 'text!view-templates/widgets/DestinationPricer.tpl.html'
-        , 'webservices/InspirationalServices'
+        , 'webservices/inspirational/InspirationalServices'
     ],
     function (
           moment
@@ -20,57 +20,50 @@ define([
     ) {
         'use strict';
 
+        function DestinationPricesController(
+            $scope
+            , DestinationPricerDataService
+            , newSearchCriteriaEvent
+            , searchCriteriaBroadcastingService
+        ) {
+
+            var searchService = {
+                executeSearch: DestinationPricerDataService.getPricesToDestination
+            };
+
+            BaseController.call(this, {
+                scope: $scope
+                , searchService: searchService
+                , newSearchCriteriaEvent: newSearchCriteriaEvent
+                , searchCriteriaBroadcastingService: searchCriteriaBroadcastingService
+            });
+
+            this.processSearchResults = function (pricesToDestination) {
+                this.modelPricesToDestination = pricesToDestination;
+            };
+
+            this.clearModel = function () {
+                this.modelPricesToDestination = {}; //TODO: pull this strategy into BaseController
+            };
+
+            this.isAnyDataToDisplayAvailable = function () {
+                return !(_.isEmpty(this.modelPricesToDestination.FareInfo));
+            };
+
+            this.clearModel();
+
+            return this
+        }
+        DestinationPricesController.prototype = Object.create(BaseController.prototype);
+        DestinationPricesController.prototype.constructor = DestinationPricesController;
+
         return angular.module('sdsWidgets')
             .controller('DestinationPricerCtrl', [
                       '$scope'
                     , 'DestinationPricerDataService'
-                    , 'ValidationErrorsReportingService'
                     , 'newInspirationalSearchCriteriaEvent'
                     , 'InspirationalSearchCriteriaBroadcastingService'
-                , function (
-                        $scope
-                      , DestinationPricerDataService
-                      , validationErrorsReportingService
-                      , newSearchCriteriaEvent
-                      , searchCriteriaBroadcastingService
-                ) {
-
-                    var searchService = {
-                          executeSearch: DestinationPricerDataService.getPricesToDestination
-                        , validateSearchCriteria: function () {
-                            return [];
-                        }
-                    };
-
-                    BaseController.call(this, {
-                          scope: $scope
-                        , searchService: searchService
-                        , validationErrorsReportingService: validationErrorsReportingService
-                        , newSearchCriteriaEvent: newSearchCriteriaEvent
-                        , searchCriteriaBroadcastingService: searchCriteriaBroadcastingService
-                    });
-                    this.prototype = Object.create(BaseController.prototype);
-                    this.prototype.constructor = this.constructor;
-
-                     function initializeEmptyModel() {
-                         $scope.modelPricesToDestination = {};
-                    }
-
-                    initializeEmptyModel();
-
-                    this.processSearchResults = function (pricesToDestination) {
-                        $scope.modelPricesToDestination = pricesToDestination;
-                    };
-
-                    this.clearModel = function () {
-                        initializeEmptyModel(); //TODO: pull this strategy into BaseController
-                    };
-
-                    this.isAnyDataToDisplayAvailable = function () {
-                        return !(_.isEmpty($scope.modelPricesToDestination.FareInfo));
-                    };
-                }
-            ])
+                , DestinationPricesController])
             .directive('destinationPricer', function (
                 ) {
                 return {
@@ -97,6 +90,6 @@ define([
                         }
 
                     }
-                }
+                };
             });
     });

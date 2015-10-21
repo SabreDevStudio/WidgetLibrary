@@ -7,7 +7,7 @@ define([
         'use strict';
 
         /**
-         *
+         * The details object to the Search Criteria. Represents one leg of the requested travel. Contains all flight related information of one leg.
          * @param origin: 3 letter airport code, case not important
          * @param destination: 3 letter airport code, case not important
          * @param departureDateTime: moment object, not String or plain Javascript Date
@@ -63,7 +63,7 @@ define([
             }
         }
 
-        SearchCriteriaLeg.prototype.moveDates = function(daysOffset) {
+        SearchCriteriaLeg.prototype.addDaysToDepartureDate = function(daysOffset) {
             this.departureDateTime = this.departureDateTime.add(daysOffset, 'days');
         };
 

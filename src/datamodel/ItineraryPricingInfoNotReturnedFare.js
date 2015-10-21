@@ -13,7 +13,7 @@ define([
             ItineraryPricingInfo.apply(this, arguments);
 
             // information, on itinerary pricing info level, why this itinerary was not priced.
-            this.fareStatus;
+            this.fareStatus = undefined;
         }
 
         ItineraryPricingInfoNotReturnedFare.prototype = Object.create(ItineraryPricingInfo.prototype);
@@ -27,6 +27,10 @@ define([
             return false;
         };
 
+        /**
+         * Returns the reason why the brand was not matched.
+         * @returns {string}
+         */
         ItineraryPricingInfoNotReturnedFare.prototype.getTranslatedFareStatus = function() {
             switch (this.fareStatus) {
                 case "A": return "Class is not available";

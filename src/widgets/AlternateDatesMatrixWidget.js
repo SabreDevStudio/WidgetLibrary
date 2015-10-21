@@ -6,7 +6,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'text!view-templates/widgets/AlternateDatesMatrix.tpl.html'
         , 'datamodel/SearchCriteria'
-        , 'webservices/AlternateDatesSearchStrategyFactory'
+        , 'webservices/common/searchStrategyFactories/AlternateDatesSearchStrategyFactory'
     ],
     function (
           moment
@@ -25,13 +25,11 @@ define([
             .controller('AlternateDatesMatrixCtrl', [
                      '$scope'
                     , 'AlternateDatesSearchStrategyFactory'
-                    , 'ValidationErrorsReportingService'
                     , 'newSearchCriteriaEvent'
                     , 'SearchCriteriaBroadcastingService'
                 , function (
                       $scope
                     , AlternateDatesSearchStrategyFactory
-                    , ErrorReportingService
                     , newSearchCriteriaEvent
                     , SearchCriteriaBroadcastingService
                 ) {
@@ -52,25 +50,15 @@ define([
                     });
 
                     $scope.processSearchCriteria = function (searchCriteria) {
-                        var validationErrors = searchService.validateSearchCriteria(searchCriteria);
-                        if (validationErrors.length > 0) {
-                            ErrorReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
-                            return;
-                        }
                         searchService.getAlternateDatesPriceMatrix(searchCriteria, _.partial(processAltDatesPriceMatrix, searchCriteria), processServiceErrorMessages);
                     };
 
                     function processServiceErrorMessages(businessErrorMessages) {
-                        $scope.businessErrorMessages = businessErrorMessages;
                         resetModel();
                     }
 
                     $scope.isAnyDataToDisplayAvailable = function () {
                         return $scope.altDatesPriceMatrix && $scope.altDatesPriceMatrix.hasAtLeastOnePrice();
-                    };
-
-                    $scope.anyBusinessErrorMessagesPresent = function () {
-                        return !_.isEmpty($scope.businessErrorMessages);
                     };
 
                     $scope.isCentralRequestedDate = function (requestedDepartureDate, requestedReturnDate) {
@@ -79,7 +67,6 @@ define([
                     };
 
                     function processAltDatesPriceMatrix(searchCriteria, altDatesPriceMatrix) {
-                        clearErrorMessages();
                         $scope.isRoundTripTravel = searchCriteria.isRoundTripTravel();
                         $scope.isOneWayTravel = searchCriteria.isOneWayTravel();
 
@@ -97,10 +84,6 @@ define([
                         $scope.departureAirport = searchCriteria.getFirstLeg().origin;
                         $scope.arrivalAirport = searchCriteria.getFirstLeg().destination;
                     }
-
-                    function clearErrorMessages() {
-                        _.remove($scope.businessErrorMessages);
-                    };
 
                     function resetModel() {
                         $scope.altDatesPriceMatrix = undefined;
@@ -129,6 +112,6 @@ define([
                             , element.attr('alt-dates-plus-minus')
                         );
                     }
-                }
+                };
             });
     });

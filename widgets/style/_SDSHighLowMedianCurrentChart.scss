@@ -8,11 +8,11 @@ svg.SDSHighLowMedianCurrentChart {
   width: 350px;
   height: 150px;
 
-  rect.SDSHLMCChartMainBar {
+  .SDSHLMCChartMainBar {
     fill:$bootstrapPrimaryColor;
   }
 
-  marker.SDSHLMCChartMainBarMarketCircle > circle {
+  .SDSHLMCChartMainBarMarkerCircle > circle {
     stroke: none;
     fill: $legendLineColor;
   }
@@ -29,7 +29,7 @@ svg.SDSHighLowMedianCurrentChart {
     marker-start: url(#markerCircle);
   }
 
-  line.SDSHLMCChartDataLine {
+  .SDSHLMCChartDataLine {
     stroke: $dataLineColor;
     stroke-width:1.5;
   }

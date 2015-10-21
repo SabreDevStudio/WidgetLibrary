@@ -5,6 +5,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'text!view-templates/widgets/Itinerary.tpl.html'
         , 'util/DOMManipulationUtils'
+        , 'util/CommonDirectives'
     ],
     function (moment
         , angular
@@ -12,6 +13,7 @@ define([
         , SDSWidgets
         , ItineraryTemplate
         , domUtils
+        , CommonDirectives
     ) {
         'use strict';
 
@@ -26,10 +28,14 @@ define([
                     link: function (scope, element) {
 
                         function addClickEventHandlers(element) {
-                            domUtils.addToggleOnClickHandler(element, '.SDSItinListTogglePriceDetails', '.SDSItinListPriceDetails');
-                            domUtils.addShowOnClickHandler(element, '.SDSItinListShowPriceDetails', '.SDSItinListPriceDetails');
-                            domUtils.addHideOnClickHandler(element, '.SDSItinListHidePriceDetails', '.SDSItinListPriceDetails');
-                        };
+                            domUtils.addToggleOnClickHandler(element, '.SDSItineraryTogglePriceDetails', '.SDSItineraryPriceDetails');
+                            domUtils.addShowOnClickHandler(element, '.SDSItineraryShowPriceDetails', '.SDSItineraryPriceDetails');
+                            domUtils.addHideOnClickHandler(element, '.SDSItineraryHidePriceDetails', '.SDSItineraryPriceDetails');
+
+                            domUtils.addToggleOnClickHandler(element, '.SDSItineraryToggleFlightDetails', '.SDSItineraryFlightDetails');
+                            domUtils.addShowOnClickHandler(element, '.SDSItineraryShowFlightDetails', '.SDSItineraryFlightDetails', '.SDSItineraryHideWhenFlightDetailsShown');
+                            domUtils.addHideOnClickHandler(element, '.SDSItineraryHideFlightDetails', '.SDSItineraryFlightDetails', '.SDSItineraryHideWhenFlightDetailsShown');
+                        }
 
                         addClickEventHandlers(element);
                     }

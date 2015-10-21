@@ -18,29 +18,29 @@ define([
         function AlternateDatesOneWayPriceMatrix() {
 
             AlternateDatesAbstractPriceMatrix.apply(this, arguments);
-
-            this.addLeadFareForDate = function (travelDatesWithLeadPrice) {
-                var entry = this.findEntryForDepartureDate(travelDatesWithLeadPrice.departureDate);
-                this.updateEntry(entry, travelDatesWithLeadPrice.price, travelDatesWithLeadPrice.currency);
-            };
-
-            this.getLeadFareForTravelDate = function (departureDate) {
-                var sameDateAsDepartureDateFn = _.partial(this.datesAreSameDay, departureDate);
-                var entry = _.find(this.leadFaresForDates, function (entry) {
-                    return sameDateAsDepartureDateFn(entry.departureDate);
-                });
-                if(_.isUndefined(entry)) {
-                    return;
-                }
-                return {
-                    price: entry.price,
-                    currency: entry.currency
-                };
-            };
         }
 
         AlternateDatesOneWayPriceMatrix.prototype = Object.create(AlternateDatesAbstractPriceMatrix.prototype);
         AlternateDatesOneWayPriceMatrix.prototype.constructor = AlternateDatesOneWayPriceMatrix;
+
+        AlternateDatesOneWayPriceMatrix.prototype.addLeadFareForDate = function (travelDatesWithLeadPrice) {
+            var entry = this.findEntryForDepartureDate(travelDatesWithLeadPrice.departureDate);
+            this.updateEntry(entry, travelDatesWithLeadPrice.price, travelDatesWithLeadPrice.currency);
+        };
+
+        AlternateDatesOneWayPriceMatrix.prototype.getLeadFareForTravelDate = function (departureDate) {
+            var sameDateAsDepartureDateFn = _.partial(this.datesAreSameDay, departureDate);
+            var entry = _.find(this.leadFaresForDates, function (entry) {
+                return sameDateAsDepartureDateFn(entry.departureDate);
+            });
+            if(_.isUndefined(entry)) {
+                return;
+            }
+            return {
+                price: entry.price,
+                currency: entry.currency
+            };
+        };
 
         return AlternateDatesOneWayPriceMatrix;
     });

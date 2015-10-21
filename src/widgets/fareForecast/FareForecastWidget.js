@@ -2,7 +2,7 @@ define([
           'angular'
         , 'widgets/SDSWidgets'
         , 'text!view-templates/widgets/FareForecastWidget.tpl.html'
-        , 'webservices/InformationalServices'
+        , 'webservices/informational/InformationalServices'
     ],
     function (
           angular

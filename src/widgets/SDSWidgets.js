@@ -2,7 +2,8 @@ define([
         'angular'
       , 'util/BaseServices'
       , 'util/CommonDirectives'
-      , 'util/CommonFilters'
+      , 'util/CommonGenericFilters'
+      , 'util/CommonDisplayFilters'
       , 'webservices/SabreDevStudioWebServicesModule'
       , 'angular-ui-select'
       , 'angular-sanitize'
@@ -10,14 +11,13 @@ define([
       , 'angular-img-fallback'
       , 'angular-rangeslider'
       , 'angular_iso_currency'
-      , 'text!view-templates/partials/ErrorsModal.tpl.html'
-      , 'text!view-templates/partials/ErrorsMessages.tpl.html'
     ],
     function (
           NG
         , BaseServices
         , CommonDirectives
-        , CommonFilters
+        , CommonGenericFilters
+        , CommonDisplayFilters
         , SabreDevStudioWebServicesModule
         , angular_ui_select
         , angular_sanitize
@@ -25,8 +25,6 @@ define([
         , angular_img_fallback
         , angular_rangeslider
         , angular_iso_currency
-        , ErrorsModalTemplate
-        , ErrorMessagesTemplate
     ) {
         'use strict';
 
@@ -131,7 +129,7 @@ define([
                     };
                     return service;
             }])
-            .factory('StatisticsGatheringRequestsRegistryService', function () { //TODO maybe move from here to other place
+            .factory('StatisticsGatheringRequestsRegistryService', function () {
                 var registry = [];
                 return {
                     register: function (statisticDescription) {
@@ -142,36 +140,4 @@ define([
                     }
                 };
             })
-            .factory('ValidationErrorsReportingService', [
-                '$modal'
-                , function ($modal) {
-                    return {
-                        reportErrors: function (errors, errorsCategory) {
-                            var modalInstance = $modal.open({
-                                animation: true,
-                                template: ErrorsModalTemplate,
-                                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-                                    $scope.errorsList = errors;
-                                    $scope.modalTitle = errorsCategory;
-
-                                    $scope.ok = function () {
-                                        $modalInstance.close();
-                                    };
-                                }]
-                            });
-                        }
-                    };
-                }])
-            .directive('errorMessages', function () {
-                return {
-                    restrict: 'EA',
-                    scope: {
-                        messages: '='
-                    },
-                    replace: true,
-                    template: ErrorMessagesTemplate
-                };
-            });
-
-
     });

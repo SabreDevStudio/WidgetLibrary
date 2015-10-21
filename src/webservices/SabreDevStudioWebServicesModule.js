@@ -4,6 +4,7 @@ define([
         , 'angular_resource'
         , 'ngPromiseExtras'
         , 'ngStorage'
+        , 'text!view-templates/partials/ErrorsModal.tpl.html'
     ],
     function (
           _
@@ -11,57 +12,125 @@ define([
         , angular_resource
         , ngPromiseExtras
         , ngStorage
+        , ErrorsModalTemplate
     ) {
         'use strict';
 
-        function isNonGetAuthTokenCallToRestAPI(currentURL, apiURL) {
-            return (_.startsWith(currentURL, apiURL) && !_.startsWith(currentURL, 'https://api.test.sabre.com/v1/auth/token')); //todo tmp hardcode
+        function isAPIrequest(currentURL, apiURL) {
+            return _.startsWith(currentURL, apiURL);
         }
 
         return angular.module('sabreDevStudioWebServices', ['ngResource', 'configuration', 'NGPromiseUtils', 'ngStorage'])
-            // making sure works with CORS. Needed?
-            //.config(['$httpProvider', function($httpProvider) {
-            //    $httpProvider.defaults.useXDomain = true;
-            //    $httpProvider.defaults.withCredentials = true;
-            //    delete $httpProvider.defaults.headers.common["X-Requested-With"];
-            //    $httpProvider.defaults.headers.common["Accept"] = "application/json";
-            //    $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
-            //}
-            //])
-            .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss') // //"2015-04-11T00:00:00",
-            .constant('dateFormat', 'YYYY-MM-DD') // //"2015-04-11T00:00:00",
-            .factory('StandardErrorHandler', function () {
+            .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss')
+            .constant('dateFormat', 'YYYY-MM-DD')
+            .constant('errorEvent', 'errorEvent')
+            .factory('businessMessagesErrorHandler', ['ErrorReportingService', function (ErrorReportingService) {
+                function identityAsArray(arg) {
+                    return [arg];
+                }
                 return {
-                    handleError: function (reason) {
-                        var HTTP_NETWORK_ERROR_MSG = 'Unable to communicate with the Sabre Dev Studio';
-                        if (reason.status == 0) {
-                            return [HTTP_NETWORK_ERROR_MSG];
+                    handle: function(reject, reason, errorParsingFn) {
+                        errorParsingFn = errorParsingFn || identityAsArray;
+                        if (reason.data !== null) {
+                            var businessErrorMessages = errorParsingFn(reason.data.message);
+                            ErrorReportingService.reportErrors(businessErrorMessages);
                         }
-                        var businessErrorMessage = reason.data.message; //TODO replicate this pattern reason.data.message to all data services
-                        return [businessErrorMessage];
+                        return reject(businessErrorMessages);
                     }
                 }
-            })
-            .factory('ResponseTimeLoggerHttpInterceptor', ['$log', 'apiURL', function ($log, apiURL) {
-                    var timeStart, timeEnd;//todo: what is we have 2 concurrent http requests?
+            }])
+            .service('ErrorReportingService', ['$rootScope', 'errorEvent', function ($rootScope, errorEvent) {
+                return {
+                    reportError: function (error, searchCriteria) {
+                        $rootScope.$broadcast(errorEvent, [error], searchCriteria);
+                    },
+                    reportErrors: function (errorsArray, searchCriteria) {
+                        $rootScope.$broadcast(errorEvent, errorsArray, searchCriteria);
+                    }
+                };
+            }])
+            .factory('ValidationErrorReportingService', [
+                '$modal'
+                , function ($modal) {
                     return {
-                        request: function (config) {
-                            if (isNonGetAuthTokenCallToRestAPI(config.url, apiURL)) {
-                                timeStart = performance.now();
-                            }
-                            return config;
-                        },
-                        response: function (response) {
-                            if (isNonGetAuthTokenCallToRestAPI(response.config.url, apiURL)) {
-                                timeEnd = performance.now();
-                                var duration = Math.round(timeEnd - timeStart);
-                                $log.debug("http call time: " + duration + " millis");
-                            }
-                            return response;
+                        reportErrors: function (errors, errorsCategory) {
+                            $modal.open({
+                                animation: true,
+                                template: ErrorsModalTemplate,
+                                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                                    $scope.errorsList = errors;
+                                    $scope.modalTitle = errorsCategory;
+
+                                    $scope.ok = function () {
+                                        $modalInstance.close();
+                                    };
+                                }]
+                            });
                         }
                     };
                 }])
+            .factory('NetworkConnectivityErrorInterceptor', ['$q', 'ErrorReportingService', function ($q, ErrorReportingService) {
+                var COMMUNICATION_GENERIC_ERROR_MSG = 'Unable to communicate with the Sabre Dev Studio';
+                var COMMUNICATION_TIMEOUT_ERROR_MSG = 'Timeout calling Sabre Dev Studio';
+                var minimalCommunicationTimeMillisToDetectTimeout = 300;
+                return {
+                    responseError: function (reason) {
+                        if (reason.status !== 0) {
+                            return $q.reject(reason);
+                        }
+                        if (reason.config.timeout && reason.config.timeoutClockStart) {
+                            var httpCallDuration = Math.round(performance.now() - reason.config.timeoutClockStart);
+                            if ((httpCallDuration > minimalCommunicationTimeMillisToDetectTimeout) && (httpCallDuration >= reason.config.timeout)) {
+                                ErrorReportingService.reportError(COMMUNICATION_TIMEOUT_ERROR_MSG);
+                                return $q.reject(reason);
+                            }
+                        }
+                        ErrorReportingService.reportError(COMMUNICATION_GENERIC_ERROR_MSG);
+                        return $q.reject(reason);
+                    }
+                }
+            }])
+            .factory('ResponseTimeLoggerHttpInterceptor', ['$q', '$log', 'apiURL', function ($q, $log, apiURL) {
+                function logHttpCallTime(config) {
+                    if (isAPIrequest(config.url, apiURL) && config.timeStart) {
+                        var timeEnd = performance.now();
+                        var duration = Math.round(timeEnd - config.timeStart);
+                        $log.debug("http call time: " + duration + " millis");
+                    }
+                }
+
+                return {
+                    request: function (config) {
+                        if (isAPIrequest(config.url, apiURL)) {
+                            config.timeStart = performance.now();
+                        }
+                        return config;
+                    },
+                    response: function (response) {
+                        logHttpCallTime(response.config);
+                        return response;
+                    },
+                    responseError: function (reason) {
+                        logHttpCallTime(reason.config);
+                        return $q.reject(reason);
+                    }
+                };
+                }])
+            .constant('defaultTimeoutMillis', 5000)
+            .factory('AddTimeoutOnHttpCommunicationInterceptor', ['defaultTimeoutMillis', function (defaultTimeoutMillis) {
+                return {
+                    request: function(config) {
+                        config.timeout = config.timeout || defaultTimeoutMillis;
+                        config.timeoutClockStart = performance.now();
+                        return config;
+                    }
+                }
+            }])
             .config(['$httpProvider', function ($httpProvider) {
-                $httpProvider.interceptors.push('ResponseTimeLoggerHttpInterceptor');
+                $httpProvider.interceptors.push(
+                      'ResponseTimeLoggerHttpInterceptor'
+                    , 'NetworkConnectivityErrorInterceptor'
+                    , 'AddTimeoutOnHttpCommunicationInterceptor'
+                );
             }]);
     });

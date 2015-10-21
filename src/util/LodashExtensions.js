@@ -1,13 +1,18 @@
 /* returns patched (utility functions added), local version of lodash */
-define(['lodash'], function (_) {
+define([
+        'lodash'
+    ], function (
+        _
+    ) {
+    "use strict";
 
     var lodash = _.runInContext();
 
+    /* jshint ignore:start */
     // base64 methods taken from undermore.js
     // chars for base64 methods
     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
-    /* jshint ignore:start */
     function utf8_encode(str) {
         return unescape(encodeURIComponent(str));
     }
@@ -201,13 +206,23 @@ define(['lodash'], function (_) {
                 return (values[half-1] + values[half]) / 2.0;
             }
         },
-        // adds all elements of source array to target array. Both arguments must be arrays.
-        // modifies target array.
-        // Returns modified target array
+
+        /**
+         * Adds all elements of source array to target array.
+         * Both arguments must be arrays.
+         * Modifies target array.
+         * Returns modified target array
+         */
         pushAll: function(target, source) {
             target.push.apply(target, source);
             return target;
         },
+        /**
+         * Adds all elements of source array to target array if the element does not already exist in the target array.
+         * Both arguments must be arrays.
+         * Modifies target array.
+         * Returns modified target array
+         */
         pushIfNotContains: function (target, source) {
             if (!_.contains(target, source)) {
                 target.push(source);

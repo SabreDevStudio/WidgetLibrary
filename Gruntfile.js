@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                 jshintrc: '.jshintrc'
             },
             prod: {
-                src: ['src/**/*.js', '!src/lib/**/*.js']//'src-test/**.js']
+                src: ['src/**/*.js', '!src/lib/**/*.js']
             }
         },
 
@@ -245,6 +245,17 @@ module.exports = function (grunt) {
             }
         },
 
+        uncss: {
+            dist: {
+                files: {
+                    'dist/widgets/css/tidy.css': ['src/view-templates/**/*.html']
+                }
+            },
+            options: {
+                compress:true
+            }
+        },
+
         cssmin: {
             options: {
                 roundingPrecision: -1
@@ -259,6 +270,11 @@ module.exports = function (grunt) {
                         , 'bower_components/angular-rangeslider/angular.rangeSlider.css'
                         , 'bower_components/titatoggle/dist/titatoggle-dist.css'
                     ]
+                }
+            },
+            tmpuncss: {
+                files: {
+                    'dist/widgets/css/tidy.min.css': ['dist/widgets/css/tidy.css']
                 }
             }
         },
@@ -295,6 +311,7 @@ module.exports = function (grunt) {
     grunt.registerTask('dist', [
           'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
+        , 'jshint'
         , 'requirejs:compile'
         , 'css-pipeline'
         , 'cssmin:cssbundle'

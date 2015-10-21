@@ -3,6 +3,8 @@ define([
     ], function (
         _
     ) {
+    "use strict";
+
     return function PriceClassifier() {
 
         var uniquePrices;

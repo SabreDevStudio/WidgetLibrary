@@ -18,15 +18,15 @@ define([],
         function show(el) {
             if (angular.element(el).hasClass(CLASS_HIDDEN)) {
                 angular.element(el).removeClass(CLASS_HIDDEN);
-                angular.element(el).addClass(CLASS_VISIBLE);
             }
+            angular.element(el).addClass(CLASS_VISIBLE);
         }
 
         function hide(el) {
             if (angular.element(el).hasClass(CLASS_VISIBLE)) {
                 angular.element(el).removeClass(CLASS_VISIBLE);
-                angular.element(el).addClass(CLASS_HIDDEN);
             }
+            angular.element(el).addClass(CLASS_HIDDEN);
         }
 
         function addToggleOnClickHandler(element, selectorForToggleLink, selectorForToggledContent) {
@@ -38,21 +38,33 @@ define([],
             });
         }
 
-        function addShowOnClickHandler(element, selectorForShowLink, selectorForContentToShow) {
+        function addShowOnClickHandler(element, selectorForShowLink, selectorForContentToShow, selectorForContentToHide) {
             element.querySelectorAll(selectorForShowLink).on('click', function () { //event delegation not used for code simplicity, especially without jQuery, reconsider
                 var elementsToShow = element.querySelectorAll(selectorForContentToShow);
                 [].forEach.call(elementsToShow, function (e) {
                     show(e);
                 });
+                if (selectorForContentToHide) {
+                    var elementsToHide = element.querySelectorAll(selectorForContentToHide);
+                    [].forEach.call(elementsToHide, function (e) {
+                        hide(e);
+                    });
+                }
             });
         }
 
-        function addHideOnClickHandler(element, selectorForHideLink, selectorForContentToHide) {
+        function addHideOnClickHandler(element, selectorForHideLink, selectorForContentToHide, selectorForContentToShow) {
             element.querySelectorAll(selectorForHideLink).on('click', function () { //event delegation not used for code simplicity, especially without jQuery, reconsider
                 var elementsToHide = element.querySelectorAll(selectorForContentToHide);
                 [].forEach.call(elementsToHide, function (e) {
                     hide(e);
                 });
+                if (selectorForContentToShow) {
+                    var elementsToShow = element.querySelectorAll(selectorForContentToShow);
+                    [].forEach.call(elementsToShow, function (e) {
+                        show(e);
+                    });
+                }
             });
         }
 

@@ -30,7 +30,6 @@ define([
                     , 'FareRangeSummaryService'
                     , 'newSearchCriteriaEvent'
                     , 'SearchCriteriaBroadcastingService'
-                    , 'ValidationErrorsReportingService'
                 , function (
                       $scope
                     , DateService
@@ -38,10 +37,9 @@ define([
                     , FareRangeSummaryService
                     , newSearchCriteriaEvent
                     , searchCriteriaBroadcastingService
-                    , validationErrorsReportingService
                 ) {
 
-                    var rangeDays = $scope.rangeDays | 15;
+                    var rangeDays = $scope.rangeDays || 15;
 
                     // main business model object
                     $scope.fareRangeSummary = {};
@@ -52,26 +50,16 @@ define([
                     }
 
                     function processSearchCriteria(searchCriteria) {
-                        var validationErrors = FareRangeDataService.validateSearchCriteria(searchCriteria);
-                        if (validationErrors.length > 0) {
-                            validationErrorsReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
-                            return;
-                        }
-
                         var requestedRange = calculateRequestedDepartureDateRanges(searchCriteria.getTripDepartureDateTime(), rangeDays);
                         FareRangeDataService.getFareRange(searchCriteria, requestedRange).then(
                             function (response) {
                                 $scope.fareRangeSummary = FareRangeSummaryService.getSummary(response, searchCriteria.getFirstLeg().departureDateTime, searchCriteria.getSecondLeg().departureDateTime);
                                 $scope.requestedRange = requestedRange;
-                                clearErrorMessages();
                                 $scope.origin = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().origin: searchCriteria.origin;
                                 $scope.destination = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().destination: searchCriteria.destination;
                             },
                             function (errors) {
-                                $scope.businessErrorMessages = errors;
                                 clearModel();
-                                $scope.origin = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().origin: searchCriteria.origin;
-                                $scope.destination = (_.isFunction(searchCriteria.getFirstLeg))? searchCriteria.getFirstLeg().destination: searchCriteria.destination;
                             }
                         );
                     }
@@ -82,14 +70,6 @@ define([
                         $scope.currentLowestFareCurrency = undefined;
                         processSearchCriteria(newSearchCriteria);
                     });
-
-                    $scope.anyBusinessErrorMessagesPresent = function () {
-                        return !_.isEmpty($scope.businessErrorMessages);
-                    };
-
-                    function clearErrorMessages() {
-                        _.remove($scope.businessErrorMessages);
-                    }
 
                     function clearModel() {
                         $scope.fareRangeSummary = {};
@@ -129,7 +109,7 @@ define([
                     };
 
                     function medianFareLowerThanCurrentLowestFare() {
-                        return ($scope.currentLowestFare < $scope.fareRangeSummary.fareDataForRequestedDates.MedianFare) && ($scope.currentLowestFareCurrency ===  $scope.fareRangeSummary.fareDataForRequestedDates.CurrencyCode)
+                        return ($scope.currentLowestFare < $scope.fareRangeSummary.fareDataForRequestedDates.MedianFare) && ($scope.currentLowestFareCurrency ===  $scope.fareRangeSummary.fareDataForRequestedDates.CurrencyCode);
                     }
 
                 }])

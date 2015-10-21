@@ -4,19 +4,6 @@
         summary="summaryPerStopsPerAirline">
 </itinerary-summary-price-per-stops-per-airline>
 
-<div class="panel panel-default" ng-if="anyBusinessErrorMessagesPresent()">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            No options found for {{searchCriteriaDepartureAirport | cityAndAirportFullName}} to {{searchCriteriaArrivalAirport | cityAndAirportFullName}}
-        </h4>
-        <div>
-            <ul>
-                <li ng-repeat="message in businessErrorMessages"><p class="text-danger">{{message}}</p></li>
-            </ul>
-        </div>
-    </div>
-</div>
-
 <div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading">
@@ -61,12 +48,12 @@
             </div>
 
             <div class="SDS-col-element-xxl-2">
-                <input-sort-by class="pull-right"
+                <input-select-dropdown class="pull-right"
                                available-sort-criteria="sortCriteria.availableSortCriteria"
                                selected-first-sort-criterion="selectedFirstCriterion"
                                on-sorting-criteria-changed="onSortingCriteriaChanged()"
                                label="Sort by">
-                </input-sort-by>
+                </input-select-dropdown>
             </div>
         </div>
     </div>

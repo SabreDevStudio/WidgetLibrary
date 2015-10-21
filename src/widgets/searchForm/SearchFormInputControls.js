@@ -15,7 +15,7 @@ define([
         , 'text!view-templates/partials/SelectMonths.tpl.html'
         , 'text!view-templates/partials/SelectDaysOfWeek.tpl.html'
         , 'text!view-templates/partials/SelectLengthsOfStay.tpl.html'
-        , 'AirportNameBestSuggestionComparator'
+        , 'widgets/searchForm/AirportNameBestSuggestionComparator'
     ],
     function (
           _
@@ -56,7 +56,7 @@ define([
                         cabinSelected: '='
                     },
                     template: PreferredCabinSelectTemplate
-                }
+                };
             })
             .directive('selectPreferredAirline', [
                     'AirlineLookupDataService'
@@ -163,13 +163,9 @@ define([
                     transclude: true,
                     template: SelectDaysOfWeekTemplate,
                     link: function (scope, element) {
-                        var doNotAllowToCheckAll = element.attr('do-not-allow-to-check-all') && scope.$eval(element.attr('do-not-allow-to-check-all'));
                         scope.daysOfWeek = _.clone($locale.DATETIME_FORMATS.SHORTDAY); //WARN: this will print short week days according to locale. Please also mind that first day of week is also locale specific. For US it is Sunday. Next logic does not take it into account. There is no way to recognize it in NG, you could use moment.js: moment().startOf("week").day()
                         scope.daysSelected = [false, false, false, false, false, false, false];
                         scope.$watchCollection('daysSelected', function (newVal, oldVal) {
-                           if (doNotAllowToCheckAll) {
-                               //TODO: invalidate this field in form - but need to know form name and field name
-                           }
                            if (newVal !== oldVal) {
                                scope.value = newVal;
                            }
@@ -202,19 +198,25 @@ define([
                         }
 
                         scope.$watch('selectedPredefinedLengthOfStayDays.value', function (predefinedLoS) {
-                            predefinedLoS && resetMinMaxDays(predefinedLoS);
+                            if (predefinedLoS) {
+                                resetMinMaxDays(predefinedLoS);
+                            }
                         });
 
                         // if min starts exceeding max, then increase max as well
                         scope.$watch('lengthOfStay.minDays', function (minDays, oldMinDays) {
-                            if (minDays === oldMinDays) return;
+                            if (minDays === oldMinDays) {
+                                return;
+                            }
                             if (minDays > scope.lengthOfStay.maxDays) {
                                 scope.lengthOfStay.maxDays = minDays;
                             }
                         });
                         // if max decreases below min, then decrease min as well
                         scope.$watch('lengthOfStay.maxDays', function (maxDays, oldMaxDays) {
-                            if (maxDays === oldMaxDays) return;
+                            if (maxDays === oldMaxDays) {
+                                return;
+                            }
                             if (maxDays < scope.lengthOfStay.minDays) {
                                 scope.lengthOfStay.minDays = maxDays;
                             }

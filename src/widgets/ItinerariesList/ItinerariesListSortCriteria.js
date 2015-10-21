@@ -1,8 +1,10 @@
 define([
-        'util/LodashExtensions'
+          'lodash'
+        , 'util/LodashExtensions'
     ],
     function (
-        _
+              _
+            , __
     ) {
         'use strict';
 
@@ -12,34 +14,35 @@ define([
          */
         function ItinerariesListSortCriteria() {
 
-            var that = this;
-
             /* all possible criteria to select from */
             this.availableSortCriteria = this.configureAvailableSortCriteria();
 
             /* the business logic specific sort criteria order, to be applied when there is a tie on the first user-selected sort criterion */
             this.sortCriteriaNaturalOrder = this.setSortCriteriaNaturalOrder();
 
-            function setSortCriteriaInternal(firstCriterion) {
-                // current sort criteria list will contain the user-selected criterion in the head, and then will be supplemented by others, defined in sortCriteriaNaturalOrder
-                currentSortCriteria = that.sortCriteriaNaturalOrder.reduce(_.pushIfNotContains, [firstCriterion]);
-            }
+            this.currentSortCriteria = this.resetSortCriteria();
+        }
 
-            this.setSortCriteria = function (firstCriterion) {
-                setSortCriteriaInternal(firstCriterion);
-            };
-
-            this.resetSortCriteria = function () {
-                setSortCriteriaInternal(_.first(this.sortCriteriaNaturalOrder));
-            };
-
-            this.getCurrentSortCriteria = function () {
-                return currentSortCriteria;
-            };
-
-            var currentSortCriteria = this.resetSortCriteria();
+        ItinerariesListSortCriteria.prototype.setSortCriteriaInternal = function(firstCriterion) {
+            // current sort criteria list will contain the user-selected criterion in the head, and then will be supplemented by others, defined in sortCriteriaNaturalOrder
+            this.currentSortCriteria = this.sortCriteriaNaturalOrder.reduce(__.pushIfNotContains, [firstCriterion]);
         };
 
+        ItinerariesListSortCriteria.prototype.setSortCriteria = function (firstCriterion) {
+            this.setSortCriteriaInternal(firstCriterion);
+        };
+
+        ItinerariesListSortCriteria.prototype.resetSortCriteria = function () {
+            this.setSortCriteriaInternal(_.first(this.sortCriteriaNaturalOrder));
+        };
+
+        ItinerariesListSortCriteria.prototype.getCurrentSortCriteria = function () {
+            return this.currentSortCriteria;
+        };
+
+        /**
+         * Predefined sort criteria definitions, for list of Itinerary objects
+         */
         ItinerariesListSortCriteria.prototype.sortCriteriaDefinitions = {
             byPriceAsc: {
                 label: 'Price (Lowest)',
@@ -109,8 +112,10 @@ define([
             ];
         };
 
-        /* business logic specific sort criteria order (next criteria are applied when application of previous one returned tie)
-           may be overwritten by class clients */
+        /**
+         *  business logic specific sort criteria order (the next criterion in the list is applied when application of previous one returned tie, and so on)
+         *  may be overwritten by class clients
+         */
         ItinerariesListSortCriteria.prototype.setSortCriteriaNaturalOrder = function () {
             return [
                   this.sortCriteriaDefinitions.byPriceAsc

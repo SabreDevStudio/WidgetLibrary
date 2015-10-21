@@ -1,4 +1,4 @@
-require(['../../src/webservices/BasicSearchCriteriaValidator'], function (BasicSearchCriteriaValidator) {
+require(['../../src/webservices/common/validators/BasicSearchCriteriaValidator'], function (BasicSearchCriteriaValidator) {
     'use strict';
 
     var validator = new BasicSearchCriteriaValidator();

@@ -1,7 +1,7 @@
 define([
           'angular'
         , 'lodash'
-        , 'webservices/LookupServices'
+        , '../webservices/lookup/LookupServices'
     ],
     function (
           angular
@@ -11,6 +11,9 @@ define([
         'use strict';
 
         return angular.module('sDSLookups', ['sabreDevStudioWebServices'])
+            /**
+             * given airline IATA code, like 'AA', returns airline full name: like 'American Airlines'
+             */
             .filter('airlineFullName', ['AirlineLookupDataService', function (AirlineLookupDataService) {
                 /* this filter depends on asynchronous response from other service.
                  It lazy-loads the web service response. If response is not yet available then it schedules its loading
@@ -33,6 +36,10 @@ define([
                 filter.$stateful = true; // this is stateful filter so we have to let NG know that it needs to keep executing it on every digest cycle. (Normally filters are executed only if the filtered value changes).
                 return filter;
             }])
+            /**
+             * Accepts IATA airport or city code, for example 'LON'.
+             * If the value passed is airport and the airport name is different than the city it is located in, then returns bot airport name and city name (comma separated). If they are same returns just one.
+             */
             .filter('cityAndAirportFullName', ['AirportLookupDataService', function (AirportLookupDataService) {
                 /* this filter depends on asynchronous response from other service.
                  It lazy-loads the web service response. If response is not yet available then it schedules its loading
@@ -57,13 +64,16 @@ define([
                     if (entryFound.airportName !== entryFound.cityName) {
                         return entryFound.airportName + ', ' + entryFound.cityName;
                     } else {
-                        return entryFound.airportName
+                        return entryFound.airportName;
                     }
                 };
                 filter.$stateful = true; // this is stateful filter so we have to let NG know that it needs to keep executing it on every digest cycle. (Normally filters are executed only if the filtered value changes).
                 return filter;
             }])
-            .filter('airportCountry', ['AirportLookupDataService', function (AirportLookupDataService) { //TODO DRY!!!
+            /**
+             * Given airport/city code, returns the country name (for example Germany) this airport/city is located.
+             */
+            .filter('airportCountry', ['AirportLookupDataService', function (AirportLookupDataService) { //TODO DRY, same pattern in every filter
                 /* this filter depends on asynchronous response from other service.
                  It lazy-loads the web service response. If response is not yet available then it schedules its loading
                  Till response from asynchronous service is not available, it just returns the provided value (pass thru).
@@ -86,6 +96,9 @@ define([
                 filter.$stateful = true; // this is stateful filter so we have to let NG know that it needs to keep executing it on every digest cycle. (Normally filters are executed only if the filtered value changes).
                 return filter;
             }])
+            /**
+             * Given aircraft code, returns full aircraft full name
+             */
             .filter('aircraftName', ['EquipmentLookupDataService', function (EquipmentLookupService) {
                 /* this filter depends on asynchronous response from other service.
                     It lazy-loads the web service response. If response is not yet available then it schedules its loading
@@ -107,5 +120,5 @@ define([
                 };
                 filter.$stateful = true; // this is stateful filter so we have to let NG know that it needs to keep executing it on every digest cycle. (Normally filters are executed only if the filtered value changes).
                 return filter;
-            }])
+            }]);
     });

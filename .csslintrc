@@ -8,4 +8,6 @@
     , "regex-selectors": false
     , "empty-rules": false
     , "floats": false
+    , "known-properties": false
+    , "important": false
 }

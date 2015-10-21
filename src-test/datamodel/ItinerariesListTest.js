@@ -1,4 +1,4 @@
-define(['moment', 'datamodel/ItinerariesList', 'datamodel/TestItineraryBuilder'], function (moment, ItinerariesList, TestItineraryBuilder) {
+define(['moment', 'datamodel/ItinerariesList', 'TestItineraryBuilder'], function (moment, ItinerariesList, TestItineraryBuilder) {
     "use strict";
 
     describe('get statistics', function () {

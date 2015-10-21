@@ -1,4 +1,8 @@
-define(['util/LodashExtensions'], function (__) {
+define([
+        'util/LodashExtensions'
+    ], function (
+        __
+    ) {
         'use strict';
 
         function defineExtensions() {
@@ -8,9 +12,11 @@ define(['util/LodashExtensions'], function (__) {
                 var n = elem.nextSibling, matches = [];
 
                 for ( ; n; n = n.nextSibling ) {
-                    if ( n.nodeType == 1) {
+                    if ( n.nodeType === 1) {
                         matches.push( n );
-                        if (!all) return matches;
+                        if (!all) {
+                            return matches;
+                        }
                     }
                 }
                 return matches;

@@ -5,7 +5,7 @@ require([
     , 'webservices/SabreDevStudioWebServices'
     , 'datamodel/SearchCriteria'
     , 'datamodel/ShoppingData'
-    , 'datamodel/TestItineraryBuilder'
+    , '../datamodel/TestItineraryBuilder'
     , 'text!../src-test/webservices/fixtures/AdvancedCalendarSampleRequest.json'
     , 'text!../src-test/webservices/fixtures/AdvancedCalendarSampleRequest_404.json'
     , 'text!../src-test/webservices/fixtures/AdvancedCalendarSampleRequest_big_number_of_options_requested.json'
@@ -50,7 +50,6 @@ require([
         beforeEach(function () {
             module('baseServices');
             module('sabreDevStudioWebServices');
-            //TODO
             //inject(function (_ShoppingOptionsCacheService_) {
             //    ShoppingOptionsCacheServiceSpy = jasmine.spyOn(_ShoppingOptionsCacheService_).and.callThrough();
             //});

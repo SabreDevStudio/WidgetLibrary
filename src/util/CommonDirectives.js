@@ -19,6 +19,16 @@ define([
                         });
                     }
                 };
-            });
+            })
+            .directive('hideOnClick', function () {
+                return {
+                    scope: 'A',
+                    link: function (scope, el, attrs) {
+                        angular.element(el).on('click', function () {
+                            angular.element(el).addClass('ng-hide');
+                        });
+                    }
+                }
+            })
 
     });

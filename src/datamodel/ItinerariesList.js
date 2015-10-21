@@ -1,179 +1,73 @@
-define(['util/LodashExtensions'], function (_) {
+define([
+      'lodash'
+    , 'util/ItinerariesDedupper'
+], function (
+      _
+    , ItinerariesDedupper
+) {
     "use strict";
 
+    /**
+     * @global
+     * @classdesc
+     * List of itineraries.
+     * @class ItinerariesList
+     * @constructor
+     */
     function ItinerariesList() {
-
-        var itineraries = [];
-
-        this.getItineraries = function () {
-            return itineraries;
-        };
-
-        this.getPermittedItineraries = function () {
-          return _.reject(itineraries, 'filteredOut');
-        };
-
-        this.add = function (itin) {
-            itineraries.push(itin);
-        };
-
-        this.addItinerariesList = function(itinerariesList) {
-            var that = this;
-            itinerariesList.getItineraries().forEach(function (itin) {
-                that.add(itin);
-            });
-            return this;
-        };
-
-        this.addItinerariesListWithDedup = function(itinerariesList) {
-            this.dedupMerge(itinerariesList);
-            return this;
-        };
-
-        this.size = function () {
-            return this.getPermittedItineraries().length;
-        };
-
-        this.getMinValue = function (propertyName, propertyFieldToCompareOn) {
-            return _.chain(this.getPermittedItineraries())
-                .map(_.ary(_.partialRight(_.result, propertyName), 1))
-                .min(propertyFieldToCompareOn).value();
-        };
-
-        this.getMaxValue = function (propertyName, propertyFieldToCompareOn) {
-            return _.chain(this.getPermittedItineraries())
-                .map(_.ary(_.partialRight(_.result, propertyName), 1))
-                .max(propertyFieldToCompareOn).value();
-        };
-
-        this.getRangeStatistics = function (propertyName) {
-            return {
-                min: this.getMinValue(propertyName),
-                max: this.getMaxValue(propertyName)
-            };
-        };
-
-        this.getMonetaryAmountRangeStatistics = function (propertyName) {
-            return {
-                min: this.getMinValue(propertyName, 'amount'),
-                max: this.getMaxValue(propertyName, 'amount')
-            };
-        };
-
-        this.getDiscreteValuesStatistics = function (propertyName) {
-            var selectableValues =  _.chain(this.getPermittedItineraries())
-                .groupByAndGetCountAndMin(propertyName, 'totalFareAmount', 'totalFareCurrency').map(function (groupingItem) {
-                    return {
-                          value: groupingItem.value
-                        , count: groupingItem.count
-                        , minPrice: groupingItem.min
-                        , currency: groupingItem.mustBeEqualPropertyValue
-                    };
-                })
-                .sortBy('value')
-                .value();
-            return {selectableValues: selectableValues};
-        };
-
-        //TODO SRP extract from here
-        this.getStatistics = function (statisticsSpecification) {
-            var filterablePropertyName = statisticsSpecification.property;
-            switch (statisticsSpecification.type) {
-                case 'range': {
-                    return this.getRangeStatistics(filterablePropertyName);
-                }
-                case 'rangeMonetaryAmount': {
-                    return this.getMonetaryAmountRangeStatistics(filterablePropertyName);
-                }
-                case 'discrete': {
-                    return  this.getDiscreteValuesStatistics(filterablePropertyName);
-                }
-                case 'noop': {
-                    return undefined;
-                }
-                default:
-                    throw new Error('Illegal specification of bounds requested: ' + statisticsSpecification.type);
-            }
-        };
-
-        /**
-         * Performs deduplication of the itinerariesList passed as argument with own itineraries,
-         * and merges deduplicated itinerariesList to own itineraries list.
-         *
-         * The deduplication key is the flight structure of itinerary: all flights of itinerary (segments: origin, destination, datetimes, flight numbers, airlines).
-         * Any pricing and availability related information (booking codes, seats remaining, total fare) is not included into deduplication key.
-         *
-         * Algorithm:
-         * For every itinerary from argument itinerariesList DO: TODO correct doc
-         *  calculate itinerary flight structure
-         *  check if any own itinerary contains  same flight structure
-         *  IF any own itinerary contains same flight structure
-         *      THEN choose own itinerary (leave own itinerary in place) or replace own itinerary with argument itinerary, based on the priority of the web service that produced it (see later).
-         *      ELSE add the argument itinerary to own itineraries list
-         * DONE;
-         *
-         * WARN: this algorithm for the moment has O(n^2) complexity, can be easily improved.
-         *
-         * When both itineraries have same flight structure than the version that was produced by a 'more life search' service will be chosen.
-         * For example itineraries from BFM will be preferred over itineraries from Instaflights.
-         *
-         * @param itinerariesList
-         */
-            //TODO SRP extract from here
-        this.dedupMerge = function (candidateItinerariesList) {
-            var flightStructureToItinerariesMap = this.createFlightStructureToItinerariesMap(itineraries);
-            var knownKeys = _.keys(flightStructureToItinerariesMap);
-            candidateItinerariesList.getItineraries().forEach(function (candidateItin) {
-                var candidateKey = candidateItin.getFlightStructure();
-                if (_.contains(knownKeys, candidateKey)) {
-                    var knowItinPricingSource = flightStructureToItinerariesMap[candidateKey].getPricingSource();
-                    var candidateItinPricingSource = candidateItin.getPricingSource();
-                    var pricingSourceCompareResult = comparePricingSources(knowItinPricingSource, candidateItinPricingSource);
-                    if (pricingSourceCompareResult === -1) { // candidate itin better, replace known itin with candidate itin. Otherwise (known itin better or tie), do not do anything
-                        flightStructureToItinerariesMap[candidateKey] = candidateItin;
-                    }
-                } else {
-                    flightStructureToItinerariesMap[candidateKey] = candidateItin;
-                }
-            });
-            var deduppedItineraries = _.values(flightStructureToItinerariesMap);
-            itineraries = deduppedItineraries;
-        };
-
-        function comparePricingSources(first, second) {
-            if (first === 'BFM') {
-                return 1;
-            }
-            if (second === 'BFM') {
-                return -1;
-            }
-            return 0;
-        }
-
-        this.createFlightStructureToItinerariesMap = function (itineraries) {
-            return _.indexBy(itineraries, function (itin) {
-                return itin.getFlightStructure();
-            });
-        };
-
+        this.itineraries = [];
     }
 
-    //TODO SRP extract from here
-    ItinerariesList.prototype.getCurrentValuesBounds = function (statisticsSpecifications) {
+    /**
+     * Returns list of itineraries that are <em>permitted</em>, that is are not filtered out (by applied itinerary list filtering functions).
+     * @returns {Array}
+     */
+    ItinerariesList.prototype.getPermittedItineraries = function () {
+        return _.reject(this.itineraries, 'filteredOut');
+    };
+
+    ItinerariesList.prototype.getItineraries = function () {
+        return this.itineraries;
+    };
+
+    ItinerariesList.prototype.add = function (itin) {
+        this.itineraries.push(itin);
+    };
+
+    /**
+     * Adds passed itineraries list to this itineraries list. Just adds all new itineraries to the end of te current list.
+     * @param itinerariesList
+     * @returns {ItinerariesList}
+     */
+    ItinerariesList.prototype.addItinerariesList = function(itinerariesList) {
         var that = this;
-        return statisticsSpecifications.map(function (statisticsSpecification) {
-            return {
-                filterablePropertyName: statisticsSpecification.property,
-                statistics: that.getStatistics(statisticsSpecification)
-            };
+        itinerariesList.getItineraries().forEach(function (itin) {
+            that.add(itin);
         });
+        return this;
+    };
+
+    /**
+     * Adds passed itineraries list to this itineraries list performing deduplication of itineraries
+     * @see dedupMerge
+     * @param otherItinerariesList
+     * @returns {ItinerariesList}
+     */
+    ItinerariesList.prototype.addItinerariesListWithDedup = function(otherItinerariesList) {
+        var dedupper = new ItinerariesDedupper();
+        this.itineraries = dedupper.dedupMerge(this.itineraries, otherItinerariesList.itineraries);
+        return this;
+    };
+
+    ItinerariesList.prototype.size = function () {
+        return this.getPermittedItineraries().length;
     };
 
     ItinerariesList.prototype.getLeadPrice = function () {
         var minimumPriceItinerary = _.min(this.getPermittedItineraries(), 'totalFareAmount');
         return {
               price: minimumPriceItinerary.totalFareAmountWithCurrency.amount
-            , currency: minimumPriceItinerary.totalFareAmountWithCurrency.amount.currency
+            , currency: minimumPriceItinerary.totalFareAmountWithCurrency.currency
         };
     };
 
@@ -185,6 +79,11 @@ define(['util/LodashExtensions'], function (_) {
         return _.min(this.getPermittedItineraries(), 'duration');
     };
 
+    /**
+     * Applies the array of filtering functions (filters) to the itineraries.
+     * So that itinerary is NOT marked as filteredOut (not permitted), it must pass all the filters.
+     * @param filteringFunctions
+     */
     ItinerariesList.prototype.applyFilters = function (filteringFunctions) {
         this.getItineraries().forEach(function (itin) {
             itin.filteredOut = !filteringFunctions.every(function (filteringFunction) {

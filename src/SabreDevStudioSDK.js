@@ -13,15 +13,15 @@ require.config({
         , 'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider'
         , 'ngStorage': '../bower_components/ngstorage/ngStorage'
         , 'ngPromiseExtras': '../bower_components/angular-promise-extras/angular-promise-extras'
-        ,  chartjs: '../bower_components/Chart.js/Chart'
+        , 'chartjs': '../bower_components/Chart.js/Chart'
         , 'angular_iso_currency': '../bower_components/iso-currency/dist/isoCurrency'
         , 'elementQuery': 'lib/elementQuery' //TODO elementQuery exposing functions on windows... AMD support already requested, see: https://github.com/tysonmatanich/elementQuery/pull/9/commits
     },
     map: {
         '*': {
-              'chartjs': 'chartjs-noConflict'
+              'chartjs': 'util/chartjs-noConflict'
         }
-        , 'chartjs-noConflict': { 'chartjs': 'chartjs'}
+        , 'util/chartjs-noConflict': { 'chartjs': 'chartjs'}
     },
     shim: {
         // angular does not support AMD out of the box, put it in a shim
@@ -73,8 +73,8 @@ require.config({
 require([
           'moment'
         , 'datamodel/ItinerariesList'
-        , 'webservices/BasicSearchCriteriaValidator'
-        , 'webservices/InstaflightSearchCriteriaValidator'
+        , 'webservices/common/validators/BasicSearchCriteriaValidator'
+        , 'webservices/instaflights/InstaflightSearchCriteriaValidator'
         , 'lodash'
         , 'angular'
         , 'widgets/calendar/CalendarWidget'
@@ -93,6 +93,7 @@ require([
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
         , 'widgets/HighLowMedianCurrentChartDirective'
+        , 'widgets/ErrorDisplayWidget'
         , 'Configuration'
         , 'elementQuery'
     ], function (
@@ -118,6 +119,7 @@ require([
         , FiltersPanelWidget
         , DiscreteFilterWidget
         , HighLowMedianCurrentChartDirective
+        , ErrorDisplayWidget
         , Configuration
         , elementQuery
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?

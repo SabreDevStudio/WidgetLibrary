@@ -72,9 +72,9 @@ define([
                                         }
                                     );
                                 });
-                                }
+                                };
                         }
-                    }
+                    };
 
             }])
             .factory('AdvancedCalendarSearchService', [
@@ -92,6 +92,7 @@ define([
                         sendRequest: {
                               method: 'POST'
                             , headers: generalHeaders
+                            , timeout: 15000
                         }
                     });
                     return {
@@ -113,6 +114,7 @@ define([
                         sendRequest: {
                               method: 'POST'
                             , headers: generalHeaders
+                            , timeout: 30000
                         }
                     });
                     return {
@@ -134,6 +136,7 @@ define([
                         sendRequest: {
                             method: 'POST'
                             , headers: generalHeaders
+                            , timeout: 30000
                         }
                     });
                     return {

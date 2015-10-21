@@ -1,15 +1,10 @@
-<div class="SDSAlternateDatesMatrixWidget panel panel-default" ng-if="isAnyDataToDisplayAvailable() || anyBusinessErrorMessagesPresent()">
+<div class="SDSAlternateDatesMatrixWidget panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Alternate Dates Lead Fares</h4>
     </div>
 
-    <div class="panel-body" ng-if="anyBusinessErrorMessagesPresent()">
-        No prices found.
-        <error-messages messages="businessErrorMessages"></error-messages>
-    </div>
-
-    <div class="panel-body" ng-if="isAnyDataToDisplayAvailable()">
+    <div class="panel-body">
 
         <div class="table-responsive">
             <table class="SDSTable table table-bordered table-condensed" ng-if="isRoundTripTravel">

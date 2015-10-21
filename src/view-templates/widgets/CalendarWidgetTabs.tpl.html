@@ -1,15 +1,10 @@
-<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable() || anyBusinessErrorMessagesPresent()">
+<div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading text-center">
         <h4 class="panel-title">Lead Prices Calendar</h4>
     </div>
 
-    <div class="panel-body" ng-if="anyBusinessErrorMessagesPresent()">
-        No lead prices found.
-        <error-messages messages="businessErrorMessages"></error-messages>
-    </div>
-
-    <div class="panel-body" ng-if="isAnyDataToDisplayAvailable()">
+    <div class="panel-body">
 
         <div ng-if="numberOfMonths > 1">
             <tabset type="pills">

@@ -9,6 +9,7 @@ Javascript widgets for Sabre Dev Studio web services (SDS) were created in order
 ## Dependencies
 Main dependencies
 
+- RequireJS
 - Angular 1.3.x
 - Angular modules: resource, sanitize, ngStorage
 - Bootstrap (CSS)
@@ -56,7 +57,7 @@ Please see the `SabreDevStudioSDK.js` to see how widgets are initialized and how
 
 ## Widgets Architecture
 
-### Overall components description
+### Overall processing layers description
 1. Widgets are implemented as Angular directives. One widget is represented by one directive. So you embed widgets on your web page by using custom HTML5 elements or attributes.
 2. One widget directive may depend on other directives, which are called partials.
 3. Every widget is represented by one file in `src/widgets` directory, or a subdirectory in that directory.
@@ -105,6 +106,29 @@ From data services implementation perspective, several complexity levels are pos
     * actual calling the web service.
     * parsing web service response into domain objects, which may include using external (reusable) parsers for a given response type.
 
+### Communication between widgets
+Widgets collaborate with each other in following cases:
+1. The Search Form Widget, which collects user search criteria, must pass these criteria to any other widget which does the _active search_ in SDS services (for example Itineraries List Widget or Calendar Widget).
+_active search_ means that the widget which executes it, on receiving search criteria, is the one that initiates the search in the SDS (and also presents response data in its view).
+This is in contrary to the _passive_ mode, in which, the search and populating web services response cache, is initiated by other (_acive search_) widget, while the widget in _passive_ mode is reusing the data from cache.
+2. Active search widgets, for example Calendar Widget or Lead Price Chart Widget, must pass information that user selected some view element (like calendar day cell or day bar price) and needs to be shown more data in a detailed display (like in Itineraries List Widget).
+Then the active search widget must inform the passive search widget on what what details user requested (like selected date of travel), and give reference to the data service where the passive widget can get the data from (the data retrieved by active search and cache in data service).
+3. The Itineraries Filtering Panel must be able to request information on the statistics of the data currently presented, so that it can configure its values shown to customer for filtering.
+   In response, the widget presenting itineraries, like the Itineraries List Widget, must send the statics on the current data currently presented to the Itineraries Filtering Panel.
+4. Itineraries Filtering Panel must send information to the widgets, for example to the Itineraries List Widget, that the user selected/updated filtering criteria, so the new filtering criteria must be applied.
+
+All above communication is implemented by Angular events system ($broadcast, $on). The $broadcast call is wrapped into simple Angular messaging service (one service per one event type) and the message sender is calling the service to send the event, previously calling service setters to provide message details.
+The receiver is listening ($on) for the event, and then reading the message from the communication service.
+In case of point 3. (statistics on current itineraries presented) it is further decoupled into a publish-subscribe mechanism.
+
+### <a name="WidgetsWorkflow"></a>Widgets use cases and workflow
+Widgets itself (the classes in `widgets` directory) are commonly implementing this behaviour:
+1. If search criteria elements were predefined in as widget directive attributes, assembly SearchCriteria object, validate it and execute search
+2. Upon receiving new search criteria event, validate the search criteria received. If validation is not successful then you may return validation error messages to the user.
+3. When search criteria are valid, execute search in data service. Update Angular scope objects that the view listens on and renders.
+4. If data service does not return data or returns errors, present information to the user that the result for given city pair could not be produced.
+5. For subsequent search criteria received, apart from processing and updating scope objects, make sure you clear all old scope results, in particular old error messages if present.
+
 ### <a name="Security"></a> Security
 SDS REST services use token based authentication (OAuth 2). In order to obtain the token, users must provide SDS username and password.
 We cannot allow that username and password to be stored in Javascript file that is downloaded to the end-user browsers. That is why some kind of proxy (bridge) is needed to participate in communication between the widgets (end user browser) and SDS services.
@@ -113,7 +137,38 @@ Then, it is the bridge which has Sabre SDS username and password and which calls
 
 Please note that it is **your responsibility** to properly secure access to the bridge you are setting up for your end customers.
 
-## Implementing new widget
+#### Use of browser local storage
+On the first widget run, widgets are making calls to the SDS lookup (decode) services (airport lookup, country lookup, airline lookup, aircraft lookup), to populate dictionaries for decoding.
+Upon getting successful response from SDS and parsing, these dictionaries are stored in local storage of the browser, and then not fetched again.
+There is not expiration or renew policy for those dictionaries in local storage.
+
+### Error handling
+We can have following error categories:
+1. Network connectivity errors (like link down, packages dropped by firewall)
+2. All non-successful HTTP response code (all HTTP response codes other than 200 series).
+From SDS user perspective, the error code then is nearly always 404, and there is actual business error message in the response (like no fares available for given search criteria)
+3. User input validation errors: like particular search form fields do not work with each other, the search form criteria are not handled by the web service (like length of stay over 16 days not supported).
+
+All errors from point 1. and 2. are presented (presented, not caught) in the same place, which is the designated widget called ErrorDisplayWidget.
+
+All errors of type 1. (network connectivity) are caught by one Angular response error interceptor, which broadcasts the event on network connectivity issue.
+These events are caught and displayed by the ErrorDisplayWidget. On next new search criteria event, the ErrorDisplayWidget clears all (previous) errors.
+
+Regarding errors of type 2 (HTTP error message), the HTTP error code only is caught by the interceptor and the event is broadcast,
+but the parsing of the business error message is done in the (promise) reject handler of the data service.
+The reject handler broadcasts the error event, which is caught by ErrorDisplayWidget, and also rejects the data service promise with parsed business error message.
+The widget, on getting data service promise rejected may do nothing (its previous successful data are still presented), may clear previous successful data, but does not need to handle displaying error messages, as it is the responsibility of the ErrorDisplayWidget.
+
+## Development
+### Development dependencies
+1. NPM for managing development dependencies
+2. Bower for managing application dependencies
+3. Grunt
+4. SASS and Compass
+
+Currently there are no unit test and no integration tests.
+
+### Implementing new widget
 1. Make sure the web service you are going to consume is defined in the `WebServicesResourceDefinitions.js` file.
 2. Check data services using given web service, if they already offer the business abstractions you need. Extend existing data service (or multiple data services if you want to consume same data abstraction from multiple services), or create new data service.
    Data service will typically offer some getSomeBusinessAbstraction/getSomeDomainObjects method, which will be passed the `SearchCriteria` object. The `SearchCriteria` object is created by the Search form widget or build internally by the widget when the search criteria elements (departure airport, arrival airport, travel times) are provided as the widget directive attributes.
@@ -122,14 +177,8 @@ Please note that it is **your responsibility** to properly secure access to the 
    Please note that the widget should be the controller + view only, and it should not model domain objects or implement any business logic. Please put domain objects in 'datamodel' directory, and for any business logic create separate angular services.
 4. At least for test purposes you will also create a test HTML page that will use only this widget (typically paired with the Search Form widget). Please see `www` directory for examples.
 
-
-You controller logic will very probably be very similar to the following pattern:
-- If search criteria elements were predefined in as widget directive attributes, assembly SearchCriteria object, validate it and execute search
-- Upon receiving new search criteria event, validate the search criteria received. If validation is not successful then you may return validation error messages to the user.
-- When search criteria are valid, execute search in data service. Update Angular scope objects that the view listens on and renders.
-- If data service does not return data or returns errors, present information to the user that the result for given city pair could not be produced.
-- for subsequent search criteria received, apart from processing and updating scope objects, make sure you clear all old scope results, in particular old error messages if present.
-In such case you may reuse (inherit from) the `BaseController`, which implements the skeleton for all the workflow described above.
+If your widget (controller) logic is similar to the workflow described in previous section [Widgets use cases and workflow](#WidgetsWorkflow),
+then you may reuse (inherit from) the `BaseController`, which implements the skeleton for all the workflow described above.
 As `BaseController` was identified later, not every widget which could uses it, but all new widgets should use it.
 
 Regarding the widget view templates, please you may reuse the patterns currently used:
@@ -138,10 +187,10 @@ Regarding the widget view templates, please you may reuse the patterns currently
 - please see the `view-templates\partials` for partials you could reuse
 - the Angular filters defined in `util\CommonFilters` and `util\Lookups` files may be useful.
 
-## Styling
+### Styling
 All styling is based Twitter Bootstrap 3 classes. When Bootstrap classes were not sufficient, minimal custom styling was added.
 All custom styling classes have the prefix `SDS` to differentiate from Bootstrap or the user classes.
-All custom styling is authored in SASS and all SASS files are located in `widgets\style\*.scss` files.
+All custom styling is authored in SASS and Compass and all SASS files are located in `widgets\style\*.scss` files.
 You will notice that, apart from the `_SDSCommon.scss` file, there are only several custom classes defined per widget.
 
 ### RWD
@@ -168,3 +217,13 @@ All Angular currency filters have currency passed as argument, so the prices are
 Date display formats:
 All dates are represented by Moment.js dates and are given explicit formatting, so they are presented in the same format regardless of browser locale or Angular locale.
 We use the default Moment.js build, without default (English) locale strings. It is possible to bundle moment.js with [other locale](http://momentjs.com/docs/#/i18n/).
+
+## General notes on API usage
+- all index-type arguments of API methods (like for example findMealForFlight(legIndex, segmentIndex)) are 0-based. All returned indexes are 0-based.
+- all arguments with names of origin, destination, departure airport, arrival airport are IATA 3-character airport or city codes, for example NYC. Same for returned airports
+- when any variable or method has _airport_ in name, then it may mean also city.
+- by default all dates are in the format YYYY-MM-dd, for example 2015-12-31
+- by default all date times are ISO 8601 date times without timezone offset. For example 2015-10-14T13:13:20
+- all dates and date times, after being parsing from web service or from the user, are internally stored and passed between functions as Moment.js objects. The date or date time returning methods also returns them as Moment.js objects.
+- the notion of <em>segment</em> is the same as <em>flight</em>.
+- the notion of _relative_ and _absolute_ flight (segment) indexes: _absolute_ flight index is the index of flight in the whole travel. _relative_ flight index is the index in a given leg.

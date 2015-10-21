@@ -65,6 +65,7 @@ define([
 
                         scope.filterInstance = createFilterInstance();
 
+                        /* jshint maxcomplexity:7 */
                         function createFilterInstance() {
                             var filterId = FilterIdGeneratorService.next();
                             switch (scope.filterType) {

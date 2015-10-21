@@ -3,21 +3,38 @@
   "eqnull": true,
   "eqeqeq": true,
   "undef": true,
+  "unused": "vars",
   "laxcomma": true,
+  "laxbreak": true,
+  //"latedef": true,
+  "sub": true,
+  "bitwise": true,
+  "forin": true,
+  "immed": true,
+  "newcap": true,
+  "nocomma": true,
+  "noempty": true,
+  "nonew": true,
+  "strict": true,
   "globals": {
-    "jQuery": true,
+    "angular": true,
     // for requirejs
     "define": false,
+    "require": false,
+    "console": true,
     // jasmine
     "spyOn": false,
     "spyOnEvent": false,
     "xit": false,
-    "xdescribe": false
+    "xdescribe": false,
+    "performance": true
   },
   "maxcomplexity": 5,
   "maxdepth": 3,
   "browser": true,
-  "browserify": true,
   "jquery": true,
-  "jasmine": true
+  "jasmine": true,
+  // WARN: relaxing options:
+  "asi": true,
+  "funcscope": true
 }
