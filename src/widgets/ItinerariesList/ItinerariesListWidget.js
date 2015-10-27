@@ -4,7 +4,6 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/ItinerariesListWidget.tpl.html'
         , 'datamodel/ItinerariesList'
         , 'util/ItinerariesStatisticsCalculator'
         , 'webservices/bargainFinderMax/BargainFinderMaxWebServices'
@@ -26,7 +25,6 @@ define([
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , ItinerariesListWidgetTemplate
         , ItinerariesList
         , ItinerariesStatisticsCalculator
         , BargainFinderMaxWebServices
@@ -270,8 +268,7 @@ define([
                         , activeSearchWebService: '@?'
                         , requestBrandedItineraries: '=?'
                     },
-                    template: ItinerariesListWidgetTemplate,
-                    //templateUrl: '../src/view-templates/widgets/ItinerariesListWidget.tpl.html', // element queries do not work. BTW: use https://thinkster.io/templatecache-tutorial https://www.npmjs.com/package/grunt-angular-templatecache
+                    templateUrl: '../src/view-templates/widgets/ItinerariesListWidget.tpl.html',
                     controller: 'ItineraryListCtrl',
                     link: function (scope, element) {
                         var predefinedSearchCriteria = buildSearchCriteriaFromPredefinedParameters();

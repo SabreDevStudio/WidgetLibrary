@@ -60,7 +60,7 @@
 
     <div class="panel-body">
         <ul class="list-unstyled SDSTopLevelList">
-            <li class="row" ng-repeat="itinerary in permittedItinerariesSorted
+            <li class="SDS-row" ng-repeat="itinerary in permittedItinerariesSorted
                                             | startFrom: (paginationSettings.currentPage - 1)*itemsPerPage | limitTo: itemsPerPage track by $index">
                 <itinerary itin="itinerary"></itinerary>
             </li>

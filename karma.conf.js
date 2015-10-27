@@ -15,10 +15,6 @@ module.exports = function(config) {
       'src-test/test-main.js',
       {pattern: 'src/**/*.js', included: false},
       {pattern: 'src-test/**/*.js', included: false},
-      {pattern: 'src/view-templates/*.*', included: false},
-      {pattern: 'src/request-templates/*.*', included: false},
-      {pattern: 'src/dictionaries/*.*', included: false},
-      {pattern: 'src-test/**/fixtures/*', included: false},
       {pattern: 'bower_components/**/*.js', included: false},
       {pattern: 'node_modules/**/*.js', included: false}
     ],

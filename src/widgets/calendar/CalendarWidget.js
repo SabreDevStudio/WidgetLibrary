@@ -2,29 +2,23 @@ define([
           'moment'
         , 'angular'
         , 'lodash'
-        , 'util/SelectorEngineExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/CalendarWidgetTabs.tpl.html'
-        , 'text!view-templates/widgets/CalendarWidgetNavigable.tpl.html'
-        , 'text!view-templates/widgets/CalendarWidgetOneMonth.tpl.html'
         , 'datamodel/SearchCriteria'
         , 'widgets/calendar/Calendar'
         , 'webservices/common/searchStrategyFactories/DaysRangeSearchStrategyFactory'
+        , 'widgets/calendar/HighlightLengthOfStay'
     ],
     function (
           moment
         , angular
         , _
-        , $$
         , angular_bootstrap
         , SDSWidgets
-        , CalendarWidgetTabsTemplate
-        , CalendarWidgetNavigableTemplate
-        , CalendarWidgetOneMonthTemplate
         , SearchCriteria
         , Calendar
         , DaysRangeSearchStrategyFactory
+        , HighlightLengthOfStay
     ) {
         'use strict';
 
@@ -112,6 +106,9 @@ define([
                     };
 
                     $scope.cellClicked = function (day) {
+                        if (day.isBefore(new Date(), 'day')) { // no point to search for past dates
+                            return;
+                        }
                         DateSelectedBroadcastingService.newSearchCriteria = lastSearchCriteria.cloneWithDatesAdjustedToOtherDepartureDate(day);
                         DateSelectedBroadcastingService.originalDataSourceWebService = searchService;
                         DateSelectedBroadcastingService.broadcast();
@@ -127,11 +124,10 @@ define([
                         , activeSearchWebService: '@'
                         , doNotShowPrevNextMonthDays: '@'
                     },
-                    template: CalendarWidgetTabsTemplate,
+                    templateUrl: '../src/view-templates/widgets/CalendarWidgetTabs.tpl.html',
                     controller: 'CalendarWidgetCtrl',
                     link: function (scope, element, attrs) {
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) || 1;
-                        $compile(CalendarWidgetOneMonthTemplate); //hackish, to source external template into template cache, so that it is accessible for including for the both calendar view templates
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
                     }
                 }
@@ -146,40 +142,13 @@ define([
                         , activeSearchWebService: '@'
                         , doNotShowPrevNextMonthDays: '@'
                     },
-                    template: CalendarWidgetNavigableTemplate,
+                    templateUrl: '../src/view-templates/widgets/CalendarWidgetNavigable.tpl.html',
                     controller: 'CalendarWidgetCtrl',
                     link: function (scope, element, attrs) {
                         scope.numberOfMonthsShownAtOnce = parseInt(scope.numberOfMonthsShownAtOnce) || 1;
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) || 10;
-                        $compile(CalendarWidgetOneMonthTemplate);
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
                     }
                 }
             }])
-            // Adds handler for mouseenter and mouseleave events to highlight the mouse entered calendar cell and all next cells within LoS
-            .directive('highlightLengthOfStay', function () {
-                return {
-                  scope: {
-                        lengthOfStayDays: '@'
-                      , highlightClass: '@'
-                  },
-                  link: function (scope, element) {
-                      var lengthOfStayDays = parseInt(scope.lengthOfStayDays) + 1; // in length of stay highlight we include both departure and return day ( that's why + 1)
-
-                      element[0].addEventListener('mouseenter', function () {
-                          var allLoSdays = $$.nextAllAndFirstLevelCousins(this, lengthOfStayDays);
-                          allLoSdays.forEach(function (cell) {
-                              cell.classList.add(scope.highlightClass);
-                          });
-                      });
-
-                      element[0].addEventListener('mouseleave', function () {
-                          var allLoSdays = $$.nextAllAndFirstLevelCousins(this, lengthOfStayDays);
-                          allLoSdays.forEach(function (cell) {
-                              cell.classList.remove(scope.highlightClass);
-                          });
-                      });
-                  }
-                };
-            });
     });

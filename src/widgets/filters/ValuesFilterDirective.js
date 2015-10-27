@@ -4,7 +4,6 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/ValuesFilterDirective.tpl.html'
         , 'widgets/filters/DiscreteValuesFilter'
         , 'widgets/filters/DiscreteValuesListFilter'
         , 'widgets/filters/RangeFilter'
@@ -18,7 +17,6 @@ define([
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , ValuesFilterDirectiveTemplate
         , DiscreteValuesFilter
         , DiscreteValuesListFilter
         , RangeFilter
@@ -60,7 +58,7 @@ define([
                         , canFilterOnlyOnMinValue: '@'
                         , filterType: '@type'
                     },
-                    template: ValuesFilterDirectiveTemplate,
+                    templateUrl: '../src/view-templates/widgets/ValuesFilterDirective.tpl.html',
                     link: function(scope, element, attrs, filtersPanelController) {
 
                         scope.filterInstance = createFilterInstance();

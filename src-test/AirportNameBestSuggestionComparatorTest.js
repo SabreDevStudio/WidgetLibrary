@@ -1,4 +1,4 @@
-define(['../src/widgets/searchForm/AirportNameBestSuggestionComparator'], function (Comparator) {
+define(['widgets/searchForm/AirportNameBestSuggestionComparator'], function (Comparator) {
     "use strict";
 
     describe('autocomplete best suggestions', function () {

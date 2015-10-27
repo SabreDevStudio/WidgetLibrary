@@ -4,7 +4,6 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/partials/InputSortBy.tpl.html'
     ],
     function (
           _
@@ -12,7 +11,6 @@ define([
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , InputSortByTemplate
     ) {
         'use strict';
 
@@ -51,7 +49,7 @@ define([
                          */
                         , onSortingCriteriaChanged: '&'
                     },
-                    template: InputSortByTemplate,
+                    templateUrl: '../src/view-templates/partials/InputSortBy.tpl.html',
                     link: function (scope, element) {
 
                         var lastSelectedValueIdx;

@@ -52,8 +52,17 @@ No dependency on jQuery.
 The `class="embeddedWidget"` is for a moment necessary, to have responsive styling.
 
 ### Using widgets services from other Angular applications
-Currently it is not supported to have widgets included as Javascript/Angular library in other Angular applications.
-Please see the `SabreDevStudioSDK.js` to see how widgets are initialized and how you could possibly use the `sdsWidgets` Angular module.
+In dist directory two files are produced:
+
+- SDSWidgets.min.js: this is standalone, auto-booting Angular application. Use it when you include widgets in non-Angular environment
+- SDSWidgets.lib.min.js: this build is done in library mode, the widgets will not start itself as application. Use it to include widgets in any Angular application.
+
+When using widgets in library mode, make sure:
+1. make your angular modules dependent on `sdsWidgets` module.
+2. enable widgets elementQueries: call: //TODO:
+$timeout(function () {
+      sabreDevStudioWidgets.parseAllStylesheetsToMakeWidgetsResponsive()
+}, 10);
 
 ## Widgets Architecture
 

@@ -1,17 +1,15 @@
 define([
           'angular'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/FareNabberWidget.tpl.html'
     ],
     function (
           angular
         , SDSWidgets
-        , FareNabberWidgetTemplate
     ) {
         'use strict';
 
         return angular.module('sdsWidgets')
-            .controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+            .controller('FareNabberModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
 
                 $scope.defaultOptions = {
                       earliestTravelStart: new Date()
@@ -73,7 +71,7 @@ define([
                         , maximumAcceptablePrice: '@'
                         , maximumAcceptablePriceCurrency: '@'
                     },
-                    template: FareNabberWidgetTemplate,
+                    templateUrl: '../src/view-templates/widgets/FareNabberWidget.tpl.html',
                     transclude: true,
                     link: function (scope, element) {
 
@@ -83,19 +81,13 @@ define([
                             var modalInstance = $modal.open({
                                   animation: true
                                 , templateUrl: 'FareNabberSubscriptionFormModal.html.tpl'
-                                , controller: 'ModalInstanceCtrl'
+                                , controller: 'FareNabberModalInstanceCtrl'
                                 , size: 'lg'
                                 , scope: scope
-                                //, resolve: { //TODO: reconsider later (like resolve in routes)
-                                //    items: function () {
-                                //        return scope.items;
-                                //    }
-                                //}
                             });
 
                             modalInstance.result.then(function (fareNabberSubscriptionRequest) {
                                 console.log(fareNabberSubscriptionRequest); // here do fare nabber web service call with this data
-                                // TODO: present also web service errors to the user
                             });
                         }
                     }

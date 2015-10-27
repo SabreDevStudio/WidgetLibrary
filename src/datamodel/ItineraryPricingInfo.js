@@ -1,9 +1,11 @@
 define([
           'lodash'
+        , 'util/LodashExtensions'
         , 'datamodel/SegmentBaggageAllowance'
     ],
     function (
           _
+        , __
         , SegmentBaggageAllowance
     ) {
         'use strict';
@@ -46,6 +48,9 @@ define([
                 totalFare: undefined,
                 totalTax: undefined
             };
+
+            // will store summaries, like unique brands, or unique cabins. For performance optimisation
+            this.summaries = {};
         }
 
         /**
@@ -72,9 +77,7 @@ define([
          * For discrimination between this and its accompanying null object ItineraryPricingInfoNotReturnedFares. Always returns false.
          * @returns {boolean}
          */
-        ItineraryPricingInfo.prototype.fareReturned = function () {
-            return true;
-        };
+        ItineraryPricingInfo.prototype.fareReturned = true;
 
         /**
          * Used by parsers, sets cabin for given <b>absolute</b> segment (flight) index.
@@ -121,6 +124,18 @@ define([
             return matchingFound && matchingFound.brandName;
         };
 
+        /**
+         * Returns array of _uniq_ brands matched to all itinerary flights. In particular may be one element array.
+         */
+        ItineraryPricingInfo.prototype.getUniqueBrandsMatchedToAllFlights = function () {
+            if (_.isUndefined(this.brandToSegmentMatchings)) {
+                return [];
+            }
+            return _.uniq(this.brandToSegmentMatchings.map(function (matching) {
+                return matching.brandName;
+            }));
+        };
+
         ItineraryPricingInfo.prototype.getSeatsRemaining = function (legIdx, segmentIdx) {
             return this.segmentSeatsRemaining[legIdx] && this.segmentSeatsRemaining[legIdx][segmentIdx];
         };
@@ -129,8 +144,16 @@ define([
             return this.segmentCabins[legIdx] && this.segmentCabins[legIdx][segmentIdx];
         };
 
+        ItineraryPricingInfo.prototype.getUniqueCabins = function () {
+            return _.uniq(__.leafValues(this.segmentCabins));
+        };
+
         ItineraryPricingInfo.prototype.getMeals = function (legIdx, segmentIdx) {
             return this.segmentMeals[legIdx] && this.segmentMeals[legIdx][segmentIdx];
+        };
+
+        ItineraryPricingInfo.prototype.getUniqueMeals = function () {
+            return _.uniq(__.leafValues(this.segmentMeals));
         };
 
         /**
@@ -152,6 +175,10 @@ define([
             return this.baggageAllowance && this.baggageAllowance.getSegmentAllowance(legIdx, segmentIdx);
         };
 
+        ItineraryPricingInfo.prototype.getUniqueBaggageAllowance = function () {
+            return this.baggageAllowance.uniqueBaggageAllowance();
+        };
+
         /**
          * Returns indicator that number of seats remaining is low.
          * The low threshold is arbitrary. Shopping services return this value in range between 1 and 9.
@@ -164,6 +191,15 @@ define([
                     return (seatsRemaining <= LOW_SEATS_REMAINING_THRESHOLD);
                 });
             });
+        };
+
+        ItineraryPricingInfo.prototype.updateSummaries = function () {
+            this.summaries = {
+                  uniqueBrandsMatchedToAllFlights: this.getUniqueBrandsMatchedToAllFlights()
+                , uniqueCabins: this.getUniqueCabins()
+                , uniqueMeals: this.getUniqueMeals()
+                , uniqueBaggageAllowance: this.getUniqueBaggageAllowance()
+            };
         };
 
         return ItineraryPricingInfo;

@@ -1,12 +1,10 @@
 define([
           'angular'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/partials/HighLowMedianCurrentChart.tpl.html'
     ],
     function (
           angular
         , SDSWidgets
-        , highLowMedianCurrentChartTemplate
     ) {
         'use strict';
 
@@ -26,7 +24,7 @@ define([
                         , valuesFilter: '@?'
                         , valuesFilterArguments: '@?'
                     },
-                    template: highLowMedianCurrentChartTemplate,
+                    templateUrl: '../src/view-templates/partials/HighLowMedianCurrentChart.tpl.html',
                     link: function (scope) {
 
                         scope.chartConfig = {

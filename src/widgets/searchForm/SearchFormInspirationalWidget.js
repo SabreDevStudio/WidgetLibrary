@@ -4,7 +4,6 @@ define([
         , 'util/LodashExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/SearchFormInspirationalWidget.tpl.html'
     ],
     function (
           moment
@@ -12,7 +11,7 @@ define([
         , __
         , angular_bootstrap
         , SDSWidgets
-        , InspirationalSearchFormWidgetTemplate) {
+    ) {
         'use strict';
 
         return angular.module('sdsWidgets')
@@ -33,7 +32,7 @@ define([
 
                 return {
                     replace: true,
-                    template: InspirationalSearchFormWidgetTemplate,
+                    templateUrl: '../src/view-templates/widgets/SearchFormInspirationalWidget.tpl.html',
                     link: function (scope) {
                         scope.pointOfSaleCountries = [
                             noPointOfSaleCountryPreference

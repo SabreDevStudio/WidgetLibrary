@@ -228,8 +228,29 @@ define([
                 target.push(source);
             }
             return target;
+        },
+        /**
+         * For multi-level maps, returns all leaf nodes (all bottom-most values of all mappings).
+         * The second argument maxTraverseDepth is optional.
+         * Assumptions:
+         * - only multi-level maps of equal (tree) height at all nodes are supported
+         * - if maxTraverseDepth is provided then the top-down traversing of the tree ends after maxTraverseDepth traversals.
+         * - if maxTraverseDepth is not provided then _.isObject applied to only first element of the mapping on given level is used to recognize if it is the leaf node.
+         *   So without maxTraverseDepth it will not work for objects intended as leafs (will try to iterate object values).
+         * - by JS specification the iteration order of Object.values() methods and alike is not guaranteed
+         */
+        leafValues: function leafValues(multiLevelMap, maxTraverseDepth) {
+            var nextLevelMappings = _.values(multiLevelMap);
+            if (!_.isUndefined(maxTraverseDepth)) {
+                maxTraverseDepth--;
+            }
+            if (!_.isObject(nextLevelMappings[0]) || (maxTraverseDepth === 0)) {
+                return nextLevelMappings;
+            }
+            return _.flatten(nextLevelMappings.map(function (item) {
+                return leafValues(item, maxTraverseDepth);
+            }));
         }
-
     });
 
     return lodash;

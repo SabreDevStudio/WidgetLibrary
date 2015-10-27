@@ -58,7 +58,7 @@ define([
 
             var additionalFaresBrands = this.additionalFaresPricingInfos
                 .filter(function (additionalFare) {
-                    return additionalFare.fareReturned();
+                    return additionalFare.fareReturned;
                 })
                 .map(function (additionalFare) {
                     return additionalFare.getBrandMatchedToFlight(legIndex, segmentIndex);

@@ -13,64 +13,66 @@ requirejs.config({
     baseUrl: '/base/src',
 
     paths: {
-        jquery: "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min",
-        'jquery-ui': 'http://code.jquery.com/ui/1.11.4/jquery-ui',
-        //'jquery-mobile': 'https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min',
-        'jasmine-jquery': '../node_modules/jasmine-jquery/lib/jasmine-jquery',
-        mustache: '../bower_components/mustache/mustache',
-        text: 'lib/text',
-        stache: 'lib/stache',
-        moment: '../bower_components/moment/min/moment-with-locales',
-        moment_range: '../bower_components/moment-range/dist/moment-range',
-        validator_lib: '../bower_components/validator-js/validator',
-        async: '../bower_components/async/lib/async',
-        lodash: '../bower_components/lodash/lodash',
-        angular: '../bower_components/angular/angular',
-        'angular_resource': '../bower_components/angular-resource/angular-resource',
-        angularMocks: '../bower_components/angular-mocks/angular-mocks',
-        'angular_moment': '../bower_components/angular-moment/angular-moment',
-        'd3': '../bower_components/d3/d3',
-        'nvd3': '../bower_components/nvd3/nv.d3',
-        'angular_nvd3': '../bower_components/angular-nvd3/dist/angular-nvd3'
+          text: '../node_modules/requirejs-text/text'
+        , moment: '../bower_components/moment/moment'
+        , moment_range: '../bower_components/moment-range/dist/moment-range'
+        , lodash: '../bower_components/lodash/lodash'
+        , angular: '../bower_components/angular/angular'
+        , 'angular_resource': '../bower_components/angular-resource/angular-resource'
+        , 'angular_bootstrap': '../bower_components/angular-bootstrap/ui-bootstrap-tpls'
+        , 'angular-ui-select': '../bower_components/angular-ui-select/dist/select'
+        , 'angular-sanitize': '../bower_components/angular-sanitize/angular-sanitize'
+        , 'angular-img-fallback': '../bower_components/angular-img-fallback/angular.dcb-img-fallback'
+        , 'angular-rangeslider': '../bower_components/angular-rangeslider/angular.rangeSlider'
+        , 'ngStorage': '../bower_components/ngstorage/ngStorage'
+        , 'ngPromiseExtras': '../bower_components/angular-promise-extras/angular-promise-extras'
+        , 'chartjs': '../bower_components/Chart.js/Chart'
+        , angularMocks: '../bower_components/angular-mocks/angular-mocks'
+    },
+    map: {
+        '*': {
+            'chartjs': 'util/chartjs-noConflict'
+        }
+        , 'util/chartjs-noConflict': { 'chartjs': 'chartjs'}
     },
     shim: {
-        'jasmine-jquery': {
-            deps: ['jquery']
-        },
+        // angular does not support AMD out of the box, put it in a shim
         'angular': {
             exports: 'angular'
-        },
-        angular_resource : {
-            deps : ['angular'], 'exports' : 'ngResource'
         },
         'angularMocks': {
             deps: ['angular']
         },
-        d3: {
-            exports: 'd3' //todo: all these libs export global symbols...
+        angular_resource: {
+            deps: ['angular'], 'exports': 'ngResource'
         },
-        angular_nvd3: {
-            exports: 'angular_nvd3',
-            deps: ['nvd3', 'angular']
+        angular_bootstrap: {
+            deps: ['angular']
+        },
+        'angular-ui-select': {
+            deps: ['angular']
+        },
+        'angular-sanitize': {
+            deps: ['angular']
+        },
+        'angular-img-fallback': {
+            deps: ['angular']
+        },
+        'angular-rangeslider': {
+            deps: ['angular']
+        },
+        'ngStorage': {
+            deps: ['angular']
+        },
+        'ngPromiseExtras': {
+            deps: ['angular']
         }
-
-    },
-    stache: {
-        extension: '.mst'
-    },
-    'jquery-ui': {
-        deps: ['jquery']
     },
     config: {
         moment: {
             noGlobal: true
         }
     },
-    //map: {
-    //    '*': { 'jquery': 'util/jquery-loader' },
-    //    'util/jquery-loader': { 'jquery': 'jquery' }
-    //},
-
 
     // ask Require.js to load these files (all our tests)
     deps: tests,

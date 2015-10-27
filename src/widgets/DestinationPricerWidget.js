@@ -5,8 +5,7 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
-        , 'text!view-templates/widgets/DestinationPricer.tpl.html'
-        , 'webservices/inspirational/InspirationalServices'
+        , 'webservices/inspirational/DestinationPricerDataService'
     ],
     function (
           moment
@@ -15,8 +14,7 @@ define([
         , angular_bootstrap
         , SDSWidgets
         , BaseController
-        , DestinationPricerTemplate
-        , InspirationalServices
+        , DestinationPricerDataService
     ) {
         'use strict';
 
@@ -69,7 +67,7 @@ define([
                 return {
                     restrict: 'EA',
                     scope: true,
-                    template: DestinationPricerTemplate,
+                    templateUrl: '../src/view-templates/widgets/DestinationPricer.tpl.html',
                     controller: 'DestinationPricerCtrl',
                     controllerAs: 'ctrl',
                     link: function (scope, element, attrs, controller) {

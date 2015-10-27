@@ -6,7 +6,6 @@ define([
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
         , 'widgets/GlobalChartsConfiguration'
-        , 'text!view-templates/widgets/LeadPriceChartWidget.tpl.html'
         , 'datamodel/ShoppingData'
         , 'webservices/common/searchStrategyFactories/DaysRangeSearchStrategyFactory'
     ],
@@ -18,7 +17,6 @@ define([
         , SDSWidgets
         , BaseController
         , GlobalChartsConfiguration
-        , LeadPriceChartWidgetTemplate
         , ShoppingData
         , DaysRangeSearchStrategyFactory
     ) {
@@ -231,7 +229,7 @@ define([
                         , activeSearchWebService: '@'
                     },
                     replace: false,
-                    template: LeadPriceChartWidgetTemplate,
+                    templateUrl: '../src/view-templates/widgets/LeadPriceChartWidget.tpl.html',
                     controller: 'LeadPriceChartCtrl',
                     controllerAs: 'ctrl',
                     link: function(scope, element, attrs, controller) {

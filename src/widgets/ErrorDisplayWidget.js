@@ -5,7 +5,6 @@ define([
         , 'util/LodashExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/ErrorDisplayWidget.tpl.html'
     ],
     function (
         moment
@@ -14,7 +13,6 @@ define([
         , __
         , angular_bootstrap
         , SDSWidgets
-        , ErrorDisplayWidgetTemplate
     ) {
         'use strict';
 
@@ -30,7 +28,7 @@ define([
                 ) {
                 return {
                     replace: true,
-                    template: ErrorDisplayWidgetTemplate,
+                    templateUrl: '../src/view-templates/widgets/ErrorDisplayWidget.tpl.html',
                     link: function (scope) {
 
                         function resetErrorModel() {

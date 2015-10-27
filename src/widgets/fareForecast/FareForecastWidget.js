@@ -1,14 +1,12 @@
 define([
           'angular'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/FareForecastWidget.tpl.html'
-        , 'webservices/informational/InformationalServices'
+        , 'webservices/informational/FareForecastDataService'
     ],
     function (
           angular
         , SDSWidgets
-        , FareForecastWidgetTemplate
-        , InformationalServices
+        , FareForecastDataService
     ) {
         'use strict';
 
@@ -22,7 +20,7 @@ define([
                       $scope
                     , SearchCriteriaBroadcastingService
                     , newSearchCriteriaEvent
-                    , ShoppingDataService
+                    , FareForecastDataService
                 ) {
 
                     // only model object
@@ -31,7 +29,7 @@ define([
                     // @Controller: main controller function, acting on new search criteria sent to the widget
                     $scope.$on(newSearchCriteriaEvent, function () {
                         var newSearchCriteria = SearchCriteriaBroadcastingService.searchCriteria;
-                        ShoppingDataService.getFareForecast(newSearchCriteria).then(function (fareForecast) {
+                        FareForecastDataService.getFareForecast(newSearchCriteria).then(function (fareForecast) {
                             $scope.fareForecast.recommendation = fareForecast.recommendation;
                         });
                     });
@@ -64,7 +62,7 @@ define([
                           showWaitRecommendation: '@'
                         , showUnknownRecommendation: '@'
                     },
-                    template: FareForecastWidgetTemplate,
+                    templateUrl: '../src/view-templates/widgets/FareForecastWidget.tpl.html',
                     controller: 'FareForecastCtrl'
                 };
             });

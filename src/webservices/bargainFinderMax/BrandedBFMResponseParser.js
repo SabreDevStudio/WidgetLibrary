@@ -65,7 +65,7 @@ define([
         };
 
         BrandedBFMResponseParser.prototype.parseItineraryPricingInfo = function (itineraryPricingInfoResponsePart, legsSegmentCounts) {
-            // special case: FareReturned === fasle means that it was not possible to match fare to the itinerary. See ItineraryPricingInfoNotReturnedFare
+            // special case: FareReturned === false means that it was not possible to match fare to the itinerary. See ItineraryPricingInfoNotReturnedFare
             if (itineraryPricingInfoResponsePart.FareReturned === false) {
                 var itinPricingInfoNotReturnedFares = new ItineraryPricingInfoNotReturnedFare(legsSegmentCounts);
                 itinPricingInfoNotReturnedFares.fareStatus = itineraryPricingInfoResponsePart.FareStatus;
@@ -88,6 +88,7 @@ define([
                 return brandToSegmentMatching;
             }
 
+            itineraryPricingInfo.updateSummaries();
             return itineraryPricingInfo;
         };
 

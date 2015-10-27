@@ -3,15 +3,12 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/ItineraryPricePerStopsPerAirlineSummary.tpl.html'
     ],
     function (
           _
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , ItineraryPricePerStopsPerAirlineSummaryTemplate
-
     ) {
         'use strict';
 
@@ -21,7 +18,7 @@ define([
                     scope: {
                         summary: '='
                     },
-                    template: ItineraryPricePerStopsPerAirlineSummaryTemplate,
+                    templateUrl: '../src/view-templates/widgets/ItineraryPricePerStopsPerAirlineSummary.tpl.html',
                     controller: ['$scope', function ($scope) {
 
                         $scope.isAnyDataToDisplayAvailable = function () {

@@ -5,6 +5,7 @@ define([
       , 'util/CommonGenericFilters'
       , 'util/CommonDisplayFilters'
       , 'webservices/SabreDevStudioWebServicesModule'
+      , 'webservices/Interceptors'
       , 'angular-ui-select'
       , 'angular-sanitize'
       , 'util/Lookups'
@@ -19,6 +20,7 @@ define([
         , CommonGenericFilters
         , CommonDisplayFilters
         , SabreDevStudioWebServicesModule
+        , Interceptors
         , angular_ui_select
         , angular_sanitize
         , Lookups

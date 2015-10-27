@@ -23,9 +23,7 @@ define([
          * For discrimination between this null object and its base class ItineraryPricingInfo. Always returns false.
          * @returns {boolean}
          */
-        ItineraryPricingInfoNotReturnedFare.prototype.fareReturned = function () {
-            return false;
-        };
+        ItineraryPricingInfoNotReturnedFare.prototype.fareReturned = false;
 
         /**
          * Returns the reason why the brand was not matched.

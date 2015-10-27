@@ -1,4 +1,10 @@
-define(['moment'], function (moment) {
+define([
+      'moment'
+    , 'moment_range'
+], function (
+      moment
+    , moment_range
+) {
     /**
      * Extending moment library with additional moment range functions.
      */

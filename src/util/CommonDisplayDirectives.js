@@ -1,22 +1,21 @@
 define([
-        'moment'
+          'moment'
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/partials/AirlineLogo.tpl.html'
     ],
-    function (moment
+    function (
+          moment
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , AirlineLogoTpl
     ) {
         'use strict';
 
         return angular.module('sdsWidgets')
             .directive('airlineLogo', function () {
                 return {
-                    template: AirlineLogoTpl,
+                    templateUrl: '../src/view-templates/partials/AirlineLogo.tpl.html',
                     scope: true,
                     link: function (scope, element, attrs) {
                         scope.airlineCode = attrs.airlineCode;

@@ -4,7 +4,6 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/FiltersPanelWidget.tpl.html'
     ],
     function (
           moment
@@ -12,7 +11,6 @@ define([
         , _
         , angular_bootstrap
         , SDSWidgets
-        , FiltersPanelWidgetTemplate
     ) {
         'use strict';
 
@@ -58,7 +56,7 @@ define([
                     restrict: 'EA',
                     replace: true,
                     scope: true,
-                    template: FiltersPanelWidgetTemplate,
+                    templateUrl: '../src/view-templates/widgets/FiltersPanelWidget.tpl.html',
                     controller: 'FiltersPanelCtrl'
                 }
             });

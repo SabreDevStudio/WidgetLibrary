@@ -10,7 +10,6 @@ define([
         , 'datamodel/DaysOfWeekAtDestination'
         , 'datamodel/PlusMinusDaysTravelDatesFlexibility'
         , 'datamodel/EarliestDepartureLatestReturnTravelDatesFlexibility'
-        , 'text!view-templates/widgets/SearchFormWidget.tpl.html'
         , 'util/DOMManipulationUtils'
     ],
     function (
@@ -25,7 +24,6 @@ define([
         , DaysOfWeekAtDestination
         , PlusMinusDaysTravelDatesFlexibility
         , EarliestDepartureLatestReturnTravelDatesFlexibility
-        , SearchFormWidgetTemplate
         , domUtils
     ) {
         'use strict';
@@ -181,7 +179,7 @@ define([
             }])
             .directive('searchForm', ['DateService', '$timeout', function (DateService, $timeout) {
                return {
-                   template: SearchFormWidgetTemplate,
+                   templateUrl: '../src/view-templates/widgets/SearchFormWidget.tpl.html',
                    controller: 'SearchFormCtrl',
                    scope: true,
                    link: function (scope, element) {

@@ -5,8 +5,8 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
-        , 'text!view-templates/widgets/LowFareHistory.tpl.html'
         , 'widgets/GlobalChartsConfiguration'
+        , 'webservices/informational/LowFareHistoryDataService'
     ],
     function (
           moment
@@ -15,8 +15,8 @@ define([
         , angular_bootstrap
         , SDSWidgets
         , BaseController
-        , LowFareHistoryTemplate
         , GlobalChartsConfiguration
+        , LowFareHistoryDataService
     ) {
         'use strict';
 
@@ -96,7 +96,7 @@ define([
                     restrict: 'EA',
                     scope: true,
                     replace: false,
-                    template: LowFareHistoryTemplate,
+                    templateUrl: '../src/view-templates/widgets/LowFareHistory.tpl.html',
                     controller: 'LowFareHistoryCtrl',
                     controllerAs: 'ctrl',
                     link: function (scope, element, attrs, controller) {

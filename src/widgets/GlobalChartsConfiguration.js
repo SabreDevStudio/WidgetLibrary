@@ -49,7 +49,7 @@ define([
                     createBarChart: createBarChart
                 };
             })
-            .constant('xAxisDateFormat', 'D MMM') // for example: 17 Aug)
+            .constant('xAxisDateFormat', 'dd. D MMM')// for example: Mo. 17 Aug)
             .factory('customToStringFunction', ['xAxisDateFormat', function(xAxisDateFormat) {
                 // returns copy of original date, with the toString method overwritten.
                 // custom toString is needed to the Chart.js library to display label in the format we wish.

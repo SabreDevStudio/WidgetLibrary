@@ -4,7 +4,6 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/AlternateDatesMatrix.tpl.html'
         , 'datamodel/SearchCriteria'
         , 'webservices/common/searchStrategyFactories/AlternateDatesSearchStrategyFactory'
     ],
@@ -14,7 +13,6 @@ define([
         , _
         , angular_bootstrap
         , SDSWidgets
-        , AlternateDatesMatrixTemplate
         , SearchCriteria
         , AlternateDatesSearchStrategyFactory
     ) {
@@ -101,7 +99,7 @@ define([
                           activeSearch: '@'
                         , activeSearchWebService: '@'
                     },
-                    template: AlternateDatesMatrixTemplate,
+                    templateUrl: '../src/view-templates/widgets/AlternateDatesMatrix.tpl.html',
                     controller: 'AlternateDatesMatrixCtrl',
                     link: function (scope, element) {
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(

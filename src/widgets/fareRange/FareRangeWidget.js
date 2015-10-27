@@ -5,9 +5,9 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/FareRangeWidget.tpl.html'
         , 'datamodel/SearchCriteria'
-        , 'widgets/HighLowMedianCurrentChartDirective'
+        , 'widgets/fareRange/HighLowMedianCurrentChartDirective'
+        , 'webservices/informational/FareRangeDataService'
     ],
     function (
           moment
@@ -16,9 +16,9 @@ define([
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , FareRangeWidgetTemplate
         , SearchCriteria
         , HighLowMedianCurrentChartDirective
+        , FareRangeDataService
     ) {
         'use strict';
 
@@ -125,7 +125,7 @@ define([
                         , currentLowestFareCurrency: '@?'
                         , rangeDays: '@?'
                     },
-                    template: FareRangeWidgetTemplate,
+                    templateUrl: '../src/view-templates/widgets/FareRangeWidget.tpl.html',
                     controller: 'FareRangeCtrl'
                 };
             })

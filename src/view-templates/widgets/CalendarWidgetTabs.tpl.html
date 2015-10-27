@@ -12,14 +12,14 @@
                      heading="{{month.monthStartDate.format('MMM')}} {{month.monthLeadPrice | currency:month.monthLeadPriceCurrency}}"
                      disable="month.noPricesFound"
                      active="monthsDisplayStates[month.monthStartDate]"><!-- Jan Feb ... Nov Dec --><!-- warn: this variable/array needs to be writable, as tabs directive will be reflecting in it the state of given tabs -->
-                        <ng-include src="'CalendarOneMonth'"></ng-include>
+                        <ng-include src="'../src/view-templates/widgets/CalendarWidgetOneMonth.tpl.html'"></ng-include>
                 </tab>
             </tabset>
         </div>
 
         <div ng-if="numberOfMonths == 1" ng-repeat="month in calendar.months"><!-- todo ugly, there is actually only one month -->
             <h5 class="text-center">{{month.monthStartDate.format('MMM YYYY')}} from {{month.monthLeadPrice | currency:month.monthLeadPriceCurrency}}</h5>
-            <ng-include src="'CalendarOneMonth'"></ng-include>
+            <ng-include src="'../src/view-templates/widgets/CalendarWidgetOneMonth.tpl.html'"></ng-include>
         </div>
     </div>
 </div>

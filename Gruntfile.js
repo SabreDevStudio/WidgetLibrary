@@ -1,5 +1,5 @@
 module.exports = function (grunt) {
-//    require('time-grunt')(grunt);
+    //require('time-grunt')(grunt);
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
@@ -43,8 +43,8 @@ module.exports = function (grunt) {
             options: {
                 jshintrc: '.jshintrc'
             },
-            prod: {
-                src: ['src/**/*.js', '!src/lib/**/*.js']
+            all: {
+                src: ['src/**/*.js', 'src-test/**/*.js']
             }
         },
 
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
                 stoponerror: false,
                 relaxerror: ['W001', 'W002', 'W003', 'W005', 'E001']
             },
-            files: ['src/view-templates/*.tpl.html', 'www/*.html']
+            files: ['src/view-templates/**/*.tpl.html']
         },
 
         autoprefixer: {
@@ -157,11 +157,16 @@ module.exports = function (grunt) {
         },
 
         karma: {
-            'unit all browsers': {
+            'unit-Chrome': {
+                configFile: 'karma.conf.js',
+                singleRun: true,
+                browsers: ['Chrome'],
+                logLevel: 'ERROR'
+            },
+            'unit-all-browsers': {
                 configFile: 'karma.conf.js',
                 singleRun: true,
                 browsers: ['Chrome', 'IE', 'IE9', 'Firefox', 'Safari'],
-                //browsers: ['IE', 'IE8'],
                 logLevel: 'ERROR',
                 customLaunchers: {
                     IE9: {
@@ -173,12 +178,6 @@ module.exports = function (grunt) {
                         'x-ua-compatible': 'IE=EmulateIE8'
                     }
                 }
-            },
-            'unit Safari': {
-                configFile: 'karma.conf.js',
-                singleRun: true,
-                browsers: ['Safari'],
-                logLevel: 'ERROR'
             }
         },
 
@@ -200,59 +199,44 @@ module.exports = function (grunt) {
             }
         },
 
-        requirejs: {
-            compile: {
-                // for all options see https://github.com/jrburke/r.js/blob/master/build/example.build.js
+        ngtemplates: {
+            sdsWidgets: {
+                cwd: 'src',
+                src: '../src/view-templates/**/*.html',
+                dest: 'build/ngtemplates/templateCacheCharger.js',
                 options: {
-                      name: 'SabreDevStudioSDK'
-                    , mainConfigFile: 'src/SabreDevStudioSDK.js'
-                    , out: "dist/widgets/SDSWidgets.min.js"
-                    , inlineText: true
-                    //, findNestedDependencies: true
-                    , paths: {
-                          //lodash: '../build/lodash/lodash.custom.build' // skipped lodash custom builds to save build time
-                         angular: '../bower_components/angular/angular.min'
-                    }
-                    , pragmas: {
-                        appBuildExclude:true
-                    }
-                    , include: ['../node_modules/requirejs/require.js']
-                    , mangle: true
-                    , optimize: 'uglify2'
-                    , uglify2: {
-                        compress: { // all those compress options decrease size by round 5%
-                            screw_ie8: true,
-                            sequences: true,
-                            properties: true,
-                            dead_code: true,
-                            drop_debugger: true,
-                            comparisons: true,
-                            conditionals: true,
-                            evaluate: true,
-                            booleans: true,
-                            loops: true,
-                            unused: true,
-                            hoist_funs: true,
-                            if_return: true,
-                            join_vars: true,
-                            cascade: true,
-                            negate_iife: true,
-                            drop_console: true
-                        }
-                        //warnings: true
+                    bootstrap:  function(module, templateCacheChargingScript) {
+                        return 'define(["angular", "widgets/SDSWidgets"], function(angular, SDSWidgets) { ' +
+                            'angular.module("' + module + '").run(["$templateCache", function($templateCache) {' +
+                                 templateCacheChargingScript + ' ' +
+                            '}]);' +
+                            '});';
+                    },
+                    htmlmin: {
+                        collapseBooleanAttributes:      true,
+                        collapseWhitespace:             true,
+                        removeAttributeQuotes:          true,
+                        removeComments:                 true, // Only if you don't use comment directives!
+                        removeEmptyAttributes:          true,
+                        removeRedundantAttributes:      true,
+                        removeScriptTypeAttributes:     true,
+                        removeStyleLinkTypeAttributes:  true
                     }
                 }
             }
         },
 
-        uncss: {
-            dist: {
-                files: {
-                    'dist/widgets/css/tidy.css': ['src/view-templates/**/*.html']
-                }
+        requirejs: {
+            'compile-standalone-app': {
+                options: grunt.file.readJSON('r.compiler.options.json')
             },
-            options: {
-                compress:true
+            'compile-library-only': {
+                options: (function () {
+                    var config = grunt.file.readJSON('r.compiler.options.json');
+                    config.pragmas.excludeWhenBuiltAsLibraryOnly = true;
+                    config.out = "dist/widgets/SDSWidgets.lib.min.js";
+                    return config;
+                })()
             }
         },
 
@@ -301,32 +285,55 @@ module.exports = function (grunt) {
                 }
             }
         }
-
     });
 
-    grunt.registerTask('test', 'karma');
-
-    grunt.registerTask('css-pipeline', ['compass', 'csslint', 'autoprefixer']);
-
-    grunt.registerTask('dist', [
+    grunt.registerTask('dist-standalone-app', [
           'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'jshint'
-        , 'requirejs:compile'
+        , 'unit-test'
+        , 'ngtemplates'
+        , 'requirejs:compile-standalone-app'
         , 'css-pipeline'
-        , 'cssmin:cssbundle'
-        , 'copy:bootstrap_glyphicons_fonts'
-        , 'includereplace:htmlPartials'
-        , 'copy:copyHtmlUpdatingLinksAndIncludes'
-        , 'copy:widgets_img'
-        , 'copy:page_img'
+        , 'copy-static-resources'
+    ]);
+
+    grunt.registerTask('dist-library-only', [
+        'clean:dist'
+        //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
+        , 'jshint'
+        , 'unit-test'
+        , 'ngtemplates'
+        , 'requirejs:compile-library-only'
+        , 'css-pipeline'
+        , 'copy-static-resources'
+    ]);
+
+    grunt.registerTask('dist-all', [
+        'clean:dist'
+        //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
+        , 'jshint'
+        , 'unit-test'
+        , 'ngtemplates'
+        , 'requirejs:compile-standalone-app'
+        , 'requirejs:compile-library-only'
+        , 'css-pipeline'
+        , 'copy-static-resources'
     ]);
 
     grunt.registerTask('dist-no-compile', [
           'clean:dist-no-compile'
         , 'css-pipeline'
-        , 'cssmin:cssbundle'
-        , 'copy:bootstrap_glyphicons_fonts'
+        , 'copy-static-resources'
+    ]);
+
+
+    grunt.registerTask('unit-test', 'karma:unit-Chrome');
+
+    grunt.registerTask('css-pipeline', ['compass', 'bootlint', 'csslint', 'autoprefixer', 'cssmin:cssbundle']);
+
+    grunt.registerTask('copy-static-resources', [
+        'copy:bootstrap_glyphicons_fonts'
         , 'includereplace:htmlPartials'
         , 'copy:copyHtmlUpdatingLinksAndIncludes'
         , 'copy:widgets_img'

@@ -2,14 +2,12 @@ define([
           'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/ItineraryShortSummary.tpl.html'
         , 'util/CommonDisplayDirectives'
     ],
     function (
           angular
         , angular_bootstrap
         , SDSWidgets
-        , ItineraryShortSummaryTemplate
         , CommonDisplayDirectives
 
     ) {
@@ -21,7 +19,7 @@ define([
                     scope: {
                         itinerary: '=itin'
                     },
-                    template: ItineraryShortSummaryTemplate
+                    templateUrl: '../src/view-templates/widgets/ItineraryShortSummary.tpl.html'
                 }
             });
     });

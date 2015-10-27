@@ -5,16 +5,6 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/partials/PreferredCabinSelect.tpl.html'
-        , 'text!view-templates/partials/PreferredAirlineSelect.tpl.html'
-        , 'text!view-templates/partials/AirportInput.tpl.html'
-        , 'text!view-templates/partials/InputDate.tpl.html'
-        , 'text!view-templates/partials/InputTimeRangePickerTemplate.tpl.html'
-        , 'text!view-templates/partials/InputOnOffToggle.tpl.html'
-        , 'text!view-templates/partials/PlusMinusDaysSelection.tpl.html'
-        , 'text!view-templates/partials/SelectMonths.tpl.html'
-        , 'text!view-templates/partials/SelectDaysOfWeek.tpl.html'
-        , 'text!view-templates/partials/SelectLengthsOfStay.tpl.html'
         , 'widgets/searchForm/AirportNameBestSuggestionComparator'
     ],
     function (
@@ -24,16 +14,6 @@ define([
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , PreferredCabinSelectTemplate
-        , PreferredAirlineSelectTemplate
-        , AirportInputTemplate
-        , InputDateTemplate
-        , InputTimeRangePickerTemplate
-        , InputOnOffToggleTemplate
-        , PlusMinusDaysSelectionTemplate
-        , SelectMonthsTemplate
-        , SelectDaysOfWeekTemplate
-        , SelectLengthsOfStayTemplate
         , AirportNameBestSuggestionComparator
     ) {
         'use strict';
@@ -55,7 +35,7 @@ define([
                     scope: {
                         cabinSelected: '='
                     },
-                    template: PreferredCabinSelectTemplate
+                    templateUrl: '../src/view-templates/partials/PreferredCabinSelect.tpl.html'
                 };
             })
             .directive('selectPreferredAirline', [
@@ -68,7 +48,7 @@ define([
                     scope: {
                         preferredAirline: '='
                     },
-                    template: PreferredAirlineSelectTemplate,
+                    templateUrl: '../src/view-templates/partials/PreferredAirlineSelect.tpl.html',
                     link: function (scope) {
                         AirlineLookupDataService.getAirlineAndAirlineCodesList().then(function (airlineAndAirlineCodesList) {
                             // add empty airline to all airlines model to denote no airline preference
@@ -90,7 +70,7 @@ define([
                     scope: {
                         airport: '='
                     },
-                    template: AirportInputTemplate,
+                    templateUrl: '../src/view-templates/partials/AirportInput.tpl.html',
                     link: function (scope) {
                         if (globalAirportsDictionary) {
                             scope.airports = globalAirportsDictionary;
@@ -121,7 +101,7 @@ define([
                             , date: '='
                             , onDateChange: '&'
                         },
-                        template: InputDateTemplate,
+                        templateUrl: '../src/view-templates/partials/InputDate.tpl.html',
                         link: function (scope) {
                             scope.dateFormat = scope.dateFormat || 'dd-MMM-yyyy';
 
@@ -147,7 +127,7 @@ define([
                         value: '='
                     },
                     transclude: true,
-                    template: SelectMonthsTemplate,
+                    templateUrl: '../src/view-templates/partials/SelectMonths.tpl.html',
                     link: function (scope) {
                         scope.allMonths = _.clone($locale.DATETIME_FORMATS.MONTH);
                     }
@@ -161,7 +141,7 @@ define([
                         , innerFormName: '@name'
                     },
                     transclude: true,
-                    template: SelectDaysOfWeekTemplate,
+                    templateUrl: '../src/view-templates/partials/SelectDaysOfWeek.tpl.html',
                     link: function (scope, element) {
                         scope.daysOfWeek = _.clone($locale.DATETIME_FORMATS.SHORTDAY); //WARN: this will print short week days according to locale. Please also mind that first day of week is also locale specific. For US it is Sunday. Next logic does not take it into account. There is no way to recognize it in NG, you could use moment.js: moment().startOf("week").day()
                         scope.daysSelected = [false, false, false, false, false, false, false];
@@ -180,7 +160,7 @@ define([
                         lengthOfStay: '=value'
                     },
                     transclude: true,
-                    template: SelectLengthsOfStayTemplate,
+                    templateUrl: '../src/view-templates/partials/SelectLengthsOfStay.tpl.html',
                     link: function (scope) {
                         scope.predefinedLengthOfStayDays = [1, 2, 7, 14];
                         scope.selectedPredefinedLengthOfStayDays = {
@@ -232,7 +212,7 @@ define([
                           timeMin: '='
                         , timeMax: '='
                     },
-                    template: InputTimeRangePickerTemplate,
+                    templateUrl: '../src/view-templates/partials/InputTimeRangePickerTemplate.tpl.html',
                     link: function (scope, element) {
 
                         scope.step = element.attr('stepMinutes') || MINUTES_IN_HOUR;
@@ -265,7 +245,7 @@ define([
                         , ngOnValue: '@'
                         , ngOffValue: '@'
                     },
-                    template: InputOnOffToggleTemplate,
+                    templateUrl: '../src/view-templates/partials/InputOnOffToggle.tpl.html',
                     link: function (scope, element) {
                         // by default the toggle is in off state
                         scope.selectedValue = scope.ngOffValue;
@@ -285,7 +265,7 @@ define([
                           days: '='
                         , maxDays: '@'
                     },
-                    template: PlusMinusDaysSelectionTemplate,
+                    templateUrl: '../src/view-templates/partials/PlusMinusDaysSelection.tpl.html',
                     link: function (scope) {
                         var DEFAULT_PLUS_MINUS_DAYS_MAX_DAYS = 3;
                         var maxDays = parseInt(scope.maxDays) || DEFAULT_PLUS_MINUS_DAYS_MAX_DAYS;

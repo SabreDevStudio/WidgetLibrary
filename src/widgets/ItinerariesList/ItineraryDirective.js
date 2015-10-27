@@ -3,7 +3,6 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'text!view-templates/widgets/Itinerary.tpl.html'
         , 'util/DOMManipulationUtils'
         , 'util/CommonDirectives'
     ],
@@ -11,7 +10,6 @@ define([
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , ItineraryTemplate
         , domUtils
         , CommonDirectives
     ) {
@@ -24,7 +22,7 @@ define([
                     scope: {
                         itinerary: '=itin'
                     },
-                    template: ItineraryTemplate,
+                    templateUrl: '../src/view-templates/widgets/Itinerary.tpl.html',
                     link: function (scope, element) {
 
                         function addClickEventHandlers(element) {
@@ -35,6 +33,10 @@ define([
                             domUtils.addToggleOnClickHandler(element, '.SDSItineraryToggleFlightDetails', '.SDSItineraryFlightDetails');
                             domUtils.addShowOnClickHandler(element, '.SDSItineraryShowFlightDetails', '.SDSItineraryFlightDetails', '.SDSItineraryHideWhenFlightDetailsShown');
                             domUtils.addHideOnClickHandler(element, '.SDSItineraryHideFlightDetails', '.SDSItineraryFlightDetails', '.SDSItineraryHideWhenFlightDetailsShown');
+
+                            domUtils.addToggleOnClickHandler(element, '.SDSItineraryToggleBrandDetails', '.SDSItineraryBrandDetails');
+                            //domUtils.addShowOnClickHandler(element, '.SDSItineraryShowBrandDetails', '.SDSItineraryBrandDetails');
+                            domUtils.addHideOnClickHandler(element, '.SDSItineraryHideBrandDetails', '.SDSItineraryBrandDetails');
                         }
 
                         addClickEventHandlers(element);

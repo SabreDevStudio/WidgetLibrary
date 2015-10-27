@@ -51,8 +51,8 @@
     "Chart.js": "~1.0.2",
     "angular-promise-extras": "~0.1.4",
     "iso-currency": "~0.1.6",
-    "text": "~2.0.14",
-    "titatoggle": "~1.2.6"
+    "titatoggle": "~1.2.6",
+    "elementQuery": "https://github.com/TomekSzymanski/elementQuery.git"
   },
   "resolutions": {
     "angular": "1.3.x",
