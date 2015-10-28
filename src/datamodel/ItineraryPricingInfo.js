@@ -16,7 +16,7 @@ define([
          * and all other fare conditions related information: if ticket will be refundable, OB fees, baggage allowance (pieces, kg), cabin (Economy), number of seats remaining, meal.
          *
          * It is the collaborator of Itinerary, assigned to its field itineraryPricingInfo.
-         * In case of branded itineraries it is also assigned as elements to additionalFaresPricingInfos - one item per for every brand.
+         * In case of branded itineraries, the class inheriting from this class - BrandedItineraryPricingInfo is also assigned as elements to additionalFaresPricingInfos - one item per for every brand.
          *
          * @param legsSegmentCounts array with number of segments for every leg. For example [1,2] (one segments in first leg, two segments in second). This context object is needed for parsing.
          * @constructor
@@ -30,9 +30,6 @@ define([
             this.OBFees = [];
 
             this.baggageAllowance = undefined;
-
-            //TODO extract all brand related info into other inheriting class
-            this.brandToSegmentMatchings = [];
 
             /* two level map of leg and segment indices into segment (flight) cabin code.
              * For example: this.segmentCabins[1][2] will refer to the cabin of the leg with index 1 (second leg) and segment with index 2 (third segment).
@@ -49,7 +46,7 @@ define([
                 totalTax: undefined
             };
 
-            // will store summaries, like unique brands, or unique cabins. For performance optimisation
+            // will store summaries, like unique cabins. For performance optimisation.
             this.summaries = {};
         }
 
@@ -72,12 +69,6 @@ define([
                 totalSegmentsTillStartOfThisLeg = totalSegmentsTillEndOfThisLeg;
             }
         };
-
-        /**
-         * For discrimination between this and its accompanying null object ItineraryPricingInfoNotReturnedFares. Always returns false.
-         * @returns {boolean}
-         */
-        ItineraryPricingInfo.prototype.fareReturned = true;
 
         /**
          * Used by parsers, sets cabin for given <b>absolute</b> segment (flight) index.
@@ -112,28 +103,6 @@ define([
                 this.segmentSeatsRemaining[legAndSegmentIndices.legIdx] = {};
             }
             this.segmentSeatsRemaining[legAndSegmentIndices.legIdx][legAndSegmentIndices.relativeSegmentIdx] = seatsRemaining;
-        };
-
-        /**
-         * For given leg and segment relative indexes returns the brand name (if exists) if the brand was assigned to given flight.
-         */
-        ItineraryPricingInfo.prototype.getBrandMatchedToFlight = function (legIndex, segmentIndex) {
-            var matchingFound = _.find(this.brandToSegmentMatchings, function (matchingItem) {
-                return matchingItem.hasMatchingForFlight(legIndex, segmentIndex);
-            });
-            return matchingFound && matchingFound.brandName;
-        };
-
-        /**
-         * Returns array of _uniq_ brands matched to all itinerary flights. In particular may be one element array.
-         */
-        ItineraryPricingInfo.prototype.getUniqueBrandsMatchedToAllFlights = function () {
-            if (_.isUndefined(this.brandToSegmentMatchings)) {
-                return [];
-            }
-            return _.uniq(this.brandToSegmentMatchings.map(function (matching) {
-                return matching.brandName;
-            }));
         };
 
         ItineraryPricingInfo.prototype.getSeatsRemaining = function (legIdx, segmentIdx) {
@@ -195,8 +164,7 @@ define([
 
         ItineraryPricingInfo.prototype.updateSummaries = function () {
             this.summaries = {
-                  uniqueBrandsMatchedToAllFlights: this.getUniqueBrandsMatchedToAllFlights()
-                , uniqueCabins: this.getUniqueCabins()
+                  uniqueCabins: this.getUniqueCabins()
                 , uniqueMeals: this.getUniqueMeals()
                 , uniqueBaggageAllowance: this.getUniqueBaggageAllowance()
             };

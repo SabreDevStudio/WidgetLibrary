@@ -105,12 +105,6 @@ define([
                         link: function (scope) {
                             scope.dateFormat = scope.dateFormat || 'dd-MMM-yyyy';
 
-                            //element.removeAttr('required');
-                            //element.removeAttr('date');
-                            //element.removeAttr('on-date-change');
-                            //element.removeAttr('min-date'); //TODO these two are not removed
-                            //element.removeAttr('date-format'); //TODO these two are not removed
-
                             scope.openDatePicker = function($event) {
                                 $event.preventDefault();
                                 $event.stopPropagation();

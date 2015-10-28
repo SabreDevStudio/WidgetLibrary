@@ -32,7 +32,7 @@ define([
         };
 
         OTAResponseParser.prototype.parseEquipment = function(segment) {
-            return segment.Equipment[0].AirEquipType;
+            return segment.Equipment[0].AirEquipType; // the case with changing equipment (actual aircraft) during one segment (perhaps at hidden stop) is extremely rare. Not found at testing targeted at hidden stops. Not complicating structures for such case only. Also the info about second equipment type not crucial to end user.
         };
 
         OTAResponseParser.prototype.getBusinessErrorMessages = function (message) {
@@ -55,12 +55,9 @@ define([
         };
 
         OTAResponseParser.prototype.parsePricingSource = function(itinerary) {
-            return 'BFM'; //TODO: parse actual from response
-            // or more detailed parsing:
-            //var pricingInfo = itinerary.AirItineraryPricingInfo[0];
-            //if (pricingInfo.PricingSource === 'ADVJR1' && pricingInfo.PricingSubSource === 'MIP') {
-            //    return 'BFM_MIP';
-            //}
+            //Parsing pricing source only for the main fare. No case that pricing source for additional fares (like branded) is different than for main fare.
+            var pricingInfo = itinerary.AirItineraryPricingInfo[0];
+            return pricingInfo.PricingSource + ':' + pricingInfo.PricingSubSource;
         };
 
         return OTAResponseParser;

@@ -51,7 +51,7 @@ define([
                             return getDataFromService(bfmWebService, searchCriteria);
                         }
                         // alternate dates requests
-                        if (searchCriteria.isAlternateDatesRequest()) { //TODO split this service into plain date search and AD search (interface segregation principle)
+                        if (searchCriteria.isAlternateDatesRequest()) {
                             if (searchCriteria.returnAlternateDatesOnly) {
                                 return getDataFromService(bfmAltDatesWebService, searchCriteria);
                             } else { // call both Alt Dates BFM and normal BFM

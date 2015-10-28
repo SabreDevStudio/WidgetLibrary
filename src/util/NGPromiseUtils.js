@@ -24,7 +24,6 @@ define([
                      * @param rejectionReasonsMergeFn
                      * @returns {*}
                      */
-                        // TODO make it working without dependency on $q.allSettled
                     $q.mergePromises = function (promises, fulfilledValuesMergeFn, rejectionReasonsMergeFn) {
                         return $q(function (resolve, reject) {
                             $q.allSettled(promises)
@@ -75,7 +74,7 @@ define([
 
                     function getFulfilledValues(values) {
                         return values
-                            .filter(function (v) { //TODO working only with arr, not obj
+                            .filter(function (v) { //working only with array, not obj
                                 return v.state === 'fulfilled';
                             })
                             .map(function (v) {
@@ -84,7 +83,7 @@ define([
                     }
 
                     function getRejectionReasons(values) {
-                        return values.filter(function (v) { //TODO working only with arr, not obj
+                        return values.filter(function (v) { //working only with array, not obj
                             return v.state === 'rejected';
                         })
                             .map(function (v) {
@@ -93,7 +92,7 @@ define([
                     }
 
                     //function moreThanOneFulfilled(values) {
-                    //    for (var i = 0; i++; i < values.length) { //TODO make it working also with values as object, not only arr
+                    //    for (var i = 0; i++; i < values.length) { //working only with array, not obj
                     //        if (values[i].state === 'fulfilled') {
                     //            if (otherFulfilledAlreadyFound) {
                     //                return true;
@@ -104,7 +103,6 @@ define([
                     //    }
                     //    return false;
                     //}
-
 
                     return $q;
                 }]);

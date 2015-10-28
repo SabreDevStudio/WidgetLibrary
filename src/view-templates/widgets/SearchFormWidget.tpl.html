@@ -146,7 +146,7 @@
 
         <div ng-if="tripType === 'oneWay' || tripType === 'returnTrip'">
             <div class="SDSTopBuffer-xs"></div>
-            <form class="SDS-form-xl-inline" name="searchForm" class="SDSTopBuffer-xs" novalidate ng-submit="createNewSearchCriteria()">
+            <form class="SDS-form-xl-inline" name="searchForm" class="SDSTopBuffer-xs" novalidate ng-submit="searchForm.$valid && createNewSearchCriteria()">
                     <div class="SDS-row">
                         <div class="SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Origin.$invalid}">
@@ -155,6 +155,7 @@
                             </div>
                             <div ng-show="searchForm.$submitted && searchForm.Origin.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.Origin.$error.required">Type origin airport or city</small>
+                                <small class="help-block" ng-show="searchForm.Origin.$error.pattern">Please select airport or city from the suggested matchings</small>
                             </div>
                         </div>
                         <div class="SDS-col-element-sm-3">
@@ -164,6 +165,7 @@
                             </div>
                             <div  ng-show="searchForm.$submitted && searchForm.Destination.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.Destination.$error.required">Type destination airport or city</small>
+                                <small class="help-block" ng-show="searchForm.Destination.$error.pattern">Please select airport or city from the suggested matchings</small>
                             </div>
                         </div>
                         <div class="SDS-col-element-sm-3">
@@ -226,7 +228,7 @@
 
         <div ng-if="tripType === 'multiDestination'">
             <div class="SDSTopBuffer-xs"></div>
-            <form class="SDS-form-xl-inline" name="searchFormMultiDestination" class="SDSTopBuffer-xs" novalidate ng-submit="createNewSearchCriteria()">
+            <form class="SDS-form-xl-inline" name="searchFormMultiDestination" class="SDSTopBuffer-xs" novalidate ng-submit="searchFormMultiDestination.$valid && createNewSearchCriteria()">
 
                 <div ng-repeat="i in multiDestinationLegs">
                     <div class="SDS-row">
@@ -237,6 +239,7 @@
                             </div>
                             <div ng-show="searchFormMultiDestination.$submitted && searchFormMultiDestination.Origin_{{$index}}.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchFormMultiDestination.Origin_{{$index}}.$error.required">Type origin airport or city</small>
+                                <small class="help-block" ng-show="searchFormMultiDestination.Origin_{{$index}}.$error.pattern">Please select airport or city from the suggested matchings</small>
                             </div>
                         </div>
 
@@ -247,6 +250,7 @@
                             </div>
                             <div ng-show="searchFormMultiDestination.$submitted && searchFormMultiDestination.Destination_{{$index}}.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchFormMultiDestination.Destination_{{$index}}.$error.required">Type destination airport or city</small>
+                                <small class="help-block" ng-show="searchFormMultiDestination.Destination_{{$index}}.$error.pattern">Please select airport or city from the suggested matchings</small>
                             </div>
                         </div>
 

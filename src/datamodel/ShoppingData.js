@@ -1,6 +1,19 @@
-define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], function (moment, ItinerariesList, _) {
+define([
+      'moment'
+    , 'datamodel/ItinerariesList'
+    , 'util/LodashExtensions'
+], function (
+      moment
+    , ItinerariesList,
+      _
+) {
     "use strict";
 
+    /**
+     * The goal for this container is to provide a caching service for any calendar type searches.
+     * While searching for the same search criteria (apart from the searched range itself), you can use this container to accumulate searched itineraries, and then reuse them when search is done within the search ranges done previously.
+     * If you do not need such complex caching behaviour, remove use of this class from its client (and possibly use any other simpler mechanism, like CachingDecorator from sabreDevStudioWebServices module.
+     */
     function ShoppingData() {
 
         this.data = {};
@@ -103,7 +116,6 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
         }
     };
 
-
     ShoppingData.prototype.getLeadPricesForMonth = function (key, month) {
         var leadPrices = {};
         var that = this;
@@ -167,7 +179,6 @@ define(['moment', 'datamodel/ItinerariesList', 'util/LodashExtensions'], functio
         });
     };
 
-    //TODO this is lodash 3.7 _.set function, other problems with new lodash 3.7 now, refactor later
     ShoppingData.prototype.initKeyEntries = function(data, key, monthKey, dayKey) {
         if (_.isUndefined(data)) {
             this.data = {};

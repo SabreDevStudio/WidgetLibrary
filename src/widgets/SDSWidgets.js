@@ -50,7 +50,7 @@ define([
             .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
             .constant('dateSelectedEvent', 'dateSelectedEvent')
             .constant('noResultsFoundEvent', 'noResultsFoundEvent')
-            .config(['datepickerConfig', function (datepickerConfig) { //TODO make every widget a module of its own, then this config, specyfic to Form will go there
+            .config(['datepickerConfig', function (datepickerConfig) {
                 datepickerConfig.showWeeks = false;
                 datepickerConfig.startingDay = 1;
                 datepickerConfig.yearRange = 2;

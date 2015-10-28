@@ -359,7 +359,7 @@ define([
      * @memberof Itinerary
      */
     Itinerary.prototype.hasRedEyeFlight = function () {
-        // WARN: performance optimisation, assuming Itinerary object is not changed after creation (all legs are added in batch, after object creation, and before querying this hasRedEyeFlight property) //TODO: change into client (parser) to call method .build() on Itinerary, and that method will call update all stats and indicators
+        // WARN: performance optimisation, assuming Itinerary object is not changed after creation (all legs are added after object creation, and before querying this hasRedEyeFlight property)
         if (_.isUndefined(this.hasRedEyeFlightIndicator)) {
             this.hasRedEyeFlightIndicator = this.legs.some(function (leg) {
                 return leg.hasRedEyeFlight();

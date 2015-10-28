@@ -86,7 +86,7 @@ define([
                                     function (response) {
                                         var itinerariesList = responseParser.parse(response);
 
-                                        var shoppingData = new ShoppingData(); //TODO far too complex interface to ShoppingData
+                                        var shoppingData = new ShoppingData();
                                         shoppingData.markRequestedData(cacheKey, range.start, range.end);
                                         itinerariesList.getItineraries().forEach(function(itineary) {
                                             shoppingData.addItinerary(cacheKey, itineary, itineary.getOutboundDepartureDateTime());
@@ -148,7 +148,9 @@ define([
                             });
 
                         },
-                        getMinDateAndPricePair: function (searchCriteria) { //todo for now assume it is called after getLeadPricesForRange
+                        //WARN: assuming this method is called _after_ getLeadPricesForRange. Otherwise it will not return results.
+                        //WARN: it will extract min date and price pair for the range that was previously specified when calling getLeadPricesForRange
+                        getMinDateAndPricePair: function (searchCriteria) {
                             var cacheKey = createCacheKey(searchCriteria);
                             var minDateAndPricePair = ShoppingOptionsCacheService.getMinDateAndPricePair(cacheKey);
                             return {
@@ -157,6 +159,7 @@ define([
                                 , date: minDateAndPricePair.date
                             };
                         },
+                        //WARN: same comments as for getMinDateAndPricePair
                         getMaxAvailableDate: function (searchCriteria) {
                             var cacheKey = createCacheKey(searchCriteria);
                             return ShoppingOptionsCacheService.getMaxAvailableDate(cacheKey);

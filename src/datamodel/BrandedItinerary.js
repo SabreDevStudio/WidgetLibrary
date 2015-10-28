@@ -1,10 +1,12 @@
 define([
-        'datamodel/Itinerary'
+          'lodash'
         , 'util/LodashExtensions'
+        , 'datamodel/Itinerary'
     ],
     function (
-        Itinerary
+          _
         , __
+        , Itinerary
     ) {
         'use strict';
 
@@ -26,6 +28,15 @@ define([
 
         BrandedItinerary.prototype = Object.create(Itinerary.prototype);
         BrandedItinerary.prototype.constructor = BrandedItinerary;
+
+        /**
+         * Factory method creating this class objects from its base class objects
+         */
+        BrandedItinerary.prototype.createBrandedItinerary = function (itinerary) {
+            itinerary.additionalFaresPricingInfos = [];
+            _.extend(itinerary, BrandedItinerary.prototype);
+            return itinerary;
+        };
 
         /**
          * Used by parsers of branded itineraries response, while building branded itineraries.

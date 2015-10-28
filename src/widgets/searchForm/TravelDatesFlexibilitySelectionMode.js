@@ -29,11 +29,8 @@ define([
         };
 
         TravelDatesFlexibilitySelectionMode.prototype.isSelectableByEarliestDepartureLatestReturn = function () {
-            var that = this;
-            return this.selectableModes.some(function (mode) { //TODO unused arg
-               return _.contains(that.selectableModes, 'earliestDepartureLatestReturn.losDays')
-                   || _.contains(that.selectableModes, 'earliestDepartureLatestReturn.daysOfWeekAtDestination');
-            });
+           return _.contains(this.selectableModes, 'earliestDepartureLatestReturn.losDays')
+               || _.contains(this.selectableModes, 'earliestDepartureLatestReturn.daysOfWeekAtDestination');
         };
 
         TravelDatesFlexibilitySelectionMode.prototype.isSelectableByAnyOf = function (modes) {

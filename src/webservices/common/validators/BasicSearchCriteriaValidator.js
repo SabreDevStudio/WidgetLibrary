@@ -24,7 +24,7 @@ define([
         };
 
         BasicSearchCriteriaValidator.prototype.validateAirportCodes = function (searchCriteria) {
-            //TODO change validator to not throw exceptions
+            // it is unexpected at this stage that airport codes are not correct. That is why these methods throw exception, instead of appending to errors array, like all other checks.
             v.airportCode(searchCriteria.getFirstLeg().origin,
                 "You have to specify origin location, and it must be valid 3 letter airport or city code, for example LAX");
             v.airportCode(searchCriteria.getFirstLeg().destination,

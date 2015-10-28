@@ -92,6 +92,7 @@ define([
         AbstractOTAResponseParser.prototype.parseItinerary = function (responseItin) {
             var that = this;
             var itinerary = new Itinerary();
+
             responseItin.AirItinerary.OriginDestinationOptions.OriginDestinationOption.forEach(function (leg) {
                 itinerary.addLeg(that.parseLeg(leg));
             });
@@ -182,9 +183,6 @@ define([
             var leg = new Leg();
             leg.duration = parseInt(responseLeg.ElapsedTime);
             leg.segments = responseLeg.FlightSegment.map(function (segment) {
-                if (segment.Equipment.length > 1) {
-                    throw new Error('parser unsupported'); //TODO: find if such case exists in practice, perhaps on hidden stop
-                }
                 return new Segment({
                     departureAirport: segment.DepartureAirport.LocationCode,
 

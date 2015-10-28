@@ -10,27 +10,26 @@ define([
         }
 
         /**
-         * Performs deduplication of the itinerariesList passed as argument with own itineraries,
-         * and merges deduplicated itinerariesList to own itineraries list.
+         * Performs deduplication of the two itinerariesLists passed as arguments.
+         * Does not modify itineraries lists passed as arguments
          *
          * The deduplication key is the flight structure of itinerary: all flights of itinerary (segments: origin, destination, datetimes, flight numbers, airlines).
          * Any pricing and availability related information (booking codes, seats remaining, total fare) is not included into deduplication key.
          *
          * Algorithm:
-         * For every itinerary from argument itinerariesList DO: TODO correct doc
+         * For every itinerary from argument candidateItineraries DO:
          *  calculate itinerary flight structure
-         *  check if any own itinerary contains  same flight structure
-         *  IF any own itinerary contains same flight structure
-         *      THEN choose own itinerary (leave own itinerary in place) or replace own itinerary with argument itinerary, based on the priority of the web service that produced it (see later).
-         *      ELSE add the argument itinerary to own itineraries list
+         *  check if any currentItineraries contains  same flight structure
+         *  IF any currentItineraries itinerary contains same flight structure:
+         *      THEN add current itinerary to result set or replace current itinerary in result set with candidate itinerary, based on the priority of the web service that produced it (see later).
+         *      ELSE add the candidate itinerary to result list.
          * DONE;
          *
-         * WARN: this algorithm for the moment has O(n^2) complexity, can be easily improved.
+         * WARN: this algorithm has O(n^2) complexity, can be easily improved.
          *
          * When both itineraries have same flight structure than the version that was produced by a 'more life search' service will be chosen.
          * For example itineraries from BFM will be preferred over itineraries from Instaflights.
          *
-         * @param itinerariesList
          */
         ItinerariesDedupper.prototype.dedupMerge = function (currentItineraries, candidateItineraries) {
             var flightStructureToItinerariesMap = this.createFlightStructureToItinerariesMap(currentItineraries);
@@ -61,14 +60,14 @@ define([
          * @returns {number}
          */
         ItinerariesDedupper.prototype.comparePricingSources = function(first, second) {
-            if (first === 'BFM') {
+            if (first.indexOf('MIP') > -1) {
                 return 1;
             }
-            if (second === 'BFM') {
+            if (second.indexOf('MIP') > -1) {
                 return -1;
             }
             return 0;
-        }
+        };
 
         ItinerariesDedupper.prototype.createFlightStructureToItinerariesMap = function (itineraries) {
             return _.indexBy(itineraries, function (itin) {

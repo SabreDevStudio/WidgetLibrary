@@ -157,7 +157,7 @@ define([
                                 var webServiceRequestOptions = translateSearchCriteriaIntoRequestOptions(searchCriteria);
                                 LeadPriceCalendarWebService.get(webServiceRequestOptions).$promise.then(
                                     function(response) {
-                                        var leadFares = parser.parse(response); //TODO variables naming
+                                        var leadFares = parser.parse(response);
                                         leadFaresCache.put(searchCriteria, leadFares);
                                         var leadFaresForRange = sliceLeadFares(leadFares, range);
                                         var leadPrices = buildLeadPrices(leadFaresForRange, searchCriteria.maxStops);
@@ -193,17 +193,17 @@ define([
                                 );
                             });
                         },
-                        getMinDateAndPricePair: function (searchCriteria) { //todo for now assume it is called after getLeadPricesForRange
+                        getMinDateAndPricePair: function (searchCriteria) { // see AdvancedCalendarService, same method comments
                             var dataFromCache = leadFaresCache.get(searchCriteria);
                             if (_.isUndefined(dataFromCache)) {
-                                throw new Error('trying to get aggregate from lead prices data while first call not done yet'); //TODO handle
+                                throw new Error('trying to get aggregate from lead prices data while first call not done yet');
                             }
                             return getMinDateAndPricePair(dataFromCache, searchCriteria.maxStops);
                         },
-                        getMaxAvailableDate: function (searchCriteria) {
+                        getMaxAvailableDate: function (searchCriteria) { // see AdvancedCalendarService, same method comments
                             var dataFromCache = leadFaresCache.get(searchCriteria);
                             if (_.isUndefined(dataFromCache)) {
-                                throw new Error('trying to get aggregate from lead prices data while first call not done yet'); //TODO handle
+                                throw new Error('trying to get aggregate from lead prices data while first call not done yet');
                             }
                             return getMaxAvailableDate(dataFromCache);
                         }

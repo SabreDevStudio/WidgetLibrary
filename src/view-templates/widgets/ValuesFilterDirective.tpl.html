@@ -32,7 +32,7 @@
 
             <div ng-if="filterType === 'range' || filterType === 'rangeDateTime' || filterType === 'rangeMonetaryAmount'">
                 <span class="top-left">
-                    <span ng-if="filterType === 'range' || filterType === 'rangeDateTime'"><!-- todo this if else would go away if we define filter composition operator and pass composition here from parent directive-->
+                    <span ng-if="filterType === 'range' || filterType === 'rangeDateTime'">
                         {{filterInstance.minConstraint | applyFilter:valuesDisplayFilter:valuesDisplayFilterOptions}}
                     </span>
                     <span ng-if="filterType === 'rangeMonetaryAmount'">

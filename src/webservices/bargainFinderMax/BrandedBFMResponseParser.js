@@ -4,7 +4,8 @@ define([
         , 'datamodel/BrandedItinerary'
         , 'datamodel/BrandToSegmentMatchingItem'
         , 'datamodel/ItineraryPricingInfo'
-        , 'datamodel/ItineraryPricingInfoNotReturnedFare'
+        , 'datamodel/BrandedItineraryPricingInfo'
+        , 'datamodel/BrandedItineraryPricingInfoNotReturnedFare'
         , 'webservices/bargainFinderMax/BFMResponseParser'
     ],
     function (
@@ -13,7 +14,8 @@ define([
         , BrandedItinerary
         , BrandToSegmentMatchingItem
         , ItineraryPricingInfo
-        , ItineraryPricingInfoNotReturnedFare
+        , BrandedItineraryPricingInfo
+        , BrandedItineraryPricingInfoNotReturnedFare
         , BFMResponseParser
     ) {
         'use strict';
@@ -26,29 +28,17 @@ define([
         BrandedBFMResponseParser.prototype.constructor = BrandedBFMResponseParser;
 
         BrandedBFMResponseParser.prototype.parseItinerary = function (responseItin) {
-            var that = this;
-            var itinerary = new BrandedItinerary();
-
-            responseItin.AirItinerary.OriginDestinationOptions.OriginDestinationOption.forEach(function (leg) { //TODO dups with AbstractOTAResponseParser
-                itinerary.addLeg(that.parseLeg(leg));
-            });
-            if (responseItin.AirItineraryPricingInfo.length > 1) {
-                throw new Error('parser unsupported');
-            }
-            var itineraryPricingInfoResponsePart = this.getItineraryPricingInfoResponsePart(responseItin);
-            var legsSegmentCounts = itinerary.getLegsSegmentCounts();
-            itinerary.itineraryPricingInfo = this.parseItineraryPricingInfo(itineraryPricingInfoResponsePart, legsSegmentCounts);
+            var itinerary = BFMResponseParser.prototype.parseItinerary.call(this, responseItin);
+            var brandedItinerary = BrandedItinerary.prototype.createBrandedItinerary(itinerary);
 
             if (responseItin.TPA_Extensions.AdditionalFares) {
+                var legsSegmentCounts = itinerary.getLegsSegmentCounts();
                 var additionalFares = this.parseAdditionalFares(responseItin.TPA_Extensions.AdditionalFares, legsSegmentCounts);
                 additionalFares.forEach(function (additionalFare) {
-                    itinerary.addAdditionalFare(additionalFare);
+                    brandedItinerary.addAdditionalFare(additionalFare);
                 });
             }
-
-            itinerary.pricingSource = this.parsePricingSource(responseItin);
-
-            return itinerary;
+            return brandedItinerary;
         };
 
         /**
@@ -65,9 +55,9 @@ define([
         };
 
         BrandedBFMResponseParser.prototype.parseItineraryPricingInfo = function (itineraryPricingInfoResponsePart, legsSegmentCounts) {
-            // special case: FareReturned === false means that it was not possible to match fare to the itinerary. See ItineraryPricingInfoNotReturnedFare
+            // special case: FareReturned === false means that it was not possible to match fare to the itinerary. See BrandedItineraryPricingInfoNotReturnedFare
             if (itineraryPricingInfoResponsePart.FareReturned === false) {
-                var itinPricingInfoNotReturnedFares = new ItineraryPricingInfoNotReturnedFare(legsSegmentCounts);
+                var itinPricingInfoNotReturnedFares = new BrandedItineraryPricingInfoNotReturnedFare(legsSegmentCounts);
                 itinPricingInfoNotReturnedFares.fareStatus = itineraryPricingInfoResponsePart.FareStatus;
                 var brandToSegmentMatchingPart = itineraryPricingInfoResponsePart.TPA_Extensions.Legs;
                 itinPricingInfoNotReturnedFares.brandToSegmentMatchings = this.parseBrandToSegmentMatchingForNotReturnedFare(brandToSegmentMatchingPart);
@@ -75,9 +65,10 @@ define([
             }
 
             var itineraryPricingInfo = BFMResponseParser.prototype.parseItineraryPricingInfo.call(this, itineraryPricingInfoResponsePart, legsSegmentCounts);
+            var brandedItineraryPricingInfo = BrandedItineraryPricingInfo.prototype.createBrandedItineraryPricingInfo(itineraryPricingInfo);
 
             var fareComponents = itineraryPricingInfoResponsePart.PTC_FareBreakdowns.PTC_FareBreakdown[0].PassengerFare.TPA_Extensions.FareComponents;
-            itineraryPricingInfo.brandToSegmentMatchings = fareComponents && fareComponents.FareComponent.map(parseBrandToSegmentMatching);
+            brandedItineraryPricingInfo.brandToSegmentMatchings = fareComponents && fareComponents.FareComponent.map(parseBrandToSegmentMatching);
 
             function parseBrandToSegmentMatching(fc) {
                 var brandToSegmentMatching = new BrandToSegmentMatchingItem(fc.BrandName);
@@ -88,8 +79,8 @@ define([
                 return brandToSegmentMatching;
             }
 
-            itineraryPricingInfo.updateSummaries();
-            return itineraryPricingInfo;
+            brandedItineraryPricingInfo.updateSummaries();
+            return brandedItineraryPricingInfo;
         };
 
         /**
