@@ -1,10 +1,12 @@
 define([
           'widgets/SDSWidgets'
         , 'chartjs'
+        , 'lodash'
     ],
     function (
           SDSWidgets
         , Chart
+        , _
     ) {
         'use strict';
 
@@ -15,52 +17,57 @@ define([
                 // This color is the Bootstrap color for primary buttons, text, labels
                   fillColor: "#337ab7"
             })
-            .factory('ChartsFactory', function () {
+            .constant('globalBarChartConfiguration', {
+                scaleShowVerticalLines: false
+                , barValueSpacing: 2 //the default for this value is 5. It is set to 2 to make bars wider. WARN: if you, on the other hand set it to values greater than 5 (like 10), then the getBarsAtEvent will not work correctly ( will not be able to map bar to event click coordinates).
+                , tooltipFillColor: "rgba(255,255,255,0.8)" // make tooltips black on white background, instead of default (white on black background)
+                , tooltipFontColor: "rgba(0,0,0 ,0.8)"
+                , responsive: true
+            })
+            .factory('ChartsFactory', ['globalBarChartConfiguration', function (globalBarChartConfiguration) {
 
-                var globalBarChartConfiguration = {
-                      scaleShowVerticalLines: false
-                    , barValueSpacing: 2 //the default for this value is 5. It is set to 2 to make bars wider. WARN: if you, on the other hand set it to values greater than 5 (like 10), then the getBarsAtEvent will not work correctly ( will not be able to map bar to event click coordinates).
-                };
-
-                function createBarChart(element, chartData) {
+                function createBarChart(element, chartData, configurationOverrides, canvasCssOptions) {
                     var canvas = angular.element(element).find('canvas')[0]; //WARN: template must have canvas element already.
                     var ctx = canvas.getContext("2d");
 
-                    adjustCanvasCSSStyleToMatchParent(canvas);
+                    if (canvasCssOptions) {
+                        _.each(canvasCssOptions, function (value, cssProperty) {
+                            canvas.style[cssProperty] = value;
+                        });
+                    }
 
-                    return new Chart(ctx).Bar(chartData, globalBarChartConfiguration);
-                }
-
-                /** Need to dynamically adjust width of canvas to match the parent element width.
-                 * Left padding is also added for better look.
-                 * @param canvas
-                 */
-                function adjustCanvasCSSStyleToMatchParent(canvas) {
-                    // Chart.js charts are drawn on canvas and we need to set width of this canvas dynamically based on the parent element width.
-                    // For this calculation we need to include padding (because of the border-box sizing model)
-                    var leftPadding = 10;
-
-                    var parentWidth = parseInt((angular.element(canvas)).parent()[0].getBoundingClientRect().width); // getBoundingClientRect().width is replacement for jQuery width()
-                    canvas.style['max-width'] = (parentWidth - leftPadding) + 'px'; //setting max-width, as width is them overwritten
-                    canvas.style['padding-left'] = leftPadding + 'px';
+                    var chartConfiguration = _.extend(globalBarChartConfiguration, configurationOverrides);
+                    return new Chart(ctx).Bar(chartData, chartConfiguration);
                 }
 
                 return {
                     createBarChart: createBarChart
                 };
-            })
-            .constant('xAxisDateFormat', 'dd. D MMM')// for example: Mo. 17 Aug)
-            .factory('customToStringFunction', ['xAxisDateFormat', function(xAxisDateFormat) {
+            }])
+            .constant('labelsDateFormat', 'dd. D MMM')// for example: Mo. 17 Aug)
+            .constant('labelsDateRangeFormat', 'D MMM')// for example: Mo. 17 Aug)
+            .factory('DateToStringRedefineFactory', ['labelsDateFormat', function(xAxisDateFormat) {
                 // returns copy of original date, with the toString method overwritten.
                 // custom toString is needed to the Chart.js library to display label in the format we wish.
                 // Otherwise the default toString method would be used, which prints too much information (whole date time).
                 // Other solution would be to pass as label the already formatted date string, but then, in the click event handler,
                 // we would get just string from the helper getBarsAtEvent method (and would need to parse this back string into date object).
                 return {
-                    toString: function (date) {
+                    patchToStringMethod: function (date) {
                         var copy = date.clone();
                         copy.toString = function () {
                             return this.format(xAxisDateFormat);
+                        };
+                        return copy;
+                    }
+                };
+            }])
+            .factory('DateRangeToStringRedefineFactory', ['labelsDateRangeFormat', function(labelsDateRangeFormat) {
+                return {
+                    patchToStringMethod: function (momentRange) {
+                        var copy = momentRange.clone();
+                        copy.toString = function () {
+                            return this.start.format(labelsDateRangeFormat) + ' - ' + this.end.format(labelsDateRangeFormat);
                         };
                         return copy;
                     }

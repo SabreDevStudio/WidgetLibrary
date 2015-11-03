@@ -8,7 +8,7 @@
         No results found for {{lastSearchCriteriaAirports.departureAirport | cityAndAirportFullName}} to {{lastSearchCriteriaAirports.arrivalAirport | cityAndAirportFullName}}
         <div class="well well-sm">
             <ul>
-                <li ng-repeat="error in errors"><p class="text-danger">{{error}}</p></li>
+                <li ng-repeat="error in errors track by $index"><p class="text-danger">{{error}}</p></li>
             </ul>
         </div>
     </div>

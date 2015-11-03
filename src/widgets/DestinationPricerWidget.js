@@ -21,7 +21,7 @@ define([
         function DestinationPricesController(
             $scope
             , DestinationPricerDataService
-            , newSearchCriteriaEvent
+            , newInspirationalSearchCriteriaEvent
             , searchCriteriaBroadcastingService
         ) {
 
@@ -32,7 +32,7 @@ define([
             BaseController.call(this, {
                 scope: $scope
                 , searchService: searchService
-                , newSearchCriteriaEvent: newSearchCriteriaEvent
+                , newSearchCriteriaEvent: newInspirationalSearchCriteriaEvent
                 , searchCriteriaBroadcastingService: searchCriteriaBroadcastingService
             });
 
@@ -41,7 +41,7 @@ define([
             };
 
             this.clearModel = function () {
-                this.modelPricesToDestination = {}; //TODO: pull this strategy into BaseController
+                this.modelPricesToDestination = {};
             };
 
             this.isAnyDataToDisplayAvailable = function () {
@@ -50,7 +50,7 @@ define([
 
             this.clearModel();
 
-            return this
+            return this;
         }
         DestinationPricesController.prototype = Object.create(BaseController.prototype);
         DestinationPricesController.prototype.constructor = DestinationPricesController;

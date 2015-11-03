@@ -8,7 +8,7 @@ define([
       , 'webservices/Interceptors'
       , 'angular-ui-select'
       , 'angular-sanitize'
-      , 'util/Lookups'
+      , 'util/LookupFilters'
       , 'angular-img-fallback'
       , 'angular-rangeslider'
       , 'angular_iso_currency'
@@ -23,7 +23,7 @@ define([
         , Interceptors
         , angular_ui_select
         , angular_sanitize
-        , Lookups
+        , LookupFilters
         , angular_img_fallback
         , angular_rangeslider
         , angular_iso_currency
@@ -78,11 +78,11 @@ define([
             .service('InspirationalSearchCriteriaBroadcastingService', [
                 '$rootScope'
                 , 'newInspirationalSearchCriteriaEvent'
-                , function ($rootScope, newSearchCriteriaEvent) {
+                , function ($rootScope, newInspirationalSearchCriteriaEvent) {
                     var service = {};
                     service.searchCriteria = undefined;
                     service.broadcast = function () {
-                        $rootScope.$broadcast(newSearchCriteriaEvent);
+                        $rootScope.$broadcast(newInspirationalSearchCriteriaEvent);
                     };
                     return service;
                 }])

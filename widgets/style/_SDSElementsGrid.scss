@@ -8,6 +8,8 @@ $numberOfGridColumns: 12 !default;
   @include createGridColumnsForBreakpoint('60em', 'lg', 20px);
   @include createGridColumnsForBreakpoint('70em', 'xl', 20px);
   @include createGridColumnsForBreakpoint('80em', 'xxl', 20px);
+  @include createGridColumnsForBreakpoint('90em', '3xl', 20px);
+  @include createGridColumnsForBreakpoint('100em', '4xl', 20px);
 }
 
 @mixin createFormInlineForAllBreakpoints {

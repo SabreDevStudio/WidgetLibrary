@@ -6,7 +6,7 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'datamodel/SearchCriteria'
-        , 'widgets/fareRange/HighLowMedianCurrentChartDirective'
+        , 'widgets/informational/fareRange/HighLowMedianCurrentChartDirective'
         , 'webservices/informational/FareRangeDataService'
     ],
     function (

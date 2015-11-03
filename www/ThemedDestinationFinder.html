@@ -4,27 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Low Fare History</title>
+    <title>Destination Finder with Themes</title>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
     <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
     <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
 <body>
-
-<div id="mainPageContainer">
-    <partial command="include('partials/navigation.html')"></partial>
-    <div class="embeddedWidget" data-search-form></div>
-    <error-display class="embeddedWidget"></error-display>
-    <div class="row">
-        <div class="col-lg-4">
-            <error-display class="embeddedWidget"></error-display>
-            <low-fare-history class="embeddedWidget">
-            </low-fare-history>
-        </div>
+    <div id="mainPageContainer">
+        <partial command="include('partials/navigation.html')"></partial>
+        <!-- warn: error display widget must initialize first, so that it registers event handlers to listen on errors -->
+        <error-display class="embeddedWidget"></error-display>
+        <themed-destination-finder class="embeddedWidget"></themed-destination-finder>
     </div>
-</div>
-<script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
+
+    <script async data-main="../src/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
 </body>
 </html>

@@ -9,7 +9,9 @@
             from <strong>{{ctrl.minDateAndPricePair.totalFareAmountWithCurrency.amount | currency:ctrl.minDateAndPricePair.totalFareAmountWithCurrency.currency}}</strong> at <strong>{{ctrl.minDateAndPricePair.date.format('D MMM')}}</strong>
         </h5>
 
-        <canvas ng-click="ctrl.chartClicked($event)"></canvas>
+        <div>
+            <canvas ng-click="ctrl.chartClicked($event)"></canvas>
+        </div>
 
     </div>
 

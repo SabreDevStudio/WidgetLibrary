@@ -223,7 +223,7 @@ define([
                         }
                     });
                 }])
-            .factory('DestinationPricerWebService', [
+            .factory('DestinationPricerWebService', [ // aka Flights To
                 '$resource'
                 , 'apiURL'
                 , function (
@@ -234,6 +234,22 @@ define([
                     return $resource(endpointURL, {destination: '@_destination'}, {
                         get: {
                               method:'GET'
+                            , cache: true
+                            , headers: generalHeaders
+                        }
+                    });
+                }])
+            .factory('DestinationFinderWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v2/shop/flights/fares/';
+                    return $resource(endpointURL, {}, {
+                        get: {
+                            method:'GET'
                             , cache: true
                             , headers: generalHeaders
                         }
@@ -318,7 +334,59 @@ define([
                             , headers: generalHeaders
                         }
                     });
-                }]);
+                }])
+            .factory('TravelThemeLookupWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v1/lists/supported/shop/themes/';
+                    return $resource(endpointURL, {}, {
+                        get: {
+                            method:'GET'
+                            , cache: true
+                            , headers: generalHeaders
+                        }
+                    });
+                }])
+            .factory('TravelSeasonalityWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v1/historical/flights/:destination/seasonality';
+                    return $resource(endpointURL, {destination: '@_destination'}, {
+                        get: {
+                              method:'GET'
+                            , cache: true
+                            , headers: generalHeaders
+                        }
+                    });
+                }])
+            .factory('GeoSearchWebService', [
+                '$resource'
+                , 'apiURL'
+                , 'CachingDecorator'
+                , function (
+                    $resource
+                    , apiURL
+                    , CachingDecorator
+                ) {
+                    var endpointURL = apiURL + '/v1/lists/utilities/geosearch/locations';
+                    var resource = $resource(endpointURL, null, {
+                        sendRequest: {
+                              method:'POST'
+                            , headers: generalHeaders
+                        }
+                    });
+                    return {
+                        sendRequest: CachingDecorator.addCaching(resource.sendRequest, [404])
+                    };
+                }])
 
 
     });

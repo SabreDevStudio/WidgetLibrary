@@ -78,15 +78,17 @@ define([
         , 'widgets/calendar/CalendarWidget'
         , 'widgets/AlternateDatesMatrixWidget'
         , 'widgets/leadPriceChart/LeadPriceChartWidget'
-        , 'widgets/LowFareHistoryWidget'
+        , 'widgets/informational/LowFareHistoryWidget'
+        , 'widgets/informational/TravelSeasonalityWidget'
         , 'widgets/searchForm/SearchFormWidget'
         , 'widgets/searchForm/SearchFormInspirationalWidget'
         , 'widgets/searchForm/SearchFormInputControls'
         , 'widgets/ItinerariesList/InputSortBy'
-        , 'widgets/fareForecast/FareForecastWidget'
-        , 'widgets/fareRange/FareRangeWidget'
+        , 'widgets/informational/fareForecast/FareForecastWidget'
+        , 'widgets/informational/fareRange/FareRangeWidget'
         , 'widgets/FareNabberWidget'
         , 'widgets/DestinationPricerWidget'
+        , 'widgets/inspirational/ThemedDestinationFinderWidget'
         , 'widgets/ItinerariesList/ItinerariesListWidget'
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
@@ -105,6 +107,7 @@ define([
         , AlternateDatesMatrixWidget
         , LeadPriceChartWidget
         , LowFareHistoryWidget
+        , TravelSeasonalityWidget
         , SearchFormWidget
         , SearchFormInspirationalWidget
         , SearchFormInputControls
@@ -113,6 +116,7 @@ define([
         , FareRangeWidget
         , FareNabberWidget
         , DestinationPricerWidget
+        , ThemedDestinationFinderWidget
         , ItinerariesListWidget
         , FiltersPanelWidget
         , DiscreteFilterWidget

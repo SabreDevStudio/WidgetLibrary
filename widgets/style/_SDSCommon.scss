@@ -126,3 +126,17 @@ $itemsSeparatingLineStyle: solid #D2DDE4 1px;
   }
 }
 
+.SDSHideOverflow {
+  text-overflow: clip;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.SDSSearchInProgressUponClicked {
+  cursor: wait;
+}
+
+.SDSPaddingSmall {
+  padding-right: 0.2rem;
+  padding-left: 0.2rem;
+}

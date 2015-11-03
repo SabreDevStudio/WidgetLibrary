@@ -30,7 +30,7 @@ define([
             , newSearchCriteriaEvent
             , searchCriteriaBroadcastingService
             , globalChartStyleConfiguration
-            , customToStringFunction
+            , DateToStringRedefineFactory
         ) {
             var searchService = {
                 executeSearch: LowFareHistoryDataService.getLowFareHistory
@@ -56,7 +56,7 @@ define([
             initializeEmptyModel();
 
             this.processSearchResults = function (lowFareHistory) {
-                chartData.labels = _.pluck(lowFareHistory.historicalPrices, 'dateOfShopping').map(customToStringFunction.toString).reverse();
+                chartData.labels = _.pluck(lowFareHistory.historicalPrices, 'dateOfShopping').map(DateToStringRedefineFactory.patchToStringMethod).reverse();
                 chartData.datasets[0].data = _.pluck(lowFareHistory.historicalPrices, 'lowestFare').reverse();
                 chartInstance.initialize(chartData);
             };
@@ -85,7 +85,7 @@ define([
                     , 'newSearchCriteriaEvent'
                     , 'SearchCriteriaBroadcastingService'
                     , 'globalChartStyleConfiguration'
-                    , 'customToStringFunction'
+                    , 'DateToStringRedefineFactory'
                 , LowFareHistoryController])
             .directive('lowFareHistory', [
                     'ChartsFactory'

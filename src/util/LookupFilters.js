@@ -52,6 +52,15 @@ define([
              * Accepts IATA airport or city code, for example 'LON'.
              * If the value passed is airport and the airport name is different than the city it is located in, then returns bot airport name and city name (comma separated). If they are same returns just one.
              */
+            .filter('cityFullName', ['AirportLookupDataService', function (AirportLookupDataService) {
+                var filterFromBuilder = buildFilter(AirportLookupDataService.getAirportsDictionary());
+                var cityFullNameDecorator = function (airportCode) {
+                    var entryFound = filterFromBuilder(airportCode);
+                    return (entryFound.cityName)? entryFound.cityName: entryFound;
+                }
+                cityFullNameDecorator.$stateful = true;
+                return cityFullNameDecorator;
+            }])
             .filter('cityAndAirportFullName', ['AirportLookupDataService', function (AirportLookupDataService) {
                 var filterFromBuilder = buildFilter(AirportLookupDataService.getAirportsDictionary());
 

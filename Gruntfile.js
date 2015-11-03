@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         bootlint: {
             options: {
                 stoponerror: false,
-                relaxerror: ['W001', 'W002', 'W003', 'W005', 'E001']
+                relaxerror: ['W001', 'W002', 'W003', 'W005', 'E001', 'W012']
             },
             files: ['src/view-templates/**/*.tpl.html']
         },
@@ -105,6 +105,38 @@ module.exports = function (grunt) {
                 dest: 'dist/widgets/',
                 options: {
                     nonull: true
+                }
+            },
+            'cdnify-inline-style-images-urls': { // cannot use grunt-cdnify because it does not support inline css styles
+                expand: true,
+                src: 'src/view-templates/**/*.html',
+                dest: 'build/templates_cdnified/',
+                options: {
+                    nonull: true,
+                    process: function (content, srcpath) {
+                        var cdnBase = 'http://analytics.sabre.com/sdsdemo/dslab/widgets/static';
+
+                        var localToCdnPathMappings = {
+                            '/widgets/img/destinations/': '/destinations/' //TODO: tmp hardcoding. CDN resources structure should be same as local.
+                        };
+
+                        function rewriteRelativeLink(path) {
+                            // find first mapping that matches the provided path
+                            var keyFound = Object.keys(localToCdnPathMappings).filter(function (localPath) {
+                                return (path.indexOf(localPath) > -1);
+                            })[0];
+                            if (keyFound) {
+                                var cdnPath = localToCdnPathMappings[keyFound];
+                                return path.replace(new RegExp("(.*)(" + keyFound + ")(.*)"), cdnPath + "$3"); // also all parent directory references (like .., ../..) that may exist in the relative path will be removed.
+                            }
+                            return path;
+                        }
+
+                        var INLINE_STYLE_BACKGROUND_IMAGE_REGEX = /(url\(\')([^\']+)(\'\))/gi; // url('../widgets/img/destinations/{{destination}}.jpg')
+                        return content.replace(INLINE_STYLE_BACKGROUND_IMAGE_REGEX, function (wholeMatchedString, urlPart, pathPart, closePart) {
+                            return urlPart + cdnBase + rewriteRelativeLink(pathPart) + closePart;
+                        });
+                    }
                 }
             },
             copyHtmlUpdatingLinksAndIncludes: {
@@ -156,6 +188,48 @@ module.exports = function (grunt) {
             }
         },
 
+        image_resize: { //WARN: along with installing grunt-image-resize, you HAVE to install manually imagemagick on your operating system. That grunt plugin depends on it. Without it installed you will be getting errors. See http://stackoverflow.com/questions/11703973/imagemagick-with-nodejs-not-working
+            dist: {
+                options: {
+                      width: 260
+					  , height: 170
+                      , parallel: 2
+                },
+                src: 'widgets/img/destinations_orig/*.jpg',
+                dest: 'widgets/img/destinations_resized/'
+            }
+        },
+
+        imagemin: {
+            options: {
+                progressive: true
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: 'widgets/img/destinations_resized',
+                    src: ['*.{png,jpg,gif}'],
+                    dest: 'widgets/img/destinations'
+                }]
+            }
+        },
+
+        //cdnify: {
+        //    'images-in-templates': {
+        //        options: {
+        //            base: 'http://analytics.sabre.com/sdsdemo/dslab/widgets/static/',
+        //            html: {
+        //                'div[style]': 'url'
+        //            }
+        //        },
+        //        files: [{
+        //            expand: true,
+        //            src: 'src/view-templates/**/*.html',
+        //            dest: 'build/templates_cdnified/'
+        //        }]
+        //    }
+        //},
+
         karma: {
             'unit-Chrome': {
                 configFile: 'karma.conf.js',
@@ -201,7 +275,7 @@ module.exports = function (grunt) {
 
         ngtemplates: {
             sdsWidgets: {
-                cwd: 'src',
+                cwd: 'build/templates_cdnified/src',
                 src: '../src/view-templates/**/*.html',
                 dest: 'build/ngtemplates/templateCacheCharger.js',
                 options: {
@@ -211,8 +285,8 @@ module.exports = function (grunt) {
                                  templateCacheChargingScript + ' ' +
                             '}]);' +
                             '});';
-                    },
-                    htmlmin: {
+                    }
+                    , htmlmin: {
                         collapseBooleanAttributes:      true,
                         collapseWhitespace:             true,
                         removeAttributeQuotes:          true,
@@ -220,7 +294,8 @@ module.exports = function (grunt) {
                         removeEmptyAttributes:          true,
                         removeRedundantAttributes:      true,
                         removeScriptTypeAttributes:     true,
-                        removeStyleLinkTypeAttributes:  true
+                        removeStyleLinkTypeAttributes:  true,
+                        keepClosingSlash:               true // needed for HTML5 closing slashes. Also for svg <line />. Wiout this option the SVG is broken, see https://github.com/kangax/html-minifier/pull/122
                     }
                 }
             }
@@ -255,11 +330,6 @@ module.exports = function (grunt) {
                         , 'bower_components/titatoggle/dist/titatoggle-dist.css'
                     ]
                 }
-            },
-            tmpuncss: {
-                files: {
-                    'dist/widgets/css/tidy.min.css': ['dist/widgets/css/tidy.css']
-                }
             }
         },
 
@@ -292,6 +362,7 @@ module.exports = function (grunt) {
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'jshint'
         , 'unit-test'
+        , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
         , 'requirejs:compile-standalone-app'
         , 'css-pipeline'
@@ -303,6 +374,7 @@ module.exports = function (grunt) {
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'jshint'
         , 'unit-test'
+        , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
         , 'requirejs:compile-library-only'
         , 'css-pipeline'
@@ -314,6 +386,7 @@ module.exports = function (grunt) {
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'jshint'
         , 'unit-test'
+        , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
         , 'requirejs:compile-standalone-app'
         , 'requirejs:compile-library-only'

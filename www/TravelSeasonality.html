@@ -4,24 +4,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Low Fare History</title>
+    <title>Travel Seasonality</title>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
     <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
     <partial command="include('partials/navigation-includes.html')"></partial>
 </head>
+
 <body>
 
 <div id="mainPageContainer">
     <partial command="include('partials/navigation.html')"></partial>
-    <div class="embeddedWidget" data-search-form></div>
+    <search-form class="embeddedWidget"></search-form>
     <error-display class="embeddedWidget"></error-display>
     <div class="row">
         <div class="col-lg-4">
-            <error-display class="embeddedWidget"></error-display>
-            <low-fare-history class="embeddedWidget">
-            </low-fare-history>
+            <travel-seasonality class="embeddedWidget" destination="NYC" chart-height="120px"></travel-seasonality>
         </div>
     </div>
 </div>

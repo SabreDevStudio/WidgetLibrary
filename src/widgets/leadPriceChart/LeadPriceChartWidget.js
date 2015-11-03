@@ -34,7 +34,7 @@ define([
             , searchCriteriaBroadcastingService
             , noResultsFoundBroadcastingService
             , globalChartStyleConfiguration
-            , customToStringFunction
+            , DateToStringRedefineFactory
             , DateSelectedBroadcastingService
         ) {
 
@@ -147,7 +147,7 @@ define([
                 var leadPricesAndDatesSorted = _.sortBy(leadPricesAndDates, 'date');
                 var leadPricesAndDatesEmptyDatesFilled = fillEmptyDates(leadPricesAndDatesSorted);
 
-                chartData.labels = _.pluck(leadPricesAndDatesEmptyDatesFilled, 'date').map(customToStringFunction.toString);
+                chartData.labels = _.pluck(leadPricesAndDatesEmptyDatesFilled, 'date').map(DateToStringRedefineFactory.patchToStringMethod);
                 chartData.datasets[0].data = _.pluck(leadPricesAndDatesEmptyDatesFilled, 'leadPrice');
                 chartInstance.initialize(chartData);
 
@@ -214,7 +214,7 @@ define([
                     , 'SearchCriteriaBroadcastingService'
                     , 'NoResultsFoundBroadcastingService'
                     , 'globalChartStyleConfiguration'
-                    , 'customToStringFunction'
+                    , 'DateToStringRedefineFactory'
                     , 'DateSelectedBroadcastingService'
                 , LeadPriceChartController])
             .directive('leadPriceChart', [

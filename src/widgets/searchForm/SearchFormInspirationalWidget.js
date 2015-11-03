@@ -17,11 +17,9 @@ define([
         return angular.module('sdsWidgets')
             .directive('searchFormInspirational', [
                       'InspirationalSearchCriteriaBroadcastingService'
-                    , 'newInspirationalSearchCriteriaEvent'
                     , 'PointOfSaleCountryLookupDataService'
                 , function (
-                      SearchCriteriaBroadcastingService
-                    , newInspirationalSearchCriteriaEvent
+                    InspirationalSearchCriteriaBroadcastingService
                     , PointOfSaleCountryLookupDataService
                 ) {
 
@@ -42,11 +40,11 @@ define([
                         });
 
                         scope.createNewSearchCriteria = function () {
-                            SearchCriteriaBroadcastingService.searchCriteria = {
+                            InspirationalSearchCriteriaBroadcastingService.searchCriteria = {
                                   destination: scope.destination.airportCode
                                 , pointOfSaleCountry: scope.pointOfSaleCountry
                             };
-                            SearchCriteriaBroadcastingService.broadcast();
+                            InspirationalSearchCriteriaBroadcastingService.broadcast();
                         };
                     }
                 }
