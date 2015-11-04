@@ -6,6 +6,11 @@ module.exports = function (grunt) {
 
         pkg: grunt.file.readJSON('package.json'),
 
+        'git-describe': {
+            options: {},
+            me: {}
+        },
+
         clean: {
               dist: ['dist/**/*', 'build/**/*']
             , 'dist-no-compile': [
@@ -357,13 +362,27 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('saveRevision', function() {
+        grunt.event.once('git-describe', function (rev) {
+            grunt.option('gitRevision', rev);
+            grunt.file.write('build/version/version.js', 'define([], function () {return {version: function () {return ' + JSON.stringify({
+                    version: grunt.config('pkg.version'),
+                    revision: grunt.option('gitRevision'),
+                    date: grunt.template.today()
+                })+ '}}});'
+            );
+        });
+        grunt.task.run('git-describe');
+    });
+
     grunt.registerTask('dist-standalone-app', [
           'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'jshint'
-        , 'unit-test'
+        //, 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
+        , 'saveRevision'
         , 'requirejs:compile-standalone-app'
         , 'css-pipeline'
         , 'copy-static-resources'
@@ -376,6 +395,7 @@ module.exports = function (grunt) {
         , 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
+        , 'saveRevision'
         , 'requirejs:compile-library-only'
         , 'css-pipeline'
         , 'copy-static-resources'
@@ -388,6 +408,7 @@ module.exports = function (grunt) {
         , 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
+        , 'saveRevision'
         , 'requirejs:compile-standalone-app'
         , 'requirejs:compile-library-only'
         , 'css-pipeline'
@@ -399,7 +420,6 @@ module.exports = function (grunt) {
         , 'css-pipeline'
         , 'copy-static-resources'
     ]);
-
 
     grunt.registerTask('unit-test', 'karma:unit-Chrome');
 

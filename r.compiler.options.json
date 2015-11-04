@@ -6,6 +6,7 @@
   , "paths": {
       "angular": "../bower_components/angular/angular.min"
     , "widgets/templateCacheCharger": "../build/ngtemplates/templateCacheCharger"
+    , "widgets/version": "../build/version/version"
     , "COMMENT_": "skipped lodash custom builds to save build time"
     , "COMMENT_lodash": "../build/lodash/lodash.custom.build"
   }

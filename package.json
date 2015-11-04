@@ -28,6 +28,7 @@
     "grunt-contrib-jshint": "~0.11.0",
     "grunt-contrib-requirejs": "~0.4.4",
     "grunt-contrib-watch": "~0.5.3",
+    "grunt-git-describe": "^2.3.2",
     "grunt-image-resize": "^1.0.0",
     "grunt-include-replace": "^3.2.0",
     "grunt-jsdoc": "^1.0.0",

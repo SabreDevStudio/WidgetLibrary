@@ -93,9 +93,11 @@ define([
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
         , 'widgets/ErrorDisplayWidget'
+        , 'widgets/AboutWidget'
         , 'Configuration'
         , 'elementQuery'
         , 'widgets/templateCacheCharger'
+        , 'widgets/version'
     ], function (
           moment
         , ItinerariesList
@@ -121,9 +123,11 @@ define([
         , FiltersPanelWidget
         , DiscreteFilterWidget
         , ErrorDisplayWidget
+        , AboutWidget
         , Configuration
         , elementQuery
         , templateCacheCharger
+        , version
     ) { // we have to list all files with angular components as dependencies, so that they are recognized?
         "use strict";
 
@@ -161,6 +165,7 @@ define([
 
     return {
         parseAllStylesheetsToMakeWidgetsResponsive: parseAllStylesheetsToMakeWidgetsResponsive
+        , version: version.version
     }
 
 });
