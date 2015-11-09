@@ -1,9 +1,9 @@
 {
   "name": "SabreDevStudioDemo",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "postinstall": "bower install",
+    "postinstall": "bower install && tsd install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -35,6 +35,8 @@
     "grunt-karma": "~0.10.1",
     "grunt-lodash": "^0.4.0",
     "grunt-lodash-autobuild": "^0.3.0",
+    "grunt-tslint": "^2.5.0",
+    "grunt-typescript": "^0.8.0",
     "jasmine-core": "~2.3.4",
     "karma": "~0.12.31",
     "karma-chrome-launcher": "~0.1.7",
@@ -48,7 +50,10 @@
     "lodash-cli": "^3.10.1",
     "protractor": "^2.1.0",
     "requirejs-text": "^2.0.12",
-    "time-grunt": "^1.2.1"
+    "time-grunt": "^1.2.1",
+    "tsd": "^0.6.5",
+    "tslint": "^2.5.1",
+    "typescript": "^1.6.2"
   },
   "pretest": {
     "update-webdriver": "node_modules/protractor/bin/webdriver-manager update"

@@ -1,5 +1,5 @@
 module.exports = function (grunt) {
-    //require('time-grunt')(grunt);
+    require('time-grunt')(grunt);
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
@@ -12,7 +12,11 @@ module.exports = function (grunt) {
         },
 
         clean: {
-              dist: ['dist/**/*', 'build/**/*']
+              dist: [
+                    'dist/**/*'
+                  , 'build/**/*'
+                  , 'build-js/**/*'
+              ]
             , 'dist-no-compile': [
                   'dist/widgets/css'
                 , 'dist/widgets/fonts'
@@ -20,6 +24,7 @@ module.exports = function (grunt) {
                 , 'dist/www'
                 , 'dist/index.html'
                 , 'build/**/*'
+                , 'build-js/**/*'
             ]
         },
 
@@ -34,7 +39,7 @@ module.exports = function (grunt) {
         },
         lodashAutobuild: {
             customBuild: {
-                src: ['src/**/*.js'],
+                src: ['build-js/main/**/*.js'],
                 // Default options:
                 options: {
                     // The name(s) of the lodash object(s)
@@ -44,12 +49,51 @@ module.exports = function (grunt) {
             }
         },
 
+        tslint: {
+            options: {
+                configuration: grunt.file.readJSON("tslint.json")
+            },
+            files: {
+                src: ['src/**/*.ts']
+            }
+        },
+
+        typescript: {
+            app: {
+                src: ['src/**/*.ts'],
+                dest: 'build-js',
+                options: grunt.file.readJSON('tsconfig.json').compilerOptions
+            },
+            'watch-src': {
+                src: ['src/main/**/*.ts'],
+                dest: 'build-js/main',
+                options: (function () {
+                    var optionsFromConfigFile = grunt.file.readJSON('tsconfig.json').compilerOptions;
+                    optionsFromConfigFile.watch = true;
+                    optionsFromConfigFile.atBegin = true;
+                    optionsFromConfigFile.references = ["typings/tsd.d.ts"];
+                    return optionsFromConfigFile;
+                })()
+            },
+            'watch-all': {
+                src: ['src/**/*.ts'],
+                dest: 'build-js',
+                options: (function () {
+                    var optionsFromConfigFile = grunt.file.readJSON('tsconfig.json').compilerOptions;
+                    optionsFromConfigFile.watch = true;
+                    optionsFromConfigFile.atBegin = true;
+                    optionsFromConfigFile.references = ["typings/tsd.d.ts"];
+                    return optionsFromConfigFile;
+                })()
+            }
+        },
+
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
             },
             all: {
-                src: ['src/**/*.js', 'src-test/**/*.js']
+                src: ['build-js/**/*.js']
             }
         },
 
@@ -73,7 +117,7 @@ module.exports = function (grunt) {
                 stoponerror: false,
                 relaxerror: ['W001', 'W002', 'W003', 'W005', 'E001', 'W012']
             },
-            files: ['src/view-templates/**/*.tpl.html']
+            files: ['widgets/view-templates/**/*.tpl.html']
         },
 
         autoprefixer: {
@@ -114,7 +158,7 @@ module.exports = function (grunt) {
             },
             'cdnify-inline-style-images-urls': { // cannot use grunt-cdnify because it does not support inline css styles
                 expand: true,
-                src: 'src/view-templates/**/*.html',
+                src: 'widgets/view-templates/**/*.html',
                 dest: 'build/templates_cdnified/',
                 options: {
                     nonull: true,
@@ -251,10 +295,6 @@ module.exports = function (grunt) {
                     IE9: {
                         base: 'IE',
                         'x-ua-compatible': 'IE=EmulateIE9'
-                    },
-                    IE8: {
-                        base: 'IE',
-                        'x-ua-compatible': 'IE=EmulateIE8'
                     }
                 }
             }
@@ -281,7 +321,7 @@ module.exports = function (grunt) {
         ngtemplates: {
             sdsWidgets: {
                 cwd: 'build/templates_cdnified/src',
-                src: '../src/view-templates/**/*.html',
+                src: '../widgets/view-templates/**/*.html',
                 dest: 'build/ngtemplates/templateCacheCharger.js',
                 options: {
                     bootstrap:  function(module, templateCacheChargingScript) {
@@ -354,7 +394,7 @@ module.exports = function (grunt) {
 
         jsdoc : {
             dist : {
-                src: ['src/**/*.js', 'README.md'],
+                src: ['build-js/main/**/*.js', 'README.md'],
                 options: {
                     destination: 'doc'
                 }
@@ -378,8 +418,8 @@ module.exports = function (grunt) {
     grunt.registerTask('dist-standalone-app', [
           'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
-        , 'jshint'
-        //, 'unit-test'
+        , 'typescript-pipeline'
+        , 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
         , 'saveRevision'
@@ -391,7 +431,7 @@ module.exports = function (grunt) {
     grunt.registerTask('dist-library-only', [
         'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
-        , 'jshint'
+        , 'typescript-pipeline'
         , 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
@@ -404,7 +444,7 @@ module.exports = function (grunt) {
     grunt.registerTask('dist-all', [
         'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
-        , 'jshint'
+        , 'typescript-pipeline'
         , 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
@@ -423,6 +463,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('unit-test', 'karma:unit-Chrome');
 
+    grunt.registerTask('typescript-pipeline', ['tslint', 'typescript:app', 'jshint']);
+
     grunt.registerTask('css-pipeline', ['compass', 'bootlint', 'csslint', 'autoprefixer', 'cssmin:cssbundle']);
 
     grunt.registerTask('copy-static-resources', [
@@ -432,5 +474,7 @@ module.exports = function (grunt) {
         , 'copy:widgets_img'
         , 'copy:page_img'
     ]);
+
+    grunt.registerTask('default', 'dist-all');
 
 };

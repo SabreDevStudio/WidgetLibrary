@@ -7,6 +7,7 @@ stylesheets/
 target/
 tmp*/
 # *.iml
-TODO
+TODO*
 doc/
 www-customer-page-downloaded
+typings/

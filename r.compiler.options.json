@@ -1,14 +1,14 @@
 {
     "COMMENT_": "for all options see https://github.com/jrburke/r.js/blob/master/build/example.build.js"
-  , "name": "../node_modules/almond/almond"
-  , "mainConfigFile": "src/SabreDevStudioSDK.js"
+  , "name": "../../node_modules/almond/almond"
+  , "mainConfigFile": "build-js/main/SabreDevStudioSDK.js"
   , "out": "dist/widgets/SDSWidgets.min.js"
   , "paths": {
-      "angular": "../bower_components/angular/angular.min"
-    , "widgets/templateCacheCharger": "../build/ngtemplates/templateCacheCharger"
-    , "widgets/version": "../build/version/version"
+      "angular": "../../bower_components/angular/angular.min"
+    , "widgets/templateCacheCharger": "../../build/ngtemplates/templateCacheCharger"
+    , "widgets/version": "../../build/version/version"
     , "COMMENT_": "skipped lodash custom builds to save build time"
-    , "COMMENT_lodash": "../build/lodash/lodash.custom.build"
+    , "COMMENT_lodash": "../../build/lodash/lodash.custom.build"
   }
   , "pragmas": {
       "appBuildExclude": true,

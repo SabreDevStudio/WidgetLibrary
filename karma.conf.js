@@ -1,6 +1,5 @@
 // Karma configuration
 // Generated on Mon Mar 16 2015 18:44:59 GMT+0100 (Central European Standard Time)
-
 module.exports = function(config) {
   config.set({
 
@@ -12,16 +11,15 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src-test/test-main.js',
-      {pattern: 'src/**/*.js', included: false},
-      {pattern: 'src-test/**/*.js', included: false},
+      {pattern: 'build-js/test/test-main.js', included: true},
+      {pattern: 'build-js/**/*.js', included: false},
       {pattern: 'bower_components/**/*.js', included: false},
       {pattern: 'node_modules/**/*.js', included: false}
     ],
 
     // list of files to exclude
     exclude: [
-      'src/SabreDevStudioSDK.js'
+      'build-js/main/SabreDevStudioSDK.js'
     ],
 
     // preprocess matching files before serving them to the browser

@@ -3,12 +3,12 @@
   <component name="CompassSettings">
     <option name="compassConfigPath" value="C:\priv\future\projects_workspace\SabreDevStudioDemo\config.rb" />
     <option name="compassExecutableFilePath" value="C:\Program Files\Ruby193\bin\compass" />
-    <option name="compassSupportEnabled" value="true" />
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/build-js" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/tmp/lowFareHistoryWidget" />
       <excludeFolder url="file://$MODULE_DIR$/www-customer-page-downloaded" />
