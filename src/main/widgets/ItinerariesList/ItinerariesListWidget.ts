@@ -130,9 +130,7 @@ define([
                         //// for performance measuring and optimizations
                         //for (var i = 0; i < 4; i++) {
                         //    var copy = _.cloneDeep(itins);
-                        //    copy.getItineraries()
-                        //        .forEach(itineraries.add);
-                        //
+                        //    copy.itineraries.forEach(itin => itineraries.add(itin));
                         //}
                         ////
                         processItinerariesUpdate(newSearchCriteria);

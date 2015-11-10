@@ -53,7 +53,7 @@ module.exports = function (grunt) {
             options: {
                 configuration: grunt.file.readJSON("tslint.json")
             },
-            files: {
+            all: {
                 src: ['src/**/*.ts']
             }
         },
@@ -397,6 +397,7 @@ module.exports = function (grunt) {
                 }
             }
         }
+
     });
 
     grunt.registerTask('saveRevision', function() {
@@ -425,13 +426,12 @@ module.exports = function (grunt) {
         , 'copy-static-resources'
     ]);
 
-    grunt.registerTask('dist-standalone-app-no-UT', [
+    grunt.registerTask('dist-standalone-app-fast', [
         'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
-        , 'typescript-pipeline'
+        , 'typescript:app'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
-        , 'saveRevision'
         , 'requirejs:compile-standalone-app'
         , 'css-pipeline'
         , 'copy-static-resources'

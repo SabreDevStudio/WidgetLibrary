@@ -29,7 +29,7 @@
               ng-attr-x="{{chartHelpers.getPointerLineXEnd() + chartConfig.pointerLineRightMargin}}"
               ng-attr-y="{{chartConfig.topLeftOffset.y}}">
             <tspan>{{highText}}</tspan>
-            <tspan>{{highValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
+            <tspan dx="2">{{highValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
         </text>
 
         <!-- low data line -->
@@ -48,7 +48,7 @@
               ng-attr-x="{{chartHelpers.getPointerLineXEnd() + chartConfig.pointerLineRightMargin}}"
               ng-attr-y="{{chartConfig.topLeftOffset.y + chartConfig.bar.height}}">
             <tspan>{{lowText}}</tspan>
-            <tspan>{{lowValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
+            <tspan dx="2">{{lowValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
         </text>
 
         <!-- median data line -->
@@ -67,7 +67,7 @@
               ng-attr-x="{{chartHelpers.getPointerLineXEnd() + chartConfig.pointerLineRightMargin}}"
               ng-attr-y="{{chartHelpers.getMedianNormalizedYPosition()}}">
             <tspan>{{medianText}}</tspan>
-            <tspan>{{medianValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
+            <tspan dx="2">{{medianValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
         </text>
 
         <!-- current data(!) line -->
@@ -88,7 +88,7 @@
               ng-attr-x="{{chartHelpers.getOppositePointerLineXEnd() - chartConfig.pointerLineRightMargin}}"
               ng-attr-y="{{chartHelpers.getCurrentLegendYPosition()}}">
             <tspan>{{currentText}}</tspan>
-            <tspan>{{currentValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
+            <tspan dx="2">{{currentValue | applyFilter:valuesFilter:valuesFilterArguments}}</tspan>
         </text>
 
     </g>
