@@ -41,11 +41,6 @@ define([
             // WARN: we use two instances of search service: first one that was produced by the search strategy factory,
             // and the other one which is the copy of the first one, with one argument bound (partial), needed to be passed to the superclass constructor, to be used to execute search in webservice
             // Later, while processing search results, when we need to query service for additional data, we use the instance of the first one.
-            //
-            // TODO: consider: It may be coded cleaner in BaseController by:
-            //  1. making all search criteria processing functions accept not only search criteria but also any other parameters (or other more general search criteria object)
-            //  2. passing search criteria instance to processSearchResults, along with search results, to make it available if we need to query web service for additional data.
-            //    But it makes BaseController code much less readable
             var searchService = DaysRangeSearchStrategyFactory.createSearchStrategy($scope.activeSearchWebService);
 
             var firstDayDisplayedCap = DateService.now().startOf('day');
@@ -172,12 +167,12 @@ define([
                 return filled;
             }
 
-            // @Controller: event handler when earlier days are requested
+            // event handler when earlier days are requested
             this.onEarlierRequested = function () {
                 shiftRangePresented(-numberOfWeeksToDisplay);
             };
 
-            // @Controller: event handler when later days are requested
+            // event handler when later days are requested
             this.onLaterRequested = function () {
                 shiftRangePresented(numberOfWeeksToDisplay);
             };

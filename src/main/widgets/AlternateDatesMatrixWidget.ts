@@ -94,7 +94,6 @@ define([
             .directive('alternateDatesMatrix', function () {
                 return {
                     restrict: 'EA',
-                    transclude: true,
                     scope: {
                           activeSearch: '@'
                         , activeSearchWebService: '@'

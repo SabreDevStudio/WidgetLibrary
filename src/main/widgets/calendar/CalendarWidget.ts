@@ -118,7 +118,6 @@ define([
             .directive('calendarTabs', ['$compile', function ($compile) {
                 return {
                     restrict: 'EA',
-                    //replace: true, with replace=true element.attr('origin') and other return undefined. Would need to writer transclude function
                     scope: {
                           numberOfMonths: '@tabsShown'
                         , activeSearchWebService: '@'
@@ -135,7 +134,6 @@ define([
             .directive('calendarNavigable', ['$compile', function ($compile) {
                 return {
                     restrict: 'EA',
-                    //replace: true, with replace=true element.attr('origin') and other return undefined. Would need to writer transclude function
                     scope: {
                           numberOfMonths: '@?totalNumberOfMonths'
                         , numberOfMonthsShownAtOnce: '@?'

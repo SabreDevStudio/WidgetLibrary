@@ -151,13 +151,4 @@ $numberOfGridColumns: 12 !default;
   @include createGridColumnsForAllBreakpoints;
   @include createGridRow;
   @include createFormInlineForAllBreakpoints;
-
-  .SDS-row-no-padding {
-    margin-left: 0;
-    margin-right: 0;
-      [class*="SDS-col-element-"] {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-      }
-  }
 }

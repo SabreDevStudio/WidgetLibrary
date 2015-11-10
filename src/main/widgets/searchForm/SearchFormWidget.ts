@@ -11,6 +11,7 @@ define([
         , 'datamodel/PlusMinusDaysTravelDatesFlexibility'
         , 'datamodel/EarliestDepartureLatestReturnTravelDatesFlexibility'
         , 'util/DOMManipulationUtils'
+        , 'util/BaseServices'
     ],
     function (
           _
@@ -25,6 +26,7 @@ define([
         , PlusMinusDaysTravelDatesFlexibility
         , EarliestDepartureLatestReturnTravelDatesFlexibility
         , domUtils
+        , BaseServicesSrc
     ) {
         'use strict';
 

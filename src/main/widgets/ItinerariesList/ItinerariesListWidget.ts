@@ -75,9 +75,11 @@ define([
                     , noResultsFoundEvent
                 ) {
 
-                    $scope.sortCriteria = new ItinerariesListSortCriteria();
+                    var sortCriteria = new ItinerariesListSortCriteria();
+                    $scope.availableSortCriteria = sortCriteria.availableSortCriteria;
+
                     $scope.selectedFirstCriterion = { // must be object so that the scope of inputSelectDropdown can update the parent scope object, not its copy (like when it was a scalar)
-                        selected: _.first($scope.sortCriteria.availableSortCriteria)
+                        selected: _.first(sortCriteria.availableSortCriteria)
                     };
                     $scope.paginationSettings = {};
 
@@ -87,8 +89,8 @@ define([
                     var permittedItineraries;
 
                     function resetNavigationAndSortCriteria() {
-                        $scope.sortCriteria.resetSortCriteria();
-                        $scope.selectedFirstCriterion.selected =  _.first($scope.sortCriteria.availableSortCriteria);
+                        sortCriteria.resetSortCriteria();
+                        $scope.selectedFirstCriterion.selected =  _.first(sortCriteria.availableSortCriteria);
 
                         $scope.itemsPerPage = 20;
                         // have to explicitly set the current page for pagination (startFrom filter), otherwise undefined and filter getting NaN parameter.
@@ -96,9 +98,9 @@ define([
                     }
 
                     $scope.onSortingCriteriaChanged = function () {
-                        $scope.sortCriteria.setSortCriteria($scope.selectedFirstCriterion.selected);
+                        sortCriteria.setSortCriteria($scope.selectedFirstCriterion.selected);
                         // filtering in controller, not in view filter for performance reasons
-                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
+                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, sortCriteria.getCurrentSortCriteria());
 
                         // when changing sorting criteria, which will trigger resorting of itineraries list, reset current page to 1.
                         // The customer expectation upon changing sort criteria, is to see, at the very top of the list,
@@ -133,20 +135,19 @@ define([
                         //
                         //}
                         ////
-                        permittedItineraries = itineraries.getPermittedItineraries();
-                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
-
-                        recalculateAndBroadcastStatistics();
-                        recalculateSummaries();
-                        updateSearchAirports(newSearchCriteria);
+                        processItinerariesUpdate(newSearchCriteria);
                     }
 
                     function updateWithNewItineraries(newSearchCriteria, itinerariesList) {
                         resetNavigationAndSortCriteria();
-                        var mergedItinerariesLists = itineraries.addItinerariesListWithDedup(itinerariesList);
-                        permittedItineraries = mergedItinerariesLists.getPermittedItineraries();
-                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
-                        recalculateAndBroadcastStatistics(); //TODO dup in sequence of invocations
+                        itineraries.addItinerariesListWithDedup(itinerariesList);
+                        processItinerariesUpdate(newSearchCriteria);
+                    }
+
+                    function processItinerariesUpdate(newSearchCriteria) {
+                        permittedItineraries = itineraries.getPermittedItineraries();
+                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, sortCriteria.getCurrentSortCriteria());
+                        recalculateAndBroadcastStatistics();
                         recalculateSummaries();
                         updateSearchAirports(newSearchCriteria);
                     }
@@ -165,7 +166,7 @@ define([
 
                     var searchStrategy = searchStrategyFactory.createSearchStrategy($scope.activeSearchWebService);
 
-                    // @Controller: main controller function, acting on new search criteria sent to the widget
+                    // main controller function, acting on new search criteria sent to the widget
                     $scope.$on(newSearchCriteriaEvent, function () {
                         var newSearchCriteria = SearchCriteriaBroadcastingService.searchCriteria;
                         $scope.processSearchCriteria(newSearchCriteria);
@@ -182,34 +183,19 @@ define([
                             _.partial(updateWithNewItineraries, searchCriteria));
                     };
 
-
-                    //TODO tmp here https://coderwall.com/p/ngisma/safe-apply-in-angular-js , move to general package
-                    $scope.safeApply = function (fn) {
-                        var phase = this.$root.$$phase;
-                        if (phase === '$apply' || phase === '$digest') {
-                            if (fn && (typeof(fn) === 'function')) {
-                                fn();
-                            }
-                        } else {
-                            this.$apply(fn);
-                        }
-                    };
-
-                    // @Controller
                     $scope.$on(filteringCriteriaChangedEvent, function () {
                         var currentFilteringFunctions = FilteringCriteriaChangedBroadcastingService.filteringFunctions;
                         itineraries.applyFilters(currentFilteringFunctions);
                         permittedItineraries = itineraries.getPermittedItineraries();
-                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, $scope.sortCriteria.getCurrentSortCriteria()); //TODO sortCriteria out of scope!!
+                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, sortCriteria.getCurrentSortCriteria());
                         recalculateSummaries();
-                        // by applying filters we changed internal state of the $scope.itineraries object. NG is not watching its internal state (result of getPermittedItineraries() call in view)
-                        $scope.safeApply(); //TODO this is temporary trigger to angular, as discrete values filter already trigger apply, thru some sideeffect, while rangeSliders not. Also while rest all filters is clicked apply is already in progress. Debug NG what triggers apply in case of dicreate values filters
-                        // whatever filter type (range, discrete) the model itself (ItinerariesList) is updated correctly (filteredOut set) in every case.
+                        $scope.$evalAsync();
+                        // We need to call the digest cycle manually, as we changed the model outside of Angular (we have read the state of filters UI controls (sliders), sent new filtering functions thru event and applied to the itineraries domain model).
+                        // In case of discrete filters (checkboxes), the digest cycle is already triggered by Angular (checkboxes with ng-model), while range sliders are component totally outside of Angular: that is why we have to call digest after change from these components.
+                        // It is evalAsync, not just digest(), because in case of discrete values filters, the digest cycle is already in progress.
                     });
 
-                    // @Controller
                     $scope.$on(dateSelectedEvent, function () {
-                        //TODO: when you add listener method for updating itinerary list from other widget (Adv Calendar), then also call recalculateAndBroadcastStatistics
                         var newSearchCriteria = DateSelectedBroadcastingService.newSearchCriteria;
                         // the web service which produced the data, from which the particular date was selected
                         var webService = selectItinerariesListProducingService(DateSelectedBroadcastingService.originalDataSourceWebService);
@@ -218,7 +204,7 @@ define([
                               _.partial(processNewItineraries, newSearchCriteria)
                             , _.partial(processServiceErrorMessages, newSearchCriteria)
                         );
-                        $scope.safeApply();
+                        $scope.$evalAsync();
                     });
 
                     /**
@@ -232,7 +218,7 @@ define([
                     });
 
                     function selectItinerariesListProducingService(originalWebService) {
-                        return (isItinerariesListProducingService(originalWebService))? originalWebService : BargainFinderMaxDataService; //TODO search strategy here as well
+                        return (isItinerariesListProducingService(originalWebService))? originalWebService : BargainFinderMaxDataService;
                     }
 
                     function isItinerariesListProducingService(originalWebService) {
@@ -247,7 +233,6 @@ define([
                     }
 
                     function updateSearchAirports(newSearchCriteria) {
-                        //TODO: move both airports into ItinerariesList (the airports for which the search was done)
                         $scope.searchCriteriaDepartureAirport = newSearchCriteria.getFirstLeg().origin;
                         $scope.searchCriteriaArrivalAirport = newSearchCriteria.getFirstLeg().destination;
                     }
@@ -264,7 +249,7 @@ define([
                 return {
                     restrict: 'EA',
                     scope: {
-                        activeSearch: '@?' //TODO: activeSearchWebService not enough to decide
+                          activeSearch: '@?'
                         , activeSearchWebService: '@?'
                         , requestBrandedItineraries: '=?'
                     },

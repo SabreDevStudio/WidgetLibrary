@@ -139,12 +139,11 @@ define([
     function bootstrapNG() {
         angular.element(document).ready(function () {
             var beforeNG = performance.now();
-            angular.bootstrap(document, ['sdsWidgets'], { // TODO: we cannot compile on whole document level..
+            angular.bootstrap(document, ['sdsWidgets'], {
                 strictDi: true
             });
             var afterNG = performance.now();
-            let executionTimeMillis = Math.round(afterNG - beforeNG);
-            console.log(`NG load: ${executionTimeMillis.toString()}`);
+            console.log('NG load: ' + Math.round(afterNG - beforeNG));
 
             //>>excludeStart('appBuildExclude', pragmas.appBuildExclude);
             var initInjector = angular.injector(["ng"]);
@@ -153,20 +152,21 @@ define([
             //>>excludeEnd('appBuildExclude');
                 parseAllStylesheetsToMakeWidgetsResponsive();
             //>>excludeStart('appBuildExclude', pragmas.appBuildExclude);
-            }, 0);
+            });
             var afterCSS = performance.now();
-            console.log('CSS RWD parse: ' + (afterCSS - afterNG));
+            console.log('CSS RWD parse: ' + Math.round((afterCSS - afterNG)));
             //>>excludeEnd('appBuildExclude');
         });
     }
 
     function parseAllStylesheetsToMakeWidgetsResponsive() {
-        for (var i = 0; i < document.styleSheets.length; i++) {
-            if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf('SDS') > -1) { //TODO: having file part name constant in JS code to limit processing to only own stylesheets. But this infix should be overwritten by build system (Grunt), while doing minfication. Changing the name of minified file in grunt will not change here...
-                // TODO: becasue of how elementQuery script is written it will parse all stylesheets later anyway itself. And will act on it.
-                elementQuery(document.styleSheets[i], true);
-            }
-        }
+        [].slice.call(document.styleSheets)
+            .filter(isOwnStylesheet) // responsive instructions are only in our own CSS, no point to parse other. // WARN becasue of how elementQuery is written now it will parse all stylesheets later anyway itself.
+            .forEach(stylesheet => elementQuery(stylesheet, true));
+    }
+
+    function isOwnStylesheet(stylesheet) {
+        return stylesheet.href && stylesheet.href.indexOf('SDS') > -1; //WARN hardcode: part of name of our css minified file to recognize own stylesheet
     }
 
     return {

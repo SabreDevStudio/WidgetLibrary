@@ -2,13 +2,13 @@ define([
           'angular'
         , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'util/BaseServices'
+        , 'util/GeoLocationService'
     ],
     function (
           angular
         , _
         , SabreDevStudioWebServicesModule
-        , BaseServices
+        , GeoLocationServiceSrc
     ) {
         'use strict';
 

@@ -17,14 +17,12 @@ define([
         return angular.module('sdsWidgets')
             /* directive for a button with drop-down. On choosing value from dropdown this value is presented on the button.
             *  May be used for example for choosing itineraries list sorting criteria.
-            *  TODO refactor general component, not only for sort criteria.
             **/
             .directive('inputSelectDropdown', function () {
 
                 return {
                     restrict: 'EA',
                     replace: true,
-                    transclude: true,
                     scope: {
                         /* Input argument: label that will be displayed before the dropdown button. For example 'Sort by' */
                           label: '@'
@@ -61,11 +59,8 @@ define([
                             buttonLabelElement.text(selectedValueLabel);
                             buttonLabelElement.val(selectedValueLabel);
 
-                            // var buttonScope = buttonLabelElement.scope();
-                            //buttonScope.$apply(function () {
-                                scope.selectedFirstSortCriterion.selected = scope.availableSortCriteria[selectedValueIdx];
-                                scope.onSortingCriteriaChanged();
-                            //});
+                            scope.selectedFirstSortCriterion.selected = scope.availableSortCriteria[selectedValueIdx];
+                            scope.onSortingCriteriaChanged();
                         }
 
                         function isAlreadySelectedValue(selectedValueIdx) {

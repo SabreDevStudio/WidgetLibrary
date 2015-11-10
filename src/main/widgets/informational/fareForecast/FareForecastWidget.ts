@@ -26,7 +26,7 @@ define([
                     // only model object
                     $scope.fareForecast = {};
 
-                    // @Controller: main controller function, acting on new search criteria sent to the widget
+                    // main controller function, acting on new search criteria sent to the widget
                     $scope.$on(newSearchCriteriaEvent, function () {
                         var newSearchCriteria = SearchCriteriaBroadcastingService.searchCriteria;
                         FareForecastDataService.getFareForecast(newSearchCriteria).then(function (fareForecast) {

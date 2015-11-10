@@ -382,10 +382,7 @@ module.exports = function (grunt) {
             htmlPartials: {
                 options: {
                     prefix: '<partial command="',
-                    suffix: '"></partial>',
-                    globals: {
-
-                    }
+                    suffix: '"></partial>'
                 },
                 src: ['index.html', 'www/**/*.html', '!www/partials/**/*'],
                 dest: 'build/www/'
@@ -420,6 +417,18 @@ module.exports = function (grunt) {
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'typescript-pipeline'
         , 'unit-test'
+        , 'copy:cdnify-inline-style-images-urls'
+        , 'ngtemplates'
+        , 'saveRevision'
+        , 'requirejs:compile-standalone-app'
+        , 'css-pipeline'
+        , 'copy-static-resources'
+    ]);
+
+    grunt.registerTask('dist-standalone-app-no-UT', [
+        'clean:dist'
+        //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
+        , 'typescript-pipeline'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
         , 'saveRevision'

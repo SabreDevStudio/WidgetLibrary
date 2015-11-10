@@ -7,7 +7,7 @@
 <div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
     <div class="panel-heading">
-        <div class="SDS-row SDS-row-no-padding">
+        <div class="SDS-row">
             <div class="SDS-col-element-xxl-3">
                 <strong>{{permittedItinerariesSorted.length}} options found for {{searchCriteriaDepartureAirport | cityAndAirportFullName}} to {{searchCriteriaArrivalAirport | cityAndAirportFullName}}</strong>
             </div>
@@ -49,7 +49,7 @@
 
             <div class="SDS-col-element-xxl-2">
                 <input-select-dropdown class="pull-right"
-                               available-sort-criteria="sortCriteria.availableSortCriteria"
+                               available-sort-criteria="availableSortCriteria"
                                selected-first-sort-criterion="selectedFirstCriterion"
                                on-sorting-criteria-changed="onSortingCriteriaChanged()"
                                label="Sort by">
@@ -70,7 +70,6 @@
     <div class="panel-footer">
         <pagination class="pagination-sm pull-right" total-items="permittedItinerariesSorted.length" items-per-page="itemsPerPage" ng-model="paginationSettings.currentPage" boundary-links="true" rotate="false"></pagination>
         <div class="clearfix"></div>
-        <!-- TODO In mobile versions it should be less than 10 items per page-->
     </div>
 
 </div>
