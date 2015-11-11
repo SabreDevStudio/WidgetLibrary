@@ -35,8 +35,6 @@ define([
                             domUtils.addHideOnClickHandler(el, '.SDSItineraryHideFlightDetails', '.SDSItineraryFlightDetails', '.SDSItineraryHideWhenFlightDetailsShown');
 
                             domUtils.addToggleOnClickHandler(el, '.SDSItineraryToggleBrandDetails', '.SDSItineraryBrandDetails');
-                            //domUtils.addShowOnClickHandler(el, '.SDSItineraryShowBrandDetails', '.SDSItineraryBrandDetails');
-                            domUtils.addHideOnClickHandler(el, '.SDSItineraryHideBrandDetails', '.SDSItineraryBrandDetails');
                         }
 
                         addClickEventHandlers(element);

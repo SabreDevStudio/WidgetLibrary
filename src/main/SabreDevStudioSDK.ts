@@ -11,6 +11,7 @@ require.config({
         , 'angular-sanitize': '../../bower_components/angular-sanitize/angular-sanitize'
         , 'angular-img-fallback': '../../bower_components/angular-img-fallback/angular.dcb-img-fallback'
         , 'angular-rangeslider': '../../bower_components/angular-rangeslider/angular.rangeSlider'
+        , 'angular-touch': '../../bower_components/angular-touch/angular-touch'
         , 'ngStorage': '../../bower_components/ngstorage/ngStorage'
         , 'ngPromiseExtras': '../../bower_components/angular-promise-extras/angular-promise-extras'
         , 'chartjs': '../../bower_components/Chart.js/Chart'
@@ -44,6 +45,9 @@ require.config({
             deps: ['angular']
         },
         'angular-rangeslider': {
+            deps: ['angular']
+        },
+        'angular-touch': {
             deps: ['angular']
         },
         'ngStorage': {

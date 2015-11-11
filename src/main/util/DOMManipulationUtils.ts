@@ -2,6 +2,21 @@ define([],
     function () {
         'use strict';
 
+        /*
+            The goal of this util is to provide hide/show/toggle mechanism to be used by "show details" and similar links.
+            Using such 'manual' mechanism, outside of angular (ngIf, ngShow, collapse), is needed so that full digest cycle is not triggered
+            for events like clicking "show details" link, which does not change the model state in any way.
+
+            WARN: Beware of using "track by $index" in repeater that renders objects that use this mechanism.
+            If you also have pagination for these objects, or resorting ar similar, then these css visibility classes
+            will stay for the new object at the same position (track by $index) in the repeater.
+         */
+
+        /**
+         * Currently only click events supported. Taps on touch screens supported as ordinary slow clicks (See comments in ngTouch)
+         * Please note than ngTouch, although installed for SDSwidgets module, does not help here, as we on purpose do not use ng-click.
+         * To have same support, you need to port ngTouch here.
+         */
         var CLASS_VISIBLE = 'ng-show';
         var CLASS_HIDDEN = 'ng-hide';
 

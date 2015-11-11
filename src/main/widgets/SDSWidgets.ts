@@ -12,6 +12,7 @@ define([
       , 'angular-img-fallback'
       , 'angular-rangeslider'
       , 'angular_iso_currency'
+      , 'angular-touch'
     ],
     function (
           NG
@@ -27,6 +28,7 @@ define([
         , angular_img_fallback
         , angular_rangeslider
         , angular_iso_currency
+        , angular_touch
     ) {
         'use strict';
 
@@ -42,6 +44,7 @@ define([
                 , 'dcbImgFallback'
                 , 'ui-rangeSlider'
                 , 'isoCurrency'
+                , 'ngTouch'
             ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .constant('newInspirationalSearchCriteriaEvent', 'newInspirationalSearchCriteriaEvent')
