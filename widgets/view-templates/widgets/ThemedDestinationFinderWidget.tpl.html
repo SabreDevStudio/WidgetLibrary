@@ -25,9 +25,13 @@
                              style="background-image: url('../widgets/img/destinations/{{offersForOneDestination.destination}}.jpg'), url('../widgets/img/destinations/general_city.jpg')">
                         </div>
                         <div class="caption">
-                            <strong class="pull-left SDSCityAndPriceLabel SDSHideOverflow">
-                                {{offersForOneDestination.destination | cityFullName}} from {{offersForOneDestination.lowestFare.amount | currency:offersForOneDestination.lowestFare.currency}}
+                            <strong class="pull-left SDSCityLabel SDSHideOverflow">
+                                {{offersForOneDestination.destination | cityFullName}}
                             </strong>
+                            <strong class="pull-right text-right SDSPriceLabel SDSHideOverflow">
+                                from {{offersForOneDestination.lowestFare.amount | currency:offersForOneDestination.lowestFare.currency}}
+                            </strong>
+                            <div class="clearfix"></div>
                             <span class="pull-right">
                                 <a href="">
                                    <!--popover-template="'DestinationFinderOfferDetailsPopover'">-->

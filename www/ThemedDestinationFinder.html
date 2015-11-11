@@ -16,8 +16,8 @@
     <div id="mainPageContainer">
         <partial command="include('partials/navigation.html')"></partial>
         <!-- warn: error display widget must initialize first, so that it registers event handlers to listen on errors -->
-        <error-display class="embeddedWidget"></error-display>
         <themed-destination-finder class="embeddedWidget"></themed-destination-finder>
+        <error-display class="embeddedWidget"></error-display>
     </div>
 
     <script async data-main="../build-js/main/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>

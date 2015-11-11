@@ -31,13 +31,27 @@ define([
                 return {
                     replace: true,
                     templateUrl: '../widgets/view-templates/widgets/SearchFormInspirationalWidget.tpl.html',
-                    link: function (scope) {
-                        scope.pointOfSaleCountries = [
-                            noPointOfSaleCountryPreference
-                        ];
-                        PointOfSaleCountryLookupDataService.getPointOfSaleCountries().then(function (pointOfSaleCountries) {
-                            __.pushAll(scope.pointOfSaleCountries, pointOfSaleCountries);
-                        });
+                    link: function (scope, element) {
+
+                        var fieldsToHide = [];
+
+                        parseFieldsToHide();
+
+                        setUpModel();
+
+                        function parseFieldsToHide() {
+                            fieldsToHide = element.attr('hide-fields') && element.attr('hide-fields').split(',') || [];
+                        }
+
+                        function setUpModel() {
+                            scope.pointOfSaleCountries = [
+                                noPointOfSaleCountryPreference
+                            ];
+
+                            PointOfSaleCountryLookupDataService.getPointOfSaleCountries().then(function (pointOfSaleCountries) {
+                                __.pushAll(scope.pointOfSaleCountries, pointOfSaleCountries);
+                            });
+                        }
 
                         scope.createNewSearchCriteria = function () {
                             InspirationalSearchCriteriaBroadcastingService.searchCriteria = {
@@ -46,6 +60,10 @@ define([
                             };
                             InspirationalSearchCriteriaBroadcastingService.broadcast();
                         };
+
+                        scope.isVisible = function (htmlFieldName) {
+                            return !_.contains(fieldsToHide, htmlFieldName);
+                        }
                     }
                 }
             }]);

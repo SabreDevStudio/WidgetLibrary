@@ -36,7 +36,7 @@ define([
                      */
                     function getSeasonality(searchCriteria) {
                         return $q(function(resolve, reject) {
-                            var destination = searchCriteria.getTripDestination();
+                            var destination = searchCriteria.destination;
                             getDestinationSeasonality(destination).then(resolve, reject);
                         });
                     }

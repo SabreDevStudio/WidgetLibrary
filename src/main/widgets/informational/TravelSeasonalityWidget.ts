@@ -29,8 +29,8 @@ define([
         function TravelSeasonalityController(
               $scope
             , TravelSeasonalityDataService
-            , newSearchCriteriaEvent
-            , searchCriteriaBroadcastingService
+            , newInspirationalSearchCriteriaEvent
+            , InspirationalSearchCriteriaBroadcastingService
             , globalChartStyleConfiguration
             , DateRangeToStringRedefineFactory
         ) {
@@ -41,8 +41,8 @@ define([
             BaseController.call(this, {
                 scope: $scope
                 , searchService: searchService
-                , newSearchCriteriaEvent: newSearchCriteriaEvent
-                , searchCriteriaBroadcastingService: searchCriteriaBroadcastingService
+                , newSearchCriteriaEvent: newInspirationalSearchCriteriaEvent
+                , searchCriteriaBroadcastingService: InspirationalSearchCriteriaBroadcastingService
             });
 
             function initializeEmptyModel() {
@@ -113,8 +113,8 @@ define([
             .controller('TravelSeasonalityCtrl', [
                       '$scope'
                     , 'TravelSeasonalityDataService'
-                    , 'newSearchCriteriaEvent'
-                    , 'SearchCriteriaBroadcastingService'
+                    , 'newInspirationalSearchCriteriaEvent'
+                    , 'InspirationalSearchCriteriaBroadcastingService'
                     , 'globalChartStyleConfiguration'
                     , 'DateRangeToStringRedefineFactory'
                 , TravelSeasonalityController])

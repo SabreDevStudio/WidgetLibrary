@@ -11,7 +11,7 @@
                     <small class="help-block" ng-show="searchFormInspirational.Destination.$error.required">Type destination airport or city</small>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" ng-if="isVisible('PointOfSaleCountry')">
                     <label for="SDSSearchFormInspirational_PreferredCabin" class="input-sm control-label">Point of sale country</label>
                     <select name="PointOfSaleCountry" class="form-control input-sm" id="SDSSearchFormInspirational_PreferredCabin"
                             ng-model="pointOfSaleCountry"

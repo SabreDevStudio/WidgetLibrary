@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="GeneralSearchCriteria">
 
-    <div class="SDS-row">
+    <div class="SDS-row" ng-if="isVisible('ADTPaxNumber')">
         <div class="SDS-col-element-xxs-12">
             <div class="form-group SDS-col-element-xxs-12" ng-class="{'has-error':searchForm.$submitted && searchForm.ADTPaxNumber.$invalid}">
                 <label for="SDSSearchForm_ADTPaxNumber" class="input-sm control-label">Adults (12+)</label>
@@ -11,14 +11,14 @@
 
     <div class="SDS-row">
         <div class="SDS-col-element-xxs-12">
-            <div class="checkbox input-sm">
+            <div class="checkbox input-sm" ng-if="isVisible('DirectFlightsOnly')">
                 <label for="SDSSearchForm_DirectFlightsOnly">
                     <input type="checkbox" name="DirectFlightsOnly" id="SDSSearchForm_DirectFlightsOnly" ng-model="generalSearchCriteria.DirectFlightsOnly">
                     Direct flights only
                 </label>
             </div>
 
-            <div class="checkbox input-sm">
+            <div class="checkbox input-sm" ng-if="isVisible('IsPlusMinus3DaysFlexible')">
                 <label for="SDSSearchForm_IsPlusMinus3DaysFlexible">
                     <input type="checkbox" name="IsPlusMinus3DaysFlexible" id="SDSSearchForm_IsPlusMinus3DaysFlexible"
                            ng-model="flexDatesMode.activeMode"
@@ -94,30 +94,29 @@
 
     <!-- input field validation error messages -->
     <div class="SDS-row">
-        <div class="TODO-6">
+        <div class="TODO-6" ng-if="isVisible('ADTPaxNumber')">
             <div ng-show="searchForm.$submitted && searchForm.ADTPaxNumber.$invalid" class="has-error">
                 <small class="help-block" ng-show="searchForm.ADTPaxNumber.$error.required">Specify number of passengers</small>
             </div>
         </div>
     </div>
 
-
-    <div class="SDS-row">
-        <div class="TODO-3 SDS-col-element-xxs-12 SDSTopBuffer-xs SDSBottomBuffer">
-            <a href="" ng-click="areAdvancedSearchOptionsCollapsed = !areAdvancedSearchOptionsCollapsed" class="input-sm SDSToggleLink">Advanced search options</a>
+    <div class="SDS-row" ng-if="isAnyOfVisible('PreferredAirline', 'PreferredCabin')">
+        <div class="SDS-col-element-xxs-12 SDSTopBuffer-xs">
+            <a href="" ng-click="detailsVisibility.areAdvancedSearchOptionsCollapsed = !detailsVisibility.areAdvancedSearchOptionsCollapsed" class="input-sm SDSToggleLink">Advanced search options</a>
         </div>
     </div>
 
-        <div ng-if="areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer">
+        <div ng-if="detailsVisibility.areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer">
             <div class="SDS-row">
-                <div class="SDS-col-element-xs-6 SDS-col-element-lg-3">
+                <div class="SDS-col-element-xs-6 SDS-col-element-lg-3" ng-if="isVisible('PreferredAirline')">
                     <div class="form-group SDS-form-inline-exclude">
                         <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label SDS-form-inline-exclude">Preferred Airline</label>
-                        <select-preferred-airline class="input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredAirline" preferred-airline="preferredAirline"></select-preferred-airline>
+                        <select-preferred-airline class="input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredAirline" name="PreferredAirline" preferred-airline="preferredAirline"></select-preferred-airline>
                         <!-- WARN: Lack of 'form-control' class is intentional. The component used in select preferred airline directive - the angular ui-select, is already styled as bootstrap button. Wrapping it in form-control here breaks the style (we get unnecessary wrapping. This issue is reported to ui-select and recognized as issue. No fix yet.  -->
                     </div>
                 </div>
-                <div class="SDS-col-element-xs-6 SDS-col-element-lg-3">
+                <div class="SDS-col-element-xs-6 SDS-col-element-lg-3" ng-if="isVisible('PreferredCabin')">
                     <div class="form-group SDS-form-inline-exclude">
                         <label for="SDSSearchForm_PreferredCabin" class="input-sm control-label SDS-form-inline-exclude">Cabin</label>
                         <select-preferred-cabin name="PreferredCabin" class="form-control input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
@@ -126,7 +125,7 @@
             </div>
         </div>
 
-    <div class="text-center">
+    <div class="text-center SDSTopBuffer">
         <button type="submit" class="SDS-hidden-sm btn btn-primary btn-lg btn-block ">Search</button>
         <button type="submit" class="SDS-visible-sm-inline-block btn btn-primary btn-lg">Search</button>
     </div>

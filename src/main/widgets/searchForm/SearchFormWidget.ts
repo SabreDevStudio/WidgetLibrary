@@ -44,6 +44,8 @@ define([
 
                 $scope.widgetId = widgetIdGenerator.next();
 
+                $scope.detailsVisibility = {};
+
                 $scope.tripType = 'returnTrip';
 
                 $scope.multiDestinationLegs = [{}, {}, {}];
@@ -177,6 +179,15 @@ define([
                         $scope.flexDatesMode.activeMode = undefined;
                     }
                 };
+
+                $scope.isVisible = function (htmlFieldName) {
+                    return !_.contains($scope.fieldsToHide, htmlFieldName);
+                }
+
+                $scope.isAnyOfVisible = function () {
+                    return [].slice.call(arguments).some($scope.isVisible);
+                }
+
             }])
             .directive('searchForm', ['DateService', '$timeout', function (DateService, $timeout) {
                return {
@@ -188,6 +199,8 @@ define([
                        var DEFAULT_LENGTH_OF_STAY = 14;
                        var DEFAULT_ADVANCE_PURCHASE_DAYS = 14;
 
+                       parseFieldsToHide();
+
                        parseSearchOptionsDefaults();
 
                        parseAdvancedDateFlexibilityOptions();
@@ -197,6 +210,10 @@ define([
                        setUpTravelDatesOnChangeListeners();
 
                        scheduleDeferredElementsLoad();
+
+                       function parseFieldsToHide() {
+                           scope.fieldsToHide = element.attr('hide-fields') && element.attr('hide-fields').split(',') || [];
+                       }
 
                        function parseSearchOptionsDefaults() {
                            scope.optionsPerDay = parseInt(element.attr('options-per-day'));
