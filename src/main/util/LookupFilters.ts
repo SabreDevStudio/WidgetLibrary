@@ -76,7 +76,7 @@ define([
              * If the value passed is airport and the airport name is different than the city it is located in, then returns bot airport name and city name (comma separated). If they are same returns just one.
              */
             .filter('cityFullName', ['AirportLookupDataService', function (AirportLookupDataService) {
-                var filterFromBuilder: Lookup = buildFilter(AirportLookupDataService.getAirportsDictionary());
+                var filterFromBuilder: Lookup = buildFilter(AirportLookupDataService.getShoppingAirportsDictionary());
                 var cityFullNameDecorator = <StatefulFunction>function (airportCode: string) {
                     var entryFound = filterFromBuilder(airportCode);
                     return (entryFound.CityName)? entryFound.CityName: entryFound;
@@ -85,9 +85,9 @@ define([
                 return cityFullNameDecorator;
             }])
             .filter('cityAndAirportFullName', ['AirportLookupDataService', function (AirportLookupDataService) {
-                var allPosCountriesFilter: Lookup = getFilterInstance('AirportLookupDataService.getAirportsDictionaryForAllPoS', AirportLookupDataService.getAirportsDictionaryForAllPoS);
+                var allPosCountriesFilter: Lookup = getFilterInstance('AirportLookupDataService.getShoppingAirportsDictionaryForAllPoS', AirportLookupDataService.getShoppingAirportsDictionaryForAllPoS);
                 var createCityAndAirportNameFilterDecorator = <StatefulFunction>function (airportCode, posCountry) {
-                    var perPosCountryFilter: Lookup = getFilterInstance('AirportLookupDataService.getAirportsDictionary', AirportLookupDataService.getAirportsDictionary, posCountry);
+                    var perPosCountryFilter: Lookup = getFilterInstance('AirportLookupDataService.getShoppingAirportsDictionary', AirportLookupDataService.getShoppingAirportsDictionary, posCountry);
                     var perPosEntry = perPosCountryFilter(airportCode);
                     if (perPosEntry === airportCode) {
                         let globalEntry = allPosCountriesFilter(airportCode);
@@ -109,7 +109,7 @@ define([
              * Given airport/city code, returns the country name (for example Germany) this airport/city is located.
              */
             .filter('airportCountry', ['AirportLookupDataService', function (AirportLookupDataService) {
-                var filterFromBuilder: Lookup = buildFilter(AirportLookupDataService.getAirportsDictionary());
+                var filterFromBuilder: Lookup = buildFilter(AirportLookupDataService.getShoppingAirportsDictionary());
 
                 var getCountryNameFilterDecorator = <StatefulFunction>function (airportCode) {
                     var entryFound = filterFromBuilder(airportCode);

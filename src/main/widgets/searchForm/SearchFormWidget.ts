@@ -195,6 +195,7 @@ define([
                    controller: 'SearchFormCtrl',
                    scope: {
                        selectableAirportsForThisPosOnly: '@'
+                       , selectableAirportsDictionary: '@'
                    },
                    link: function (scope, element) {
 

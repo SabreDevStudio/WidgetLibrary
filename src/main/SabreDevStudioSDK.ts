@@ -88,6 +88,7 @@ define([
         , 'widgets/searchForm/SearchFormWidget'
         , 'widgets/searchForm/SearchFormInspirationalWidget'
         , 'widgets/searchForm/SearchFormInputControls'
+        , 'widgets/searchForm/InputAirport'
         , 'widgets/ItinerariesList/InputSortBy'
         , 'widgets/informational/fareForecast/FareForecastWidget'
         , 'widgets/informational/fareRange/FareRangeWidget'
@@ -118,6 +119,7 @@ define([
         , SearchFormWidget
         , SearchFormInspirationalWidget
         , SearchFormInputControls
+        , InputAirport
         , InputSortBy
         , FareForecastWidget
         , FareRangeWidget

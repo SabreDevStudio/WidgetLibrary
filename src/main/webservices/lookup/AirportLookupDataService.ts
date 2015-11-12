@@ -18,6 +18,8 @@ define([
             .factory('AirportLookupDataService', [
                       '$q'
                     , 'ShoppingAirportsAndCitiesLookupWebService'
+                    , 'FareRangeAirportsAndCitiesLookupWebService'
+                    , 'LowFareForecastAirportsAndCitiesLookupWebService'
                     , '$localStorage'
                     , 'ErrorReportingService'
                     , 'businessMessagesErrorHandler'
@@ -25,7 +27,9 @@ define([
                     , 'pointOfSaleCountry'
                 , function (
                       $q
-                    , AirportsLookupService
+                    , ShoppingAirportsAndCitiesLookupWebService
+                    , FareRangeAirportsAndCitiesLookupWebService
+                    , LowFareForecastAirportsAndCitiesLookupWebService
                     , $localStorage
                     , ErrorReportingService
                     , businessMessagesErrorHandler
@@ -34,6 +38,9 @@ define([
                 ) {
 
                 const GLOBAL_DICTIONARY_KEY = 'SUM_OF_ALL_DICTIONARIES';
+                const SHOPPING_DICTIONARY_NAME = 'shoppingAirportsDictionary';
+                const FARE_RANGE_DICTIONARY_NAME = 'fareRangeAirportsDictionary';
+                const LOW_FARE_FORECAST_DICTIONARY_NAME = 'lowFareForecastAirportsDictionary';
 
                 initializeDictionariesInLocalStorage();
 
@@ -63,42 +70,63 @@ define([
                     }, {});
                 }
 
-                function getAirportsDictionary(posCountry = pointOfSaleCountry) {
+                function getAirportsDictionary(dictionaryName, webServiceResource, posCountry = pointOfSaleCountry, updateGlobalDictionaryEnabled = false) {
 
                     return $q(function (resolve, reject) {
-                        if ($localStorage.airportsDictionary[posCountry]) {
-                            return resolve($localStorage.airportsDictionary[posCountry]);
+                        if ($localStorage[dictionaryName][posCountry]) {
+                            return resolve($localStorage[dictionaryName][posCountry]);
                         }
                         var requestParameters = {
                             pointofsalecountry: posCountry
                         }
-                        AirportsLookupService.get(requestParameters).$promise.then(
+                        webServiceResource.get(requestParameters).$promise.then(
                             function (response) {
                                 var airportsDictionary = parseAirportLookupResponse(response);
-                                $localStorage.airportsDictionary[posCountry] = airportsDictionary;
-                                updateGlobalDictionary(airportsDictionary);
+                                $localStorage[dictionaryName][posCountry] = airportsDictionary;
+                                if (updateGlobalDictionaryEnabled) {
+                                    updateGlobalDictionary(dictionaryName, airportsDictionary);
+                                }
                                 resolve(airportsDictionary);
                             }
                             , function (reason) {
-                                ErrorReportingService.reportError('Cannot get airports dictionary');
+                                ErrorReportingService.reportError('Cannot get airports dictionary ' + dictionaryName + ' for POS country ' + posCountry);
                                 businessMessagesErrorHandler.handle(reject, reason);
                             }
                         );
                     });
                 }
 
-                function initializeDictionariesInLocalStorage() {
-                    if (_.isUndefined($localStorage.airportsDictionary)) {
-                        $localStorage.airportsDictionary = {};
-                    }
-
-                    if (_.isUndefined($localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY])) {
-                        $localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY] = {};
-                    }
+                function getShoppingAirportsDictionary(posCountry = pointOfSaleCountry) {
+                    return getAirportsDictionary(SHOPPING_DICTIONARY_NAME, ShoppingAirportsAndCitiesLookupWebService, posCountry);
                 }
 
-                function updateGlobalDictionary(perPosDictionary) {
-                    var globalDictionary = $localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY];
+                function getFareRangeAirportsDictionary(posCountry = pointOfSaleCountry) {
+                    return getAirportsDictionary(FARE_RANGE_DICTIONARY_NAME, FareRangeAirportsAndCitiesLookupWebService, posCountry);
+                }
+
+                function getLowFareForecastAirportsDictionary(posCountry = pointOfSaleCountry) {
+                    return getAirportsDictionary(LOW_FARE_FORECAST_DICTIONARY_NAME, LowFareForecastAirportsAndCitiesLookupWebService, posCountry);
+                }
+
+                function initializeDictionariesInLocalStorage() {
+                    if (_.isUndefined($localStorage[SHOPPING_DICTIONARY_NAME])) {
+                        $localStorage[SHOPPING_DICTIONARY_NAME] = {};
+                    }
+                    if (_.isUndefined($localStorage[FARE_RANGE_DICTIONARY_NAME])) {
+                        $localStorage[FARE_RANGE_DICTIONARY_NAME] = {};
+                    }
+                    if (_.isUndefined($localStorage[LOW_FARE_FORECAST_DICTIONARY_NAME])) {
+                        $localStorage[LOW_FARE_FORECAST_DICTIONARY_NAME] = {};
+                    }
+
+                    if (_.isUndefined($localStorage[SHOPPING_DICTIONARY_NAME][GLOBAL_DICTIONARY_KEY])) {
+                        $localStorage[SHOPPING_DICTIONARY_NAME][GLOBAL_DICTIONARY_KEY] = {};
+                    }
+                    // global dictionary for fare range and low fare forecast not implemented
+                }
+
+                function updateGlobalDictionary(dictionaryName, perPosDictionary) {
+                    var globalDictionary = $localStorage[dictionaryName][GLOBAL_DICTIONARY_KEY];
                     _.each(perPosDictionary, function (entry, key) {
                         updateDictionaryForKey(globalDictionary, entry, key);
                     })
@@ -107,9 +135,24 @@ define([
                 /* returns logical sum of all entries in all per-PoS-dictionaries that were already fetched.
                   Will not return entries for PoS that have not been requested yet (by other call) - gathering these 'sum' dictionary is done by occassion, not thru separate web service call.
                 */
-                function getAirportsDictionaryForAllPoS() {
+                function getShoppingAirportsDictionaryForAllPoS() {
+                    var globalDictionary = $localStorage[SHOPPING_DICTIONARY_NAME][GLOBAL_DICTIONARY_KEY];
+                    if (_.isEmpty(globalDictionary)) {
+                        return $q(function (resolve, reject) {
+                            getShoppingAirportsDictionary().then(resolve, reject);
+                        });
+                    }
+                    return $q.when(globalDictionary);
+                }
+
+                function getFareRangeAirportsDictionaryForAllPoS() {
                     // returning promise, not value, for consistence of return types from this module functions
-                    return $q.when($localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY]);
+                    return $q.when($localStorage[FARE_RANGE_DICTIONARY_NAME][GLOBAL_DICTIONARY_KEY]);
+                }
+
+                function getLowFareForecastAirportsDictionaryForAllPoS() {
+                    // returning promise, not value, for consistence of return types from this module functions
+                    return $q.when($localStorage[LOW_FARE_FORECAST_DICTIONARY_NAME][GLOBAL_DICTIONARY_KEY]);
                 }
 
                 function containsAirport(airportCode) {
@@ -125,7 +168,7 @@ define([
 
                 function getAirportData(airportCode) {
                     return $q(function (resolve, reject) {
-                        getAirportsDictionary().then(function (dictionary) {
+                        getShoppingAirportsDictionary().then(function (dictionary) {
                             resolve(dictionary[airportCode]);
                         }, reject);
                     });
@@ -146,12 +189,34 @@ define([
                     but we want to avoid excessive cloning big objects within invocations local to this package.
                 */
                 return {
-                      getAirportsDictionary: PromiseUtils.addResolvedObjectCloning(getAirportsDictionary)
-                    , getAirportsDictionaryForAllPoS: PromiseUtils.addResolvedObjectCloning(getAirportsDictionaryForAllPoS)
+                      getShoppingAirportsDictionary: PromiseUtils.addResolvedObjectCloning(getShoppingAirportsDictionary)
+                    , getShoppingAirportsDictionaryForAllPoS: PromiseUtils.addResolvedObjectCloning(getShoppingAirportsDictionaryForAllPoS)
+                    , getFareRangeAirportsDictionary: PromiseUtils.addResolvedObjectCloning(getFareRangeAirportsDictionary)
+                    , getFareRangeAirportsDictionaryForAllPoS: PromiseUtils.addResolvedObjectCloning(getFareRangeAirportsDictionaryForAllPoS)
+                    , getLowFareForecastAirportsDictionary: PromiseUtils.addResolvedObjectCloning(getLowFareForecastAirportsDictionary)
+                    , getLowFareForecastAirportsDictionaryForAllPoS: PromiseUtils.addResolvedObjectCloning(getLowFareForecastAirportsDictionaryForAllPoS)
                     , containsAirport: containsAirport
                     , getAirportData: PromiseUtils.addResolvedObjectCloning(getAirportData.bind(this))
                     , getAirportDataWithAirportCode: getAirportDataWithAirportCode
                 };
 
+            }])
+            .factory('AirportsDictionaryFetchFnFactory', ['AirportLookupDataService', function (AirportLookupDataService) {
+                return {
+                    /*jshint maxcomplexity: 7*/
+                    selectAirportsDictionaryFetchFn: function(selectableAirportsDictionary, selectableAirportsForThisPosOnly = false) {
+                        switch (selectableAirportsDictionary) {
+                            case 'fareRange': {
+                                return (selectableAirportsForThisPosOnly)? AirportLookupDataService.getFareRangeAirportsDictionary: AirportLookupDataService.getFareRangeAirportsDictionaryForAllPoS;
+                            }
+                            case 'lowFareForecast': {
+                                return (selectableAirportsForThisPosOnly)? AirportLookupDataService.getLowFareForecastAirportsDictionary: AirportLookupDataService.getLowFareForecastAirportsDictionaryForAllPoS;
+                            }
+                            default: {
+                                return (selectableAirportsForThisPosOnly)? AirportLookupDataService.getShoppingAirportsDictionary: AirportLookupDataService.getShoppingAirportsDictionaryForAllPoS;
+                            }
+                        }
+                    }
+                }
             }])
     });

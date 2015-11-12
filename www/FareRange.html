@@ -15,7 +15,13 @@
 
 <div id="mainPageContainer">
     <partial command="include('partials/navigation.html')"></partial>
-    <search-form class="embeddedWidget" hide-fields="ADTPaxNumber,DirectFlightsOnly,IsPlusMinus3DaysFlexible,PreferredAirline,PreferredCabin" selectable-airports-for-this-pos-only="1"></search-form>
+    <search-form
+            class="embeddedWidget"
+            hide-fields="ADTPaxNumber,DirectFlightsOnly,IsPlusMinus3DaysFlexible,PreferredAirline,PreferredCabin"
+            selectable-airports-for-this-pos-only="1"
+            selectable-airports-dictionary="fareRange">
+    </search-form>
+
     <error-display class="embeddedWidget"></error-display>
     <fare-range class="embeddedWidget fareRangeWidget"></fare-range>
     <!-- see also with specifying current lowest fare -->

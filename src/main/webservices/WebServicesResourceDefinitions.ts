@@ -335,6 +335,38 @@ define([
                         }
                     });
                 }])
+            .factory('FareRangeAirportsAndCitiesLookupWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v1/lists/supported/historical/flights/origins-destinations/';
+                    return $resource(endpointURL, {}, {
+                        get: {
+                            method:'GET'
+                            , cache: true
+                            , headers: generalHeaders
+                        }
+                    });
+                }])
+            .factory('LowFareForecastAirportsAndCitiesLookupWebService', [
+                '$resource'
+                , 'apiURL'
+                , function (
+                    $resource
+                    , apiURL
+                ) {
+                    var endpointURL = apiURL + '/v1/lists/supported/forecast/flights/origins-destinations/';
+                    return $resource(endpointURL, {}, {
+                        get: {
+                            method:'GET'
+                            , cache: true
+                            , headers: generalHeaders
+                        }
+                    });
+                }])
             .factory('TravelThemeLookupWebService', [
                 '$resource'
                 , 'apiURL'
