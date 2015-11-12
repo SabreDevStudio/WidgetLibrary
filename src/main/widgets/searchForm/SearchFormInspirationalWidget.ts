@@ -1,6 +1,7 @@
 define([
         'moment'
         , 'angular'
+        , 'lodash'
         , 'util/LodashExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
@@ -8,6 +9,7 @@ define([
     function (
           moment
         , angular
+        , _
         , __
         , angular_bootstrap
         , SDSWidgets
@@ -30,10 +32,17 @@ define([
 
                 return {
                     replace: true,
+                    scope: {
+                        selectableAirportsForThisPosOnly: '@'
+                    },
                     templateUrl: '../widgets/view-templates/widgets/SearchFormInspirationalWidget.tpl.html',
                     link: function (scope, element) {
 
                         var fieldsToHide = [];
+
+                        scope.searchContext = {
+                            pointOfSaleCountry: undefined
+                        };
 
                         parseFieldsToHide();
 
@@ -56,7 +65,7 @@ define([
                         scope.createNewSearchCriteria = function () {
                             InspirationalSearchCriteriaBroadcastingService.searchCriteria = {
                                   destination: scope.destination.airportCode
-                                , pointOfSaleCountry: scope.pointOfSaleCountry
+                                , pointOfSaleCountry: scope.searchContext.pointOfSaleCountry
                             };
                             InspirationalSearchCriteriaBroadcastingService.broadcast();
                         };

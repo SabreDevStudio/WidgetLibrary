@@ -426,6 +426,18 @@ module.exports = function (grunt) {
         , 'copy-static-resources'
     ]);
 
+    grunt.registerTask('dist-standalone-no-UT', [
+        'clean:dist'
+        //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
+        , 'typescript-pipeline'
+        , 'copy:cdnify-inline-style-images-urls'
+        , 'ngtemplates'
+        , 'saveRevision'
+        , 'requirejs:compile-standalone-app'
+        , 'css-pipeline'
+        , 'copy-static-resources'
+    ]);
+
     grunt.registerTask('dist-standalone-app-fast', [
         'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time

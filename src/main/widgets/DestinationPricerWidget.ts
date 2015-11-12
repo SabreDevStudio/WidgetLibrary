@@ -25,6 +25,8 @@ define([
             , searchCriteriaBroadcastingService
         ) {
 
+            var that = this;
+
             var searchService = {
                 executeSearch: DestinationPricerDataService.getPricesToDestination
             };
@@ -35,6 +37,10 @@ define([
                 , newSearchCriteriaEvent: newInspirationalSearchCriteriaEvent
                 , searchCriteriaBroadcastingService: searchCriteriaBroadcastingService
             });
+
+            this.saveLastSearchCriteria = function (searchCriteria) {
+                that.lastRequestPosCountryOverride = searchCriteria.pointOfSaleCountry;
+            };
 
             this.processSearchResults = function (pricesToDestination) {
                 this.modelPricesToDestination = pricesToDestination;
@@ -71,7 +77,7 @@ define([
                     controller: 'DestinationPricerCtrl',
                     controllerAs: 'ctrl',
                     link: function (scope, element, attrs, controller) {
-                        executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.destination, attrs.pointofsalecountry);
+                        executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.destination, attrs.pointOfSaleCountry);
 
                         function executeLifeSearchOnPredefinedCriteriaIfPresent(destination, pointOfSaleCountry) {
                             if (destination) {

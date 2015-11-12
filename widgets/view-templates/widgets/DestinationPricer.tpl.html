@@ -26,13 +26,13 @@
                                             <div class="SDS-col-element-xs-5">
                                                 <ul class="list-inline list-unstyled">
                                                     <li>
-                                                        <div><strong>{{offerItem.OriginLocation | cityAndAirportFullName}}</strong></div>
+                                                        <div><strong>{{offerItem.OriginLocation | cityAndAirportFullName:ctrl.lastRequestPosCountryOverride}}</strong></div>
                                                     </li>
                                                     <li>
                                                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                                                     </li>
                                                     <li>
-                                                        <strong>{{ctrl.modelPricesToDestination.DestinationLocation | cityAndAirportFullName}}</strong>
+                                                        <strong>{{ctrl.modelPricesToDestination.DestinationLocation | cityAndAirportFullName:ctrl.lastRequestPosCountryOverride}}</strong>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -63,10 +63,10 @@
 <script type="text/ng-template" id="DestinationPricerDetailsPopover">
     <ul class="list-inline list-unstyled">
         <li>
-            <small>Departure {{offerItem.DepartureDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{offerItem.OriginLocation | cityAndAirportFullName}}</small><!-- format: Sun, 05 Dec-->
+            <small>Departure {{offerItem.DepartureDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{offerItem.OriginLocation | cityAndAirportFullName:ctrl.lastRequestPosCountryOverride}}</small><!-- format: Sun, 05 Dec-->
         </li>
         <li>
-            <small>Return {{offerItem.ReturnDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{ctrl.modelPricesToDestination.DestinationLocation | cityAndAirportFullName}}</small><!-- format: Sun, 05 Dec-->
+            <small>Return {{offerItem.ReturnDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{ctrl.modelPricesToDestination.DestinationLocation | cityAndAirportFullName:ctrl.lastRequestPosCountryOverride}}</small><!-- format: Sun, 05 Dec-->
         </li>
     </ul>
 </script>

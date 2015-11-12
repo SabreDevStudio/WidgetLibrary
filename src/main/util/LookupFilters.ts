@@ -4,7 +4,7 @@ interface StatefulFunction {
 }
 
 interface Lookup {
-    (string): any;
+    (string, ...args:string[]): any;
     $stateful: boolean;
 }
 
@@ -51,6 +51,19 @@ define([
             return filter;
         }
 
+        var perPosFilters = {};
+
+        function getFilterInstance(dictionaryName, getDictionaryPromiseFn, ...getDictionaryPromiseFnArguments) {
+            if (_.isUndefined(perPosFilters[dictionaryName])) {
+                perPosFilters[dictionaryName] = {};
+            }
+            if (_.isUndefined(perPosFilters[dictionaryName][getDictionaryPromiseFnArguments.join()])) {
+                var dictionaryPromise = getDictionaryPromiseFn.apply(null, getDictionaryPromiseFnArguments);
+                perPosFilters[dictionaryName][getDictionaryPromiseFnArguments.join()] = buildFilter(dictionaryPromise);
+            }
+            return perPosFilters[dictionaryName][getDictionaryPromiseFnArguments.join()];
+        }
+
         return angular.module('sDSLookups', ['sabreDevStudioWebServices'])
             /**
              * given airline IATA code, like 'AA', returns airline full name: like 'American Airlines'
@@ -66,26 +79,30 @@ define([
                 var filterFromBuilder: Lookup = buildFilter(AirportLookupDataService.getAirportsDictionary());
                 var cityFullNameDecorator = <StatefulFunction>function (airportCode: string) {
                     var entryFound = filterFromBuilder(airportCode);
-                    return (entryFound.cityName)? entryFound.cityName: entryFound;
+                    return (entryFound.CityName)? entryFound.CityName: entryFound;
                 }
                 cityFullNameDecorator.$stateful = true;
                 return cityFullNameDecorator;
             }])
             .filter('cityAndAirportFullName', ['AirportLookupDataService', function (AirportLookupDataService) {
-                var filterFromBuilder: Lookup = buildFilter(AirportLookupDataService.getAirportsDictionary());
-
-                var createCityAndAirportNameFilterDecorator = <StatefulFunction>function (airportCode) {
-                    var entryFound = filterFromBuilder(airportCode);
-                    if (entryFound === airportCode) {
-                        return entryFound;
+                var allPosCountriesFilter: Lookup = getFilterInstance('AirportLookupDataService.getAirportsDictionaryForAllPoS', AirportLookupDataService.getAirportsDictionaryForAllPoS);
+                var createCityAndAirportNameFilterDecorator = <StatefulFunction>function (airportCode, posCountry) {
+                    var perPosCountryFilter: Lookup = getFilterInstance('AirportLookupDataService.getAirportsDictionary', AirportLookupDataService.getAirportsDictionary, posCountry);
+                    var perPosEntry = perPosCountryFilter(airportCode);
+                    if (perPosEntry === airportCode) {
+                        let globalEntry = allPosCountriesFilter(airportCode);
+                        if (globalEntry === airportCode) {
+                            return globalEntry;
+                        }
+                        perPosEntry = globalEntry;
                     }
-                    if (entryFound.airportName !== entryFound.cityName) {
-                        return entryFound.airportName + ', ' + entryFound.cityName;
+                    if (perPosEntry.AirportName !== perPosEntry.CityName) {
+                        return perPosEntry.AirportName + ', ' + perPosEntry.CityName;
                     } else {
-                        return entryFound.airportName;
+                        return perPosEntry.AirportName;
                     }
                 };
-                createCityAndAirportNameFilterDecorator.$stateful = filterFromBuilder.$stateful;
+                createCityAndAirportNameFilterDecorator.$stateful = true; // protectively setting true, as filters are selected at runtime (getFilterInstance), and we do now know if stateful or stateless filters will be used (BTW currently filters produced are stateful).
                 return createCityAndAirportNameFilterDecorator;
             }])
             /**
@@ -99,7 +116,7 @@ define([
                     if (entryFound === airportCode) {
                         return entryFound;
                     }
-                    return entryFound.countryName
+                    return entryFound.CountryName
                 };
                 getCountryNameFilterDecorator.$stateful = filterFromBuilder.$stateful;
                 return getCountryNameFilterDecorator;

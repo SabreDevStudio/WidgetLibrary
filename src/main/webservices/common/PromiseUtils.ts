@@ -14,12 +14,13 @@ define([
             .factory('PromiseUtils', ['$q', function ($q) {
                 return {
                     addResolvedObjectCloning: function (promiseReturningFunction) {
-                        return function (args) {
+                        return function () {
+                            var fnArguments = arguments;
                             return $q(function (resolve, reject) {
-                                promiseReturningFunction(args).then(function (result) {
-                                    resolve (_.clone(result));
+                                promiseReturningFunction.apply(null, fnArguments).then(function (result) {
+                                    resolve(_.clone(result));
                                 }, reject);
-                            })
+                            });
                         };
                     },
                     rejectIfAnyRejected: function (results, reject) { // works with nng-promise-extras

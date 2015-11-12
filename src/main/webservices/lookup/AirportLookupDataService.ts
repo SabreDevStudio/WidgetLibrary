@@ -22,6 +22,7 @@ define([
                     , 'ErrorReportingService'
                     , 'businessMessagesErrorHandler'
                     , 'PromiseUtils'
+                    , 'pointOfSaleCountry'
                 , function (
                       $q
                     , AirportsLookupService
@@ -29,22 +30,30 @@ define([
                     , ErrorReportingService
                     , businessMessagesErrorHandler
                     , PromiseUtils
+                    , pointOfSaleCountry
                 ) {
 
-                function parseAirportLookupResponse(response) {
+                const GLOBAL_DICTIONARY_KEY = 'SUM_OF_ALL_DICTIONARIES';
 
-                    function updateDictionary(dictionary, entry) {
-                        var airportCode = entry.AirportCode;
-                        if (!dictionary[airportCode]) {
-                            dictionary[airportCode] = {
-                                  airportName: entry.AirportName
-                                , cityName: entry.CityName
-                                , countryCode: entry.CountryCode
-                                , countryName: entry.CountryName
-                            };
-                        }
+                initializeDictionariesInLocalStorage();
+
+                function updateDictionary(dictionary, entry) {
+                    var airportCode = entry.AirportCode;
+                    updateDictionaryForKey(dictionary, entry, airportCode);
+                }
+
+                function updateDictionaryForKey(dictionary, entry, key) {
+                    if (!dictionary[key]) {
+                        dictionary[key] = {
+                            AirportName: entry.AirportName
+                            , CityName: entry.CityName
+                            , CountryCode: entry.CountryCode
+                            , CountryName: entry.CountryName
+                        };
                     }
+                }
 
+                function parseAirportLookupResponse(response) {
                     return response.OriginDestinationLocations.reduce(function (dictionary, entry) {
                         var originEntry = entry.OriginLocation;
                         updateDictionary(dictionary, originEntry);
@@ -54,15 +63,20 @@ define([
                     }, {});
                 }
 
-                function getAirportsDictionary() {
+                function getAirportsDictionary(posCountry = pointOfSaleCountry) {
+
                     return $q(function (resolve, reject) {
-                        if ($localStorage.airportsDictionary) {
-                            return resolve($localStorage.airportsDictionary);
+                        if ($localStorage.airportsDictionary[posCountry]) {
+                            return resolve($localStorage.airportsDictionary[posCountry]);
                         }
-                        AirportsLookupService.get().$promise.then(
+                        var requestParameters = {
+                            pointofsalecountry: posCountry
+                        }
+                        AirportsLookupService.get(requestParameters).$promise.then(
                             function (response) {
                                 var airportsDictionary = parseAirportLookupResponse(response);
-                                $localStorage.airportsDictionary = airportsDictionary;
+                                $localStorage.airportsDictionary[posCountry] = airportsDictionary;
+                                updateGlobalDictionary(airportsDictionary);
                                 resolve(airportsDictionary);
                             }
                             , function (reason) {
@@ -71,6 +85,31 @@ define([
                             }
                         );
                     });
+                }
+
+                function initializeDictionariesInLocalStorage() {
+                    if (_.isUndefined($localStorage.airportsDictionary)) {
+                        $localStorage.airportsDictionary = {};
+                    }
+
+                    if (_.isUndefined($localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY])) {
+                        $localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY] = {};
+                    }
+                }
+
+                function updateGlobalDictionary(perPosDictionary) {
+                    var globalDictionary = $localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY];
+                    _.each(perPosDictionary, function (entry, key) {
+                        updateDictionaryForKey(globalDictionary, entry, key);
+                    })
+                }
+
+                /* returns logical sum of all entries in all per-PoS-dictionaries that were already fetched.
+                  Will not return entries for PoS that have not been requested yet (by other call) - gathering these 'sum' dictionary is done by occassion, not thru separate web service call.
+                */
+                function getAirportsDictionaryForAllPoS() {
+                    // returning promise, not value, for consistence of return types from this module functions
+                    return $q.when($localStorage.airportsDictionary[GLOBAL_DICTIONARY_KEY]);
                 }
 
                 function containsAirport(airportCode) {
@@ -107,7 +146,8 @@ define([
                     but we want to avoid excessive cloning big objects within invocations local to this package.
                 */
                 return {
-                      getAirportsDictionary: PromiseUtils.addResolvedObjectCloning(getAirportsDictionary.bind(this))
+                      getAirportsDictionary: PromiseUtils.addResolvedObjectCloning(getAirportsDictionary)
+                    , getAirportsDictionaryForAllPoS: PromiseUtils.addResolvedObjectCloning(getAirportsDictionaryForAllPoS)
                     , containsAirport: containsAirport
                     , getAirportData: PromiseUtils.addResolvedObjectCloning(getAirportData.bind(this))
                     , getAirportDataWithAirportCode: getAirportDataWithAirportCode

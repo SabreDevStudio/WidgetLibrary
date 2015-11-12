@@ -119,7 +119,7 @@ define([
                         // closestAirport = 'FRA'; // override for testing
                         searchCriteriaTemplate.origin = closestAirport;
                         AirportLookupDataService.getAirportData(closestAirport).then(function (airportData) {
-                            searchCriteriaTemplate.pointofsalecountry = airportData.countryCode;
+                            searchCriteriaTemplate.pointofsalecountry = airportData.CountryCode;
                             initializeModel();
                         });
                     });

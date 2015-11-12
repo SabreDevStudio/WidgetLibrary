@@ -64,7 +64,7 @@ define([
                                     .map((item) => item.value)
                                     .reduce(function (allMappings, mappingForOneAirport) {
                                     if (mappingForOneAirport) { // it may happen that the mapping was not found so mappingForOneAirport will be undefined
-                                        allMappings[mappingForOneAirport.airportCode] = mappingForOneAirport.cityName;
+                                        allMappings[mappingForOneAirport.airportCode] = mappingForOneAirport.CityName;
                                     }
                                     return allMappings;
                                 }, {});

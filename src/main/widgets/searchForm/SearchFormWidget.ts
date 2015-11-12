@@ -193,7 +193,9 @@ define([
                return {
                    templateUrl: '../widgets/view-templates/widgets/SearchFormWidget.tpl.html',
                    controller: 'SearchFormCtrl',
-                   scope: true,
+                   scope: {
+                       selectableAirportsForThisPosOnly: '@'
+                   },
                    link: function (scope, element) {
 
                        var DEFAULT_LENGTH_OF_STAY = 14;

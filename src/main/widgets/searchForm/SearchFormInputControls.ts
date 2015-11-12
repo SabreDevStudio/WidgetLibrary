@@ -63,28 +63,25 @@ define([
                 };
             }])
             .directive('inputAirport', ['AirportLookupDataService', function (AirportLookupDataService) {
-                var globalAirportsDictionary = null;
 
                 return {
                     replace: true,
                     scope: {
                         airport: '='
+                        , selectableAirportsForThisPosOnly: '@'
                     },
                     templateUrl: '../widgets/view-templates/partials/AirportInput.tpl.html',
                     link: function (scope) {
-                        if (globalAirportsDictionary) {
-                            scope.airports = globalAirportsDictionary;
-                            return;
-                        }
-                        AirportLookupDataService.getAirportsDictionary().then(function (dictionary) {
-                            globalAirportsDictionary = _.map(dictionary, function (airportDescription, airportCode) {
-                                var airportAndCityName = (airportDescription.airportName === airportDescription.cityName)? airportDescription.cityName: airportDescription.airportName + ', ' + airportDescription.cityName;
+                        var airportsDictionaryFetchFn = (scope.selectableAirportsForThisPosOnly)? AirportLookupDataService.getAirportsDictionary: AirportLookupDataService.getAirportsDictionaryForAllPoS;
+                        airportsDictionaryFetchFn().then(function (dictionary) {
+                            var airportsDictionary = _.map(dictionary, function (airportDescription, airportCode) {
+                                var airportAndCityName = (airportDescription.AirportName === airportDescription.CityName)? airportDescription.CityName: airportDescription.AirportName + ', ' + airportDescription.CityName;
                                 return {
                                       fullName: airportAndCityName
                                     , airportCode: airportCode
                                 };
                             });
-                            scope.airports = globalAirportsDictionary;
+                            scope.airports = airportsDictionary;
                         });
                     }
                 }
