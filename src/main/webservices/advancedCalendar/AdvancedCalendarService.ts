@@ -52,20 +52,21 @@ define([
 
                     var validator = new AdvancedCalendarSearchCriteriaValidator();
 
+                    // create cache key to reuse itineraries from date range searches (getLeadPricesForRange), as results for one day searches (getItineraries)
                     function createCacheKey(searchCriteria) {
                         var keyElements = [
                             searchCriteria.getFirstLeg().origin
                             , searchCriteria.getFirstLeg().destination
-                            , JSON.stringify(searchCriteria.getMinMaxLengthOfStay()) || searchCriteria.getLengthOfStay()
-                            , JSON.stringify(searchCriteria.getDepartureDateFrom())
-                            , JSON.stringify(searchCriteria.getDepartureDateTo())
-                            , JSON.stringify(searchCriteria.getReturnDateFrom())
-                            , JSON.stringify(searchCriteria.getReturnDateTo())
+                            , searchCriteria.getLengthOfStay()
                             , JSON.stringify(searchCriteria.preferredAirlines)
                             , searchCriteria.maxStops
                             , JSON.stringify(searchCriteria.passengerSpecifications)
                         ];
                         return keyElements.join('-');
+                    }
+
+                    function itinerariesFromDateRangeSearchMayBeReused(searchCriteria) {
+                        return !searchCriteria.isAlternateDatesRequest();
                     }
 
                     return {
@@ -111,6 +112,14 @@ define([
                                     ValidationErrorReportingService.reportErrors(validationErrors, 'Unsupported search criteria');
                                     return reject(validationErrors);
                                 }
+                                if (itinerariesFromDateRangeSearchMayBeReused(searchCriteria)) {
+                                    var cacheKey = createCacheKey(searchCriteria);
+                                    var tripDepartureDay = searchCriteria.getFirstLeg().departureDateTime.clone().startOf('day');
+                                    var optionsFromCache = ShoppingOptionsCacheService.getItinerariesList(cacheKey, tripDepartureDay);
+                                    if (optionsFromCache && optionsFromCache.size() > 0) {
+                                        return resolve(optionsFromCache);
+                                    }
+                                }
                                 var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria);
                                 AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
                                     function (response) {
@@ -154,7 +163,7 @@ define([
                             var cacheKey = createCacheKey(searchCriteria);
                             var minDateAndPricePair = ShoppingOptionsCacheService.getMinDateAndPricePair(cacheKey);
                             return {
-                                totalFareAmount: minDateAndPricePair.totalFareAmountWithCurrency.amount
+                                  totalFareAmount: minDateAndPricePair.totalFareAmountWithCurrency.amount
                                 , currency: minDateAndPricePair.totalFareAmountWithCurrency.currency
                                 , date: minDateAndPricePair.date
                             };
