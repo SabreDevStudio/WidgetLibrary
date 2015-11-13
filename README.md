@@ -221,7 +221,8 @@ Widgets do not support any special localization or internationalization apart fr
 But all [Angular i18n](https://docs.angularjs.org/guide/i18n) should work. Currently the included `angular.js` file has the default (US) localization.
 
 Currency symbol:
-All Angular currency filters have currency passed as argument, so the prices are presented correctly in the currency as they come from the SDS web service.
+_Warning_: Angular native `currency` filter is overridden with the `isoCurrency` filter from `iso-currency` (see bower.json, see `SDSWidgets`).
+In all views the (overridden) currency filter have currency passed as argument, so the prices are presented in the currency as they come from the SDS web service.
 
 Date display formats:
 All dates are represented by Moment.js dates and are given explicit formatting, so they are presented in the same format regardless of browser locale or Angular locale.

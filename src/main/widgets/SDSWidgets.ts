@@ -67,6 +67,23 @@ define([
                 $compileProvider.debugInfoEnabled(true);
                 //>>excludeEnd('appBuildExclude');
             }])
+            .config(['$provide', function ($provide) {
+                $provide.decorator('currencyFilter', ['$delegate', '$filter', 'iso4217', function ($delegate, $filter, iso4217) {
+                    var ngCurrencyFilter = $delegate;
+                    // copy of function from iso-currency bower dependency.
+                    // Cannot decorate isoCurrency filter from iso-currency, as it itself depends on NG currency filter (and we are modifying NG filter here).
+                    return function (amount, currencyCode, fraction) {
+                        var currency = iso4217.getCurrencyByCode(currencyCode);
+
+                        if (!currency) {
+                            return amount;
+                        }
+
+                        var fractionSize = (fraction === void 0) ? currency.fraction : fraction;
+                        return ngCurrencyFilter(amount, currency.symbol || (currencyCode + ' '), fractionSize);
+                    };
+                }]);
+            }])
             .service('SearchCriteriaBroadcastingService', [
                   '$rootScope'
                 , 'newSearchCriteriaEvent'

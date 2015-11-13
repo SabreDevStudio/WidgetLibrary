@@ -133,7 +133,7 @@ module.exports = function (grunt) {
             widgets_img: {
                 expand: true,
                 cwd: 'widgets/',
-                src: ['img/**/*'],
+                src: ['img/airlineLogos/**/*', 'img/icons/**/*', 'img/sabre.png', 'img/sabre2.png'],
                 dest: 'dist/widgets/',
                 options: {
                     nonull: true
@@ -156,7 +156,7 @@ module.exports = function (grunt) {
                     nonull: true
                 }
             },
-            'cdnify-inline-style-images-urls': { // cannot use grunt-cdnify because it does not support inline css styles
+            'cdnify-inline-style-images-urls': { // cannot use grunt-cdnify because it does not support inline css styles which we use
                 expand: true,
                 src: 'widgets/view-templates/**/*.html',
                 dest: 'build/templates_cdnified/',
@@ -166,7 +166,7 @@ module.exports = function (grunt) {
                         var cdnBase = 'http://analytics.sabre.com/sdsdemo/dslab/widgets/static';
 
                         var localToCdnPathMappings = {
-                            '/widgets/img/destinations/': '/destinations/' //TODO: tmp hardcoding. CDN resources structure should be same as local.
+                            '/widgets/img/destinations/': '/destinations/' // no rewrite needed if CDN resources structure is the same as local.
                         };
 
                         function rewriteRelativeLink(path) {
@@ -262,22 +262,6 @@ module.exports = function (grunt) {
                 }]
             }
         },
-
-        //cdnify: {
-        //    'images-in-templates': {
-        //        options: {
-        //            base: 'http://analytics.sabre.com/sdsdemo/dslab/widgets/static/',
-        //            html: {
-        //                'div[style]': 'url'
-        //            }
-        //        },
-        //        files: [{
-        //            expand: true,
-        //            src: 'src/view-templates/**/*.html',
-        //            dest: 'build/templates_cdnified/'
-        //        }]
-        //    }
-        //},
 
         karma: {
             'unit-Chrome': {
