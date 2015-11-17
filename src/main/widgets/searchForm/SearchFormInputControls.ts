@@ -38,26 +38,31 @@ define([
                     templateUrl: '../widgets/view-templates/partials/PreferredCabinSelect.tpl.html'
                 };
             })
-            .directive('selectPreferredAirline', [
+            .directive('selectPreferredAirlines', [
                     'AirlineLookupDataService'
+                    , '$timeout'
                 , function (
                     AirlineLookupDataService
+                    , $timeout
                 ) {
 
                 return {
                     scope: {
-                        preferredAirline: '='
+                        preferredAirlines: '='
                     },
-                    templateUrl: '../widgets/view-templates/partials/PreferredAirlineSelect.tpl.html',
+                    templateUrl: '../widgets/view-templates/partials/PreferredAirlinesSelect.tpl.html',
                     link: function (scope) {
+
+                        scope.preferredAirlinesInternal = {
+                            selected: []
+                        };
+
                         AirlineLookupDataService.getAirlineAndAirlineCodesList().then(function (airlineAndAirlineCodesList) {
-                            // add empty airline to all airlines model to denote no airline preference
-                            airlineAndAirlineCodesList.splice(0, 0, {
-                                AirlineName: 'No airline preference'
-                                , AirlineCode: undefined
-                            });
-                            scope.preferredAirline.selected = _.first(airlineAndAirlineCodesList);
                             scope.allAirlines = airlineAndAirlineCodesList;
+                        });
+
+                        scope.$watchCollection('preferredAirlinesInternal.selected', function (newArr) {
+                            scope.preferredAirlines.selected = newArr.map((obj) => obj.AirlineCode);
                         });
                     }
                 };
@@ -104,17 +109,17 @@ define([
                 return {
                     replace: true,
                     scope: {
-                        value: '=' // here the 7 element array of booleans will be returned.
-                        , innerFormName: '@name'
+                        daysOfWeek: '=' // here the 7 element array of booleans will be returned.
+
                     },
                     transclude: true,
                     templateUrl: '../widgets/view-templates/partials/SelectDaysOfWeek.tpl.html',
                     link: function (scope, element) {
-                        scope.daysOfWeek = _.clone($locale.DATETIME_FORMATS.SHORTDAY); //WARN: this will print short week days according to locale. Please also mind that first day of week is also locale specific. For US it is Sunday. Next logic does not take it into account. There is no way to recognize it in NG, you could use moment.js: moment().startOf("week").day()
+                        scope.daysOfWeekSymbols = _.clone($locale.DATETIME_FORMATS.SHORTDAY); //WARN: this will print short week days according to locale. Please also mind that first day of week is also locale specific. For US it is Sunday. Next logic does not take it into account. There is no way to recognize it in NG, you could use moment.js: moment().startOf("week").day()
                         scope.daysSelected = [false, false, false, false, false, false, false];
                         scope.$watchCollection('daysSelected', function (newVal, oldVal) {
                            if (newVal !== oldVal) {
-                               scope.value = newVal;
+                               scope.daysOfWeek = newVal;
                            }
                         });
                     }
@@ -171,7 +176,7 @@ define([
                     }
                 };
             }])
-            .directive('inputTimeRangePicker', function () {
+            .directive('inputTimeRangePicker', function () { //WARN: this component to work requires full jQuery loaded (not only jqlite)
                 return {
                     restrict: 'EA',
                     replace: true,

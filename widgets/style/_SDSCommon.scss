@@ -100,24 +100,25 @@ $itemsSeparatingLineStyle: solid #D2DDE4 1px;
 .SDSTopBuffer-xs {
   margin-top: 1rem;
 }
-
 .SDSTopBuffer-sm {
   margin-top: 2rem;
 }
-
 .SDSTopBuffer-md {
   margin-top: 3rem;
 }
 
-.SDSTopBuffer {
-  margin-top: 1rem;
-}
-
-.SDSBottomBuffer {
+.SDSBottomBuffer-xs {
   margin-bottom: 1rem;
+}
+.SDSBottomBuffer-sm {
+  margin-bottom: 2rem;
+}
+.SDSBottomBuffer-md {
+  margin-bottom: 3rem;
 }
 
 .SDSPreferredAirlineSelect {
+
   .ui-select-toggle {
     width: 100%;
     min-width: 200px;

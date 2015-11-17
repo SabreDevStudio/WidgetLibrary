@@ -89,6 +89,21 @@ define([
                     }
                 };
             })
+            .filter('passengerType', function () {
+
+                var paxTypeMappings = {};
+                paxTypeMappings['ADT'] = 'Adult';
+                paxTypeMappings['CNN'] = 'Child';
+                paxTypeMappings['SNN'] = 'Senior';
+                paxTypeMappings['SRC'] = 'Senior citizen';
+                paxTypeMappings['INS'] = 'Infant with a seat';
+                paxTypeMappings['INF'] = 'Infant without a seat';
+                paxTypeMappings['FFY'] = 'Frequent flyer';
+
+                return function (passengerType) {
+                    return paxTypeMappings[passengerType] || passengerType;
+                };
+            })
             .filter('humanizeDurationDays', function () {
                 return function (days) {
                     if (days === 1) {

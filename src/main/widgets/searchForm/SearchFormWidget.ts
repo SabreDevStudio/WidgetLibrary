@@ -57,7 +57,9 @@ define([
                       ADTPaxCount: DEFAULT_PAX_COUNT
                 };
 
-                $scope.preferredAirline = {}; // cannot keep here simple scope property like just $scope.preferredAirline, as the angular-ui-select is unable to assign to scope simple property, but only to property of the object, see http://stackoverflow.com/questions/25937098/ng-model-is-not-getting-changed-in-ui-select
+                $scope.preferredAirlines = {
+                    selected: []
+                }; // cannot keep here simple scope property like just $scope.preferredAirlines, as the angular-ui-select is unable to assign to scope simple property, but only to property of the object, see http://stackoverflow.com/questions/25937098/ng-model-is-not-getting-changed-in-ui-select
 
                 $scope.lengthsOfStay = {
                     selected: {}
@@ -160,8 +162,8 @@ define([
                         searchCriteria.preferredCabin = $scope.generalSearchCriteria.preferredCabin;
                     }
 
-                    if ($scope.preferredAirline.selected && $scope.preferredAirline.selected.AirlineCode) {
-                        searchCriteria.addPreferredAirline($scope.preferredAirline.selected.AirlineCode);
+                    if ($scope.preferredAirlines.selected) {
+                        $scope.preferredAirlines.selected.forEach((airlineCode) => searchCriteria.addPreferredAirline(airlineCode));
                     }
 
                     if ($scope.optionsPerDay) {

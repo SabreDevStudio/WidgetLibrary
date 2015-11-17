@@ -311,7 +311,7 @@ define([
         if (this.hasAnyDepartureDaysOfWeekDefined()) {
             return this.earliestDepartureLatestReturnDatesFlexibility.departureDaysOfWeek;
         } else if (this.hasAnyDaysAtDestinationDefined()) {
-            return this.dayIndexIntoWeekDaysArray(this.departureAndReturnDaysOfWeekIndexes());
+            return this.dayIndexIntoWeekDaysArray(this.departureAndReturnDaysOfWeekIndexes().departureDayOfWeekIndex);
         }
     };
 
@@ -323,7 +323,7 @@ define([
         if (this.hasAnyReturnDaysOfWeekDefined()) {
             return this.earliestDepartureLatestReturnDatesFlexibility.returnDaysOfWeek;
         } else if (this.hasAnyDaysAtDestinationDefined()) {
-            return this.dayIndexIntoWeekDaysArray(this.departureAndReturnDaysOfWeekIndexes());
+            return this.dayIndexIntoWeekDaysArray(this.departureAndReturnDaysOfWeekIndexes().returnDayOfWeekIndex);
         }
     };
 

@@ -32,7 +32,7 @@
     </div>
 
     <div ng-if="flexDatesMode.isSelectableByAnyOf('plusMinusVariableDaysFlexibility', 'earliestDepartureLatestReturn.losDays', 'earliestDepartureLatestReturn.daysOfWeekAtDestination') && (tripType !== 'multiDestination')">
-        <div class="SDSTopBuffer-xs SDSBottomBuffer">
+        <div class="SDSTopBuffer-xs SDSBottomBuffer-xs">
             <a href="" ng-click="isAdvancedDateFlexibilityCollapsed = !isAdvancedDateFlexibilityCollapsed;" class="input-sm SDSToggleLink">More travel dates flexibility options</a>
         </div>
         <div ng-if="isAdvancedDateFlexibilityCollapsed">
@@ -70,8 +70,8 @@
                             <select-lengths-of-stay value="lengthsOfStay.selected">Duration</select-lengths-of-stay>
                             Optionally specify also days of week for departure and return
                             <ul class="list-unstyled list-inline">
-                                <li><select-days-of-week value="departureDaysOfWeek.selected"><div>Trip departure days</div></select-days-of-week></li>
-                                <li><select-days-of-week value="returnDaysOfWeek.selected"><div>Trip return days</div></select-days-of-week></li>
+                                <li><select-days-of-week days-of-week="departureDaysOfWeek.selected"><div>Trip departure days</div></select-days-of-week></li>
+                                <li><select-days-of-week days-of-week="returnDaysOfWeek.selected"><div>Trip return days</div></select-days-of-week></li>
                             </ul>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                             Specify days of week to stay at destination
                         </label>
                         <div ng-if="flexDatesMode.activeMode === 'earliestDepartureLatestReturn.daysOfWeekAtDestination'">
-                            <select-days-of-week name="DaysOfWeekAtDestination" value="daysOfWeekAtDestination.selected"></select-days-of-week>
+                            <select-days-of-week days-of-week="daysOfWeekAtDestination.selected"></select-days-of-week>
                         </div>
                     </div>
                 </div>
@@ -107,12 +107,12 @@
         </div>
     </div>
 
-        <div ng-if="detailsVisibility.areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer">
+        <div ng-if="detailsVisibility.areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer-xs">
             <div class="SDS-row">
                 <div class="SDS-col-element-xs-6 SDS-col-element-lg-3" ng-if="isVisible('PreferredAirline')">
                     <div class="form-group SDS-form-inline-exclude">
                         <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label SDS-form-inline-exclude">Preferred Airline</label>
-                        <select-preferred-airline class="input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredAirline" name="PreferredAirline" preferred-airline="preferredAirline"></select-preferred-airline>
+                        <select-preferred-airlines class="input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredAirline" name="PreferredAirline" preferred-airlines="preferredAirlines"></select-preferred-airlines>
                         <!-- WARN: Lack of 'form-control' class is intentional. The component used in select preferred airline directive - the angular ui-select, is already styled as bootstrap button. Wrapping it in form-control here breaks the style (we get unnecessary wrapping. This issue is reported to ui-select and recognized as issue. No fix yet.  -->
                     </div>
                 </div>
@@ -125,7 +125,7 @@
             </div>
         </div>
 
-    <div class="text-center SDSTopBuffer">
+    <div class="text-center SDSTopBuffer-xs">
         <button type="submit" class="SDS-hidden-sm btn btn-primary btn-lg btn-block ">Search</button>
         <button type="submit" class="SDS-visible-sm-inline-block btn btn-primary btn-lg">Search</button>
     </div>

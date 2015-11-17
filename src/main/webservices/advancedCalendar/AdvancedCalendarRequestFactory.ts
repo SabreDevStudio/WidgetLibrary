@@ -1,10 +1,12 @@
 define([
           'moment'
         , 'webservices/common/OTARequestFactory'
+        , 'webservices/common/WebServiceSerializationUtils'
     ],
     function (
           moment
         , OTARequestFactory
+        , WebServiceSerializationUtils
     ) {
         'use strict';
 
@@ -83,19 +85,10 @@ define([
             };
 
             if (travelDaysOfWeek) {
-                travelDaysRangeFormatted["WeekDays"] = this.createWeekDaysString(travelDaysOfWeek);
+                travelDaysRangeFormatted["WeekDays"] = WebServiceSerializationUtils.createWeekDaysString(travelDaysOfWeek);
             }
 
             return travelDaysRangeFormatted;
-        };
-
-        AdvancedCalendarRequestFactory.prototype.createWeekDaysString = function(selectedDaysOfWeekArray) {
-            // WARN: locale specific: we base on first day being Sunday
-            var DAY_SYMBOLS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-            var DAY_NOT_SELECTED_MARKER = '_';
-            return selectedDaysOfWeekArray.map(function (isDaySelected, dayIndex) {
-                return (isDaySelected)? DAY_SYMBOLS[dayIndex]: DAY_NOT_SELECTED_MARKER;
-            }).join('');
         };
 
         AdvancedCalendarRequestFactory.prototype.getRequestType = function (requestedItinsCount) {
