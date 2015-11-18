@@ -15,23 +15,31 @@ define([
         }
 
         return angular.module('sabreDevStudioWebServices')
-            .factory('NetworkConnectivityErrorInterceptor', ['$q', 'ErrorReportingService', function ($q, ErrorReportingService) {
-                var COMMUNICATION_GENERIC_ERROR_MSG = 'Unable to communicate with the Sabre Dev Studio';
-                var COMMUNICATION_TIMEOUT_ERROR_MSG = 'Timeout calling Sabre Dev Studio';
+            .factory('NetworkConnectivityErrorInterceptor', ['$q', 'ErrorReportingService', 'apiURL', function ($q, ErrorReportingService, apiURL) {
+                var COMMUNICATION_GENERIC_ERROR_MSG = _.template('Unable to communicate with <%= endpoint %>');
+                var COMMUNICATION_TIMEOUT_ERROR_MSG = _.template('Timeout calling <%= endpoint %>'); //
+
+                function translateKnownEndpoints(endpoint) {
+                    return (endpoint.indexOf(apiURL) > -1)? 'Sabre Dev Studio': endpoint;
+                }
+
                 var minimalCommunicationTimeMillisToDetectTimeout = 300;
                 return {
                     responseError: function (reason) {
                         if (reason.status !== 0) {
                             return $q.reject(reason);
                         }
+                        var errorMessageElements = {
+                            endpoint: translateKnownEndpoints(reason.config.url)
+                        };
                         if (reason.config.timeout && reason.config.timeoutClockStart) {
                             var httpCallDuration = Math.round(performance.now() - reason.config.timeoutClockStart);
                             if ((httpCallDuration > minimalCommunicationTimeMillisToDetectTimeout) && (httpCallDuration >= reason.config.timeout)) {
-                                ErrorReportingService.reportError(COMMUNICATION_TIMEOUT_ERROR_MSG);
+                                ErrorReportingService.reportError(COMMUNICATION_TIMEOUT_ERROR_MSG(errorMessageElements));
                                 return $q.reject(reason);
                             }
                         }
-                        ErrorReportingService.reportError(COMMUNICATION_GENERIC_ERROR_MSG);
+                        ErrorReportingService.reportError(COMMUNICATION_GENERIC_ERROR_MSG(errorMessageElements));
                         return $q.reject(reason);
                     }
                 }

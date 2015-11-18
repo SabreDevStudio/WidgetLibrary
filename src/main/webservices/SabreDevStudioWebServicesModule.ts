@@ -18,6 +18,7 @@ define([
             .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss')
             .constant('dateFormat', 'YYYY-MM-DD')
             .constant('errorEvent', 'errorEvent')
+            .constant('resetErrorsEvent', 'resetErrorsEvent')
             .factory('businessMessagesErrorHandler', ['ErrorReportingService', function (ErrorReportingService) {
                 function identityAsArray(arg) {
                     return [arg];

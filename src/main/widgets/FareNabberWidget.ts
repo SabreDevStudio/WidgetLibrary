@@ -3,6 +3,7 @@ define([
         , 'moment'
         , 'widgets/SDSWidgets'
         , 'webservices/fareNabber/FareNabberSubscriptionService'
+        , 'webservices/fareNabber/FareNabberSubscriptionMappingService'
         , 'widgets/searchForm/InputTimeOfDayRange'
     ],
     function (
@@ -10,19 +11,20 @@ define([
         , moment
         , SDSWidgets
         , FareNabberSubscriptionServiceSrc
+        , FareNabberSubscriptionMappingServiceSrc
         , InputTimeOfDayRange
     ) {
         'use strict';
 
         return angular.module('sdsWidgets')
-            .controller('FareNabberModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+            .controller('FareNabberFormModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
 
                 $scope.defaultOptions = {
                       earliestTravelStart: new Date()
-                    , earliestSubscriptionExpiry: moment().add(1, 'years').toDate()
+                    , subscriptionExpiry: moment().add(1, 'years').toDate()
                     , allowInterline: true
                 };
-                $scope.subscriptionExpiryDate = $scope.defaultOptions.earliestSubscriptionExpiry;
+                $scope.subscriptionExpiryDate = $scope.defaultOptions.subscriptionExpiry;
 
                 $scope.outboundTravelTimeRange = {
                     departure: undefined,
@@ -77,7 +79,19 @@ define([
                 };
 
             }])
-            .directive('fareNabber', ['$modal', 'FareNabberSubscriptionService', function ($modal, FareNabberSubscriptionService) {
+            .directive('fareNabber', [
+                      '$modal'
+                    , 'FareNabberSubscriptionService'
+                    , 'FareNabberSubscriptionMappingService'
+                    , 'resetErrorsEvent'
+                    , '$rootScope'
+                , function (
+                      $modal
+                    , FareNabberSubscriptionService
+                    , FareNabberSubscriptionMappingService
+                    , resetErrorsEvent
+                    , $rootScope
+                ) {
                 return {
                     restrict: 'A',
                     scope: {
@@ -96,7 +110,10 @@ define([
 
                         parseDirectiveAttributes();
 
-                        element.on('click', showSubscriptionForm);
+                        element.on('click', function () {
+                            runSubscriptionWorkflow();
+                            $rootScope.$broadcast(resetErrorsEvent); // reset previous errors (from previous tries).
+                        });
 
                         function parseDirectiveAttributes() {
                             const directiveAttributesDateFormat = moment.ISO_8601;
@@ -104,23 +121,46 @@ define([
                             scope.returnDate = moment(scope.predefinedReturnDate, directiveAttributesDateFormat).toDate();
                         }
 
+                        function runSubscriptionWorkflow() {
+                            showSubscriptionForm()
+                                .then(createSubscription)
+                                .then(saveSubscriptionMapping)
+                                .then(showSuccessfulSubscriptionMessage)
+                        }
+
                         function showSubscriptionForm () {
                             var modalInstance = $modal.open({
-                                  animation: true
+                                animation: true
                                 , templateUrl: 'FareNabberSubscriptionFormModal.html.tpl'
-                                , controller: 'FareNabberModalInstanceCtrl'
+                                , controller: 'FareNabberFormModalInstanceCtrl'
                                 , size: 'lg'
                                 , scope: scope
                             });
 
-                            modalInstance.result
-                                .then(FareNabberSubscriptionService.subscribe)
-                                //.then(function (successResult) {
-                                //    // 1. call the other REST service to register email and subscription id
-                                //    // 2. present other popup to user on successfully subscribed
-                                //});
-                                .then(function (formSubscriptionData) {
-                                })
+                            return modalInstance.result;
+                        }
+
+                        function createSubscription(fareNabberFormData: any) {
+                            return FareNabberSubscriptionService.subscribe(fareNabberFormData);
+                        }
+
+                        function saveSubscriptionMapping(subscriptionResponse) {
+                            var subscriptionMappingServiceRequest = subscriptionResponse;
+                            return FareNabberSubscriptionMappingService.save(subscriptionMappingServiceRequest);
+                        }
+
+                        function showSuccessfulSubscriptionMessage() {
+                            $modal.open({
+                                animation: true
+                                , templateUrl: 'FareNabberSubscriptionSuccessful.html.tpl'
+                                , controller: ['$scope', '$modalInstance', function (modalInstanceScope, $modalInstance) {
+                                    modalInstanceScope.ok = function () {
+                                        $modalInstance.close();
+                                    };
+                                }]
+                                , size: 'md'
+                                , scope: scope
+                            });
                         }
                     }
                 };

@@ -113,8 +113,7 @@ define([
                         addTravelTimeWindowPreferences(fareNabberRequest, formSubscriptionData);
                         addDayOfTravelPreferences(fareNabberRequest, formSubscriptionData);
 
-                        var xmlRequest = x2js.json2xml(fareNabberRequest);
-                        console.log(xmlRequest);
+                        var xmlRequest = x2js.json2xml_str(fareNabberRequest);
                         return xmlRequest;
                     }
                 };

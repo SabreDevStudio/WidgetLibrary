@@ -19,10 +19,12 @@ define([
         return angular.module('sdsWidgets')
             .directive('errorDisplay', [
                       'errorEvent'
+                    , 'resetErrorsEvent'
                     , 'newSearchCriteriaEvent'
                     , 'newInspirationalSearchCriteriaEvent'
                 , function (
                         errorEvent
+                      , resetErrorsEvent
                       , newSearchCriteriaEvent
                       , newInspirationalSearchCriteriaEvent
                 ) {
@@ -52,6 +54,7 @@ define([
                         scope.$on(newInspirationalSearchCriteriaEvent, function () {
                             resetErrorModel();
                         });
+                        scope.$on(resetErrorsEvent, resetErrorModel);
 
                         scope.anyErrorPresent = function () {
                             return scope.errors && scope.errors.length > 0;

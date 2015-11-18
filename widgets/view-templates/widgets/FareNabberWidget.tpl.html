@@ -160,8 +160,7 @@
                     <div class="form-group">
                         <label for="SDSFareNabberForm_SubscriptionExpiryDate" class="input-sm col-sm-3 control-label">Expire subscription after <em>(optional)</em></label>
                         <div class="col-sm-3">
-                            <input-date class="input-group" id="SDSFareNabberForm_SubscriptionExpiryDate" name="subscriptionExpiryDate" class="form-control input-sm"
-                                        min-date="{{::defaultOptions.earliestSubscriptionExpiry}}" date="subscriptionExpiryDate"></input-date>
+                            <input-date class="input-group" id="SDSFareNabberForm_SubscriptionExpiryDate" name="subscriptionExpiryDate" class="form-control input-sm" date="subscriptionExpiryDate"></input-date>
                         </div>
                     </div>
 
@@ -175,5 +174,15 @@
 
         </div>
     </script>
+
+    <script type="text/ng-template" id="FareNabberSubscriptionSuccessful.html.tpl">
+        <div class="modal-body">
+            <span class="text-success center-block">You subscribed successfully to the price alert. Thank you!</span>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary center-block" ng-click="ok()">OK</button>
+        </div>
+    </script>
+
 
 </div>
