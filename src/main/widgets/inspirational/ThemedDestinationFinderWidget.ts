@@ -116,7 +116,7 @@ define([
                     }
 
                     GeoSearchDataService.getAPISupportedClosestAirport().then(function (closestAirport) {
-                        // closestAirport = 'FRA'; // override for testing
+                         closestAirport = 'FRA'; // override for testing
                         searchCriteriaTemplate.origin = closestAirport;
                         AirportLookupDataService.getAirportData(closestAirport).then(function (airportData) {
                             searchCriteriaTemplate.pointofsalecountry = airportData.CountryCode;

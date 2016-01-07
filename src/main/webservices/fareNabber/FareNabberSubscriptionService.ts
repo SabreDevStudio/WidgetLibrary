@@ -28,14 +28,10 @@ define([
                 ) {
                 return   {
                     subscribe: function (fareNabberFormData) {
-                        var xmlRequest = FareNabberSubscriptionRequestBuilder.build(fareNabberFormData);
+                        var request = FareNabberSubscriptionRequestBuilder.build(fareNabberFormData);
                         return $q(function(resolve, reject) {
-                            FareNabberSubscriptionResource.save(xmlRequest).$promise.then(function (response) {
-                                var subscriptionResponse = {
-                                    subscriptionId: response.plainText
-                                    , email: fareNabberFormData.subscriberEmail // mirroring email it in the response as it will be needed by the next handler in the workflow
-                                };
-                                resolve(subscriptionResponse);
+                            FareNabberSubscriptionResource.save(request).$promise.then(function (response) {
+                                resolve(response);
                             }, function (error) {
                                 ErrorReportingService.reportError('Unable to create subscription: ' + error.status + ': ' + error.statusText); // we do not use standard error handler as this service reports errors differently
                                 reject(error);

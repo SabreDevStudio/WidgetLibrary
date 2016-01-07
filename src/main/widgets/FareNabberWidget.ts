@@ -3,7 +3,6 @@ define([
         , 'moment'
         , 'widgets/SDSWidgets'
         , 'webservices/fareNabber/FareNabberSubscriptionService'
-        , 'webservices/fareNabber/FareNabberSubscriptionMappingService'
         , 'widgets/searchForm/InputTimeOfDayRange'
     ],
     function (
@@ -11,7 +10,6 @@ define([
         , moment
         , SDSWidgets
         , FareNabberSubscriptionServiceSrc
-        , FareNabberSubscriptionMappingServiceSrc
         , InputTimeOfDayRange
     ) {
         'use strict';
@@ -82,13 +80,11 @@ define([
             .directive('fareNabber', [
                       '$modal'
                     , 'FareNabberSubscriptionService'
-                    , 'FareNabberSubscriptionMappingService'
                     , 'resetErrorsEvent'
                     , '$rootScope'
                 , function (
                       $modal
                     , FareNabberSubscriptionService
-                    , FareNabberSubscriptionMappingService
                     , resetErrorsEvent
                     , $rootScope
                 ) {
@@ -124,7 +120,6 @@ define([
                         function runSubscriptionWorkflow() {
                             showSubscriptionForm()
                                 .then(createSubscription)
-                                .then(saveSubscriptionMapping)
                                 .then(showSuccessfulSubscriptionMessage)
                         }
 
@@ -142,11 +137,6 @@ define([
 
                         function createSubscription(fareNabberFormData: any) {
                             return FareNabberSubscriptionService.subscribe(fareNabberFormData);
-                        }
-
-                        function saveSubscriptionMapping(subscriptionResponse) {
-                            var subscriptionMappingServiceRequest = subscriptionResponse;
-                            return FareNabberSubscriptionMappingService.save(subscriptionMappingServiceRequest);
                         }
 
                         function showSuccessfulSubscriptionMessage() {

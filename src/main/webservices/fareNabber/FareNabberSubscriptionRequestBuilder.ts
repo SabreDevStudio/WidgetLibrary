@@ -4,7 +4,6 @@ define([
         , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/common/WebServiceSerializationUtils'
-        , 'x2js'
     ],
     function (
         angular
@@ -12,16 +11,13 @@ define([
         , _
         , SabreDevStudioWebServicesModule
         , WebServiceSerializationUtils
-        , X2JS
     ) {
         'use strict';
 
-        var x2js = new X2JS();
-
         return angular.module('sabreDevStudioWebServices')
             .factory('FareNabberSubscriptionRequestBuilder', ['fareNabberRegistrationPCC', function (fareNabberRegistrationPCC) {
-                const dateTimeFormat = 'YYYY-MM-DDTHH:mm:ss';
                 const dateFormat = 'YYYY-MM-DD';
+                const timeFormat = 'HHmm';
 
                 function isTimeOfDatePreferenceDefined(timeOfDayRange) {
                     return ((timeOfDayRange.start.hours() !== 0) || (timeOfDayRange.start.minutes() !== 0)) ||
@@ -38,70 +34,74 @@ define([
 
                 function buildRequestSkeleton(formSubscriptionData) {
                     var fareNabberRequest: any = {
-                        FNB_Subscription: {
-                            _expiryDate: moment(formSubscriptionData.subscriptionExpiryDate).format(dateTimeFormat)
-                            , _maxPrice: formSubscriptionData.maximumAcceptablePrice
-                            , _priceCurrency: formSubscriptionData.maximumAcceptablePriceCurrency
-                            , _pcc: fareNabberRegistrationPCC
-                            , PreferredAirlines: {
-                                preferredAirline: formSubscriptionData.preferredAirlines.selected
-                            } //WARN: service XSD schema requires to provide FNB_Subscription child elements in order (sequence). They are defined 'in order' in this object, but iteration order over javascript object properties is not guaranteed - and x2js library does exactly (for prop in obj)...
-                            , SubscriptionPassenger: {
-                                _passengerType: formSubscriptionData.passengerType
-                                , _numberOfPassengers: formSubscriptionData.passengerCount
+                        expiryDate: moment(formSubscriptionData.subscriptionExpiryDate).format(dateFormat)
+                        , maxPrice: parseFloat(formSubscriptionData.maximumAcceptablePrice)
+                        , priceCurrency: formSubscriptionData.maximumAcceptablePriceCurrency
+                        , pcc: fareNabberRegistrationPCC
+                        , PreferredAirlines: createPreferredAirlines(formSubscriptionData)
+                        , SubscriptionPassengers: [
+                            {
+                                passengerType: formSubscriptionData.passengerType
+                                , numberOfPassengers: parseInt(formSubscriptionData.passengerCount)
                             }
-                            , SubscriptionLeg: undefined
-                        }
+                        ]
+                        , SubscriptionLegs: undefined
                     };
                     if(formSubscriptionData.directFlightsOnly) {
-                        fareNabberRequest.FNB_Subscription._nonstop = formSubscriptionData.directFlightsOnly;
+                        fareNabberRequest.nonstop = formSubscriptionData.directFlightsOnly;
                     }
                     return fareNabberRequest;
                 }
 
+                function createPreferredAirlines(formSubscriptionData) {
+                    return formSubscriptionData.preferredAirlines.selected;
+                }
+
                 function addLegs(fareNabberRequest, formSubscriptionData) {
-                    fareNabberRequest.FNB_Subscription.SubscriptionLeg = [
+                    fareNabberRequest.SubscriptionLegs = [
                         {
-                            _origin: formSubscriptionData.origin
-                            , _destination: formSubscriptionData.destination
-                            , _departureDateTimeFrom: moment(formSubscriptionData.departureDate).format(dateFormat)
+                            origin: formSubscriptionData.origin
+                            , destination: formSubscriptionData.destination
+                            , departureDateFrom: moment(formSubscriptionData.departureDate).format(dateFormat)
+                            , departureTimeFrom: moment(formSubscriptionData.departureDate).format(timeFormat)
                         },
                         {
-                            _origin: formSubscriptionData.destination
-                            , _destination: formSubscriptionData.origin
-                            , _departureDateTimeFrom: moment(formSubscriptionData.returnDate).format(dateFormat)
+                            origin: formSubscriptionData.destination
+                            , destination: formSubscriptionData.origin
+                            , departureDateFrom: moment(formSubscriptionData.returnDate).format(dateFormat)
+                            , departureTimeFrom: moment(formSubscriptionData.returnDate).format(timeFormat)
                         }
                     ]
 
                 }
 
                 function addTravelTimeWindowPreferences(fareNabberRequest, formSubscriptionData) {
-                    var outboundLeg = fareNabberRequest.FNB_Subscription.SubscriptionLeg[0];
-                    var inboundLeg = fareNabberRequest.FNB_Subscription.SubscriptionLeg[1];
+                    var outboundLeg = fareNabberRequest.SubscriptionLegs[0];
+                    var inboundLeg = fareNabberRequest.SubscriptionLegs[1];
 
                     if (isTimeOfDatePreferenceDefined(formSubscriptionData.outboundTravelTimeRange.departure)) {
-                        outboundLeg._departureTimeWindow = createTimeWindowString(formSubscriptionData.outboundTravelTimeRange.departure);
+                        outboundLeg.departureTimeWindow = createTimeWindowString(formSubscriptionData.outboundTravelTimeRange.departure);
                     }
                     if (isTimeOfDatePreferenceDefined(formSubscriptionData.outboundTravelTimeRange.arrival)) {
-                        outboundLeg._arrivalTimeWindow = createTimeWindowString(formSubscriptionData.outboundTravelTimeRange.arrival);
+                        outboundLeg.arrivalTimeWindow = createTimeWindowString(formSubscriptionData.outboundTravelTimeRange.arrival);
                     }
                     if (isTimeOfDatePreferenceDefined(formSubscriptionData.inboundTravelTimeRange.departure)) {
-                        inboundLeg._departureTimeWindow = createTimeWindowString(formSubscriptionData.inboundTravelTimeRange.departure);
+                        inboundLeg.departureTimeWindow = createTimeWindowString(formSubscriptionData.inboundTravelTimeRange.departure);
                     }
                     if (isTimeOfDatePreferenceDefined(formSubscriptionData.inboundTravelTimeRange.arrival)) {
-                        inboundLeg._arrivalTimeWindow = createTimeWindowString(formSubscriptionData.inboundTravelTimeRange.arrival);
+                        inboundLeg.arrivalTimeWindow = createTimeWindowString(formSubscriptionData.inboundTravelTimeRange.arrival);
                     }
                 }
 
                 function addDayOfTravelPreferences(fareNabberRequest, formSubscriptionData) {
-                    var outboundLeg = fareNabberRequest.FNB_Subscription.SubscriptionLeg[0];
-                    var inboundLeg = fareNabberRequest.FNB_Subscription.SubscriptionLeg[1];
+                    var outboundLeg = fareNabberRequest.SubscriptionLegs[0];
+                    var inboundLeg = fareNabberRequest.SubscriptionLegs[1];
 
                     if(isAnyDayOfWeekDefined(formSubscriptionData.daysOfTravelPreference.outbound)) {
-                        outboundLeg._days = WebServiceSerializationUtils.createWeekDaysString(formSubscriptionData.daysOfTravelPreference.outbound);
+                        outboundLeg.days = WebServiceSerializationUtils.createWeekDaysString(formSubscriptionData.daysOfTravelPreference.outbound);
                     }
                     if(isAnyDayOfWeekDefined(formSubscriptionData.daysOfTravelPreference.inbound)) {
-                        inboundLeg._days = WebServiceSerializationUtils.createWeekDaysString(formSubscriptionData.daysOfTravelPreference.inbound);
+                        inboundLeg.days = WebServiceSerializationUtils.createWeekDaysString(formSubscriptionData.daysOfTravelPreference.inbound);
                     }
                 }
 
@@ -113,8 +113,7 @@ define([
                         addTravelTimeWindowPreferences(fareNabberRequest, formSubscriptionData);
                         addDayOfTravelPreferences(fareNabberRequest, formSubscriptionData);
 
-                        var xmlRequest = x2js.json2xml_str(fareNabberRequest);
-                        return xmlRequest;
+                        return fareNabberRequest;
                     }
                 };
             }])

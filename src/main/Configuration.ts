@@ -12,8 +12,8 @@ define([
             //.value('apiURL', 'http://bridge.dev.sabre.cometari.com/api')
             .value('pointOfSaleCountry', 'DE')
             //.value('pointOfSaleCountry', 'US')
-            .value('fareNabberApiURL', 'http://pifhli101:51000/Subscriptions') // address of resource to create Fare Nabber subscriptions
-            .value('subscriptionMappingServiceURL', 'http://localhost:8080/subscriptionMapping') // address of service that will store mappings between Fare Nabber subscription id and subscriber emails
+            .value('fareNabberApiURL', 'http://pifhli101:51000/Subscriptions') // address of resource to create Fare Nabber subscriptions DAILY
+            //.value('fareNabberApiURL', 'http://ttfhli502:51000/Subscriptions') // address of resource to create Fare Nabber subscriptions INT
             .value('fareNabberRegistrationPCC', 'E8KE');
 
         return configurationModule;

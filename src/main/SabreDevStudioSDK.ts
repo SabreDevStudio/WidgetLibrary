@@ -17,7 +17,6 @@ require.config({
         , 'chartjs': '../../bower_components/Chart.js/Chart'
         , 'angular_iso_currency': '../../bower_components/iso-currency/dist/isoCurrency'
         , 'elementQuery': '../../bower_components/elementQuery/elementQuery' //WARN: elementQuery is exposing functions on windows... AMD support already requested, see: https://github.com/tysonmatanich/elementQuery/pull/9/commits
-        , 'x2js': '../../bower_components/x2js/xml2json'
     },
     map: {
         '*': {
