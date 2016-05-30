@@ -144,6 +144,10 @@ define([
             return this.baggageAllowance && this.baggageAllowance.getSegmentAllowance(legIdx, segmentIdx);
         };
 
+        ItineraryPricingInfo.prototype.getMinBaggageAllowance = function () {
+            return this.baggageAllowance && this.baggageAllowance.getMinBaggageAllowance();
+        };
+
         ItineraryPricingInfo.prototype.getUniqueBaggageAllowance = function () {
             return this.baggageAllowance && this.baggageAllowance.uniqueBaggageAllowance();
         };

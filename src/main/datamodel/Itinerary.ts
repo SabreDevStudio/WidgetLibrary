@@ -422,5 +422,9 @@ define([
         return this.itineraryPricingInfo.getBaggageAllowance(legIdx, segmentIdx);
     };
 
+    Itinerary.prototype.getMinBaggageAllowance = function () {
+        return this.itineraryPricingInfo.getMinBaggageAllowance();
+    };
+
     return Itinerary;
 });

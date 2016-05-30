@@ -16,6 +16,8 @@ define([
             this.legSegmentBaggageAllowance = {}; // two level mapping of leg and segment (relative) indexes into matched baggage allowance
         }
 
+        const legSegmentBaggageAllowanceDictionaryDepth = 2;
+
         SegmentBaggageAllowance.prototype.addLegSegmentsAllowance = function (legIndex, segmentIndex, allowanceInfo) {
             if (_.isUndefined(this.legSegmentBaggageAllowance[legIndex])) {
                 this.legSegmentBaggageAllowance[legIndex] = {};
@@ -36,8 +38,12 @@ define([
             var allowanceUniqueFn = function (allowance) {
                 return JSON.stringify(allowance);
             };
-            var legSegmentBaggageAllowanceDictionaryDepth = 2;
             return _.uniq(__.leafValues(this.legSegmentBaggageAllowance, legSegmentBaggageAllowanceDictionaryDepth), allowanceUniqueFn);
+        };
+
+        SegmentBaggageAllowance.prototype.getMinBaggageAllowance = function () {
+            var allSegmentsAllowance = __.leafValues(this.legSegmentBaggageAllowance, legSegmentBaggageAllowanceDictionaryDepth);
+            return _.min(allSegmentsAllowance, 'Pieces').Pieces;
         };
 
         return SegmentBaggageAllowance;

@@ -57,7 +57,9 @@ define([
 
             this.processSearchResults = function (lowFareHistory) {
                 chartData.labels = _.pluck(lowFareHistory.historicalPrices, 'dateOfShopping').map(DateToStringRedefineFactory.patchToStringMethod).reverse();
-                chartData.datasets[0].data = _.pluck(lowFareHistory.historicalPrices, 'lowestFare').reverse();
+                chartData.datasets[0].data = lowFareHistory.historicalPrices.map(dayItem => {
+                    return _.isFinite(dayItem.lowestFare)? dayItem.lowestFare : null;
+                }).reverse();
                 chartInstance.initialize(chartData);
             };
 

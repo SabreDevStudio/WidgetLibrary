@@ -1,5 +1,6 @@
 define([
          'lodash'
+        , 'util/LodashExtensions'
         , 'moment'
         , 'angular'
         , 'angular_bootstrap'
@@ -15,6 +16,7 @@ define([
     ],
     function (
           _
+        , __
         , moment
         , angular
         , angular_bootstrap
@@ -114,7 +116,7 @@ define([
                     $scope.multiDestinationLegs.pop();
                 };
 
-                /* jshint maxcomplexity:9 */
+                /* jshint maxcomplexity:10 */
                 $scope.createNewSearchCriteria = function () {
                     var searchCriteria = new SearchCriteria();
 
@@ -154,6 +156,10 @@ define([
 
                     searchCriteria.addPassenger("ADT", $scope.generalSearchCriteria.ADTPaxCount);
 
+                    if (__.isDefined($scope.generalSearchCriteria.bagsRequested)) {
+                        searchCriteria.bagsRequested = $scope.generalSearchCriteria.bagsRequested;
+                    }
+
                     if ($scope.generalSearchCriteria.DirectFlightsOnly) {
                         searchCriteria.maxStops = 0;
                     }
@@ -183,6 +189,9 @@ define([
                 };
 
                 $scope.isVisible = function (htmlFieldName) {
+                    if (_.contains($scope.optionalFields, htmlFieldName)) {
+                        return _.contains($scope.optionalFieldsToShow, htmlFieldName);
+                    }
                     return !_.contains($scope.fieldsToHide, htmlFieldName);
                 }
 
@@ -204,7 +213,11 @@ define([
                        var DEFAULT_LENGTH_OF_STAY = 14;
                        var DEFAULT_ADVANCE_PURCHASE_DAYS = 14;
 
+                       scope.optionalFields = ['BagsRequested']
+
                        parseFieldsToHide();
+
+                       parseOptionalFieldsToShow();
 
                        parseSearchOptionsDefaults();
 
@@ -218,6 +231,10 @@ define([
 
                        function parseFieldsToHide() {
                            scope.fieldsToHide = element.attr('hide-fields') && element.attr('hide-fields').split(',') || [];
+                       }
+
+                       function parseOptionalFieldsToShow() {
+                           scope.optionalFieldsToShow = element.attr('show-optional-fields') && element.attr('show-optional-fields').split(',') || [];
                        }
 
                        function parseSearchOptionsDefaults() {

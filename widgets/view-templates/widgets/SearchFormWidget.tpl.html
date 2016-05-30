@@ -1,10 +1,16 @@
 <script type="text/ng-template" id="GeneralSearchCriteria">
 
-    <div class="SDS-row" ng-if="isVisible('ADTPaxNumber')">
-        <div class="SDS-col-element-xxs-12">
-            <div class="form-group SDS-col-element-xxs-12" ng-class="{'has-error':searchForm.$submitted && searchForm.ADTPaxNumber.$invalid}">
+    <div class="SDS-row" ng-if="isVisible('ADTPaxNumber') || isVisible('BagsRequested')">
+        <div class="SDS-col-element-xxs-3" ng-if="isVisible('ADTPaxNumber')">
+            <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.ADTPaxNumber.$invalid}">
                 <label for="SDSSearchForm_ADTPaxNumber" class="input-sm control-label">Adults (12+)</label>
                 <input id="SDSSearchForm_ADTPaxNumber" type="number" name="ADTPaxNumber" value="1" min="1" max="9" required class="form-control input-sm SDSPaxNbrInput" ng-model="generalSearchCriteria.ADTPaxCount">
+            </div>
+        </div>
+        <div class="SDS-col-element-xxs-3" ng-if="isVisible('BagsRequested')">
+            <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.bagsRequested.$invalid}">
+                <label for="SDSSearchForm_BagsRequested" class="input-sm control-label">Bags</label>
+                <select-bags id="SDSSearchForm_BagsRequested" name="BagsRequested" class="form-control input-sm" bags-requested="generalSearchCriteria.bagsRequested"></select-bags>
             </div>
         </div>
     </div>

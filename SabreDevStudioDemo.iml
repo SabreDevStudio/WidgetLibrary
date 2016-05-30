@@ -7,10 +7,15 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.sass-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/build-js" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/doc" />
+      <excludeFolder url="file://$MODULE_DIR$/documentation" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp/lowFareHistoryWidget" />
+      <excludeFolder url="file://$MODULE_DIR$/typings" />
       <excludeFolder url="file://$MODULE_DIR$/www-customer-page-downloaded" />
       <excludeFolder url="file://$MODULE_DIR$/www-customer-page-workarea" />
       <excludeFolder url="file://$MODULE_DIR$/www/calendar_and_trend_results_files" />

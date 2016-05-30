@@ -34,6 +34,10 @@ define([
         this.itineraries.push(itin);
     };
 
+    ItinerariesList.prototype.addAll = function (itineraries) {
+        itineraries.forEach((itin) => this.itineraries.push(itin));
+    };
+
     /**
      * Adds passed itineraries list to this itineraries list. Just adds all new itineraries to the end of te current list.
      * @param itinerariesList

@@ -15,7 +15,7 @@ define([
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
         , 'datamodel/SearchCriteria'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
-        , 'webservices/common/searchStrategyFactories/ItinerariesSearchStrategyFactory'
+        , 'webservices/common/searchStrategyFactories/ItinerariesSearchStrategyFactoryBagsFilteringDecorator'
         , 'webservices/common/searchStrategyFactories/BrandedItinerariesSearchStrategyFactory'
         , 'util/CommonDisplayDirectives'
     ],
@@ -46,7 +46,7 @@ define([
             .controller('ItineraryListCtrl', [
                       '$scope'
                     , '$filter'
-                    , 'ItinerariesSearchStrategyFactory'
+                    , 'ItinerariesSearchStrategyFactoryBagsFilteringDecorator'
                     , 'BrandedItinerariesSearchStrategyFactory'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'

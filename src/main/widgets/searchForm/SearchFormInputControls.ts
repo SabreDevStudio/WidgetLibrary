@@ -38,6 +38,28 @@ define([
                     templateUrl: '../widgets/view-templates/partials/PreferredCabinSelect.tpl.html'
                 };
             })
+            .directive('selectBags', function () {
+                return {
+                    replace: true,
+                    scope: {
+                        bagsRequested: '='
+                    },
+                    templateUrl: '../widgets/view-templates/partials/SelectBags.tpl.html',
+                    link: function (scope) {
+                        scope.bagsSelection = [0, 1, 2, 3];
+                        scope.bagsRequested = scope.bagsSelection[1];
+                    }
+                };
+            })
+            .filter('bags', function () {
+                return function (bagsAmount) {
+                    switch (bagsAmount) {
+                        case 0: return 'No bags';
+                        case 1: return '1 bag';
+                        default: return bagsAmount + ' bags';
+                    }
+                }
+            })
             .directive('selectPreferredAirlines', [
                     'AirlineLookupDataService'
                     , '$timeout'
