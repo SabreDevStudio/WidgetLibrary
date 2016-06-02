@@ -1,5 +1,6 @@
 define([
           'lodash'
+        , 'util/LodashExtensions'
         , 'moment'
         , 'angular'
         , 'angular_bootstrap'
@@ -21,6 +22,7 @@ define([
     ],
     function (
           _
+        , __
         , moment
         , angular
         , angular_bootstrap
@@ -250,6 +252,9 @@ define([
                           activeSearch: '@?'
                         , activeSearchWebService: '@?'
                         , requestBrandedItineraries: '=?'
+                        , searchCriteria: '=?'
+                        , targetOnItinerarySelected: '@?'
+                        , selectedItineraryStore: '=?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/ItinerariesListWidget.tpl.html',
                     controller: 'ItineraryListCtrl',
@@ -258,6 +263,18 @@ define([
                         if (predefinedSearchCriteria) {
                             scope.processSearchCriteria(predefinedSearchCriteria);
                         }
+
+                        if(__.isDefined(scope.searchCriteria)) {
+                            scope.processSearchCriteria(scope.searchCriteria);
+                        }
+
+                        ////TODO needed?
+                        //scope.$watch('searchCriteria', function(newCriteria, oldCriteria) {
+                        //    if (angular.equals(newCriteria, oldCriteria)) {
+                        //        return;
+                        //    }
+                        //    scope.processSearchCriteria(newCriteria);
+                        //});
 
                         function buildSearchCriteriaFromPredefinedParameters() {
                             var origin = element.attr('origin');

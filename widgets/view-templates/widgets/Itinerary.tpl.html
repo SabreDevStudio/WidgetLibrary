@@ -161,15 +161,22 @@
                 </li>
                 <li class="SDSItineraryPriceDetails ng-hide SDSItineraryTogglePriceDetails">Base fare: {{itinerary.baseFareAmount | currency:itinerary.baseFareCurrency}}</li>
                 <li class="SDSItineraryPriceDetails ng-hide SDSItineraryTogglePriceDetails">Taxes: {{itinerary.totalTaxAmount | currency:itinerary.totalTaxCurrency}}</li>
+                <li ng-if="itinerary.baggageCharges" class="SDSItineraryPriceDetails ng-hide SDSItineraryTogglePriceDetails">Bag charges: {{itinerary.baggageCharges | currency:itinerary.totalTaxCurrency}}</li>
             </ul>
         </div>
         <div class="clearfix"></div>
 
         <div class="ng-hide SDSItineraryFlightDetails SDSTopBuffer-xs SDS-hidden-md"></div>
-        <button type="button" disabled class="ng-hide SDSItineraryFlightDetails SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-hidden-md">Select</button>
+        <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
+                class="ng-hide SDSItineraryFlightDetails SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-hidden-md">
+            Select
+        </button>
 
         <div class="SDSTopBuffer-xs SDS-visible-md"></div>
-        <button type="button" disabled class="SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-visible-md">Select</button>
+        <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
+                class="SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-visible-md">
+            Select
+        </button>
     </div>
 </div>
 

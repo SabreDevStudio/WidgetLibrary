@@ -67,13 +67,15 @@ define([
         Object.defineProperty(this, 'totalFareAmountWithCurrency', {
             get: function() {
                 return this.itineraryPricingInfo.fareAmounts.totalFare;
-            }
+            },
+            configurable: true
         });
 
         Object.defineProperty(this, 'totalFareAmount', {
             get: function() {
                 return this.itineraryPricingInfo.fareAmounts.totalFare.amount;
-            }
+            },
+            configurable: true
         });
 
         Object.defineProperty(this, 'totalFareCurrency', {

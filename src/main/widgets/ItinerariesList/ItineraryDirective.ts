@@ -1,6 +1,7 @@
 define([
         'moment'
         , 'angular'
+        , 'util/LodashExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'util/DOMManipulationUtils'
@@ -8,6 +9,7 @@ define([
     ],
     function (moment
         , angular
+        , __
         , angular_bootstrap
         , SDSWidgets
         , domUtils
@@ -16,14 +18,25 @@ define([
         'use strict';
 
         return angular.module('sdsWidgets')
-            .directive('itinerary', function () {
+            .directive('itinerary', ['$location', function ($location) {
                 return {
                     restrict: 'E',
                     scope: {
-                        itinerary: '=itin'
+                          itinerary: '=itin'
+                        , targetOnItinerarySelected: '@?'
+                        , selectedItineraryStore: '=?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/Itinerary.tpl.html',
                     link: function (scope, element) {
+
+                        scope.selectItineraryClicked = function (itinerary) {
+                            if (__.isDefined(scope.selectedItineraryStore)) {
+                                scope.selectedItineraryStore = itinerary;
+                            }
+                            if(__.isDefined(scope.targetOnItinerarySelected)) {
+                                $location.path(scope.targetOnItinerarySelected);
+                            }
+                        };
 
                         function addClickEventHandlers(el) {
                             domUtils.addToggleOnClickHandler(el, '.SDSItineraryTogglePriceDetails', '.SDSItineraryPriceDetails');
@@ -40,5 +53,5 @@ define([
                         addClickEventHandlers(element);
                     }
                 }
-            });
+            }]);
     });

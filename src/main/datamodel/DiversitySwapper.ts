@@ -6,7 +6,7 @@ define([],
             // comparator function assigns greater ranking when itinerary is more preferable.
             // So when using this comparator, while sorting, the best itineraries will go to the end of list.
             comparator: function (first, second) {
-                var durationNormalizationFactor = (first.duration + second.duration) / (first.totalFareAmountWithCurrency.amount+ second.totalFareAmountWithCurrency.currency);
+                var durationNormalizationFactor = (first.duration + second.duration) / (first.totalFareAmountWithCurrency.amount + second.totalFareAmountWithCurrency.amount);
 
                 var rankingFirst = -(first.duration / durationNormalizationFactor + first.totalFareAmountWithCurrency.amount);
                 var rankingSecond = -(second.duration / durationNormalizationFactor + second.totalFareAmountWithCurrency.amount);
