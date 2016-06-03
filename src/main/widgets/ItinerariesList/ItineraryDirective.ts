@@ -1,6 +1,7 @@
 define([
         'moment'
         , 'angular'
+        , 'lodash'
         , 'util/LodashExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
@@ -9,6 +10,7 @@ define([
     ],
     function (moment
         , angular
+        , _
         , __
         , angular_bootstrap
         , SDSWidgets
@@ -24,14 +26,16 @@ define([
                     scope: {
                           itinerary: '=itin'
                         , targetOnItinerarySelected: '@?'
-                        , selectedItineraryStore: '=?'
+                        , itinerarySelectedCallback: '&?'
+                        , flightDetailsAlwaysShown: '@?'
+                        , priceDetailsAlwaysShown: '@?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/Itinerary.tpl.html',
                     link: function (scope, element) {
 
                         scope.selectItineraryClicked = function (itinerary) {
-                            if (__.isDefined(scope.selectedItineraryStore)) {
-                                scope.selectedItineraryStore = itinerary;
+                            if (_.isFunction(scope.itinerarySelectedCallback)) {
+                                scope.itinerarySelectedCallback(itinerary);
                             }
                             if(__.isDefined(scope.targetOnItinerarySelected)) {
                                 $location.path(scope.targetOnItinerarySelected);

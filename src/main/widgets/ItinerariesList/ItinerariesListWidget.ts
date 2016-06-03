@@ -254,7 +254,7 @@ define([
                         , requestBrandedItineraries: '=?'
                         , searchCriteria: '=?'
                         , targetOnItinerarySelected: '@?'
-                        , selectedItineraryStore: '=?'
+                        , selectedItineraryCallback: '=?' //TODO should be really callback
                     },
                     templateUrl: '../widgets/view-templates/widgets/ItinerariesListWidget.tpl.html',
                     controller: 'ItineraryListCtrl',
@@ -267,14 +267,6 @@ define([
                         if(__.isDefined(scope.searchCriteria)) {
                             scope.processSearchCriteria(scope.searchCriteria);
                         }
-
-                        ////TODO needed?
-                        //scope.$watch('searchCriteria', function(newCriteria, oldCriteria) {
-                        //    if (angular.equals(newCriteria, oldCriteria)) {
-                        //        return;
-                        //    }
-                        //    scope.processSearchCriteria(newCriteria);
-                        //});
 
                         function buildSearchCriteriaFromPredefinedParameters() {
                             var origin = element.attr('origin');
