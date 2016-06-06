@@ -2,6 +2,7 @@ define([
           'moment'
         , 'angular'
         , 'lodash'
+        , 'util/LodashExtensions'
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
         , 'webservices/lookup/TravelThemeLookupDataService'
@@ -14,6 +15,7 @@ define([
           moment
         , angular
         , _
+        , __
         , SDSWidgets
         , BaseController
         , DestinationFinderDataService
@@ -27,6 +29,7 @@ define([
         return angular.module('sdsWidgets')
             .controller('ThemedDestinationFinderWidgetCtrl', [
                       '$scope'
+                    , '$q'
                     , 'TravelThemeLookupDataService'
                     , 'DestinationFinderSummaryDataService'
                     , 'GeoSearchDataService'
@@ -34,6 +37,7 @@ define([
                     , 'AirportLookupDataService'
                 , function (
                     $scope
+                    , $q
                     , TravelThemeLookupDataService
                     , DestinationFinderSummaryDataService
                     , GeoSearchDataService
@@ -115,8 +119,9 @@ define([
                         }).finally(searchCompleteCallback);
                     }
 
-                    GeoSearchDataService.getAPISupportedClosestAirport().then(function (closestAirport) {
-                         closestAirport = 'FRA'; // override for testing
+                    var closestAirportPromise = (__.isDefined($scope.closestAirport))? $q.when($scope.closestAirport): GeoSearchDataService.getAPISupportedClosestAirport();
+
+                    closestAirportPromise.then(function (closestAirport) {
                         searchCriteriaTemplate.origin = closestAirport;
                         AirportLookupDataService.getAirportData(closestAirport).then(function (airportData) {
                             searchCriteriaTemplate.pointofsalecountry = airportData.CountryCode;
@@ -128,7 +133,9 @@ define([
             .directive('themedDestinationFinder', function (
                 ) {
                 return {
-                    scope: true,
+                    scope: {
+                        closestAirport: '@?'
+                    },
                     replace: true,
                     templateUrl: '../widgets/view-templates/widgets/ThemedDestinationFinderWidget.tpl.html',
                     controller: 'ThemedDestinationFinderWidgetCtrl',

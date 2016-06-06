@@ -48,6 +48,8 @@ define([
             .controller('ItineraryListCtrl', [
                       '$scope'
                     , '$filter'
+                    , '$location'
+                    , '$anchorScroll'
                     , 'ItinerariesSearchStrategyFactoryBagsFilteringDecorator'
                     , 'BrandedItinerariesSearchStrategyFactory'
                     , 'SearchCriteriaBroadcastingService'
@@ -63,6 +65,8 @@ define([
                 , function (
                       $scope
                     , $filter
+                    , $location
+                    , $anchorScroll
                     , itinerariesSearchStrategyFactory
                     , brandedItinerariesSearchStrategyFactory
                     , SearchCriteriaBroadcastingService
@@ -173,14 +177,33 @@ define([
                     });
 
                     $scope.processSearchCriteria = function(searchCriteria) {
+                        if (__.isDefined($scope.searchStartedCallback)) {
+                            $scope.searchStartedCallback({searchCriteria: searchCriteria});
+                        }
+
                         if (!$scope.activeSearch) { //active search disabled
                             return;
                         }
 
-                        searchStrategy.search(searchCriteria,
-                            _.partial(processNewItineraries, searchCriteria),
-                            _.partial(processServiceErrorMessages, searchCriteria),
-                            _.partial(updateWithNewItineraries, searchCriteria));
+                        var successCallback = function (newItins) {
+                            if (__.isDefined($scope.searchCompletedSuccessCallback)) {
+                                $scope.searchCompletedSuccessCallback({itineraries: newItins});
+                            }
+                            processNewItineraries(searchCriteria, newItins);
+                        };
+
+                        var errorCallback = function (errorMessages) {
+                            if (__.isDefined($scope.searchCompletedErrorCallback)) {
+                                $scope.searchCompletedErrorCallback({errorMessages: errorMessages});
+                            }
+                            processServiceErrorMessages(searchCriteria, errorMessages);
+                        };
+
+                        var updateCallback = function (newItins) {
+                            updateWithNewItineraries(searchCriteria, newItins);
+                        };
+
+                        searchStrategy.search(searchCriteria, successCallback, errorCallback, updateCallback);
                     };
 
                     $scope.$on(filteringCriteriaChangedEvent, function () {
@@ -244,6 +267,22 @@ define([
                         return ($scope.permittedItinerariesSorted.length > 0);
                     };
 
+                    $scope.summaryItemClickedCallback = function (itineraryId) {
+                        $scope.paginationSettings.currentPage = getItineraryPage(itineraryId);
+                        var anchorId = $scope.getItinAnchorId(itineraryId);
+                        $location.hash(anchorId);
+                        $anchorScroll();
+                    };
+
+                    $scope.getItinAnchorId = function(itineraryId) {
+                        return '#SDS_itin_' + itineraryId;
+                    }
+
+                    function getItineraryPage(itineraryId) {
+                        var itinerarySequentialPosition = 1 + _.findIndex($scope.permittedItinerariesSorted, itin => (itin.id === itineraryId));
+                        return Math.ceil(itinerarySequentialPosition / $scope.itemsPerPage);
+                    }
+
                 }])
             .directive('itineraryList', ['$templateCache', function ($templateCache) {
                 return {
@@ -255,6 +294,9 @@ define([
                         , searchCriteria: '=?'
                         , targetOnItinerarySelected: '@?'
                         , selectedItineraryCallback: '=?' //TODO should be really callback
+                        , searchStartedCallback: '&?'
+                        , searchCompletedSuccessCallback: '&?'
+                        , searchCompletedErrorCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/ItinerariesListWidget.tpl.html',
                     controller: 'ItineraryListCtrl',

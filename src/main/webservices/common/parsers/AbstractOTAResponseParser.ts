@@ -104,7 +104,7 @@ define([
             itinerary.itineraryPricingInfo = this.parseItineraryPricingInfo(itineraryPricingInfoResponsePart, legsSegmentCounts);
 
             itinerary.pricingSource = this.parsePricingSource(responseItin);
-
+            itinerary.id = responseItin.SequenceNumber;
             return itinerary;
         };
 

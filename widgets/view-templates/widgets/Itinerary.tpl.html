@@ -1,4 +1,4 @@
-<div>
+<div class="SDSWidget SDSResponsiveElement">
     <ul class="SDSLegList list-unstyled">
         <li>
             <div class="SDS-row">
@@ -59,14 +59,16 @@
                     <span ng-if="leg.hasConnection()">{{leg.getConnectionAirports() | stringJoiner:',':'(':')'}}</span>
                 </div>
             </div>
+
             <!-- on smaller screens show this when flight details are opened, after first leg -->
-                            <span ng-if="itinerary.hasChangeOfAirportsAtAnyStopover() && $first" class="SDS-hidden-lg ng-hide SDSItineraryFlightDetails text-warning">
-                                Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
-                            </span>
-                            <span ng-if="itinerary.departureAndArrivalDifferentForComplexTravel() && $first" class="SDS-hidden-lg ng-hide SDSItineraryFlightDetails text-warning">
-                                Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
-                            </span>
-            <ul class="list-group ng-hide SDSItineraryFlightDetails">
+            <span ng-if="itinerary.hasChangeOfAirportsAtAnyStopover() && $first" ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDS-hidden-lg SDSItineraryFlightDetails text-warning">
+                Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
+            </span>
+            <span ng-if="itinerary.departureAndArrivalDifferentForComplexTravel() && $first" ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDS-hidden-lg SDSItineraryFlightDetails text-warning">
+                Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
+            </span>
+
+            <ul ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="list-group SDSItineraryFlightDetails">
                 <li class="list-group-item" ng-repeat-start="flight in leg.segments" ng-init="segmentIndex = $index">
                     <ul class="list-unstyled">
                         <!--<li>-->
@@ -148,35 +150,44 @@
     </ul>
     <div class="SDSPriceSummary">
         <div class="pull-left">
-            <a href="" class="SDS-hidden-lg SDSItineraryShowPriceDetails SDSItineraryShowFlightDetails SDSItineraryHideWhenFlightDetailsShown">Show Details</a>
-            <a href="" class="SDS-hidden-lg ng-hide SDSItineraryHidePriceDetails SDSItineraryHideFlightDetails SDSItineraryFlightDetails">Hide Details</a>
-            <a href="" class="SDS-visible-lg SDSItineraryToggleFlightDetails">Flight Details</a>
+            <a ng-show="!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg SDSItineraryShowPriceDetails SDSItineraryShowFlightDetails SDSItineraryHideWhenFlightDetailsShown">Show Details</a>
+            <a ng-show="!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg ng-hide SDSItineraryHidePriceDetails SDSItineraryHideFlightDetails SDSItineraryFlightDetails">Hide Details</a>
+            <a ng-show="!flightDetailsAlwaysShown" href="" class="SDS-visible-lg SDSItineraryToggleFlightDetails">Flight Details</a>
             <a href="" class="SDS-visible-lg SDSItineraryToggleBrandDetails" ng-show="itinerary.hasAnyBrands()">Brand Details</a>
         </div>
         <div>
             <ul class="list-unstyled pull-right">
                 <li>Total price: <strong >{{itinerary.totalFareAmountWithCurrency.amount | currency:itinerary.totalFareAmountWithCurrency.currency}}</strong></li>
-                <li>
+                <li ng-show="!priceDetailsAlwaysShown">
                     <a href="" class="SDS-visible-lg ng-show SDSItineraryTogglePriceDetails">Price Details</a>
                 </li>
-                <li class="SDSItineraryPriceDetails ng-hide SDSItineraryTogglePriceDetails">Base fare: {{itinerary.baseFareAmount | currency:itinerary.baseFareCurrency}}</li>
-                <li class="SDSItineraryPriceDetails ng-hide SDSItineraryTogglePriceDetails">Taxes: {{itinerary.totalTaxAmount | currency:itinerary.totalTaxCurrency}}</li>
-                <li ng-if="itinerary.baggageCharges" class="SDSItineraryPriceDetails ng-hide SDSItineraryTogglePriceDetails">Bag charges: {{itinerary.baggageCharges | currency:itinerary.totalTaxCurrency}}</li>
+                <li ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
+                    Base fare: {{itinerary.baseFareAmount | currency:itinerary.baseFareCurrency}}
+                </li>
+                <li ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
+                    Taxes: {{itinerary.totalTaxAmount | currency:itinerary.totalTaxCurrency}}
+                </li>
+                <li ng-if="itinerary.baggageCharges" ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
+                    Bag charges: {{itinerary.baggageCharges | currency:itinerary.totalTaxCurrency}}
+                </li>
             </ul>
         </div>
         <div class="clearfix"></div>
 
-        <div class="ng-hide SDSItineraryFlightDetails SDSTopBuffer-xs SDS-hidden-md"></div>
-        <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
-                class="ng-hide SDSItineraryFlightDetails SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-hidden-md">
-            Select
-        </button>
+        <div ng-if="!hideItinerarySelectButton">
+            <div ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDSItineraryFlightDetails SDSTopBuffer-xs SDS-hidden-md"></div>
+            <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
+                    ng-class="{'ng-hide':!flightDetailsAlwaysShown}"
+                    class="SDSItineraryFlightDetails SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-hidden-md">
+                Select
+            </button>
 
-        <div class="SDSTopBuffer-xs SDS-visible-md"></div>
-        <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
-                class="SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-visible-md">
-            Select
-        </button>
+            <div class="SDSTopBuffer-xs SDS-visible-md"></div>
+            <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
+                    class="SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-visible-md">
+                Select
+            </button>
+        </div>
     </div>
 </div>
 

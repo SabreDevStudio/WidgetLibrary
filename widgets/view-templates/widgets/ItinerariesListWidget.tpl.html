@@ -1,7 +1,8 @@
 <div class="SDSWidget SDSResponsiveElement">
 <itinerary-summary-price-per-stops-per-airline ng-if="isAnyDataToDisplayAvailable()"
         class="SDS-visible-lg"
-        summary="summaryPerStopsPerAirline">
+        summary="summaryPerStopsPerAirline"
+        summary-item-clicked-callback="summaryItemClickedCallback(itineraryId)">
 </itinerary-summary-price-per-stops-per-airline>
 
 <div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
@@ -19,30 +20,30 @@
                         <accordion-heading>
                             <span class="text-info">Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount.currency}}</span>
                         </accordion-heading>
-                        <itinerary-short-summary itin="bestItinerariesSummary.cheapest"></itinerary-short-summary>
+                        <itinerary-short-summary itin="bestItinerariesSummary.cheapest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </accordion-group>
                     <accordion-group>
                         <accordion-heading>
                             <span class="text-info">Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}</span>
                         </accordion-heading>
-                        <itinerary-short-summary itin="bestItinerariesSummary.best"></itinerary-short-summary>
+                        <itinerary-short-summary itin="bestItinerariesSummary.best" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </accordion-group>
                     <accordion-group>
                         <accordion-heading>
                             <span class="text-info">Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}</span>
                         </accordion-heading>
-                        <itinerary-short-summary itin="bestItinerariesSummary.shortest"></itinerary-short-summary>
+                        <itinerary-short-summary itin="bestItinerariesSummary.shortest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </accordion-group>
                 </accordion>
                 <tabset class="SDS-visible-lg">
                     <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}">
-                        <itinerary-short-summary itin="bestItinerariesSummary.cheapest"></itinerary-short-summary>
+                        <itinerary-short-summary itin="bestItinerariesSummary.cheapest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </tab>
                     <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}">
-                        <itinerary-short-summary itin="bestItinerariesSummary.best"></itinerary-short-summary>
+                        <itinerary-short-summary itin="bestItinerariesSummary.best" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </tab>
                     <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}">
-                        <itinerary-short-summary itin="bestItinerariesSummary.shortest"></itinerary-short-summary>
+                        <itinerary-short-summary itin="bestItinerariesSummary.shortest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </tab>
                 </tabset>
             </div>
@@ -62,7 +63,7 @@
         <ul class="list-unstyled SDSTopLevelList">
             <li class="SDS-row" ng-repeat="itinerary in permittedItinerariesSorted
                                             | startFrom: (paginationSettings.currentPage - 1)*itemsPerPage | limitTo: itemsPerPage"><!-- warn: cannot have track by $index here, as then itineraries CSS classes controlling visibility will stay the same after changing page or sort criteria (for example Brand Details section would be still open, for other itinerary). -->
-                <itinerary itin="itinerary" target-on-itinerary-selected="{{targetOnItinerarySelected}}" itinerary-selected-callback="selectedItineraryCallback(itinerary)"></itinerary>
+                <itinerary id="{{getItinAnchorId(itinerary.id)}}" itin="itinerary" target-on-itinerary-selected="{{targetOnItinerarySelected}}" itinerary-selected-callback="selectedItineraryCallback(itinerary)"></itinerary>
             </li>
         </ul>
     </div>

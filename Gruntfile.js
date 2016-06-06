@@ -334,6 +334,13 @@ module.exports = function (grunt) {
             'compile-standalone-app': {
                 options: grunt.file.readJSON('r.compiler.options.json')
             },
+            'compile-standalone-app-no-uglify': {
+                options: (function () {
+                    var config = grunt.file.readJSON('r.compiler.options.json');
+                    config.optimize = "none";
+                    return config;
+                })()
+            },
             'compile-library-only': {
                 options: (function () {
                     var config = grunt.file.readJSON('r.compiler.options.json');
@@ -428,7 +435,20 @@ module.exports = function (grunt) {
         , 'typescript:app'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
+        , 'saveRevision'
         , 'requirejs:compile-standalone-app'
+        , 'css-pipeline'
+        , 'copy-static-resources'
+    ]);
+
+    grunt.registerTask('dist-standalone-app-fast-no-uglify', [
+        'clean:dist'
+        //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
+        , 'typescript:app'
+        , 'copy:cdnify-inline-style-images-urls'
+        , 'ngtemplates'
+        , 'saveRevision'
+        , 'requirejs:compile-standalone-app-no-uglify'
         , 'css-pipeline'
         , 'copy-static-resources'
     ]);

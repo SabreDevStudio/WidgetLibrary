@@ -1,5 +1,5 @@
 <div>
-    <div class="SDS-row SDSLegShortSummary">
+    <div class="SDS-row SDSLegShortSummary" ng-click="itemClicked(itinerary.id)">
         <div class="SDS-col-element-xl-3">
             <airline-logo airline-code="{{itinerary.getFirstLeg().getFirstFlightMarketingAirline()}}"></airline-logo>
             {{itinerary.getFirstLeg().getFirstFlightMarketingAirline() | airlineFullName}}
