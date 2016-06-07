@@ -5,8 +5,8 @@
     "Tomasz Szymanski <Tomasz.Szymanski@sabre.com>"
   ],
   "main": [
-    "dist/widgets/SDSWidgets.min.js",
     "dist/widgets/SDSWidgets.lib.min.js",
+    "dist/widgets/SDSWidgets.min.js",
     "dist/widgets/css/SDS.min.css"
   ],
   "description": "Widgets demonstrating capabilities of Sabre Dev Studio",

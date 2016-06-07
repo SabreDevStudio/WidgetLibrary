@@ -457,7 +457,7 @@ module.exports = function (grunt) {
         'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
         , 'typescript-pipeline'
-        , 'unit-test'
+        //, 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'ngtemplates'
         , 'saveRevision'
