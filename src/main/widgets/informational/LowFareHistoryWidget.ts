@@ -7,6 +7,7 @@ define([
         , 'widgets/BaseController'
         , 'widgets/GlobalChartsConfiguration'
         , 'webservices/informational/LowFareHistoryDataService'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -17,6 +18,7 @@ define([
         , BaseController
         , GlobalChartsConfiguration
         , LowFareHistoryDataServiceSrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -106,6 +108,7 @@ define([
                         chartInstance = chartsFactory.createBarChart(element, chartData);
 
                         controller.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 }
             }]);

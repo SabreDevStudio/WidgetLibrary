@@ -10,6 +10,7 @@ define([
         , 'util/BaseServices'
         , 'webservices/utility/GeoSearchDataService'
         , 'webservices/lookup/AirportLookupDataService'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -23,6 +24,7 @@ define([
         , BaseServices
         , GeoSearchDataServiceSrc
         , AirportLookupDataServiceSrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -139,7 +141,10 @@ define([
                     replace: true,
                     templateUrl: '../widgets/view-templates/widgets/ThemedDestinationFinderWidget.tpl.html',
                     controller: 'ThemedDestinationFinderWidgetCtrl',
-                    controllerAs: 'ctrl'
+                    controllerAs: 'ctrl',
+                    link: function () {
+                        WidgetGlobalCallbacks.linkComplete();
+                    }
                 };
             })
             .filter('theme', function () {

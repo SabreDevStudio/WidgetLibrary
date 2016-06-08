@@ -2,11 +2,13 @@ define([
           'angular'
         , 'widgets/SDSWidgets'
         , 'webservices/informational/FareForecastDataService'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           angular
         , SDSWidgets
         , FareForecastDataServiceSrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -63,7 +65,10 @@ define([
                         , showUnknownRecommendation: '@'
                     },
                     templateUrl: '../widgets/view-templates/widgets/FareForecastWidget.tpl.html',
-                    controller: 'FareForecastCtrl'
+                    controller: 'FareForecastCtrl',
+                    link: function () {
+                        WidgetGlobalCallbacks.linkComplete();
+                    }
                 };
             });
 

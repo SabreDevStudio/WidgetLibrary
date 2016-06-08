@@ -13,6 +13,7 @@ define([
         , 'datamodel/EarliestDepartureLatestReturnTravelDatesFlexibility'
         , 'util/DOMManipulationUtils'
         , 'util/BaseServices'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           _
@@ -29,6 +30,7 @@ define([
         , EarliestDepartureLatestReturnTravelDatesFlexibility
         , domUtils
         , BaseServicesSrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -239,6 +241,8 @@ define([
                        setUpTravelDatesOnChangeListeners();
 
                        scheduleDeferredElementsLoad();
+
+                       WidgetGlobalCallbacks.linkComplete();
 
                        function parseFieldsToHide() {
                            scope.fieldsToHide = element.attr('hide-fields') && element.attr('hide-fields').split(',') || [];

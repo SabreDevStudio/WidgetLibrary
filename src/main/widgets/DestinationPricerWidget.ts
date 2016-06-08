@@ -6,6 +6,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'widgets/BaseController'
         , 'webservices/inspirational/DestinationPricerDataService'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -15,6 +16,7 @@ define([
         , SDSWidgets
         , BaseController
         , DestinationPricerDataServiceSrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -92,7 +94,7 @@ define([
                                 controller.processSearchCriteria(searchCriteria);
                             }
                         }
-
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 };
             });

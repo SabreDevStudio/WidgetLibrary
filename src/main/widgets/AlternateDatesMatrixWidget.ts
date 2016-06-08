@@ -6,6 +6,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'datamodel/SearchCriteria'
         , 'webservices/common/searchStrategyFactories/AlternateDatesSearchStrategyFactory'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -15,6 +16,7 @@ define([
         , SDSWidgets
         , SearchCriteria
         , AlternateDatesSearchStrategyFactorySrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -108,6 +110,7 @@ define([
                             , element.attr('return-date')
                             , element.attr('alt-dates-plus-minus')
                         );
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 };
             });

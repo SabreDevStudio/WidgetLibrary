@@ -19,6 +19,7 @@ define([
         , 'webservices/common/searchStrategyFactories/ItinerariesSearchStrategyFactoryBagsFilteringDecorator'
         , 'webservices/common/searchStrategyFactories/BrandedItinerariesSearchStrategyFactory'
         , 'util/CommonDisplayDirectives'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           _
@@ -41,6 +42,7 @@ define([
         , ItinerariesSearchStrategyFactory
         , BrandedItinerariesSearchStrategyFactory
         , CommonDisplayDirectives
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -320,6 +322,8 @@ define([
                                 return SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
                             }
                         }
+
+                        WidgetGlobalCallbacks.linkComplete();
                     }
 
                 };

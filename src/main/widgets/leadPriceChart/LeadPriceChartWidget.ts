@@ -8,6 +8,7 @@ define([
         , 'widgets/GlobalChartsConfiguration'
         , 'datamodel/ShoppingData'
         , 'webservices/common/searchStrategyFactories/DaysRangeSearchStrategyFactory'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -19,6 +20,7 @@ define([
         , GlobalChartsConfiguration
         , ShoppingData
         , DaysRangeSearchStrategyFactorySrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -234,6 +236,7 @@ define([
                         chartInstance = chartsFactory.createBarChart(element, chartData);
 
                         controller.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 };
             }]);

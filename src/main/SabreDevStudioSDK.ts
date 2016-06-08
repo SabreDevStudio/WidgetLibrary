@@ -16,7 +16,8 @@ require.config({
         , 'ngPromiseExtras': '../../bower_components/angular-promise-extras/angular-promise-extras'
         , 'chartjs': '../../bower_components/Chart.js/Chart'
         , 'angular_iso_currency': '../../bower_components/iso-currency/dist/isoCurrency'
-        , 'elementQuery': '../../bower_components/elementQuery/elementQuery' //WARN: elementQuery is exposing functions on windows... AMD support already requested, see: https://github.com/tysonmatanich/elementQuery/pull/9/commits
+        , 'elementQuery': '../../bower_components/css-element-queries/src/ElementQueries'
+        , 'ResizeSensor': '../../bower_components/css-element-queries/src/ResizeSensor'
     },
     map: {
         '*': {
@@ -63,7 +64,7 @@ require.config({
             deps: ['angular']
         },
         'elementQuery': {
-            exports: 'elementQuery'
+            deps: ['ResizeSensor']
         }
     },
     config: {
@@ -144,40 +145,14 @@ define([
 
     function bootstrapNG() {
         angular.element(document).ready(function () {
-            var beforeNG = performance.now();
             angular.bootstrap(document, ['sdsWidgets'], {
                 strictDi: true
             });
-            var afterNG = performance.now();
-            console.log('NG load: ' + Math.round(afterNG - beforeNG));
-
-            //>>excludeStart('appBuildExclude', pragmas.appBuildExclude);
-            var initInjector = angular.injector(["ng"]);
-            var $timeout = initInjector.get("$timeout");
-            $timeout(function () { // this timeout is a workaround for templates not applied element queries RWD (because they are loaded later, in separate http call for template). This workaround is not needed for prod build, as then templates are loaded as ng module, so are loaded at this point into template cache. This workaround creates bad user experience (page shown for a fraction of second without RWD applied)
-            //>>excludeEnd('appBuildExclude');
-                parseAllStylesheetsToMakeWidgetsResponsive();
-            //>>excludeStart('appBuildExclude', pragmas.appBuildExclude);
-            });
-            var afterCSS = performance.now();
-            console.log('CSS RWD parse: ' + Math.round((afterCSS - afterNG)));
-            //>>excludeEnd('appBuildExclude');
         });
     }
 
-    function parseAllStylesheetsToMakeWidgetsResponsive() {
-        [].slice.call(document.styleSheets)
-            .filter(isOwnStylesheet) // responsive instructions are only in our own CSS, no point to parse other. // WARN becasue of how elementQuery is written now it will parse all stylesheets later anyway itself.
-            .forEach(stylesheet => elementQuery(stylesheet, true));
-    }
-
-    function isOwnStylesheet(stylesheet) {
-        return stylesheet.href && stylesheet.href.indexOf('SDS') > -1; //WARN hardcode: part of name of our css minified file to recognize own stylesheet
-    }
-
     return {
-        parseAllStylesheetsToMakeWidgetsResponsive: parseAllStylesheetsToMakeWidgetsResponsive
-        , version: version.version
+         version: version.version
     }
 
 });

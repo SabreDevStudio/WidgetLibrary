@@ -8,6 +8,7 @@ define([
         , 'widgets/BaseController'
         , 'widgets/GlobalChartsConfiguration'
         , 'webservices/informational/TravelSeasonalityDataService'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -19,6 +20,7 @@ define([
         , BaseController
         , GlobalChartsConfiguration
         , TravelSeasonalityDataServiceSrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -158,6 +160,7 @@ define([
                             };
                             controller.processSearchCriteria(searchCriteria);
                         }
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 }
             }]);

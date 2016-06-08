@@ -8,6 +8,7 @@ define([
         , 'datamodel/SearchCriteria'
         , 'widgets/informational/fareRange/HighLowMedianCurrentChartDirective'
         , 'webservices/informational/FareRangeDataService'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -19,6 +20,7 @@ define([
         , SearchCriteria
         , HighLowMedianCurrentChartDirective
         , FareRangeDataServiceSrc
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -126,7 +128,10 @@ define([
                         , rangeDays: '@?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/FareRangeWidget.tpl.html',
-                    controller: 'FareRangeCtrl'
+                    controller: 'FareRangeCtrl',
+                    link: function () {
+                        WidgetGlobalCallbacks.linkComplete();
+                    }
                 };
             })
             .factory('FareRangeSummaryService', function () { // provides summary recommendation whether to buy now or not, based on Fare Range service (based on what the others paid). Implements specific business recommendation logic.

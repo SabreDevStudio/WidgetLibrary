@@ -4,6 +4,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'webservices/fareNabber/FareNabberSubscriptionService'
         , 'widgets/searchForm/InputTimeOfDayRange'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           angular
@@ -11,6 +12,7 @@ define([
         , SDSWidgets
         , FareNabberSubscriptionServiceSrc
         , InputTimeOfDayRange
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -152,6 +154,7 @@ define([
                                 , scope: scope
                             });
                         }
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 };
             }]);

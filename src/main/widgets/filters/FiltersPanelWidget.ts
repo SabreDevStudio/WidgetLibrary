@@ -4,6 +4,7 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -11,6 +12,7 @@ define([
         , _
         , angular_bootstrap
         , SDSWidgets
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -57,7 +59,10 @@ define([
                     replace: true,
                     scope: true,
                     templateUrl: '../widgets/view-templates/widgets/FiltersPanelWidget.tpl.html',
-                    controller: 'FiltersPanelCtrl'
+                    controller: 'FiltersPanelCtrl',
+                    link: function () {
+                        WidgetGlobalCallbacks.linkComplete();
+                    }
                 }
             });
     });

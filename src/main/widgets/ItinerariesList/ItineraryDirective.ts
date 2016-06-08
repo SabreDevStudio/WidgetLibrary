@@ -7,6 +7,7 @@ define([
         , 'widgets/SDSWidgets'
         , 'util/DOMManipulationUtils'
         , 'util/CommonDirectives'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (moment
         , angular
@@ -16,6 +17,7 @@ define([
         , SDSWidgets
         , domUtils
         , CommonDirectives
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -33,7 +35,6 @@ define([
                     },
                     templateUrl: '../widgets/view-templates/widgets/Itinerary.tpl.html',
                     link: function (scope, element) {
-
                         scope.selectItineraryClicked = function (itinerary) {
                             if (_.isFunction(scope.itinerarySelectedCallback)) {
                                 scope.itinerarySelectedCallback(itinerary);
@@ -60,6 +61,7 @@ define([
                         }
 
                         addClickEventHandlers(element);
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 }
             }]);

@@ -8,6 +8,7 @@ define([
         , 'widgets/calendar/Calendar'
         , 'webservices/common/searchStrategyFactories/DaysRangeSearchStrategyFactory'
         , 'widgets/calendar/HighlightLengthOfStay'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
           moment
@@ -19,6 +20,7 @@ define([
         , Calendar
         , DaysRangeSearchStrategyFactorySrc
         , HighlightLengthOfStay
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -128,6 +130,7 @@ define([
                     link: function (scope, element, attrs) {
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) || 1;
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 }
             }])
@@ -146,6 +149,7 @@ define([
                         scope.numberOfMonthsShownAtOnce = parseInt(scope.numberOfMonthsShownAtOnce) || 1;
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) || 10;
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 }
             }])

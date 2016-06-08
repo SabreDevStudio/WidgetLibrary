@@ -5,6 +5,7 @@ define([
         , 'util/LodashExtensions'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
+        , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
         moment
@@ -13,6 +14,7 @@ define([
         , __
         , angular_bootstrap
         , SDSWidgets
+        , WidgetGlobalCallbacks
     ) {
         'use strict';
 
@@ -59,6 +61,7 @@ define([
                         scope.anyErrorPresent = function () {
                             return scope.errors && scope.errors.length > 0;
                         };
+                        WidgetGlobalCallbacks.linkComplete();
                     }
                 }
             }]);
