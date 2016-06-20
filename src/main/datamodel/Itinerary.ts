@@ -428,5 +428,20 @@ define([
         return this.itineraryPricingInfo.getMinBaggageAllowance();
     };
 
+    Itinerary.prototype.equals = function (otherItin) {
+        if (this.legs.length !== otherItin.legs.length) {
+            return false;
+        }
+        for (var i = 0; i < this.legs.length; i++) {
+            if (!this.legs[i].equals(otherItin.legs[i])) {
+                return false;
+            }
+        }
+        if (!this.itineraryPricingInfo.equals(otherItin.itineraryPricingInfo)) {
+            return false;
+        }
+        return true;
+    };
+
     return Itinerary;
 });

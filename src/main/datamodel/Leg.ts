@@ -192,5 +192,27 @@ define([
             });
         };
 
+        /* jshint maxcomplexity:7 */
+        Leg.prototype.equals = function (otherLeg) {
+            if (this.segments.length !== otherLeg.segments.length) {
+                return false;
+            }
+            for (var i = 0; i < this.segments.length; i++) {
+                if (!this.segments[i].equals(otherLeg.segments[i])) {
+                    return false;
+                }
+            }
+            if (this.duration !== otherLeg.duration) {
+                return false;
+            }
+            if (this.hasAirportChangeAtDeparture !== otherLeg.hasAirportChangeAtDeparture) {
+                return false;
+            }
+            if (this.hasAirportChangeAtArrival !== otherLeg.hasAirportChangeAtArrival) {
+                return false;
+            }
+            return true;
+        };
+
         return Leg;
     });

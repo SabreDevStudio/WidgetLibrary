@@ -119,7 +119,7 @@ define([
                     $scope.multiDestinationLegs.pop();
                 };
 
-                /* jshint maxcomplexity:12 */
+                /* jshint maxcomplexity:15 */
                 $scope.createNewSearchCriteria = function () {
                     var searchCriteria = new SearchCriteria();
 
@@ -182,8 +182,8 @@ define([
                     SearchCriteriaBroadcastingService.searchCriteria = searchCriteria;
                     SearchCriteriaBroadcastingService.broadcast();
 
-                    if (__.isDefined($scope.lastSearchCriteriaStore)) {
-                        $scope.lastSearchCriteriaStore = searchCriteria;
+                    if (__.isDefined($scope.newSearchCriteriaCallback)) {
+                        $scope.newSearchCriteriaCallback({searchCriteria: searchCriteria});
                     }
 
                     if (__.isDefined($scope.submitTarget)) {
@@ -219,7 +219,7 @@ define([
                        selectableAirportsForThisPosOnly: '@'
                        , selectableAirportsDictionary: '@'
                        , submitTarget: '@?'
-                       , lastSearchCriteriaStore: '=?'
+                       , newSearchCriteriaCallback: '&?'
                    },
                    link: function (scope, element) {
 

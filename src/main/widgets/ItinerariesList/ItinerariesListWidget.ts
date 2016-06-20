@@ -64,6 +64,7 @@ define([
                     , 'dateSelectedEvent'
                     , 'BargainFinderMaxDataService'
                     , 'noResultsFoundEvent'
+                    , 'ItinerarySerializer'
                 , function (
                       $scope
                     , $filter
@@ -81,6 +82,7 @@ define([
                     , dateSelectedEvent
                     , BargainFinderMaxDataService
                     , noResultsFoundEvent
+                    , ItinerarySerializer
                 ) {
 
                     var sortCriteria = new ItinerariesListSortCriteria();

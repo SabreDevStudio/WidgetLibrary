@@ -9,7 +9,9 @@ define([
         // callback to be called by all standalone (not partials) widgets at the end of link function.
         // Not using any global decorator or global post-link, as do not want to change behaviour of all directives
         linkComplete: function () {
-            elementQuery.init(); // see https://github.com/marcj/css-element-queries/issues/95. In future maybe will be optimized for something like refresh. Then init or listen will be run globally on widgets SDK level
+            // see https://github.com/marcj/css-element-queries/issues/95. In future maybe will be optimized for something like refresh. Then init or listen will be run globally on widgets SDK level
+            // WARN: there is performance penalty in this ElementQuery init, on fast desktop browser takes 0.7 second. So DO NOT call unnecessarily, especially from partials.
+            elementQuery.init();
         }
     };
 });

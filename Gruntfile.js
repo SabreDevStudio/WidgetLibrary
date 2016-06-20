@@ -346,6 +346,7 @@ module.exports = function (grunt) {
                     var config = grunt.file.readJSON('r.compiler.options.json');
                     config.pragmas.excludeWhenBuiltAsLibraryOnly = true;
                     config.out = "dist/widgets/SDSWidgets.lib.min.js";
+                    config.optimize = "none";
                     return config;
                 })()
             }

@@ -46,5 +46,9 @@ define([
             return _.min(allSegmentsAllowance, 'Pieces').Pieces;
         };
 
+        SegmentBaggageAllowance.prototype.equals = function (other) {
+            return _.isEqual(this.legSegmentBaggageAllowance, other.legSegmentBaggageAllowance);
+        };
+
         return SegmentBaggageAllowance;
     });

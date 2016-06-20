@@ -174,5 +174,17 @@ define([
             };
         };
 
+        ItineraryPricingInfo.prototype.equals = function (other) {
+            return _.isEqual(this.legsSegmentCounts, other.legsSegmentCounts)
+                && _.isEqual(this.nonRefundableIndicator, other.nonRefundableIndicator)
+                && _.isEqual(this.OBFees, other.OBFees)
+                && ((this.baggageAllowance && other.baggageAllowance && this.baggageAllowance.equals(other.baggageAllowance)) || (_.isUndefined(this.baggageAllowance) && _.isUndefined(other.baggageAllowance)) )
+                && _.isEqual(this.segmentCabins, other.segmentCabins)
+                && _.isEqual(this.segmentSeatsRemaining, other.segmentSeatsRemaining)
+                && _.isEqual(this.segmentMeals, other.segmentMeals)
+                && _.isEqual(this.fareAmounts, other.fareAmounts)
+                && _.isEqual(this.summaries, other.summaries);
+        };
+
         return ItineraryPricingInfo;
 });

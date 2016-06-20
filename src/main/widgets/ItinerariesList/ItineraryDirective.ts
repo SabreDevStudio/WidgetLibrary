@@ -32,6 +32,7 @@ define([
                         , flightDetailsAlwaysShown: '@?'
                         , priceDetailsAlwaysShown: '@?'
                         , hideItinerarySelectButton: '@?'
+                        , standaloneWidget: '@?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/Itinerary.tpl.html',
                     link: function (scope, element) {
@@ -61,7 +62,11 @@ define([
                         }
 
                         addClickEventHandlers(element);
-                        WidgetGlobalCallbacks.linkComplete();
+                        if (scope.standaloneWidget === "true") {
+                        // WidgetGlobalCallbacks linkComplete must be called only for standalone widgets, not for partials. Most often this directive is used as partial that is why by default it is not called.
+                            WidgetGlobalCallbacks.linkComplete();
+                        }
+
                     }
                 }
             }]);

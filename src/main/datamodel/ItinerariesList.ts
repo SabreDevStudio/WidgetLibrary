@@ -59,9 +59,17 @@ define([
      */
     ItinerariesList.prototype.addItinerariesListWithDedup = function(otherItinerariesList) {
         var dedupper = new ItinerariesDedupper();
-        this.itineraries = dedupper.dedupMerge(this.itineraries, otherItinerariesList.itineraries);
+        var itinsDedupped = dedupper.dedupMerge(this.itineraries, otherItinerariesList.itineraries);
+        this.itineraries = recalcIds(itinsDedupped);
         return this;
     };
+
+    function recalcIds(itineraries) {
+        return itineraries.map(function (itin, idx) {
+            itin.id = idx;
+            return itin;
+        });
+    }
 
     ItinerariesList.prototype.size = function () {
         return this.getPermittedItineraries().length;

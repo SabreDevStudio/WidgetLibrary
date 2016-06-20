@@ -46,10 +46,10 @@ define([
                     createSearchStrategy: function (activeSearchWebService) {
                         var delegateStrategy = delegate.createSearchStrategy(activeSearchWebService);
                         return {
-                            search: function (searchCriteria, originalSuccessCallback, failureCallback) {
+                            search: function (searchCriteria, originalSuccessCallback, failureCallback, updateCallback) {
                                 const bagsRequested = searchCriteria.bagsRequested;
                                 if (_.isUndefined(bagsRequested)) {
-                                    return delegateStrategy.search(searchCriteria, originalSuccessCallback, failureCallback);
+                                    return delegateStrategy.search(searchCriteria, originalSuccessCallback, failureCallback, updateCallback);
                                 }
 
                                 //function bagsFilteringStrategy(originalItineraryList) {
@@ -67,13 +67,15 @@ define([
                                 //    }
                                 //}
 
-                                function bagsFilteringAndBaggageChargesSupplementingStrategy(originalItineraryList) {
-                                    var baggageChargesSupplementedItinList = addBaggageChargesForInsufficientAllowance(originalItineraryList);
-                                    if (baggageChargesSupplementedItinList.size() === 0) {
-                                        ErrorReportingService.reportError(`Could not find itineraries with ${bagsRequested} bags requested`, searchCriteria);
-                                        failureCallback();
-                                    } else {
-                                        originalSuccessCallback(baggageChargesSupplementedItinList);
+                                function decorateWithBagsFilteringAndBaggageChargesSupplementingStrategy(originalCallback) {
+                                    return function (originalItineraryList) {
+                                        var baggageChargesSupplementedItinList = addBaggageChargesForInsufficientAllowance(originalItineraryList);
+                                        if (baggageChargesSupplementedItinList.size() === 0) {
+                                            ErrorReportingService.reportError(`Could not find itineraries with ${bagsRequested} bags requested`, searchCriteria);
+                                            failureCallback();
+                                        } else {
+                                            originalCallback(baggageChargesSupplementedItinList);
+                                        }
                                     }
                                 }
 
@@ -126,7 +128,7 @@ define([
                                     return filteredItinList;
                                 }
 
-                                return delegateStrategy.search(searchCriteria, bagsFilteringAndBaggageChargesSupplementingStrategy, failureCallback);
+                                return delegateStrategy.search(searchCriteria, decorateWithBagsFilteringAndBaggageChargesSupplementingStrategy(originalSuccessCallback), failureCallback, decorateWithBagsFilteringAndBaggageChargesSupplementingStrategy(updateCallback));
                             }
                         };
                     }

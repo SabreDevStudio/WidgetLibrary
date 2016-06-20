@@ -9,6 +9,7 @@ define([
       , 'angular-ui-select'
       , 'angular-sanitize'
       , 'util/LookupFilters'
+      , 'util/SerializationServices'
       , 'angular-img-fallback'
       , 'angular-rangeslider'
       , 'angular_iso_currency'
@@ -25,6 +26,7 @@ define([
         , angular_ui_select
         , angular_sanitize
         , LookupFilters
+        , SerializationServices
         , angular_img_fallback
         , angular_rangeslider
         , angular_iso_currency
@@ -41,6 +43,7 @@ define([
                 , 'ngSanitize'
                 , 'ui.select'
                 , 'sDSLookups'
+                , 'SDSWidgets.SerializationServices'
                 , 'dcbImgFallback'
                 , 'ui-rangeSlider'
                 , 'isoCurrency'
