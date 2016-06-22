@@ -31,14 +31,22 @@ define([
                     , businessMessagesErrorHandler
                 ) {
                     function translateSearchCriteriaIntoRequestParams(searchCriteria) {
-                        var requestParams = _.extend({}, searchCriteria);
-                        requestParams.earliestdeparturedate = searchCriteria.earliestdeparturedate.format(dateFormat);
-                        requestParams.latestdeparturedate = searchCriteria.latestdeparturedate.format(dateFormat);
+                        var requestParams: any = {};
+
+                        requestParams.origin = searchCriteria.origin;
 
                         var requestedPointOfSaleCountry = (searchCriteria.pointOfSaleCountry) && searchCriteria.pointOfSaleCountry || (pointOfSaleCountry.length > 0) && pointOfSaleCountry;
                         if (requestedPointOfSaleCountry) {
                             requestParams.pointofsalecountry = requestedPointOfSaleCountry;
                         }
+
+                        requestParams.earliestdeparturedate = searchCriteria.inspirationalSearchPolicy.earliestdeparturedate.format(dateFormat);
+                        requestParams.latestdeparturedate = searchCriteria.inspirationalSearchPolicy.latestdeparturedate.format(dateFormat);
+                        requestParams.lengthofstay = searchCriteria.inspirationalSearchPolicy.lengthOfStayDays.join();
+                        requestParams.topdestinations = searchCriteria.inspirationalSearchPolicy.topdestinations;
+
+                        requestParams.theme = searchCriteria.theme;
+
                         return requestParams;
                     }
 

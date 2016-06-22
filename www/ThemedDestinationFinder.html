@@ -15,8 +15,17 @@
 <body>
     <div id="mainPageContainer">
         <partial command="include('partials/navigation.html')"></partial>
-        <!-- warn: error display widget must initialize first, so that it registers event handlers to listen on errors -->
-        <themed-destination-finder class="embeddedWidget" closest-airport="FRA"></themed-destination-finder>
+
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h4 class="panel-title">Best offers</h4>
+            </div>
+            <div class="panel-body">
+                <travel-themes-selection-bar></travel-themes-selection-bar>
+                <themed-destination-finder class="embeddedWidget" closest-airport="FRA"></themed-destination-finder>
+            </div>
+        </div>
+
         <error-display class="embeddedWidget"></error-display>
     </div>
 

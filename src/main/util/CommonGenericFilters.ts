@@ -32,6 +32,11 @@ define([
                     return prefix + (input || []).join(delimiter) + suffix;
                 };
             })
+            .filter('capitalize', function () { //Converts the first character of string to upper case and the remaining to lower case.
+                return function (themeStringFromApi) {
+                    return _.startCase(themeStringFromApi.toLowerCase());
+                }
+            })
             .filter('unixTimeToMoment', function () {
                 return function (input) {
                     return moment.unix(input);

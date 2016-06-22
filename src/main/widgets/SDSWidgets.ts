@@ -5,6 +5,7 @@ define([
       , 'util/CommonGenericFilters'
       , 'util/CommonDisplayFilters'
       , 'webservices/SabreDevStudioWebServicesModule'
+      , 'widgets/inspirational/InspirationalWidgets.mod'
       , 'webservices/Interceptors'
       , 'angular-ui-select'
       , 'angular-sanitize'
@@ -22,6 +23,7 @@ define([
         , CommonGenericFilters
         , CommonDisplayFilters
         , SabreDevStudioWebServicesModule
+        , InspirationalWidgetsModule
         , Interceptors
         , angular_ui_select
         , angular_sanitize
@@ -37,6 +39,7 @@ define([
         return angular.module('sdsWidgets', [
                   'baseServices'
                 , 'sabreDevStudioWebServices'
+                , 'sdsWidgets.inspirationalWidgets'
                 , 'commonDirectives'
                 , 'commonFilters'
                 , 'ui.bootstrap'

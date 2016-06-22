@@ -95,7 +95,7 @@ define([
         , 'widgets/informational/fareRange/FareRangeWidget'
         , 'widgets/FareNabberWidget'
         , 'widgets/DestinationPricerWidget'
-        , 'widgets/inspirational/ThemedDestinationFinderWidget'
+        , 'widgets/inspirational/InspirationalWidgets.mod'
         , 'widgets/ItinerariesList/ItinerariesListWidget'
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
@@ -126,7 +126,7 @@ define([
         , FareRangeWidget
         , FareNabberWidget
         , DestinationPricerWidget
-        , ThemedDestinationFinderWidget
+        , InspirationalWidgetsModule
         , ItinerariesListWidget
         , FiltersPanelWidget
         , DiscreteFilterWidget
