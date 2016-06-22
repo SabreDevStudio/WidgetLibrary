@@ -1,104 +1,57 @@
 define([
-          'moment'
-        , 'angular'
-        , 'lodash'
-        , 'util/LodashExtensions'
-        , 'widgets/SDSWidgets'
-        , 'widgets/BaseController'
-        , 'webservices/lookup/TravelThemeLookupDataService'
-        , 'webservices/inspirational/DestinationFinderSummaryDataService'
-        , 'util/BaseServices'
-        , 'webservices/utility/GeoSearchDataService'
-        , 'webservices/lookup/AirportLookupDataService'
-        , 'widgets/WidgetGlobalCallbacks'
-        , 'util/CommonGenericFilters'
-        , 'datamodel/inspirationalSearch/InspirationalSearchCriteriaFactory'
+        //'widgets/WidgetGlobalCallbacks',
+        'lodash'
     ],
     function (
-          moment
-        , angular
-        , _
-        , __
-        , SDSWidgets
-        , BaseController
-        , DestinationFinderDataService
-        , DestinationFinderSummaryDataServiceSrc
-        , BaseServices
-        , GeoSearchDataServiceSrc
-        , AirportLookupDataServiceSrc
-        , WidgetGlobalCallbacks
-        , CommonGenericFilters
-        , InspirationalSearchCriteriaFactory
+        //WidgetGlobalCallbacks,
+        _
     ) {
         'use strict';
 
-        ThemedDestinationFinderWidgetDirective.$inject = [
-            '$q',
-            'DestinationFinderSummaryDataService',
-            'GeoSearchDataService',
-            'ThemedInspirationalSearchCriteriaBroadcastingService',
-            'ThemedInspirationalSearchCompleteBroadcastingService',
-            'AirportLookupDataService'];
-        function ThemedDestinationFinderWidgetDirective(
-            $q,
-            DestinationFinderSummaryDataService,
-            GeoSearchDataService,
-            ThemedInspirationalSearchCriteriaBroadcastingService,
-            ThemedInspirationalSearchCompleteBroadcastingService,
-            AirportLookupDataService
+        MapThemedDestinationFinderWidgetDirective.$inject = ['uiGmapGoogleMapApi'];
+        function MapThemedDestinationFinderWidgetDirective(
+            uiGmapGoogleMapApi
         ) {
             return {
                 scope: {
                     closestAirport: '@?'
                 },
-                templateUrl: '../widgets/view-templates/widgets/ThemedDestinationFinderWidget.tpl.html',
+                templateUrl: '../widgets/view-templates/widgets/MapThemedDestinationFinderWidget.tpl.html',
+                controller: 'ThemedDestinationFinderWidgetController',
                 link: function ($scope) {
-                    var searchCriteria = InspirationalSearchCriteriaFactory.create();
-
-                    $scope.model = {
-                        originForPricesForDestinations: undefined,
-                        pricesForDestinationsGrouped: []
+                    $scope.controllerOptions = {
+                        lookupDestinationsGeoCoordinates: true
                     };
 
-                    $scope.isAnyDataToDisplayAvailable = () => {
-                        return !(_.isEmpty($scope.model.pricesForDestinationsGrouped));
+                    $scope.map = {
+                        center: {
+                            latitude: 45,
+                            longitude: -73
+                        },
+                        zoom: 4
                     };
 
-                    $scope.$on('newThemedInspirationalSearchCriteriaEvent', function () {
-                        var themeSearched = ThemedInspirationalSearchCriteriaBroadcastingService.searchCriteria.theme;
-                        var searchCompleteCallback = () => {
-                            ThemedInspirationalSearchCompleteBroadcastingService.themeSearched = themeSearched;
-                            ThemedInspirationalSearchCompleteBroadcastingService.broadcast();
-                        };
-                        searchDestinationsForTheme(themeSearched, searchCompleteCallback);
-                    });
+                    var markerOpts = [
+                        {
+                            icon: '../widgets/img/icons/bullets/bullet_sm_green.png'
+                        },
+                        {
+                            icon: '../widgets/img/icons/bullets/bullet_sm_yellow.png'
+                        },
+                        {
+                            icon: '../widgets/img/icons/bullets/bullet_sm_red.png'
+                        }
+                    ];
 
-                    function searchDestinationsForTheme(theme, searchCompleteCallback) {
-                        var themedSearchCriteria = _.extend(searchCriteria, {
-                            theme: theme
-                        });
-                        DestinationFinderSummaryDataService
-                            .getOffersOrderedSummary(themedSearchCriteria)
-                            .then(function (orderedSummary) {
-                                $scope.model.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped;
-                                $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
-                            })
-                            .finally(searchCompleteCallback);
-                    }
+                    $scope.getOptionsForDestination = function (destinationLowestFare, pricesForDestinationsGrouped) {
+                        return markerOpts[_.random(2)];
+                    };
 
-                    var closestAirportPromise = (__.isDefined($scope.closestAirport))? $q.when($scope.closestAirport): GeoSearchDataService.getAPISupportedClosestAirport();
-                    closestAirportPromise
-                        .then(function (closestAirport) {
-                            searchCriteria.origin = closestAirport;
-                            return AirportLookupDataService.getAirportData(closestAirport)
-                        })
-                        .then(function (airportData) {
-                            searchCriteria.pointofsalecountry = airportData.CountryCode;
-                        });
-
-                    WidgetGlobalCallbacks.linkComplete();
+                    //uiGmapGoogleMapApi.then(function(maps) {
+                    //});
+                    //WidgetGlobalCallbacks.linkComplete();
                 }
             }
         }
-        return ThemedDestinationFinderWidgetDirective;
+        return MapThemedDestinationFinderWidgetDirective;
 });

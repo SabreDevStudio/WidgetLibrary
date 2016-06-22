@@ -419,6 +419,26 @@ define([
                         sendRequest: CachingDecorator.addCaching(resource.sendRequest, [404])
                     };
                 }])
+            .factory('GeoCodeWebService', [
+                '$resource'
+                , 'apiURL'
+                , 'CachingDecorator'
+                , function (
+                    $resource
+                    , apiURL
+                    , CachingDecorator
+                ) {
+                    var endpointURL = apiURL + '/v1/lists/utilities/geocode/locations';
+                    var resource = $resource(endpointURL, null, {
+                        sendRequest: {
+                            method:'POST'
+                            , headers: generalHeaders
+                        }
+                    });
+                    return {
+                        sendRequest: CachingDecorator.addCaching(resource.sendRequest, [404])
+                    };
+                }])
 
 
     });

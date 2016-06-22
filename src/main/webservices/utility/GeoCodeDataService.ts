@@ -2,146 +2,96 @@ define([
           'angular'
         , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'util/GeoLocationService'
     ],
     function (
           angular
         , _
         , SabreDevStudioWebServicesModule
-        , GeoLocationServiceSrc
     ) {
         'use strict';
 
         return angular.module('sabreDevStudioWebServices')
-            .factory('GeoSearchDataServiceRequestFactory', function () {
+            .factory('GeoCodeDataServiceRequestFactory', function () {
                 return {
-                    buildRequest: function (geoCoordinates, maxResults, maxDistance) {
-                        var DEFAULT_MAX_RADIUS_FOR_AIRPORT_SEARCH_MILES = 50; // by default, when max distance is not specified the web service looks in the radius of 0 miles which is not enough for airport search
-                        maxDistance = maxDistance || DEFAULT_MAX_RADIUS_FOR_AIRPORT_SEARCH_MILES;
-                        var request = {
-                            "GeoSearchRQ":{
-                                "ForPlaces":{
-                                    "OfCategory":[{
-                                            "name":"AIR"
-                                        }]
-                                },
-                                "Around": {
-                                    "PlaceByLatLong":{
-                                        "latitude":geoCoordinates.latitude,
-                                        "longitude":geoCoordinates.longitude
+                    buildRequest: function (aiportCode) {
+                        var request = [{
+                            "GeoCodeRQ":{
+                                "PlaceById":{
+                                    "Id":aiportCode,
+                                    "BrowseCategory": {
+                                        "name": "AIR"
                                     }
                                 }
                             }
-                        };
-                        if (maxResults) {
-                            request.GeoSearchRQ['ResultSetConfig'] = {
-                                maxResults: maxResults
-                            };
-                        }
-                        if (maxDistance) {
-                            request.GeoSearchRQ.Around['distance'] = maxDistance;
-                        }
+                        }];
                         return request;
                     }
                 }
             })
-            .factory('GeoSearchDataService', [
+            .factory('GeoCodeDataService', [
                       '$q'
-                    , 'GeoSearchWebService'
-                    , 'GeoSearchDataServiceRequestFactory'
-                    , 'GeoLocationService'
-                    , 'AirportLookupDataService'
+                    , 'GeoCodeWebService'
+                    , 'GeoCodeDataServiceRequestFactory'
                     , '$localStorage'
                     , 'ErrorReportingService'
                     , 'businessMessagesErrorHandler'
                 , function (
                       $q
-                    , GeoSearchWebService
-                    , GeoSearchDataServiceRequestFactory
-                    , GeoLocationService
-                    , AirportLookupDataService
+                    , GeoCodeWebService
+                    , GeoCodeDataServiceRequestFactory
                     , $localStorage
                     , ErrorReportingService
                     , businessMessagesErrorHandler
                 ) {
 
                 function parseWebServiceResponse(response) {
-                    return response.GeoSearchRS.Found.Place.map(function (item) {
-                        return item.Id;
-                    });
+                    var locationGeoData = response.Results[0].GeoCodeRS.Place[0];
+                    return {
+                        latitude: locationGeoData.latitude,
+                        longitude: locationGeoData.longitude
+                    };
                 }
 
-                function getClosestAirports(maxResults, maxDistance) {
+                function getAirportGeoCoordinates(airportCode) {
                     return $q(function (resolve, reject) {
-                        GeoLocationService.getCurrentPosition().then(function (geoCoordinates) {
-                                getClosestAirportsForGeo(geoCoordinates, maxResults, maxDistance).then(resolve, reject)
-                        }, reject);
-                    });
-                }
-
-                function getAPISupportedClosestAirports(maxResults, maxDistance) {
-                    return $q(function (resolve, reject) {
-                        GeoLocationService.getCurrentPosition().then(function (geoCoordinates) {
-                            getAPISupportedClosestAirportsForGeo(geoCoordinates, maxResults, maxDistance).then(resolve, reject)
-                        }, reject);
-                    });
-                }
-
-                function getAPISupportedClosestAirportsForGeo(geoCoordinates, maxResults, maxDistance) {
-                    return $q(function (resolve, reject) {
-                        getClosestAirportsForGeo(geoCoordinates, maxResults, maxDistance).then(function (airports) {
-                            // intersect closest airports from geo api call with the airports supported by flights search apis
-                            $q.mapSettled(airports, AirportLookupDataService.getAirportData).then(function (results) {
-                                return resolve(airports.filter(function (airportCode, index) {
-                                    return results[index].value;
-                                }));
-                            }, reject);
-                        }, reject);
-                    });
-                }
-
-                function getClosestAirportsForGeo(geoCoordinates, maxResults, maxDistance) {
-                    return $q(function (resolve, reject) {
-                        var foundInLocalStorage = getFromLocalStorage(geoCoordinates, maxResults, maxDistance);
+                        var foundInLocalStorage = getFromLocalStorage(airportCode);
                         if (foundInLocalStorage) {
                             return resolve(_.clone(foundInLocalStorage));
                         }
-                        var request = GeoSearchDataServiceRequestFactory.buildRequest(geoCoordinates, maxResults, maxDistance);
-                        GeoSearchWebService.sendRequest(request).then(
+                        var request = GeoCodeDataServiceRequestFactory.buildRequest(airportCode);
+                        GeoCodeWebService.sendRequest(request).then(
                             function (response) {
-                                var closestAirports = parseWebServiceResponse(response);
-                                persistInLocalStorage(geoCoordinates, maxResults, maxDistance, closestAirports);
-                                resolve(closestAirports);
+                                var geoCoordinates = parseWebServiceResponse(response);
+                                persistInLocalStorage(airportCode, geoCoordinates);
+                                resolve(geoCoordinates);
                             }
                             , function (reason) {
-                                ErrorReportingService.reportError('Cannot get closest airports', geoCoordinates);
+                                ErrorReportingService.reportError('Cannot get geo coordinates for airport', airportCode);
                                 businessMessagesErrorHandler.handle(reject, reason);
                             }
                         );
                     });
                 }
 
-                function getFromLocalStorage(geoCoordinates, maxResults, maxDistance) {
-                    // as geo coordinates from browser differ minimally across subsequent API calls even without device move, then we round by 1 digit after comma, which equals to several miles, to have any hits from the local storage cache
-                    var cacheKey = JSON.stringify([_.round(geoCoordinates.latitude, 1), _.round(geoCoordinates.longitude, 1), maxResults, maxDistance]);
-                    return $localStorage.closestAirportsForGeo && $localStorage.closestAirportsForGeo[cacheKey];
+                function getFromLocalStorage(airportCode) {
+                    var geoCoordinatesFound = $localStorage.airportsGeoCoordinates && $localStorage.airportsGeoCoordinates[airportCode];
+                    if (geoCoordinatesFound) {
+                        return {
+                            latitude: geoCoordinatesFound[0],
+                            longitude: geoCoordinatesFound[1]
+                        };
+                    }
                 }
 
-                function persistInLocalStorage(geoCoordinates, maxResults, maxDistance, closestAirports) {
-                    if (_.isUndefined($localStorage.closestAirportsForGeo)) {
-                        $localStorage.closestAirportsForGeo = {};
+                function persistInLocalStorage(airportCode, geoCoordinates) {
+                    if (_.isUndefined($localStorage.airportsGeoCoordinates)) {
+                        $localStorage.airportsGeoCoordinates = {};
                     }
-                    var cacheKey = JSON.stringify([_.round(geoCoordinates.latitude, 1), _.round(geoCoordinates.longitude, 1), maxResults, maxDistance]);
-                    $localStorage.closestAirportsForGeo[cacheKey] = closestAirports;
+                    $localStorage.airportsGeoCoordinates[airportCode] = [geoCoordinates.latitude, geoCoordinates.longitude];
                 }
 
                 return {
-                      getClosestAirport: _.partial(getClosestAirports, 1)
-                    , getClosestAirports: getClosestAirports
-                    , getClosestAirportsForGeo: getClosestAirportsForGeo
-                    , getAPISupportedClosestAirport: _.partial(getAPISupportedClosestAirports, 1)
-                    , getAPISupportedClosestAirports: getAPISupportedClosestAirports
-                    , getAPISupportedClosestAirportsForGeo: getAPISupportedClosestAirportsForGeo
+                    getAirportGeoCoordinates: getAirportGeoCoordinates
                 };
             }])
     });

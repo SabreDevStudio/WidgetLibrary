@@ -18,6 +18,8 @@ require.config({
         , 'angular_iso_currency': '../../bower_components/iso-currency/dist/isoCurrency'
         , 'elementQuery': '../../bower_components/css-element-queries/src/ElementQueries'
         , 'ResizeSensor': '../../bower_components/css-element-queries/src/ResizeSensor'
+        , 'angular_google_maps': '../../bower_components/angular-google-maps/dist/angular-google-maps'
+        , 'angular-simple-logger': '../../bower_components/angular-simple-logger/dist/angular-simple-logger'
     },
     map: {
         '*': {
@@ -62,6 +64,12 @@ require.config({
         },
         'angular_iso_currency': {
             deps: ['angular']
+        },
+        'angular-simple-logger': {
+            deps: ['angular']
+        },
+        'angular_google_maps': {
+            deps: ['angular', 'angular-simple-logger', 'lodash']
         },
         'elementQuery': {
             deps: ['ResizeSensor']

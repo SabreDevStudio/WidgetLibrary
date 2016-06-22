@@ -1,0 +1,22 @@
+<div class="SDSWidget SDSMapThemedDestinationFinderWidget" ng-if="isAnyDataToDisplayAvailable()">
+    <!-- DO NOT use ng-show="isAnyDataToDisplayAvailable()", use ng-if: it is because you do not want map DOM do be created before model data are available.
+    If you use ngShow (DOM is created), them later when you populated the model you would have to call refresh on map.
+     See https://github.com/angular-ui/angular-google-maps/issues/76
+     http://stackoverflow.com/questions/4700594/google-maps-displaynone-problem/8595674#8595674
+     -->
+    <ui-gmap-google-map center='map.center'
+                        zoom='map.zoom'
+                        refresh="true">
+        <ui-gmap-marker ng-repeat="destination in model.pricesForDestinationsGrouped"
+                        coords="destination.geoCoordinates"
+                        idkey="$index"
+                        onMarkerClicked="markerClicked = !markerClicked"
+                        options="getOptionsForDestination(destination.lowestFare.amount, model.pricesForDestinationsGrouped)">
+            <ui-gmap-window show="markerClicked"
+                            templateUrl="'../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html'"
+                            templateParameter="destination"
+                            ng-cloak>
+            </ui-gmap-window>
+        </ui-gmap-marker>
+    </ui-gmap-google-map>
+</div>
