@@ -79,7 +79,7 @@ define([
                 var filterFromBuilder: Lookup = buildFilter(AirportLookupDataService.getShoppingAirportsDictionary());
                 var cityFullNameDecorator = <StatefulFunction>function (airportCode: string) {
                     var entryFound = filterFromBuilder(airportCode);
-                    return (entryFound.CityName)? entryFound.CityName: entryFound;
+                    return (entryFound && entryFound.CityName)? entryFound.CityName: entryFound;
                 }
                 cityFullNameDecorator.$stateful = true;
                 return cityFullNameDecorator;

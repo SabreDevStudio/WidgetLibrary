@@ -8,7 +8,9 @@ define([
         'widgets/inspirational/ThemedInspirationalSearchCriteriaBroadcastingService.srv',
         'widgets/inspirational/ThemedInspirationalSearchCompleteBroadcastingService.srv',
         'widgets/inspirational/TravelThemesSelectionBar.drv',
-        'angular_google_maps'
+        'angular_google_maps',
+        'webservices/inspirational/DestinationFinderSummaryServicePriceClassifierDecorator',
+        'webservices/inspirational/DestinationFinderSummaryServiceGeoCoordsDecorator'
     ],
     function (
         angular,
@@ -20,7 +22,9 @@ define([
         ThemedInspirationalSearchCriteriaBroadcastingService,
         ThemedInspirationalSearchCompleteBroadcastingService,
         TravelThemesSelectionBarDirective,
-        angularGoogleMapsModule
+        angularGoogleMapsModule,
+        DestinationFinderSummaryServicePriceClassifierDecoratorSrc,
+        DestinationFinderSummaryServiceGeoCoordsDecoratorSrc
     ) {
         'use strict';
 
@@ -31,6 +35,7 @@ define([
         ])
             .config(['uiGmapGoogleMapApiProvider', function(uiGmapGoogleMapApiProvider) {
                 uiGmapGoogleMapApiProvider.configure({
+                    key: 'AIzaSyBVxxTahaPICgkB26ddyLy_U-kN90V4pmE',
                     v: '3' // per Google recommendations use just v3, to always get latest stable version. Do not specify specific versions line 3.23, as over time they become retired
                 });
             }])
@@ -39,7 +44,24 @@ define([
             .service('ThemedInspirationalSearchCriteriaBroadcastingService', ThemedInspirationalSearchCriteriaBroadcastingService)
             .service('ThemedInspirationalSearchCompleteBroadcastingService', ThemedInspirationalSearchCompleteBroadcastingService)
             .directive('travelThemesSelectionBar', TravelThemesSelectionBarDirective)
-            .controller('ThemedDestinationFinderWidgetController', ThemedDestinationFinderWidgetController)
+            .controller('TilesThemedDestinationFinderWidgetController', [
+                '$scope',
+                '$q',
+                'DestinationFinderSummaryDataService',
+                'GeoSearchDataService',
+                'ThemedInspirationalSearchCriteriaBroadcastingService',
+                'ThemedInspirationalSearchCompleteBroadcastingService',
+                'AirportLookupDataService',
+                ThemedDestinationFinderWidgetController])
+            .controller('MapThemedDestinationFinderWidgetController', [
+                '$scope',
+                '$q',
+                'DestinationFinderSummaryServicePriceClassifierDecorator',
+                'GeoSearchDataService',
+                'ThemedInspirationalSearchCriteriaBroadcastingService',
+                'ThemedInspirationalSearchCompleteBroadcastingService',
+                'AirportLookupDataService',
+                ThemedDestinationFinderWidgetController])
             .directive('tilesThemedDestinationFinder', TilesThemedDestinationFinderWidgetDirective)
             .directive('mapThemedDestinationFinder', MapThemedDestinationFinderWidgetDirective)
     }

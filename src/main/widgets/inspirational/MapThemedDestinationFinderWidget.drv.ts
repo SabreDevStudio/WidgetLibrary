@@ -17,18 +17,14 @@ define([
                     closestAirport: '@?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/MapThemedDestinationFinderWidget.tpl.html',
-                controller: 'ThemedDestinationFinderWidgetController',
+                controller: 'MapThemedDestinationFinderWidgetController',
                 link: function ($scope) {
-                    $scope.controllerOptions = {
-                        lookupDestinationsGeoCoordinates: true
-                    };
-
                     $scope.map = {
                         center: {
                             latitude: 45,
-                            longitude: -73
+                            longitude: -30
                         },
-                        zoom: 4
+                        zoom: 5
                     };
 
                     var markerOpts = [
@@ -43,8 +39,8 @@ define([
                         }
                     ];
 
-                    $scope.getOptionsForDestination = function (destinationLowestFare, pricesForDestinationsGrouped) {
-                        return markerOpts[_.random(2)];
+                    $scope.getOptionsForDestination = function (priceTier) {
+                        return markerOpts[priceTier - 1];
                     };
 
                     //uiGmapGoogleMapApi.then(function(maps) {

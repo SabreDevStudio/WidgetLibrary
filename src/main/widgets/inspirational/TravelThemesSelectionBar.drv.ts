@@ -1,11 +1,13 @@
 define([
     'angular',
     'lodash',
-    'util/LodashExtensions'
+    'util/LodashExtensions',
+    'webservices/lookup/TravelThemeLookupDataService'
 ], function (
     angular,
     _,
-    __
+    __,
+    TravelThemeLookupDataServiceSrc
 ) {
     'use strict';
 

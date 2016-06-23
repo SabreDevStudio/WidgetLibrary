@@ -12,7 +12,7 @@ define([
                     closestAirport: '@?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/TilesThemedDestinationFinderWidget.tpl.html',
-                controller: 'ThemedDestinationFinderWidgetController',
+                controller: 'TilesThemedDestinationFinderWidgetController',
                 link: function () {
                     WidgetGlobalCallbacks.linkComplete();
                 }

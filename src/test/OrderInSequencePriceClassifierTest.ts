@@ -1,7 +1,7 @@
-define(['util/PriceClassifier'], function (PriceClassifier) {
+define(['util/OrderInSequencePriceClassifier'], function (OrderInSequencePriceClassifier) {
     "use strict";
     describe('classifies correctly', function () {
-        var classifier = new PriceClassifier();
+        var classifier = new OrderInSequencePriceClassifier();
         classifier.train([100.1, 200, 100.1, 200, 500, 500, 100.1]);
 
         it('classfies correctly existing values', function () {

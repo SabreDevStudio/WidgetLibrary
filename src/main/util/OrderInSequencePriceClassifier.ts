@@ -5,7 +5,7 @@ define([
     ) {
     "use strict";
 
-    return function PriceClassifier() {
+    return function OrderInSequencePriceClassifier() {
 
         var uniquePrices;
 

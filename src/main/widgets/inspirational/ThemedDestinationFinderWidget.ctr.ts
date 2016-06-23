@@ -4,12 +4,8 @@ define([
         , 'lodash'
         , 'util/LodashExtensions'
         , 'widgets/SDSWidgets'
-        , 'widgets/BaseController'
-        , 'webservices/lookup/TravelThemeLookupDataService'
-        , 'webservices/inspirational/DestinationFinderSummaryDataService'
         , 'util/BaseServices'
         , 'webservices/utility/GeoSearchDataService'
-        , 'webservices/utility/GeoCodeDataService'
         , 'webservices/lookup/AirportLookupDataService'
         , 'widgets/WidgetGlobalCallbacks'
         , 'util/CommonGenericFilters'
@@ -21,12 +17,8 @@ define([
         , _
         , __
         , SDSWidgets
-        , BaseController
-        , DestinationFinderDataService
-        , DestinationFinderSummaryDataServiceSrc
         , BaseServices
         , GeoSearchDataServiceSrc
-        , GeoCodeDataServiceSrc
         , AirportLookupDataServiceSrc
         , WidgetGlobalCallbacks
         , CommonGenericFilters
@@ -34,15 +26,6 @@ define([
     ) {
         'use strict';
 
-        TilesThemedDestinationFinderWidgetCtr.$inject = [
-            '$scope',
-            '$q',
-            'DestinationFinderSummaryDataService',
-            'GeoSearchDataService',
-            'ThemedInspirationalSearchCriteriaBroadcastingService',
-            'ThemedInspirationalSearchCompleteBroadcastingService',
-            'AirportLookupDataService',
-            'GeoCodeDataService'];
         function TilesThemedDestinationFinderWidgetCtr(
             $scope,
             $q,
@@ -50,8 +33,7 @@ define([
             GeoSearchDataService,
             ThemedInspirationalSearchCriteriaBroadcastingService,
             ThemedInspirationalSearchCompleteBroadcastingService,
-            AirportLookupDataService,
-            GeoCodeDataService
+            AirportLookupDataService
         ) {
             var searchCriteria = InspirationalSearchCriteriaFactory.create();
 
@@ -82,21 +64,8 @@ define([
                     .then(function (orderedSummary) {
                         $scope.model.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped;
                         $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
-                        if ($scope.controllerOptions && $scope.controllerOptions.lookupDestinationsGeoCoordinates) {
-                            attachDestinationsGeoCoordinates($scope.model.pricesForDestinationsGrouped);
-                        }
                     })
                     .finally(searchCompleteCallback);
-            }
-
-            //TODO modifying arg
-            function attachDestinationsGeoCoordinates(pricesForDestinationsGrouped) { //TODO: allSettled and similar
-                _.each(pricesForDestinationsGrouped, function (item) {
-                    GeoCodeDataService.getAirportGeoCoordinates(item.destination)
-                        .then((geoCoordinates) => {
-                            item.geoCoordinates = geoCoordinates;
-                        });
-                });
             }
 
             var closestAirportPromise = (__.isDefined($scope.closestAirport))? $q.when($scope.closestAirport): GeoSearchDataService.getAPISupportedClosestAirport();
