@@ -269,6 +269,23 @@ module.exports = function (grunt) {
           }
         },
 
+        replace: {
+          cdnifyImgLinksInJS: {
+              options: {
+                  usePrefix: false,
+                  patterns: [
+                      {
+                          match: '\.\.\/widgets\/img',
+                          replacement: properties.cdnBase
+                      }
+                  ]
+              },
+              files: [
+                  {expand: true, src: 'build-js/main/**/*.js'}
+              ]
+          }
+        },
+
         image_resize: { //WARN: along with installing grunt-image-resize, you HAVE to install manually imagemagick on your operating system. That grunt plugin depends on it. Without it installed you will be getting errors. See http://stackoverflow.com/questions/11703973/imagemagick-with-nodejs-not-working
             dist: {
                 options: {
@@ -444,8 +461,7 @@ module.exports = function (grunt) {
         , 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'cdnify:widgetImages'
-        , 'ngtemplates'
-        , 'saveRevision'
+        , 'prepare-sources-pipeline'
         , 'requirejs:compile-standalone-app'
         , 'css-pipeline'
         , 'copy-static-resources'
@@ -457,8 +473,7 @@ module.exports = function (grunt) {
         , 'typescript-pipeline'
         , 'copy:cdnify-inline-style-images-urls'
         , 'cdnify:widgetImages'
-        , 'ngtemplates'
-        , 'saveRevision'
+        , 'prepare-sources-pipeline'
         , 'requirejs:compile-standalone-app'
         , 'css-pipeline'
         , 'copy-static-resources'
@@ -470,8 +485,7 @@ module.exports = function (grunt) {
         , 'typescript:app'
         , 'copy:cdnify-inline-style-images-urls'
         , 'cdnify:widgetImages'
-        , 'ngtemplates'
-        , 'saveRevision'
+        , 'prepare-sources-pipeline'
         , 'requirejs:compile-standalone-app'
         , 'css-pipeline'
         , 'copy-static-resources'
@@ -483,8 +497,7 @@ module.exports = function (grunt) {
         , 'typescript:app'
         , 'copy:cdnify-inline-style-images-urls'
         , 'cdnify:widgetImages'
-        , 'ngtemplates'
-        , 'saveRevision'
+        , 'prepare-sources-pipeline'
         , 'requirejs:compile-standalone-app-no-uglify'
         , 'css-pipeline'
         , 'copy-static-resources'
@@ -497,8 +510,7 @@ module.exports = function (grunt) {
         //, 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'cdnify:widgetImages'
-        , 'ngtemplates'
-        , 'saveRevision'
+        , 'prepare-sources-pipeline'
         , 'requirejs:compile-library-only'
         , 'css-pipeline'
         , 'copy-static-resources'
@@ -511,8 +523,7 @@ module.exports = function (grunt) {
         //, 'unit-test'
         , 'copy:cdnify-inline-style-images-urls'
         , 'cdnify:widgetImages'
-        , 'ngtemplates'
-        , 'saveRevision'
+        , 'prepare-sources-pipeline'
         , 'requirejs:compile-standalone-app'
         , 'requirejs:compile-library-only'
         , 'css-pipeline'
@@ -530,6 +541,8 @@ module.exports = function (grunt) {
     grunt.registerTask('typescript-pipeline', ['tslint', 'typescript:app', 'jshint']);
 
     grunt.registerTask('css-pipeline', ['compass', 'bootlint', 'csslint', 'autoprefixer', 'cdnify:icons', 'cssmin:cssbundle']);
+
+    grunt.registerTask('prepare-sources-pipeline', ['ngtemplates', 'saveRevision', 'replace:cdnifyImgLinksInJS']);
 
     grunt.registerTask('copy-static-resources', [
         'copy:bootstrap_glyphicons_fonts'
