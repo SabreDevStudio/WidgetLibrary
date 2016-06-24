@@ -92,10 +92,6 @@ define([
 
                     function getAirportsGeoCoordinates(airportCodes) {
                         return $q(function (resolve, reject) {
-                            //var foundInLocalStorage = getFromLocalStorage(airportCodes);
-                            //if (foundInLocalStorage) {
-                            //    return resolve(_.clone(foundInLocalStorage));
-                            //}
                             var requestChunks = splitIntoRequestChunks(airportCodes);
                             var chunkResultsPromises = requestChunks.map(processOneChunk);
                             var allDictionariesMergedPromise = $q.mergePromises(chunkResultsPromises, mergeObjectsProperties, errorsMergingFn);
@@ -107,23 +103,6 @@ define([
                                 });
                         });
                     }
-
-                    //function getFromLocalStorage(airportCode) {
-                    //    var geoCoordinatesFound = $localStorage.airportsGeoCoordinates && $localStorage.airportsGeoCoordinates[airportCode];
-                    //    if (geoCoordinatesFound) {
-                    //        return {
-                    //            latitude: geoCoordinatesFound[0],
-                    //            longitude: geoCoordinatesFound[1]
-                    //        };
-                    //    }
-                    //}
-                    //
-                    //function persistInLocalStorage(airportCode, geoCoordinates) {
-                    //    if (_.isUndefined($localStorage.airportsGeoCoordinates)) {
-                    //        $localStorage.airportsGeoCoordinates = {};
-                    //    }
-                    //    $localStorage.airportsGeoCoordinates[airportCode] = [geoCoordinates.latitude, geoCoordinates.longitude];
-                    //}
 
                     return {
                         getAirportsGeoCoordinates: getAirportsGeoCoordinates
