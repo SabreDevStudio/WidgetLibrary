@@ -4,8 +4,8 @@
      See https://github.com/angular-ui/angular-google-maps/issues/76
      http://stackoverflow.com/questions/4700594/google-maps-displaynone-problem/8595674#8595674
      -->
-    <ui-gmap-google-map center='map.center'
-                        zoom='map.zoom'
+    <ui-gmap-google-map center='closestAirportGeoCoordinates'
+                        zoom='initialZoom'
                         refresh="true">
 
         <ui-gmap-marker ng-repeat="destination in model.pricesForDestinationsGrouped track by destination.destination"

@@ -90,7 +90,7 @@ define([
                         });
                     }
 
-                    function getAirportsGeoCoordinates(airportCodes) {
+                    function getAllAirportsGeoCoordinatesDictionary(airportCodes) {
                         return $q(function (resolve, reject) {
                             var requestChunks = splitIntoRequestChunks(airportCodes);
                             var chunkResultsPromises = requestChunks.map(processOneChunk);
@@ -104,8 +104,17 @@ define([
                         });
                     }
 
+                    function getAirportGeoCoordinates(airportCode) {
+                        return $q(function (resolve, reject) {
+                            getAllAirportsGeoCoordinatesDictionary([airportCode]).then((airportsCoordsDict) => {
+                                resolve(airportsCoordsDict[airportCode]);
+                            }, reject);
+                        });
+                    }
+
                     return {
-                        getAirportsGeoCoordinates: getAirportsGeoCoordinates
+                        getAllAirportsGeoCoordinatesDictionary: getAllAirportsGeoCoordinatesDictionary,
+                        getAirportGeoCoordinates: getAirportGeoCoordinates
                     };
                 }])
     });

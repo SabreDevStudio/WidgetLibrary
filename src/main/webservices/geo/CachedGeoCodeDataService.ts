@@ -25,14 +25,14 @@ define([
                 $localStorage
                 ) {
 
-                    function getAirportsGeoCoordinates(airportCodes) {
+                    function getAllAirportsGeoCoordinatesDictionary(airportCodes) {
                         return $q(function (resolve, reject) {
                             var itemsFoundInLocalStorage = getFromLocalStorageForAll(airportCodes);
                             if (_.size(itemsFoundInLocalStorage) === _.size(airportCodes)) {
                                 return resolve(itemsFoundInLocalStorage);
                             }
                             var itemsToBeLookedUpInWebservice = _.difference(airportCodes, _.keys(itemsFoundInLocalStorage));
-                            GeoCodeDataService.getAirportsGeoCoordinates(itemsToBeLookedUpInWebservice)
+                            GeoCodeDataService.getAllAirportsGeoCoordinatesDictionary(itemsToBeLookedUpInWebservice)
                                 .then((mappingsFromWebservice) => {
                                     persistInLocalStorageForAll(mappingsFromWebservice);
                                     var localAndWebserviceMappingsMerged = _.extend({}, itemsFoundInLocalStorage, mappingsFromWebservice);
@@ -77,8 +77,17 @@ define([
                         $localStorage.airportsGeoCoordinates[airportCode] = [geoCoordinates.latitude, geoCoordinates.longitude];
                     }
 
+                    function getAirportGeoCoordinates(airportCode) {
+                        return $q(function (resolve, reject) {
+                            getAllAirportsGeoCoordinatesDictionary([airportCode]).then((airportsCoordsDict) => {
+                                resolve(airportsCoordsDict[airportCode]);
+                            }, reject);
+                        });
+                    }
+
                     return {
-                        getAirportsGeoCoordinates: getAirportsGeoCoordinates
+                        getAllAirportsGeoCoordinatesDictionary: getAllAirportsGeoCoordinatesDictionary,
+                        getAirportGeoCoordinates: getAirportGeoCoordinates
                     };
                 }])
     });

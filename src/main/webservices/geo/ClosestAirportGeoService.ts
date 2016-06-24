@@ -30,13 +30,12 @@ define([
                 AirportLookupDataService
                 ) {
 
-                    function getClosestAirportGeoData(closestAirportOverride) {
+                    function getClosestAirportData(closestAirportOverride) {
                         return $q(function (resolve, reject) {
                             var closestAirportPromise = (__.isDefined(closestAirportOverride))? $q.when(closestAirportOverride): GeoSearchDataService.getAPISupportedClosestAirport();
                             var closestAirportGeoData = {
                                 airportCode: undefined,
-                                countryCode: undefined,
-                                geoCoordinates: undefined
+                                countryCode: undefined
                             };
                             closestAirportPromise
                                 .then(function (closestAirport) {
@@ -51,7 +50,7 @@ define([
                     }
 
                     return {
-                        getClosestAirportGeoData: getClosestAirportGeoData
+                        getClosestAirportData: getClosestAirportData
                     };
                 }
             ]);

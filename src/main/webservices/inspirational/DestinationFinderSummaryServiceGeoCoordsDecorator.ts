@@ -31,7 +31,7 @@ define([
                             DestinationFinderSummaryDataService.getOffersOrderedSummary(searchCriteria)
                                 .then(function(pricesForDestinations) {
                                     var airportCodesToLookUp = pricesForDestinations.pricesForDestinationsGrouped.map((item) => item.destination);
-                                    GeoCodeDataService.getAirportsGeoCoordinates(airportCodesToLookUp)
+                                    GeoCodeDataService.getAllAirportsGeoCoordinatesDictionary(airportCodesToLookUp)
                                         .then((airportsGeoCoordinates) => {
                                             var pricesForDestinationsGroupedWithGeoCoords = addGeoCoordinates(pricesForDestinations.pricesForDestinationsGrouped, airportsGeoCoordinates);
                                             var pricesForDestinationsWithGeoCoords = _.extend(pricesForDestinations, {

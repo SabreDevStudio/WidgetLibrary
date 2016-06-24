@@ -49,6 +49,7 @@ define([
             .controller('TilesThemedDestinationFinderWidgetController', [
                 '$scope',
                 'ClosestAirportGeoService',
+                'CachedGeoCodeDataService',
                 'DestinationFinderSummaryDataService',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',
@@ -56,6 +57,7 @@ define([
             .controller('MapThemedDestinationFinderWidgetController', [
                 '$scope',
                 'ClosestAirportGeoService',
+                'CachedGeoCodeDataService',
                 'DestinationFinderSummaryServicePriceClassifierDecorator',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',

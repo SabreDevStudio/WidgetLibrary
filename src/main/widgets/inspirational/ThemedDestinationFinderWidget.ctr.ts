@@ -25,6 +25,7 @@ define([
         function TilesThemedDestinationFinderWidgetCtr(
             $scope,
             ClosestAirportGeoService,
+            GeoCodeDataService,
             DestinationFinderSummaryDataService,
             ThemedInspirationalSearchCriteriaBroadcastingService,
             ThemedInspirationalSearchCompleteBroadcastingService
@@ -34,6 +35,11 @@ define([
             $scope.model = {
                 originForPricesForDestinations: undefined,
                 pricesForDestinationsGrouped: []
+            };
+
+            $scope.closestAirportGeoCoordinates = {
+                latitude: 0,
+                longitude: 0
             };
 
             $scope.isAnyDataToDisplayAvailable = () => {
@@ -62,10 +68,14 @@ define([
                     .finally(searchCompleteCallback);
             }
 
-            ClosestAirportGeoService.getClosestAirportGeoData($scope.closestAirport)
+            ClosestAirportGeoService.getClosestAirportData($scope.closestAirport)
                 .then((closestAirportGeoData) => {
                     searchCriteria.origin = closestAirportGeoData.airportCode;
                     searchCriteria.pointofsalecountry = closestAirportGeoData.countryCode;
+                    GeoCodeDataService.getAirportGeoCoordinates(closestAirportGeoData.airportCode)
+                        .then((geoCoordinates) => {
+                            $scope.closestAirportGeoCoordinates = geoCoordinates;
+                        });
                 });
         }
         return TilesThemedDestinationFinderWidgetCtr;
