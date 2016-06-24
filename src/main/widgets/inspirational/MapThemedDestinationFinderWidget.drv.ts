@@ -34,11 +34,20 @@ define([
                         }
                     ];
 
-                    $scope.getTierIcon = function (priceTier) {
-                        return $scope.getOptionsForDestination(priceTier).icon;
+                    $scope.markerEvents = {
+                        mouseover: function (gmapsMarkerObj, eventName, model) {
+                            model.control.shortDetailsShown = true;
+                        },
+                        mouseout: function (gmapsMarkerObj, eventName, model) {
+                            model.control.shortDetailsShown = false;
+                        }
                     };
 
-                    $scope.getOptionsForDestination = function (priceTier) {
+                    $scope.getTierIcon = function (priceTier) {
+                        return $scope.getMarkerOptions(priceTier).icon;
+                    };
+
+                    $scope.getMarkerOptions = function (priceTier) {
                         return markerOpts[priceTier - 1];
                     };
 
