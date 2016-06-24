@@ -14,17 +14,19 @@ define([
         ) {
             return {
                 scope: {
-                    closestAirport: '@?'
+                    closestAirport: '@?',
+                    initialZoom: '@?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/MapThemedDestinationFinderWidget.tpl.html',
                 controller: 'MapThemedDestinationFinderWidgetController',
                 link: function ($scope) {
+                    $scope.initialZoom = parseInt($scope.initialZoom) || 5;
                     $scope.map = {
                         center: {
                             latitude: 45,
                             longitude: -30
                         },
-                        zoom: 5
+                        zoom: $scope.initialZoom
                     };
 
                     var markerOpts = [
