@@ -34,6 +34,10 @@ define([
                         }
                     ];
 
+                    $scope.getTierIcon = function (priceTier) {
+                        return $scope.getOptionsForDestination(priceTier).icon;
+                    };
+
                     $scope.getOptionsForDestination = function (priceTier) {
                         return markerOpts[priceTier - 1];
                     };

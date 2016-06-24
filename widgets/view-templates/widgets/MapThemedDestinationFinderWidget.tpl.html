@@ -4,21 +4,30 @@
      See https://github.com/angular-ui/angular-google-maps/issues/76
      http://stackoverflow.com/questions/4700594/google-maps-displaynone-problem/8595674#8595674
      -->
-    <ui-gmap-google-map center='closestAirportGeoCoordinates'
-                        zoom='initialZoom'
-                        refresh="true">
+    <div class="SDSMapTopLegend">
+        <span class="SDSMapTopLegendElement" ng-repeat="(tier, tierPriceFrom) in model.priceTiersStatistics.tiersPricesFrom">
+            <img ng-src="{{getTierIcon(tier)}}">
+            from {{tierPriceFrom | currency:model.priceTiersStatistics.tiersPriceCurrency:0}}
+        </span>
+    </div>
 
-        <ui-gmap-marker ng-repeat="destination in model.pricesForDestinationsGrouped track by destination.destination"
-                        coords="destination.geoCoordinates"
-                        idkey="destination.destination"
-                        click="markerClicked = !markerClicked"
-                        options="getOptionsForDestination(destination.priceTier)">
-            <ui-gmap-window show="markerClicked"
-                            templateUrl="'../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html'"
-                            templateParameter="destination"
-                            ng-cloak>
-            </ui-gmap-window>
-        </ui-gmap-marker>
+    <div class="SDSMapContainer">
+        <ui-gmap-google-map center='closestAirportGeoCoordinates'
+                            zoom='initialZoom'
+                            refresh="true">
 
-    </ui-gmap-google-map>
+            <ui-gmap-marker ng-repeat="destination in model.pricesForDestinationsGrouped track by destination.destination"
+                            coords="destination.geoCoordinates"
+                            idkey="destination.destination"
+                            click="markerClicked = !markerClicked"
+                            options="getOptionsForDestination(destination.priceTier)">
+                <ui-gmap-window show="markerClicked"
+                                templateUrl="'../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html'"
+                                templateParameter="destination"
+                                ng-cloak>
+                </ui-gmap-window>
+            </ui-gmap-marker>
+
+        </ui-gmap-google-map>
+    </div>
 </div>

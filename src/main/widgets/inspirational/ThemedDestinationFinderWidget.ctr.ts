@@ -64,6 +64,7 @@ define([
                     .then(function (orderedSummary) {
                         $scope.model.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped;
                         $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
+                        $scope.model.priceTiersStatistics = orderedSummary.priceTiersStatistics;
                     })
                     .finally(searchCompleteCallback);
             }

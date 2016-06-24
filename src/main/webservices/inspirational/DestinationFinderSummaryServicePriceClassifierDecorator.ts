@@ -34,7 +34,8 @@ define([
                             .then(function(pricesForDestinations) {
                                 resolve({
                                     pricesForDestinationsGrouped: addPriceTiers(pricesForDestinations.pricesForDestinationsGrouped),
-                                    originForPricesForDestinations: pricesForDestinations.originForPricesForDestinations
+                                    originForPricesForDestinations: pricesForDestinations.originForPricesForDestinations,
+                                    priceTiersStatistics: getPriceTiersStatistics(pricesForDestinations.pricesForDestinationsGrouped)
                             });
                             }, reject)
                     });
@@ -48,6 +49,20 @@ define([
                         return _.extend(item, {priceTier: priceTier});
                     });
                     return inputWithPriceTiers;
+                }
+
+                function getPriceTiersStatistics(pricesForDestinationsGrouped) {
+                    var priceTiersStatistics = {
+                        tiersPricesFrom: {},
+                        tiersPriceCurrency: pricesForDestinationsGrouped[0].lowestFare.currency
+                    };
+                    _.each(pricesForDestinationsGrouped, (item) => {
+                        if (_.isUndefined(priceTiersStatistics.tiersPricesFrom[item.priceTier])) {
+                            priceTiersStatistics.tiersPricesFrom[item.priceTier] = Infinity;
+                        }
+                        priceTiersStatistics.tiersPricesFrom[item.priceTier] = Math.min(item.lowestFare.amount, priceTiersStatistics.tiersPricesFrom[item.priceTier]);
+                    });
+                    return priceTiersStatistics;
                 }
 
                 return {
