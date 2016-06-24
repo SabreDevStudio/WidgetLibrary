@@ -4,8 +4,7 @@ define([
         'util/LodashExtensions',
         'webservices/SabreDevStudioWebServicesModule',
         'webservices/geo/GeoSearchDataService',
-        'webservices/lookup/AirportLookupDataService',
-        'webservices/geo/AirportGeoData'
+        'webservices/lookup/AirportLookupDataService'
     ],
     function (
         angular,
@@ -13,8 +12,7 @@ define([
         __,
         SabreDevStudioWebServicesModule,
         GeoSearchDataServiceSrc,
-        AirportLookupDataServiceSrc,
-        airportGeoData
+        AirportLookupDataServiceSrc
     ) {
         'use strict';
 
