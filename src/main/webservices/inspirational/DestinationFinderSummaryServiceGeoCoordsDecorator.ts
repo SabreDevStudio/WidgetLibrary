@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/inspirational/DestinationFinderSummaryDataService'
-        , 'webservices/utility/CachedGeoCodeDataService'
+        , 'webservices/geo/CachedGeoCodeDataService'
     ],
     function (
           angular

@@ -3,7 +3,7 @@ define([
     'lodash',
     'util/LodashExtensions',
     'webservices/SabreDevStudioWebServicesModule',
-    'webservices/utility/GeoCodeDataService'
+    'webservices/geo/GeoCodeDataService'
     ],
     function (
     angular,

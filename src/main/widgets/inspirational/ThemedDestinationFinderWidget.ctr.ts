@@ -5,8 +5,6 @@ define([
         , 'util/LodashExtensions'
         , 'widgets/SDSWidgets'
         , 'util/BaseServices'
-        , 'webservices/utility/GeoSearchDataService'
-        , 'webservices/lookup/AirportLookupDataService'
         , 'widgets/WidgetGlobalCallbacks'
         , 'util/CommonGenericFilters'
         , 'datamodel/inspirationalSearch/InspirationalSearchCriteriaFactory'
@@ -18,8 +16,6 @@ define([
         , __
         , SDSWidgets
         , BaseServices
-        , GeoSearchDataServiceSrc
-        , AirportLookupDataServiceSrc
         , WidgetGlobalCallbacks
         , CommonGenericFilters
         , InspirationalSearchCriteriaFactory
@@ -28,12 +24,10 @@ define([
 
         function TilesThemedDestinationFinderWidgetCtr(
             $scope,
-            $q,
+            ClosestAirportGeoService,
             DestinationFinderSummaryDataService,
-            GeoSearchDataService,
             ThemedInspirationalSearchCriteriaBroadcastingService,
-            ThemedInspirationalSearchCompleteBroadcastingService,
-            AirportLookupDataService
+            ThemedInspirationalSearchCompleteBroadcastingService
         ) {
             var searchCriteria = InspirationalSearchCriteriaFactory.create();
 
@@ -68,14 +62,10 @@ define([
                     .finally(searchCompleteCallback);
             }
 
-            var closestAirportPromise = (__.isDefined($scope.closestAirport))? $q.when($scope.closestAirport): GeoSearchDataService.getAPISupportedClosestAirport();
-            closestAirportPromise
-                .then(function (closestAirport) {
-                    searchCriteria.origin = closestAirport;
-                    return AirportLookupDataService.getAirportData(closestAirport)
-                })
-                .then(function (airportData) {
-                    searchCriteria.pointofsalecountry = airportData.CountryCode;
+            ClosestAirportGeoService.getClosestAirportGeoData($scope.closestAirport)
+                .then((closestAirportGeoData) => {
+                    searchCriteria.origin = closestAirportGeoData.airportCode;
+                    searchCriteria.pointofsalecountry = closestAirportGeoData.countryCode;
                 });
         }
         return TilesThemedDestinationFinderWidgetCtr;

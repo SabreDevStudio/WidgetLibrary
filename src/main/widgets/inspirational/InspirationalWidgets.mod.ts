@@ -10,7 +10,8 @@ define([
         'widgets/inspirational/TravelThemesSelectionBar.drv',
         'angular_google_maps',
         'webservices/inspirational/DestinationFinderSummaryServicePriceClassifierDecorator',
-        'webservices/inspirational/DestinationFinderSummaryServiceGeoCoordsDecorator'
+        'webservices/inspirational/DestinationFinderSummaryServiceGeoCoordsDecorator',
+        'webservices/geo/ClosestAirportGeoService'
     ],
     function (
         angular,
@@ -24,7 +25,8 @@ define([
         TravelThemesSelectionBarDirective,
         angularGoogleMapsModule,
         DestinationFinderSummaryServicePriceClassifierDecoratorSrc,
-        DestinationFinderSummaryServiceGeoCoordsDecoratorSrc
+        DestinationFinderSummaryServiceGeoCoordsDecoratorSrc,
+        ClosestAirportGeoServiceSrc
     ) {
         'use strict';
 
@@ -46,21 +48,17 @@ define([
             .directive('travelThemesSelectionBar', TravelThemesSelectionBarDirective)
             .controller('TilesThemedDestinationFinderWidgetController', [
                 '$scope',
-                '$q',
+                'ClosestAirportGeoService',
                 'DestinationFinderSummaryDataService',
-                'GeoSearchDataService',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',
-                'AirportLookupDataService',
                 ThemedDestinationFinderWidgetController])
             .controller('MapThemedDestinationFinderWidgetController', [
                 '$scope',
-                '$q',
+                'ClosestAirportGeoService',
                 'DestinationFinderSummaryServicePriceClassifierDecorator',
-                'GeoSearchDataService',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',
-                'AirportLookupDataService',
                 ThemedDestinationFinderWidgetController])
             .directive('tilesThemedDestinationFinder', TilesThemedDestinationFinderWidgetDirective)
             .directive('mapThemedDestinationFinder', MapThemedDestinationFinderWidgetDirective)
