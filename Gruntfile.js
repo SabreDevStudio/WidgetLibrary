@@ -226,7 +226,7 @@ module.exports = function (grunt) {
                             var baseDir = 'build/www/';
                             var toParentDirectoryPathElement = buildToParentDirectoryPathElement(baseDir, srcpath);
 
-                            var HTML_LINKS_TO_LOCAL_HTML_FILES_REGEX = /(href=\")(.+\.html)(\")/gi;
+                            var HTML_LINKS_TO_LOCAL_HTML_FILES_REGEX = /(href=\")(.+\.html.*)(\")/gi;
                             var IMG_LINKS_TO_LOCAL_IMG_FILES_REGEX = /(\<img\s+src=\")(.+)(\")/gi;
                             var STYLESHEET_LINKS_TO_LOCAL_CSS_REGEX = /(\<link\s+rel=\"stylesheet\".*href=\")(.+)(\"\>)/gi;
 
