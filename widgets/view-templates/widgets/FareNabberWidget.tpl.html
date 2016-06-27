@@ -9,7 +9,7 @@
             <form class="form-horizontal" name="fareNabberForm" novalidate ng-submit="fareNabberForm.$valid && subscribe()">
                 <div class="modal-body">
 
-                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.subscriberEmail.$invalid}">
+                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.subscriberEmail.$invalid}" ng-if="!hideEmailField">
                         <label for="SDSFareNabberForm_SubscriberEmail" class="input-sm col-sm-3 control-label">Email</label>
                         <div class="col-sm-9">
                             <input type="email" id="SDSFareNabberForm_SubscriberEmail" name="subscriberEmail" class="form-control input-sm col-sm-10" placeholder="Type your email" autofocus required ng-model="subscriberEmail">

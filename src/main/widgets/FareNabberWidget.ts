@@ -101,6 +101,7 @@ define([
                         , passengerCount: '@'
                         , maximumAcceptablePrice: '@'
                         , maximumAcceptablePriceCurrency: '@'
+                        , hideEmailField: '@?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/FareNabberWidget.tpl.html',
                     transclude: true,
