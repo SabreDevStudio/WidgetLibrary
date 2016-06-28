@@ -6,7 +6,7 @@ define([
     'datamodel/Leg',
     'datamodel/Segment',
     'datamodel/ItineraryPricingInfo',
-    'datamodel/SearchCriteria'
+    'datamodel/search/SearchCriteria'
 ], function (
     angular,
     _,
@@ -60,7 +60,18 @@ define([
             return {
                 deserialize: function (jsonObj) {
                     return SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, jsonObj.inboundDepartureDateTime);
-                }
+                },
+				serialize: function (searchCriteria) {
+					return {
+						origin: searchCriteria.getFirstLeg().origin,
+						destination: searchCriteria.getFirstLeg().destination,
+						outboundDepartureDateTime: searchCriteria.getFirstLeg().departureDateTime.format(),
+						inboundDepartureDateTime: searchCriteria.getSecondLeg().departureDateTime.format(),
+						totalPassengerCount: searchCriteria.getTotalPassengerCount(),
+						preferredCabin: searchCriteria.preferredCabin.name,
+						preferredAirlines: searchCriteria.getPreferredAirlines()
+					};
+				}
             };
         });
 });

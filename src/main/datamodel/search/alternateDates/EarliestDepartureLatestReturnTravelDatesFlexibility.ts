@@ -1,8 +1,6 @@
 define([
-
     ],
     function (
-
     ) {
         'use strict';
 

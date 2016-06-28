@@ -2,7 +2,7 @@ define([
           'lodash'
         , 'util/LodashExtensions'
         , 'moment'
-        , 'datamodel/SearchCriteriaLeg'
+        , 'datamodel/search/SearchCriteriaLeg'
     ], function (
           _
         , __
@@ -392,7 +392,6 @@ define([
     SearchCriteria.prototype.buildRoundTripTravelSearchCriteria = function (origin, destination, departureDateString, returnDateString) {
         var departureDateTime = moment(departureDateString, moment.ISO_8601);
         var returnDateTime = moment(returnDateString, moment.ISO_8601);
-
 
         var firstLeg = new SearchCriteriaLeg({
               origin: origin
