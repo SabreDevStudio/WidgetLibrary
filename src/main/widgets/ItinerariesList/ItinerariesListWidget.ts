@@ -14,7 +14,7 @@ define([
         , 'widgets/ItinerariesList/ItineraryPricePerStopsPerAirlineSummary'
         , 'widgets/ItinerariesList/ItineraryDirective'
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
-        , 'datamodel/search/SearchCriteria'
+        , 'datamodel/search/SearchCriteriaFactory'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
         , 'webservices/common/searchStrategyFactories/ItinerariesSearchStrategyFactoryBagsFilteringDecorator'
         , 'webservices/common/searchStrategyFactories/BrandedItinerariesSearchStrategyFactory'
@@ -37,7 +37,7 @@ define([
         , ItineraryPricePerStopsPerAirlineSummary
         , ItineraryDirective
         , ItinerariesListSummaryByAirlineAndNumberOfStops
-        , SearchCriteria
+        , SearchCriteriaFactory
         , ItinerariesListSortCriteria
         , ItinerariesSearchStrategyFactory
         , BrandedItinerariesSearchStrategyFactory
@@ -321,7 +321,7 @@ define([
                             var returnDateString = element.attr('return-date');
 
                             if (origin && destination && departureDateString && returnDateString) {
-                                return SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
+                                return SearchCriteriaFactory.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
                             }
                         }
 

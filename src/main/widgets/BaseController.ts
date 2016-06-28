@@ -1,10 +1,10 @@
 define([
-          'lodash'
-        , 'datamodel/search/SearchCriteria'
+    'lodash',
+    'datamodel/search/SearchCriteriaFactory'
     ],
     function (
-          _
-        , SearchCriteria
+    _,
+    SearchCriteriaFactory
     ) {
         'use strict';
 
@@ -24,7 +24,7 @@ define([
         
         BaseController.prototype.executeLifeSearchOnPredefinedCriteriaIfPresent = function (origin, destination, departureDateString, returnDateString) {
             if (origin && destination && departureDateString && returnDateString) {
-                var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
+                var searchCriteria = SearchCriteriaFactory.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
                 this.processSearchCriteria(searchCriteria);
             }
         };

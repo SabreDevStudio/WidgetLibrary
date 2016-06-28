@@ -6,7 +6,7 @@ define([
     'datamodel/Leg',
     'datamodel/Segment',
     'datamodel/ItineraryPricingInfo',
-    'datamodel/search/SearchCriteria'
+    'datamodel/search/SearchCriteriaFactory'
 ], function (
     angular,
     _,
@@ -15,7 +15,7 @@ define([
     Leg,
     Segment,
     ItineraryPricingInfo,
-    SearchCriteria
+    SearchCriteriaFactory
 ) {
     'use strict';
     return angular.module('SDSWidgets.SerializationServices', [])
@@ -59,7 +59,7 @@ define([
     .factory('SearchCriteriaSerializer', function () {
             return {
                 deserialize: function (jsonObj) {
-                    return SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, jsonObj.inboundDepartureDateTime);
+                    return SearchCriteriaFactory.buildRoundTripTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, jsonObj.inboundDepartureDateTime);
                 },
 				serialize: function (searchCriteria) {
 					return {

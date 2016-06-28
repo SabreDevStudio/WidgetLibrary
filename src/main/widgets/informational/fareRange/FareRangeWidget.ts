@@ -5,7 +5,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'datamodel/search/SearchCriteria'
+        , 'datamodel/search/SearchCriteriaFactory'
         , 'widgets/informational/fareRange/HighLowMedianCurrentChartDirective'
         , 'webservices/informational/FareRangeDataService'
         , 'widgets/WidgetGlobalCallbacks'
@@ -17,7 +17,7 @@ define([
         , angular
         , angular_bootstrap
         , SDSWidgets
-        , SearchCriteria
+        , SearchCriteriaFactory
         , HighLowMedianCurrentChartDirective
         , FareRangeDataServiceSrc
         , WidgetGlobalCallbacks
@@ -47,7 +47,7 @@ define([
                     $scope.fareRangeSummary = {};
 
                     if ($scope.origin && $scope.destination && $scope.departureDate && $scope.returnDate) {
-                        var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteria($scope.origin, $scope.destination, $scope.departureDate, $scope.returnDate);
+                        var searchCriteria = SearchCriteriaFactory.buildRoundTripTravelSearchCriteria($scope.origin, $scope.destination, $scope.departureDate, $scope.returnDate);
                         processSearchCriteria(searchCriteria);
                     }
 

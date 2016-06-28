@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'datamodel/search/SearchCriteria'
+        , 'datamodel/search/SearchCriteriaFactory'
         , 'widgets/calendar/Calendar'
         , 'webservices/common/searchStrategyFactories/DaysRangeSearchStrategyFactory'
         , 'widgets/calendar/HighlightLengthOfStay'
@@ -16,7 +16,7 @@ define([
         , _
         , angular_bootstrap
         , SDSWidgets
-        , SearchCriteria
+        , SearchCriteriaFactory
         , Calendar
         , DaysRangeSearchStrategyFactorySrc
         , HighlightLengthOfStay
@@ -56,7 +56,7 @@ define([
 
                     $scope.executeLifeSearchOnPredefinedCriteriaIfPresent = function (origin, destination, departureDateString, returnDateString) {
                         if (origin && destination && departureDateString && returnDateString) {
-                            var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
+                            var searchCriteria = SearchCriteriaFactory.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
                             processSearchCriteria(searchCriteria);
                         }
                     };

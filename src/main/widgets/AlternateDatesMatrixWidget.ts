@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'datamodel/search/SearchCriteria'
+        , 'datamodel/search/SearchCriteriaFactory'
         , 'webservices/common/searchStrategyFactories/AlternateDatesSearchStrategyFactory'
         , 'widgets/WidgetGlobalCallbacks'
     ],
@@ -14,7 +14,7 @@ define([
         , _
         , angular_bootstrap
         , SDSWidgets
-        , SearchCriteria
+        , SearchCriteriaFactory
         , AlternateDatesSearchStrategyFactorySrc
         , WidgetGlobalCallbacks
     ) {
@@ -39,7 +39,7 @@ define([
 
                     $scope.executeLifeSearchOnPredefinedCriteriaIfPresent = function (origin, destination, departureDateString, returnDateString, altDatesPlusMinus) {
                         if (origin && destination && departureDateString && returnDateString) {
-                            var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteriaWithDateFlexibility(origin, destination, departureDateString, returnDateString, altDatesPlusMinus);
+                            var searchCriteria = SearchCriteriaFactory.buildRoundTripTravelSearchCriteriaWithDateFlexibility(origin, destination, departureDateString, returnDateString, altDatesPlusMinus);
                             $scope.processSearchCriteria(searchCriteria);
                         }
                     };
