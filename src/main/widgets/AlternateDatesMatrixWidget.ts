@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'datamodel/SearchCriteria'
+        , 'datamodel/search/SearchCriteria'
         , 'webservices/common/searchStrategyFactories/AlternateDatesSearchStrategyFactory'
         , 'widgets/WidgetGlobalCallbacks'
     ],

@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'datamodel/SearchCriteria'
+        , 'datamodel/search/SearchCriteria'
         , 'widgets/calendar/Calendar'
         , 'webservices/common/searchStrategyFactories/DaysRangeSearchStrategyFactory'
         , 'widgets/calendar/HighlightLengthOfStay'

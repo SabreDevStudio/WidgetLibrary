@@ -5,7 +5,7 @@ define([
         , 'angular'
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
-        , 'datamodel/SearchCriteria'
+        , 'datamodel/search/SearchCriteria'
         , 'widgets/informational/fareRange/HighLowMedianCurrentChartDirective'
         , 'webservices/informational/FareRangeDataService'
         , 'widgets/WidgetGlobalCallbacks'

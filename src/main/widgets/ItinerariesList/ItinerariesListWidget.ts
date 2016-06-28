@@ -14,7 +14,7 @@ define([
         , 'widgets/ItinerariesList/ItineraryPricePerStopsPerAirlineSummary'
         , 'widgets/ItinerariesList/ItineraryDirective'
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
-        , 'datamodel/SearchCriteria'
+        , 'datamodel/search/SearchCriteria'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
         , 'webservices/common/searchStrategyFactories/ItinerariesSearchStrategyFactoryBagsFilteringDecorator'
         , 'webservices/common/searchStrategyFactories/BrandedItinerariesSearchStrategyFactory'

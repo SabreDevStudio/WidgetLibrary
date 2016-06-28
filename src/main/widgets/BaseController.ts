@@ -1,6 +1,6 @@
 define([
           'lodash'
-        , 'datamodel/SearchCriteria'
+        , 'datamodel/search/SearchCriteria'
     ],
     function (
           _
