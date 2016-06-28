@@ -59,18 +59,24 @@ define([
     .factory('SearchCriteriaSerializer', function () {
             return {
                 deserialize: function (jsonObj) {
-                    return SearchCriteriaFactory.buildRoundTripTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, jsonObj.inboundDepartureDateTime);
+                    const searchCriteriaOptions = {
+                        totalPassengerCount: jsonObj.totalPassengerCount,
+                        preferredCabin: jsonObj.preferredCabin,
+                        preferredAirlines: jsonObj.preferredAirlines
+                    };
+                    return SearchCriteriaFactory.buildRoundTripTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, jsonObj.inboundDepartureDateTime, searchCriteriaOptions);
                 },
 				serialize: function (searchCriteria) {
-					return {
-						origin: searchCriteria.getFirstLeg().origin,
-						destination: searchCriteria.getFirstLeg().destination,
-						outboundDepartureDateTime: searchCriteria.getFirstLeg().departureDateTime.format(),
-						inboundDepartureDateTime: searchCriteria.getSecondLeg().departureDateTime.format(),
-						totalPassengerCount: searchCriteria.getTotalPassengerCount(),
-						preferredCabin: searchCriteria.preferredCabin.name,
-						preferredAirlines: searchCriteria.getPreferredAirlines()
-					};
+                    const jsonObj = {
+                        origin: searchCriteria.getFirstLeg().origin,
+                        destination: searchCriteria.getFirstLeg().destination,
+                        outboundDepartureDateTime: searchCriteria.getFirstLeg().departureDateTime.format(),
+                        inboundDepartureDateTime: searchCriteria.getSecondLeg().departureDateTime.format(),
+                        totalPassengerCount: searchCriteria.getTotalPassengerCount(),
+                        preferredCabin: searchCriteria.preferredCabin.name,
+                        preferredAirlines: searchCriteria.getPreferredAirlines()
+                    };
+                    return jsonObj;
 				}
             };
         });

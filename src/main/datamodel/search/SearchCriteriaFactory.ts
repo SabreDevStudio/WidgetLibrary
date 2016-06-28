@@ -21,7 +21,7 @@ define([
      * @param returnDateString
      * @returns {SearchCriteria}
      */
-    function buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString) {
+    function buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString, searchCriteriaOptions) {
         var departureDateTime = moment(departureDateString, moment.ISO_8601);
         var returnDateTime = moment(returnDateString, moment.ISO_8601);
 
@@ -42,16 +42,25 @@ define([
         searchCriteria.addLeg(firstLeg);
         searchCriteria.addLeg(secondLeg);
 
-        searchCriteria.addPassenger('ADT', 1);
+        const totalPassengerCount = (searchCriteriaOptions && searchCriteriaOptions.searchCriteriaOptions) || 1;
+        searchCriteria.addPassenger('ADT', totalPassengerCount);
+
+        if (searchCriteriaOptions && searchCriteriaOptions.preferredCabin) {
+            searchCriteria.preferredCabin = searchCriteriaOptions.preferredCabin
+        }
+
+        if (searchCriteriaOptions && !_.isEmpty(searchCriteriaOptions.preferredAirlines)) {
+            searchCriteria.preferredAirlines = searchCriteriaOptions.preferredAirlines
+        }
 
         return searchCriteria;
-    };
+    }
 
-    function buildRoundTripTravelSearchCriteriaWithDateFlexibility(origin, destination, departureDateString, returnDateString, dateFlexibilityDays) {
-        var searchCriteria = SearchCriteria.prototype.buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString);
+    function buildRoundTripTravelSearchCriteriaWithDateFlexibility(origin, destination, departureDateString, returnDateString, dateFlexibilityDays, searchCriteriaOptions) {
+        var searchCriteria = buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString, searchCriteriaOptions);
         searchCriteria.dateFlexibilityDays = dateFlexibilityDays;
         return searchCriteria;
-    };
+    }
 
     function buildMultidestinationSearchCriteria(originDestinationPairs) {
         var lengthOfStay = 7;
@@ -71,7 +80,7 @@ define([
         searchCriteria.addPassenger('ADT', 1);
 
         return searchCriteria;
-    };
+    }
 
     return {
         buildRoundTripTravelSearchCriteria: buildRoundTripTravelSearchCriteria,
