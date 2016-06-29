@@ -191,14 +191,20 @@ define([
 
                         var successCallback = function (newItins) {
                             if (__.isDefined($scope.searchCompletedSuccessCallback)) {
-                                $scope.searchCompletedSuccessCallback({itineraries: newItins});
+                                $scope.searchCompletedSuccessCallback({
+                                    itineraries: newItins,
+                                    searchCriteria: searchCriteria
+                                });
                             }
                             processNewItineraries(searchCriteria, newItins);
                         };
 
                         var errorCallback = function (errorMessages) {
                             if (__.isDefined($scope.searchCompletedErrorCallback)) {
-                                $scope.searchCompletedErrorCallback({errorMessages: errorMessages});
+                                $scope.searchCompletedErrorCallback({
+                                    errorMessages: errorMessages,
+                                    searchCriteria: searchCriteria
+                                });
                             }
                             processServiceErrorMessages(searchCriteria, errorMessages);
                         };

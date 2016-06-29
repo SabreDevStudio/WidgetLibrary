@@ -91,7 +91,7 @@ define([
                     , $rootScope
                 ) {
                 return {
-                    restrict: 'A',
+                    restrict: 'AE',
                     scope: {
                           origin: '@'
                         , destination: '@'
