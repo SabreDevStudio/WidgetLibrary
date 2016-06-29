@@ -80,7 +80,7 @@ define([
             };
 
             this.isAnyDataToDisplayAvailable = function () {
-                return !(_.isEmpty(chartData.datasets[0].data));
+                return chartData.datasets[0].data.filter(_.isFinite).length >= $scope.minDaysDataRequired;
             };
 
             return this;
@@ -106,13 +106,15 @@ define([
                     restrict: 'EA',
                     scope: {
                         hideChartLabels: '@?',
-                        hideHeader: '@?'
+                        hideHeader: '@?',
+                        minDaysDataRequired: '@?'
                     },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LowFareHistory.tpl.html',
                     controller: 'LowFareHistoryCtrl',
                     controllerAs: 'ctrl',
                     link: function (scope, element, attrs, controller) {
+                        scope.minDaysDataRequired = scope.minDaysDataRequired || 1;
 
                         chartInstance = chartsFactory.createBarChart(element, chartData);
 

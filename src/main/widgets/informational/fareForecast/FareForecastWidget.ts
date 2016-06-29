@@ -59,7 +59,7 @@ define([
                 }])
             .directive('fareForecast', function () {
                 return {
-                    restrict: 'A',
+                    restrict: 'AE',
                     scope: {
                           showWaitRecommendation: '@'
                         , showUnknownRecommendation: '@'
