@@ -58,10 +58,16 @@ define([
             initializeEmptyModel();
 
             this.processSearchResults = function (lowFareHistory) {
-                chartData.labels = _.pluck(lowFareHistory.historicalPrices, 'dateOfShopping').map(DateToStringRedefineFactory.patchToStringMethod).reverse();
+                if ($scope.hideChartLabels) {
+                    // even if we do not want to show labels (for example to save on display area), it is still needed to set all labels somehow. Otherwise rendering bar charts breaks (like only one big bar for all data points).
+                    chartData.labels = lowFareHistory.historicalPrices.map(item => '');
+                } else {
+                    chartData.labels = _.pluck(lowFareHistory.historicalPrices, 'dateOfShopping').map(DateToStringRedefineFactory.patchToStringMethod).reverse();
+                }
                 chartData.datasets[0].data = lowFareHistory.historicalPrices.map(dayItem => {
                     return _.isFinite(dayItem.lowestFare)? dayItem.lowestFare : null;
                 }).reverse();
+                $scope.historyDaysCount = chartData.datasets[0].data.length;
                 chartInstance.initialize(chartData);
             };
 
@@ -98,7 +104,10 @@ define([
                 ) {
                 return {
                     restrict: 'EA',
-                    scope: true,
+                    scope: {
+                        hideChartLabels: '@?',
+                        hideHeader: '@?'
+                    },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LowFareHistory.tpl.html',
                     controller: 'LowFareHistoryCtrl',
