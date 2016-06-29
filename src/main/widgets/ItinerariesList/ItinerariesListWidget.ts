@@ -210,6 +210,12 @@ define([
                         };
 
                         var updateCallback = function (newItins) {
+                            if (__.isDefined($scope.searchCompletedSuccessCallback)) {
+                                $scope.searchCompletedSuccessCallback({
+                                    itineraries: newItins,
+                                    searchCriteria: searchCriteria
+                                });
+                            }
                             updateWithNewItineraries(searchCriteria, newItins);
                         };
 
