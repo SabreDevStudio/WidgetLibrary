@@ -55,8 +55,11 @@ define([
                             return $q(function(resolve, reject) {
                                 var requestParams = translateSearchCriteriaIntoRequestParams(searchCriteria);
                                 DestinationFinderWebService.get(requestParams).$promise.then(
-                                    function (response) {
-                                        resolve(response);
+                                    function (pricesForDestinations) {
+                                        pricesForDestinations.FareInfo = pricesForDestinations.FareInfo
+                                            .filter((offer) => isFinite(offer.LowestFare.Fare)) //WARN: LowestFare from API may be also just string "N/A"
+                                            .map(parseTravelDates);
+                                        resolve(pricesForDestinations);
                                     },
                                     function (reason) {
                                         ErrorReportingService.reportError('Could not get prices for destinations', searchCriteria);
@@ -64,6 +67,16 @@ define([
                                     }
                                 );
                             });
+
+                            function parseTravelDates(offer) {
+                                const copyWithDatesParsed = _.extend({}, offer, {
+                                    departureDateTime: moment(offer.DepartureDateTime, moment.ISO_8601),
+                                    returnDateTime: moment(offer.ReturnDateTime, moment.ISO_8601)
+                                });
+                                delete copyWithDatesParsed.DepartureDateTime;
+                                delete copyWithDatesParsed.ReturnDateTime;
+                                return copyWithDatesParsed;
+                            }
                         }
                     };
                 }]);
