@@ -15,11 +15,21 @@ define([
     ) {
         'use strict';
 
-        var generalHeaders = {
-            'Content-Type' : 'application/JSON'
-        };
-
         return angular.module('sabreDevStudioWebServices')
+            .factory('requestHeadersFactory', [
+                'apiSpecificHeaders',
+                function (
+                    apiSpecificHeaders
+                ) {
+                    const generalHeaders = {
+                        'Content-Type' : 'application/JSON'
+                    };
+                    const headers = _.extend({}, generalHeaders, apiSpecificHeaders);
+                    return {
+                        getHeaders: () => headers
+                    }
+                }
+            ])
             .factory('CachingDecorator', [
                       '$q'
                     , '$cacheFactory'
@@ -80,10 +90,12 @@ define([
             .factory('AdvancedCalendarSearchService', [
                       '$resource'
                     , 'apiURL'
+					, 'requestHeadersFactory'
                     , 'CachingDecorator'
                 , function (
                       $resource
                     , apiURL
+					, requestHeadersFactory
                     , CachingDecorator
                 ) {
                     var endpointURL = apiURL + '/v1.8.6/shop/calendar/flights';
@@ -91,7 +103,7 @@ define([
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
                               method: 'POST'
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                             , timeout: 15000
                         }
                     });
@@ -102,10 +114,12 @@ define([
             .factory('BargainFinderMaxWebService', [
                       '$resource'
                     , 'apiURL'
+					, 'requestHeadersFactory'
                     , 'CachingDecorator'
                 , function (
                       $resource
                     , apiURL
+					, requestHeadersFactory
                     , CachingDecorator
                 ) {
                     var endpointURL = apiURL + '/v1.9.0/shop/flights?mode=live';
@@ -113,7 +127,7 @@ define([
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
                               method: 'POST'
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                             , timeout: 30000
                         }
                     });
@@ -124,10 +138,12 @@ define([
             .factory('BargainFinderMaxAlternateDateWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , 'CachingDecorator'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                     , CachingDecorator
                 ) {
                     var endpointURL = apiURL + '/v1.8.6/shop/altdates/flights?mode=live';
@@ -135,7 +151,7 @@ define([
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
                             method: 'POST'
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                             , timeout: 30000
                         }
                     });
@@ -146,273 +162,307 @@ define([
             .factory('InstaFlightsWebService', [
                       '$resource'
                     , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                       $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/shop/flights';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
              }])
             .factory('LeadPriceCalendarWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/shop/flights/fares';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
             }])
             .factory('FareForecastWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/forecast/flights/fares';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
             }])
             .factory('FareRangeWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/historical/flights/fares';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
              }])
             .factory('LowFareHistoryWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/historical/shop/flights/fares';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('DestinationPricerWebService', [ // aka Flights To
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/shop/flights/cheapest/fares/:destination';
                     return $resource(endpointURL, {destination: '@_destination'}, {
                         get: {
                               method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('DestinationFinderWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v2/shop/flights/fares/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('AirlineLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/utilities/airlines/';
                     return $resource(endpointURL, {}, {
                         get: {
                               method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('EquipmentLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/utilities/aircraft/equipment/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('AirlineLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/utilities/airlines/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('PointOfSaleCountryLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/supported/pointofsalecountries/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('ShoppingAirportsAndCitiesLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/supported/shop/flights/origins-destinations/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('FareRangeAirportsAndCitiesLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/supported/historical/flights/origins-destinations/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('LowFareForecastAirportsAndCitiesLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/supported/forecast/flights/origins-destinations/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('TravelThemeLookupWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/lists/supported/shop/themes/';
                     return $resource(endpointURL, {}, {
                         get: {
                             method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('TravelSeasonalityWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                 ) {
                     var endpointURL = apiURL + '/v1/historical/flights/:destination/seasonality';
                     return $resource(endpointURL, {destination: '@_destination'}, {
                         get: {
                               method:'GET'
                             , cache: true
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                 }])
             .factory('GeoSearchWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , 'CachingDecorator'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                     , CachingDecorator
                 ) {
                     var endpointURL = apiURL + '/v1/lists/utilities/geosearch/locations';
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
                               method:'POST'
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                     return {
@@ -422,17 +472,19 @@ define([
             .factory('GeoCodeWebService', [
                 '$resource'
                 , 'apiURL'
+					, 'requestHeadersFactory'
                 , 'CachingDecorator'
                 , function (
                     $resource
                     , apiURL
+					, requestHeadersFactory
                     , CachingDecorator
                 ) {
                     var endpointURL = apiURL + '/v1/lists/utilities/geocode/locations';
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
                             method:'POST'
-                            , headers: generalHeaders
+                            , headers: requestHeadersFactory.getHeaders()
                         }
                     });
                     return {
