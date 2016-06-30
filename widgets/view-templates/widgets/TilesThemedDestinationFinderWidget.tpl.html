@@ -15,9 +15,9 @@
                             from {{offersForOneDestination.lowestFare.amount | currency:offersForOneDestination.lowestFare.currency}}
                         </strong>
                         <div class="clearfix"></div>
-                        <span class="pull-right">
-                            <a href="">
-                               <!--popover-template="'DestinationFinderOfferDetailsPopover'">-->
+                        <span class="pull-right"
+                              ng-init="parameter=offersForOneDestination"><!-- ng-init is needed to set 'parameter' model value for the included, shared template. And specific model value name is required because that template is also used (DRY) by other directive which enforces that particular name (ui-gmap-windowm and it is not overrideable)-->
+                            <a href="" popover-template="'../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html'">
                                 Show flights
                             </a>
                         </span>
@@ -29,11 +29,3 @@
     </div>
 
 </div>
-
-<!--<script type="text/ng-template" id="DestinationFinderOfferDetailsPopover">-->
-    <!--<ul class="list-inline list-unstyled">-->
-        <!--<li ng-repeat="offer in offersForOneDestination.offers">-->
-            <!--{{offer.LowestFare.AirlineCodes[0]}} {{model.originForPricesForDestinations}} - {{offer.DestinationLocation}} {{offer.DepartureDateTime}}-{{offer.ReturnDateTime}} from {{offer.LowestFare.Fare | currency:offer.CurrencyCode}}-->
-        <!--</li>-->
-    <!--</ul>-->
-<!--</script>-->
