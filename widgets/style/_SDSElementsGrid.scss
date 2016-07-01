@@ -34,6 +34,11 @@ $numberOfGridColumns: 12 !default;
       padding-right: #{$gutterWidth / 2};
       position: relative;
     }
+
+    .SDS-col-element-#{$sizeShortcut}-#{$i}.SDS-clear-gutter {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 }
 

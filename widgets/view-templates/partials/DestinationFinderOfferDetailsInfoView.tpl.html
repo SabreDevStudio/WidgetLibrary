@@ -1,15 +1,32 @@
-<div>
+<div class="SDSDestinationFinderOfferDetailsInfoView">
     <!--WARN: as this template is used by ui-gmap-window, that ui-gmap-window exposes all model variables only thru 'parameter' object.
     It is not possible to rename this parameter in directive.
     Therefore if this template is reused also in for other directives, the other directive has to expose model at 'parameter' model variable -->
-    {{parameter.destination | cityFullName}}
-    from {{parameter.lowestFare.amount | currency:parameter.lowestFare.currency}}
-    <div>
-        And here comes price list.. + all details
-        <ul class="list-inline list-unstyled">
-            <li ng-repeat="offer in parameter.offers">
-                {{offer.LowestFare.AirlineCodes[0]}} TODO {{model.originForPricesForDestinations}} - {{offer.DestinationLocation}} {{offer.DepartureDateTime}}-{{offer.ReturnDateTime}} from {{offer.LowestFare.Fare | currency:offer.CurrencyCode}}
-            </li>
-        </ul>
-    </div>
+    <h5 class="text-center">
+        <strong>{{parameter.destination | cityFullName}}</strong>
+        from <strong>{{parameter.lowestFare.amount | currency:parameter.lowestFare.currency}}</strong>
+    </h5>
+    <ul class="SDSTopLevelList list-unstyled">
+        <li class="row" ng-repeat="offer in parameter.offers | orderBy:['LowestFare.Fare', 'departureDateTime', 'returnDateTime'] | limitTo:10">
+            <small>
+                <div class="col-xs-3 SDS-clear-right-gutter SDS-minimize-left-gutter">
+                    <!--show only first airline and airline logo, because of missing space -->
+                    <airline-logo airline-code="{{offer.LowestFare.AirlineCodes[0]}}"></airline-logo>
+                    {{offer.LowestFare.AirlineCodes[0]| airlineFullName}}
+                </div>
+
+                <div class="col-xs-7 SDS-clear-gutter">
+                    {{offer.departureDateTime.format('DMMM')}} - {{offer.returnDateTime.format('DMMM')}} <!-- format 'DMMM': for example 1Sep, 30Sep-->
+                    (<ng-pluralize count="offer.returnDateTime.diff(offer.departureDateTime, 'days')"
+                                   when="{'one': '1 day',
+                                          'other': '{} days'}">
+                    </ng-pluralize>)
+                </div>
+                <div class="col-xs-2 SDS-clear-left-gutter SDS-minimize-right-gutter">
+                    {{offer.LowestFare.Fare | currency:offer.CurrencyCode:0}}
+                    <a>Search</a>
+                </div>
+            </small>
+        </li>
+    </ul>
 </div>

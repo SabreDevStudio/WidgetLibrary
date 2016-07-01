@@ -7,6 +7,7 @@ $itemsSeparatingLineColor: #D2DDE4;
 $itemsSeparatingLineStyle: solid #D2DDE4 1px;
 
 .SDSTopLevelList > li  {
+  padding: 0.1em;
   border-bottom: solid #D2DDE4 1px;
   &:nth-child(odd) {
     background-color: #F2F2F2;
