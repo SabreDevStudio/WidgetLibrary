@@ -11,32 +11,30 @@
         </span>
     </div>
 
-    <div class="SDSMapContainer">
-        <ui-gmap-google-map center='closestAirportGeoCoordinates'
-                            zoom='initialZoom'
-                            refresh="true">
+    <ui-gmap-google-map center='closestAirportGeoCoordinates'
+                        zoom='initialZoom'
+                        refresh="true">
 
-            <ui-gmap-marker ng-repeat="destination in model.pricesForDestinationsGrouped track by destination.destination"
-                            coords="destination.geoCoordinates"
-                            idkey="destination.destination"
-                            click="destination.offerShown = !destination.offerShown"
-                            options="getMarkerOptions(destination.priceTier)"
-                            events="markerEvents"
-                            control="destination">
-                <ui-gmap-window show="destination.shortDetailsShown && !destination.offerShown"
-                                templateUrl="'../widgets/view-templates/partials/DestinationFinderOfferShortDetailsInfoView.tpl.html'"
-                                templateParameter="destination"
-                                closeClick="destination.shortDetailsShown = !destination.shortDetailsShown"
-                                ng-cloak>
-                </ui-gmap-window>
-                <ui-gmap-window show="destination.offerShown"
-                                templateUrl="'../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html'"
-                                templateParameter="destination"
-                                closeClick="destination.offerShown = !destination.offerShown"
-                                ng-cloak>
-                </ui-gmap-window>
-            </ui-gmap-marker>
+        <ui-gmap-marker ng-repeat="destination in model.pricesForDestinationsGrouped track by destination.destination"
+                        coords="destination.geoCoordinates"
+                        idkey="destination.destination"
+                        click="destination.offerShown = !destination.offerShown"
+                        options="getMarkerOptions(destination.priceTier)"
+                        events="markerEvents"
+                        control="destination">
+            <ui-gmap-window show="destination.shortDetailsShown && !destination.offerShown"
+                            templateUrl="'../widgets/view-templates/partials/DestinationFinderOfferShortDetailsInfoView.tpl.html'"
+                            templateParameter="destination"
+                            closeClick="destination.shortDetailsShown = !destination.shortDetailsShown"
+                            ng-cloak>
+            </ui-gmap-window>
+            <ui-gmap-window show="destination.offerShown"
+                            templateUrl="'../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html'"
+                            templateParameter="destination"
+                            closeClick="destination.offerShown = !destination.offerShown"
+                            ng-cloak>
+            </ui-gmap-window>
+        </ui-gmap-marker>
 
-        </ui-gmap-google-map>
-    </div>
+    </ui-gmap-google-map>
 </div>

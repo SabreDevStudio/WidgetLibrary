@@ -70,5 +70,12 @@
     }
   }
 
-  .angular-google-map-container { height: 400px; }
+  .angular-google-map-container {
+    height: 400px;
+  }
+
+  .angular-google-map-container .gm-style-iw > div { // for info window
+    display: block !important; // important to override google maps style on element level
+    overflow-x: hidden !important;;
+  }
 }
