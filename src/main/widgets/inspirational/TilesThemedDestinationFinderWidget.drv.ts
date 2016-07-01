@@ -9,7 +9,8 @@ define([
         function TilesThemedDestinationFinderWidgetDirective() {
             return {
                 scope: {
-                    closestAirport: '@?'
+                    closestAirport: '@?',
+                    searchOfferClicked: '&?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/TilesThemedDestinationFinderWidget.tpl.html',
                 controller: 'TilesThemedDestinationFinderWidgetController',

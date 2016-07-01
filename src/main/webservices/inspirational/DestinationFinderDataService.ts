@@ -56,8 +56,10 @@ define([
                                 var requestParams = translateSearchCriteriaIntoRequestParams(searchCriteria);
                                 DestinationFinderWebService.get(requestParams).$promise.then(
                                     function (pricesForDestinations) {
+                                        const origin = pricesForDestinations.OriginLocation;
                                         pricesForDestinations.FareInfo = pricesForDestinations.FareInfo
                                             .filter((offer) => isFinite(offer.LowestFare.Fare)) //WARN: LowestFare from API may be also just string "N/A"
+                                            .map(_.partial(addOrigin, origin))
                                             .map(parseTravelDates);
                                         resolve(pricesForDestinations);
                                     },
@@ -76,6 +78,12 @@ define([
                                 delete copyWithDatesParsed.DepartureDateTime;
                                 delete copyWithDatesParsed.ReturnDateTime;
                                 return copyWithDatesParsed;
+                            }
+
+                            function addOrigin(origin, offer) {
+                                return _.extend({}, offer, {
+                                    origin: origin
+                                });
                             }
                         }
                     };

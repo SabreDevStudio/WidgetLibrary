@@ -13,6 +13,7 @@ define([
             return {
                 scope: {
                     closestAirport: '@?',
+                    searchOfferClicked: '&?',
                     initialZoom: '@?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/MapThemedDestinationFinderWidget.tpl.html',

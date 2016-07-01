@@ -24,7 +24,19 @@
                 </div>
                 <div class="col-xs-2 SDS-clear-left-gutter SDS-minimize-right-gutter">
                     {{offer.LowestFare.Fare | currency:offer.CurrencyCode:0}}
-                    <a>Search</a>
+                    <!-- WARN: below we assume that the controller of the parent view where this very view is included, exports such searchOfferClicked callback.
+                    Or that callback is exported on parameter object (if we are within isolate scope).
+                    Not creating separate directive with isolated scope from this view, as this view is passed into popover, google map info view, which only way to communicate with this template is still only thru (parent) scope.-->
+                    <a ng-init="searchOfferClickedFn=searchOfferClicked || parameter.searchOfferClicked"
+                       ng-click="searchOfferClickedFn(
+                        {
+                            searchCriteria: {
+                                origin: offer.origin,
+                                destination: parameter.destination,
+                                departureDateTime: offer.departureDateTime,
+                                returnDateTime: offer.returnDateTime
+                            }
+                        })">Search</a>
                 </div>
             </small>
         </li>

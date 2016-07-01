@@ -62,11 +62,17 @@ define([
                 DestinationFinderSummaryDataService
                     .getOffersOrderedSummary(themedSearchCriteria)
                     .then(function (orderedSummary) {
+                        orderedSummary.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped.map(addClickHandlerToOfferForDestination);
                         $scope.model.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped;
                         $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
                         $scope.model.priceTiersStatistics = orderedSummary.priceTiersStatistics;
                     })
                     .finally(searchCompleteCallback);
+            }
+
+            // we are exporting the directive searchOfferClicked click handler onto every offerForDestination item, so that it can be used by subviews, like google maps, which only interface to communicate with parent controller is the offerForDestination object.
+            function addClickHandlerToOfferForDestination(offerForDestination) {
+                return _.extend({}, offerForDestination, {searchOfferClicked: $scope.searchOfferClicked});
             }
 
             ClosestAirportGeoService.getClosestAirportData($scope.closestAirport)
