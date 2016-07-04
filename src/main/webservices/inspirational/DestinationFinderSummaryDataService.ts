@@ -47,10 +47,21 @@ define([
                                         pricesForDestinationsGrouped: buildGroupingForDestinations(offersWithPrices, airportCodeIntoCityNameMapping)
                                         , originForPricesForDestinations: pricesForDestinations.OriginLocation
                                     };
+
+                                    if (searchCriteria.inspirationalSearchPolicy.maxOffersPerDestination) {
+                                        var trimFunction = _.partial(trimToMaxOffersPerDestination, searchCriteria.inspirationalSearchPolicy.maxOffersPerDestination);
+                                        orderedSummary.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped.map(trimFunction);
+                                    }
+
                                     resolve(orderedSummary);
                                 }, reject);
                             }, reject)
                         });
+                    }
+
+                    function trimToMaxOffersPerDestination(maxOffers, pricesForDestination) {
+                        var offersTrimmed = pricesForDestination.offers.slice(0, maxOffers);
+                        return _.extend({}, pricesForDestination, {offers: offersTrimmed});
                     }
 
                     function buildAirportToCityMapping(allDestinationAirports) {

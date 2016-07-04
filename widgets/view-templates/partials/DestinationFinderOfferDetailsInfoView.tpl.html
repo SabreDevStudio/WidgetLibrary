@@ -7,7 +7,7 @@
         from <strong>{{parameter.lowestFare.amount | currency:parameter.lowestFare.currency}}</strong>
     </h6>
     <ul class="SDSTopLevelList list-unstyled">
-        <li class="SDS-simple-row" ng-repeat="offer in parameter.offers | orderBy:['LowestFare.Fare', 'departureDateTime', 'returnDateTime'] | limitTo:10">
+        <li class="SDS-simple-row" ng-repeat="offer in parameter.offers | orderBy:['LowestFare.Fare', 'departureDateTime', 'returnDateTime']">
             <div class="SDS-simple-col-5-20">
                 <!--show only first airline and airline logo, because of missing space -->
                 <airline-logo airline-code="{{offer.LowestFare.AirlineCodes[0]}}"></airline-logo>
