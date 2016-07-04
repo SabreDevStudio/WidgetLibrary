@@ -40,12 +40,10 @@ define([
                   '$scope'
                 , 'WidgetIdGeneratorService'
                 , 'SearchCriteriaBroadcastingService'
-                , '$location'
             , function (
                   $scope
                 , widgetIdGenerator
                 , SearchCriteriaBroadcastingService
-                , $location
                 ) {
 
                 $scope.widgetId = widgetIdGenerator.next();
@@ -185,10 +183,6 @@ define([
                     if (__.isDefined($scope.newSearchCriteriaCallback)) {
                         $scope.newSearchCriteriaCallback({searchCriteria: searchCriteria});
                     }
-
-                    if (__.isDefined($scope.submitTarget)) {
-                        $location.path($scope.submitTarget);
-                    }
                 };
 
                 $scope.plusMinusConstantDateFlexibilityCheckboxClicked = function () {
@@ -218,7 +212,6 @@ define([
                    scope: {
                        selectableAirportsForThisPosOnly: '@'
                        , selectableAirportsDictionary: '@'
-                       , submitTarget: '@?'
                        , newSearchCriteriaCallback: '&?'
                    },
                    link: function (scope, element) {
