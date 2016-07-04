@@ -7,11 +7,13 @@ define([
         'util/CommonGenericFilters',
         'widgets/inspirational/ThemedInspirationalSearchCriteriaBroadcastingService.srv',
         'widgets/inspirational/ThemedInspirationalSearchCompleteBroadcastingService.srv',
+        'widgets/inspirational/TripOriginChangedBroadcastingService.srv',
         'widgets/inspirational/TravelThemesSelectionBar.drv',
         'angular_google_maps',
         'webservices/inspirational/DestinationFinderSummaryServicePriceClassifierDecorator',
         'webservices/inspirational/DestinationFinderSummaryServiceGeoCoordsDecorator',
-        'webservices/geo/ClosestAirportGeoService'
+        'webservices/geo/ClosestAirportGeoService',
+        'widgets/inspirational/changeOriginSelect.drv'
     ],
     function (
         angular,
@@ -22,11 +24,13 @@ define([
         CommonGenericFiltersModule,
         ThemedInspirationalSearchCriteriaBroadcastingService,
         ThemedInspirationalSearchCompleteBroadcastingService,
+        TripOriginChangedBroadcastingService,
         TravelThemesSelectionBarDirective,
         angularGoogleMapsModule,
         DestinationFinderSummaryServicePriceClassifierDecoratorSrc,
         DestinationFinderSummaryServiceGeoCoordsDecoratorSrc,
-        ClosestAirportGeoServiceSrc
+        ClosestAirportGeoServiceSrc,
+        ChangeOriginSelectDirective
     ) {
         'use strict';
 
@@ -43,8 +47,10 @@ define([
             }])
             .constant('newThemedInspirationalSearchCriteriaEvent', 'newThemedInspirationalSearchCriteriaEvent')
             .constant('themedInspirationalSearchCompleteEvent', 'themedInspirationalSearchCompleteEvent')
+            .constant('tripOriginChangedEvent', 'tripOriginChangedEvent')
             .service('ThemedInspirationalSearchCriteriaBroadcastingService', ThemedInspirationalSearchCriteriaBroadcastingService)
             .service('ThemedInspirationalSearchCompleteBroadcastingService', ThemedInspirationalSearchCompleteBroadcastingService)
+            .service('TripOriginChangedBroadcastingService', TripOriginChangedBroadcastingService)
             .directive('travelThemesSelectionBar', TravelThemesSelectionBarDirective)
             .controller('TilesThemedDestinationFinderWidgetController', [
                 '$scope',
@@ -53,6 +59,7 @@ define([
                 'DestinationFinderSummaryDataService',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',
+                'TripOriginChangedBroadcastingService',
                 ThemedDestinationFinderWidgetController])
             .controller('MapThemedDestinationFinderWidgetController', [
                 '$scope',
@@ -61,8 +68,10 @@ define([
                 'DestinationFinderSummaryServicePriceClassifierDecorator',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',
+                'TripOriginChangedBroadcastingService',
                 ThemedDestinationFinderWidgetController])
             .directive('tilesThemedDestinationFinder', TilesThemedDestinationFinderWidgetDirective)
             .directive('mapThemedDestinationFinder', MapThemedDestinationFinderWidgetDirective)
+            .directive('changeOriginSelect', ChangeOriginSelectDirective)
     }
 );

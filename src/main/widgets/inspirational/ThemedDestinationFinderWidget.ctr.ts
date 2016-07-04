@@ -28,7 +28,8 @@ define([
             GeoCodeDataService,
             DestinationFinderSummaryDataService,
             ThemedInspirationalSearchCriteriaBroadcastingService,
-            ThemedInspirationalSearchCompleteBroadcastingService
+            ThemedInspirationalSearchCompleteBroadcastingService,
+            TripOriginChangedBroadcastingService
         ) {
             var searchCriteria = InspirationalSearchCriteriaFactory.create();
 
@@ -55,6 +56,13 @@ define([
                 searchDestinationsForTheme(themeSearched, searchCompleteCallback);
             });
 
+            $scope.$on('tripOriginChangedEvent', function () {
+                var newOrigin = TripOriginChangedBroadcastingService.origin;
+                updateSearchCriteriaWithClosestAirport(newOrigin, () => {
+                    searchDestinationsForTheme(searchCriteria.theme, _.noop);
+                });
+            });
+
             function searchDestinationsForTheme(theme, searchCompleteCallback) {
                 var themedSearchCriteria = _.extend(searchCriteria, {
                     theme: theme
@@ -75,15 +83,20 @@ define([
                 return _.extend({}, offerForDestination, {searchOfferClicked: $scope.searchOfferClicked});
             }
 
-            ClosestAirportGeoService.getClosestAirportData($scope.closestAirport)
-                .then((closestAirportGeoData) => {
-                    searchCriteria.origin = closestAirportGeoData.airportCode;
-                    searchCriteria.pointofsalecountry = closestAirportGeoData.countryCode;
-                    GeoCodeDataService.getAirportGeoCoordinates(closestAirportGeoData.airportCode)
-                        .then((geoCoordinates) => {
-                            $scope.closestAirportGeoCoordinates = geoCoordinates;
-                        });
-                });
+            function updateSearchCriteriaWithClosestAirport(closestAirport, completeCallback = _.noop) {
+                ClosestAirportGeoService.getClosestAirportData(closestAirport)
+                    .then((closestAirportGeoData) => {
+                        searchCriteria.origin = closestAirportGeoData.airportCode;
+                        searchCriteria.pointofsalecountry = closestAirportGeoData.countryCode;
+                        GeoCodeDataService.getAirportGeoCoordinates(closestAirportGeoData.airportCode)
+                            .then((geoCoordinates) => {
+                                $scope.closestAirportGeoCoordinates = geoCoordinates;
+                                completeCallback();
+                            });
+                    });
+            }
+
+            updateSearchCriteriaWithClosestAirport($scope.closestAirport);
         }
         return TilesThemedDestinationFinderWidgetCtr;
 });
