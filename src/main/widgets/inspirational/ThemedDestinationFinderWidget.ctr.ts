@@ -72,8 +72,7 @@ define([
                 var themedSearchCriteria = _.extend(searchCriteria, {
                     theme: theme
                 });
-                DestinationFinderSummaryDataService
-                    .getOffersOrderedSummary(themedSearchCriteria)
+                DestinationFinderSummaryDataService.getOffersOrderedSummary(themedSearchCriteria)
                     .then(function (orderedSummary) {
                         orderedSummary.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped.map(addClickHandlerToOfferForDestination);
                         $scope.model.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped;

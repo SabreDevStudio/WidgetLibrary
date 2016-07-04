@@ -16,8 +16,8 @@
 
             <div class="SDS-simple-col-11-20">
                 <small>
-                    {{offer.departureDateTime.format('DMMM')}} - {{offer.returnDateTime.format('DMMM')}} <!-- format 'DMMM': for example 1Sep, 30Sep-->
-                    (<ng-pluralize count="offer.returnDateTime.diff(offer.departureDateTime, 'days')"
+                    {{offer.departureDateTime | date:'dMMM'}} - {{offer.returnDateTime | date:'dMMM'}} <!-- format example: 1Sep, 30Sep-->
+                    (<ng-pluralize count="offer.lengthOfStay"
                                    when="{'one': '1 day',
                                           'other': '{} days'}">
                     </ng-pluralize>)

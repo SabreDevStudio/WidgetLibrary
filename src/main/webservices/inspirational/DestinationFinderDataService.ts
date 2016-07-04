@@ -1,14 +1,14 @@
 define([
           'angular'
-        , 'moment'
         , 'lodash'
+        , 'util/LodashExtensions'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/WebServicesResourceDefinitions'
     ],
     function (
           angular
-        , moment
         , _
+        , __
         , SabreDevStudioWebServicesModule
         , WebServicesResourceDefinitions
     ) {
@@ -71,9 +71,12 @@ define([
                             });
 
                             function parseTravelDates(offer) {
+                                var departureDateTime = new Date(offer.DepartureDateTime);
+                                var returnDateTime = new Date(offer.ReturnDateTime);
                                 const copyWithDatesParsed = _.extend({}, offer, {
-                                    departureDateTime: moment(offer.DepartureDateTime, moment.ISO_8601),
-                                    returnDateTime: moment(offer.ReturnDateTime, moment.ISO_8601)
+                                    departureDateTime: departureDateTime,
+                                    returnDateTime: returnDateTime,
+                                    lengthOfStay: __.dateDiffDays(departureDateTime, returnDateTime)
                                 });
                                 delete copyWithDatesParsed.DepartureDateTime;
                                 delete copyWithDatesParsed.ReturnDateTime;
