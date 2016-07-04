@@ -4,7 +4,7 @@ define([
         , 'lodash'
         , 'datamodel/MonetaryAmount'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/inspirational/DestinationFinderDataService'
+        , 'webservices/inspirational/DestinationFinderCachedDataService'
         , 'webservices/lookup/AirportLookupDataService'
         , 'webservices/common/PromiseUtils'
     ],
@@ -13,7 +13,7 @@ define([
         , _
         , MonetaryAmount
         , SabreDevStudioWebServicesModule
-        , DestinationFinderDataServiceSrc
+        , DestinationFinderCachedDataServiceSrc
         , AirportLookupDataServiceSrc
         , PromiseUtilsSrc
     ) {
@@ -22,7 +22,7 @@ define([
         return angular.module('sabreDevStudioWebServices')
             .factory('DestinationFinderSummaryDataService', [
                   '$q'
-                , 'DestinationFinderDataService'
+                , 'DestinationFinderCachedDataService'
                 , 'AirportLookupDataService'
                 , 'PromiseUtils'
                 , function (

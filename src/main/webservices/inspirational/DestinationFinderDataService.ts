@@ -1,12 +1,12 @@
 define([
-          'angular'
+        'angular'
         , 'lodash'
         , 'util/LodashExtensions'
         , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/WebServicesResourceDefinitions'
     ],
     function (
-          angular
+        angular
         , _
         , __
         , SabreDevStudioWebServicesModule
@@ -16,14 +16,14 @@ define([
 
         return angular.module('sabreDevStudioWebServices')
             .factory('DestinationFinderDataService', [
-                  '$q'
+                '$q'
                 , 'dateFormat'
                 , 'DestinationFinderWebService'
                 , 'pointOfSaleCountry'
                 , 'ErrorReportingService'
                 , 'businessMessagesErrorHandler'
                 , function (
-                      $q
+                    $q
                     , dateFormat
                     , DestinationFinderWebService
                     , pointOfSaleCountry
