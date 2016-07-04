@@ -38,6 +38,11 @@ define([
                 pricesForDestinationsGrouped: []
             };
 
+            function clearModel() {
+                $scope.model.originForPricesForDestinations = undefined;
+                $scope.model.pricesForDestinationsGrouped = [];
+            }
+
             $scope.closestAirportGeoCoordinates = {
                 latitude: 0,
                 longitude: 0
@@ -74,7 +79,7 @@ define([
                         $scope.model.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped;
                         $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
                         $scope.model.priceTiersStatistics = orderedSummary.priceTiersStatistics;
-                    })
+                    }, (reason) => {clearModel()})
                     .finally(searchCompleteCallback);
             }
 
