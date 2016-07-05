@@ -2,7 +2,7 @@
     <div class="SDSThumbnailsContainer">
         <div class="SDS-row">
             <div class="SDS-col-element-md-6 SDS-col-element-xl-4 SDS-col-element-4xl-3"
-                 ng-repeat="offersForOneDestination in model.pricesForDestinationsGrouped track by $index">
+                 ng-repeat="offersForOneDestination in model.pricesForDestinationsGrouped track by offersForOneDestination.destination">
                 <div href="#" class="thumbnail">
                     <div class="SDSAspectRatioEnforcer"
                          style="background-image: url('../widgets/img/destinations/{{offersForOneDestination.destination}}.jpg'), url('../widgets/img/destinations/general_city.jpg')">
