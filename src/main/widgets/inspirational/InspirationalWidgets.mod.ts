@@ -12,6 +12,7 @@ define([
         'angular_google_maps',
         'webservices/inspirational/DestinationFinderSummaryServicePriceClassifierDecorator',
         'webservices/inspirational/DestinationFinderSummaryServiceGeoCoordsDecorator',
+        'webservices/inspirational/DestinationFinderCachedSummaryService',
         'webservices/geo/ClosestAirportGeoService',
         'widgets/inspirational/changeOriginSelect.drv'
     ],
@@ -29,6 +30,7 @@ define([
         angularGoogleMapsModule,
         DestinationFinderSummaryServicePriceClassifierDecoratorSrc,
         DestinationFinderSummaryServiceGeoCoordsDecoratorSrc,
+        DestinationFinderCachedSummaryServiceSrc,
         ClosestAirportGeoServiceSrc,
         ChangeOriginSelectDirective
     ) {
@@ -52,11 +54,13 @@ define([
             .service('ThemedInspirationalSearchCompleteBroadcastingService', ThemedInspirationalSearchCompleteBroadcastingService)
             .service('TripOriginChangedBroadcastingService', TripOriginChangedBroadcastingService)
             .directive('travelThemesSelectionBar', TravelThemesSelectionBarDirective)
+            .factory('DestinationFinderSummaryDataServiceCached', ['DestinationFinderSummaryDataService', DestinationFinderCachedSummaryServiceSrc])
+            .factory('DestinationFinderSummaryServicePriceClassifierDecoratorCached', ['DestinationFinderSummaryServicePriceClassifierDecorator', DestinationFinderCachedSummaryServiceSrc])
             .controller('TilesThemedDestinationFinderWidgetController', [
                 '$scope',
                 'ClosestAirportGeoService',
                 'CachedGeoCodeDataService',
-                'DestinationFinderSummaryDataService',
+                'DestinationFinderSummaryDataServiceCached',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',
                 'TripOriginChangedBroadcastingService',
@@ -65,7 +69,7 @@ define([
                 '$scope',
                 'ClosestAirportGeoService',
                 'CachedGeoCodeDataService',
-                'DestinationFinderSummaryServicePriceClassifierDecorator',
+                'DestinationFinderSummaryServicePriceClassifierDecoratorCached',
                 'ThemedInspirationalSearchCriteriaBroadcastingService',
                 'ThemedInspirationalSearchCompleteBroadcastingService',
                 'TripOriginChangedBroadcastingService',
