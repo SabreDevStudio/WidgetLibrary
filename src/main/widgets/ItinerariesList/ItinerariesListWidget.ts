@@ -308,8 +308,8 @@ define([
                         , activeSearchWebService: '@?'
                         , requestBrandedItineraries: '=?'
                         , searchCriteria: '=?'
-                        , targetOnItinerarySelected: '@?'
-                        , selectedItineraryCallback: '=?' //TODO should be really callback
+                        , selectedItineraryCallback: '&?'
+                        , enableItinerarySelectButton: '@?'
                         , searchStartedCallback: '&?'
                         , searchCompletedSuccessCallback: '&?'
                         , searchCompletedErrorCallback: '&?'

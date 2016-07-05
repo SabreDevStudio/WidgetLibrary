@@ -176,14 +176,14 @@
 
         <div ng-if="!hideItinerarySelectButton">
             <div ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDSItineraryFlightDetails SDSTopBuffer-xs SDS-hidden-md"></div>
-            <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
+            <button type="button" ng-disabled="{{!enableItinerarySelectButton}}" ng-click="selectItineraryClicked(itinerary)"
                     ng-class="{'ng-hide':!flightDetailsAlwaysShown}"
                     class="SDSItineraryFlightDetails SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-hidden-md">
                 Select
             </button>
 
             <div class="SDSTopBuffer-xs SDS-visible-md"></div>
-            <button type="button" ng-disabled="{{!targetOnItinerarySelected}}" ng-click="selectItineraryClicked(itinerary)"
+            <button type="button" ng-disabled="{{!enableItinerarySelectButton}}" ng-click="selectItineraryClicked(itinerary)"
                     class="SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-visible-md">
                 Select
             </button>

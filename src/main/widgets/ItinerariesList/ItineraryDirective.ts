@@ -22,13 +22,13 @@ define([
         'use strict';
 
         return angular.module('sdsWidgets')
-            .directive('itinerary', ['$location', function ($location) {
+            .directive('itinerary', [function () {
                 return {
                     restrict: 'E',
                     scope: {
                           itinerary: '=itin'
-                        , targetOnItinerarySelected: '@?'
                         , itinerarySelectedCallback: '&?'
+                        , enableItinerarySelectButton: '@?'
                         , flightDetailsAlwaysShown: '@?'
                         , priceDetailsAlwaysShown: '@?'
                         , hideItinerarySelectButton: '@?'
@@ -38,10 +38,7 @@ define([
                     link: function (scope, element) {
                         scope.selectItineraryClicked = function (itinerary) {
                             if (_.isFunction(scope.itinerarySelectedCallback)) {
-                                scope.itinerarySelectedCallback(itinerary);
-                            }
-                            if(__.isDefined(scope.targetOnItinerarySelected)) {
-                                $location.path(scope.targetOnItinerarySelected);
+                                scope.itinerarySelectedCallback({itinerary: itinerary});
                             }
                         };
 
