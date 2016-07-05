@@ -98,7 +98,7 @@ define([
 					, requestHeadersFactory
                     , CachingDecorator
                 ) {
-                    var endpointURL = apiURL + '/v1.8.6/shop/calendar/flights';
+                    var endpointURL = apiURL + '/v1.9.4/shop/calendar/flights';
 
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
