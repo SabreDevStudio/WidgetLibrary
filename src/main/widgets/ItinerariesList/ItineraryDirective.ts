@@ -66,12 +66,14 @@ define([
                             }
 
                             domUtils.addToggleOnClickHandler(el, '.SDSItineraryToggleBrandDetails', '.SDSItineraryBrandDetails');
-                            scope.$on('$destroy', () => {
-                                domUtils.removeOnClickHandler(el, '.SDSItineraryToggleBrandDetails');
-                            });
                         }
 
                         addClickEventHandlers(element);
+
+                        scope.$on('$destroy', () => {
+                            domUtils.removeOnClickHandler(element, '.SDSItineraryToggleBrandDetails');
+                            delete scope.selectItineraryClicked;
+                        });
 
                         if (scope.standaloneWidget === "true") {
                         // WidgetGlobalCallbacks linkComplete must be called only for standalone widgets, not for partials. Most often this directive is used as partial that is why by default it is not called.

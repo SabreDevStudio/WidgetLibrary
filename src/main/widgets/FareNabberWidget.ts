@@ -155,7 +155,13 @@ define([
                                 , scope: scope
                             });
                         }
+
+
                         WidgetGlobalCallbacks.linkComplete(scope, element);
+
+                        scope.$on('$destroy', function() {
+                            element.off('click');
+                        });
                     }
                 };
             }]);

@@ -28,7 +28,11 @@ define([
                             if (__.isDefined(scope.itineraryClickedCallback)) {
                                 scope.itineraryClickedCallback({itineraryId: itineraryId});
                             }
-                        }
+                        };
+
+                        scope.$on('$destroy', function() {
+                            delete scope.itemClicked;
+                        });
                     }
                 }
             });

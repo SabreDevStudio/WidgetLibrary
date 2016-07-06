@@ -34,7 +34,12 @@ define([
                             if (__.isDefined($scope.summaryItemClickedCallback)) {
                                 $scope.summaryItemClickedCallback({itineraryId: itineraryId});
                             }
-                        }
+                        };
+
+                        $scope.$on('$destroy', function() {
+                           delete $scope.isAnyDataToDisplayAvailable;
+                           delete $scope.itemClicked;
+                        });
                     }]
                 }
             });

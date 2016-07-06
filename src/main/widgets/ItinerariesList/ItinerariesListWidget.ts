@@ -286,12 +286,12 @@ define([
 
                     $scope.summaryItemClickedCallback = function (itineraryId) {
                         $scope.paginationSettings.currentPage = getItineraryPage(itineraryId);
-                        var anchorId = getItinAnchorId(itineraryId);
+                        var anchorId = $scope.getItinAnchorId(itineraryId);
                         $location.hash(anchorId);
                         $anchorScroll();
                     };
 
-                    function getItinAnchorId(itineraryId) {
+                    $scope.getItinAnchorId = function(itineraryId) {
                         return '#SDS_itin_' + itineraryId;
                     }
 
@@ -314,6 +314,8 @@ define([
                     function clearScopeFunctionsExportedToView() {
                         delete $scope.isAnyDataToDisplayAvailable;
                         delete $scope.onSortingCriteriaChanged;
+                        delete $scope.getItinAnchorId;
+                        delete $scope.summaryItemClickedCallback;
                     }
 
                 }])
