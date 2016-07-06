@@ -64,7 +64,6 @@ define([
                     , 'dateSelectedEvent'
                     , 'BargainFinderMaxDataService'
                     , 'noResultsFoundEvent'
-                    , 'ItinerarySerializer'
                 , function (
                       $scope
                     , $filter
@@ -82,7 +81,6 @@ define([
                     , dateSelectedEvent
                     , BargainFinderMaxDataService
                     , noResultsFoundEvent
-                    , ItinerarySerializer
                 ) {
 
                     var sortCriteria = new ItinerariesListSortCriteria();
@@ -162,7 +160,10 @@ define([
 
                     function clearModel() {
                         itineraries = undefined;
+                        permittedItineraries = undefined;
                         $scope.permittedItinerariesSorted = undefined;
+                        $scope.bestItinerariesSummary = undefined;
+                        $scope.summaryPerStopsPerAirline = undefined;
                     }
 
                     function processServiceErrorMessages(newSearchCriteria, businessErrorMessages) {
@@ -285,12 +286,12 @@ define([
 
                     $scope.summaryItemClickedCallback = function (itineraryId) {
                         $scope.paginationSettings.currentPage = getItineraryPage(itineraryId);
-                        var anchorId = $scope.getItinAnchorId(itineraryId);
+                        var anchorId = getItinAnchorId(itineraryId);
                         $location.hash(anchorId);
                         $anchorScroll();
                     };
 
-                    $scope.getItinAnchorId = function(itineraryId) {
+                    function getItinAnchorId(itineraryId) {
                         return '#SDS_itin_' + itineraryId;
                     }
 
@@ -299,8 +300,24 @@ define([
                         return Math.ceil(itinerarySequentialPosition / $scope.itemsPerPage);
                     }
 
+                    $scope.$on('$destroy', function() {
+                        clearModel();
+                        delete $scope.availableSortCriteria;
+                        delete $scope.selectedFirstCriterion;
+                        delete $scope.paginationSettings;
+                        delete $scope.itemsPerPage;
+                        searchStrategyFactory = undefined;
+                        searchStrategy = undefined;
+                        clearScopeFunctionsExportedToView();
+                    });
+
+                    function clearScopeFunctionsExportedToView() {
+                        delete $scope.isAnyDataToDisplayAvailable;
+                        delete $scope.onSortingCriteriaChanged;
+                    }
+
                 }])
-            .directive('itineraryList', ['$templateCache', function ($templateCache) {
+            .directive('itineraryList', [function () {
                 return {
                     restrict: 'EA',
                     scope: {
