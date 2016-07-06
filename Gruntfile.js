@@ -516,6 +516,19 @@ module.exports = function (grunt) {
         , 'copy-static-resources'
     ]);
 
+    grunt.registerTask('build-library-only-fast', [
+        //'clean:dist'
+        //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
+        'typescript:app'
+        //, 'unit-test'
+        //, 'copy:cdnify-inline-style-images-urls'
+        //, 'cdnify:widgetImages'
+        , 'prepare-sources-pipeline'
+        , 'requirejs:compile-library-only'
+        //, 'css-pipeline'
+        //, 'copy-static-resources'
+    ]);
+
     grunt.registerTask('dist-all', [
         'clean:dist'
         //, 'lodashAutobuild:customBuild' // skipped lodash custom builds to save build time
