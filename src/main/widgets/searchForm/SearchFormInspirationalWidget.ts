@@ -75,7 +75,7 @@ define([
                         scope.isVisible = function (htmlFieldName) {
                             return !_.contains(fieldsToHide, htmlFieldName);
                         }
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 }
             }]);

@@ -79,7 +79,7 @@ define([
                     controllerAs: 'ctrl',
                     link: function (scope, element, attrs, controller) {
                         controller.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 };
             });

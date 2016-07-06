@@ -14,8 +14,8 @@ define([
                 },
                 templateUrl: '../widgets/view-templates/widgets/TilesThemedDestinationFinderWidget.tpl.html',
                 controller: 'TilesThemedDestinationFinderWidgetController',
-                link: function () {
-                    WidgetGlobalCallbacks.linkComplete();
+                link: function (scope, element) {
+                    WidgetGlobalCallbacks.linkComplete(scope, element);
                 }
             }
         }

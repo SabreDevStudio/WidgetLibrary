@@ -235,7 +235,7 @@ define([
 
                        scheduleDeferredElementsLoad();
 
-                       WidgetGlobalCallbacks.linkComplete();
+                       WidgetGlobalCallbacks.linkComplete(scope, element);
 
                        function parseFieldsToHide() {
                            scope.fieldsToHide = element.attr('hide-fields') && element.attr('hide-fields').split(',') || [];

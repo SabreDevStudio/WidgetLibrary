@@ -33,7 +33,7 @@ define([
                 return {
                     replace: true,
                     templateUrl: '../widgets/view-templates/widgets/ErrorDisplayWidget.tpl.html',
-                    link: function (scope) {
+                    link: function (scope, element) {
 
                         function resetErrorModel() {
                             scope.errors = [];
@@ -61,7 +61,7 @@ define([
                         scope.anyErrorPresent = function () {
                             return scope.errors && scope.errors.length > 0;
                         };
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 }
             }]);

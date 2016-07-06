@@ -130,7 +130,7 @@ define([
                     link: function (scope, element, attrs) {
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) || 1;
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 }
             }])
@@ -149,7 +149,7 @@ define([
                         scope.numberOfMonthsShownAtOnce = parseInt(scope.numberOfMonthsShownAtOnce) || 1;
                         scope.numberOfMonths = parseInt(scope.numberOfMonths) || 10;
                         scope.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 }
             }])

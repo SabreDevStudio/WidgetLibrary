@@ -110,7 +110,7 @@ define([
                             , element.attr('return-date')
                             , element.attr('alt-dates-plus-minus')
                         );
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 };
             });

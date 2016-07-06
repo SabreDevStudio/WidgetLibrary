@@ -236,7 +236,7 @@ define([
                         chartInstance = chartsFactory.createBarChart(element, chartData);
 
                         controller.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 };
             }]);

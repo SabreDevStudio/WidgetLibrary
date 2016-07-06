@@ -337,7 +337,7 @@ define([
                             }
                         }
 
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
 
                 };

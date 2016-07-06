@@ -155,7 +155,7 @@ define([
                                 , scope: scope
                             });
                         }
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 };
             }]);

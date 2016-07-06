@@ -60,8 +60,8 @@ define([
                     scope: true,
                     templateUrl: '../widgets/view-templates/widgets/FiltersPanelWidget.tpl.html',
                     controller: 'FiltersPanelCtrl',
-                    link: function () {
-                        WidgetGlobalCallbacks.linkComplete();
+                    link: function (scope, element) {
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 }
             });

@@ -94,7 +94,7 @@ define([
                                 controller.processSearchCriteria(searchCriteria);
                             }
                         }
-                        WidgetGlobalCallbacks.linkComplete();
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 };
             });

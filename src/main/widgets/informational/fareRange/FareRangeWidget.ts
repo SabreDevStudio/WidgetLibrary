@@ -129,8 +129,8 @@ define([
                     },
                     templateUrl: '../widgets/view-templates/widgets/FareRangeWidget.tpl.html',
                     controller: 'FareRangeCtrl',
-                    link: function () {
-                        WidgetGlobalCallbacks.linkComplete();
+                    link: function (scope, element) {
+                        WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 };
             })
