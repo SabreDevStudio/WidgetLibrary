@@ -47,21 +47,35 @@ define([
                                 domUtils.addToggleOnClickHandler(el, '.SDSItineraryTogglePriceDetails', '.SDSItineraryPriceDetails');
                                 domUtils.addShowOnClickHandler(el, '.SDSItineraryShowPriceDetails', '.SDSItineraryPriceDetails');
                                 domUtils.addHideOnClickHandler(el, '.SDSItineraryHidePriceDetails', '.SDSItineraryPriceDetails');
+                                scope.$on('$destroy', () => {
+                                    domUtils.removeOnClickHandler(el, '.SDSItineraryTogglePriceDetails');
+                                    domUtils.removeOnClickHandler(el, '.SDSItineraryShowPriceDetails');
+                                    domUtils.removeOnClickHandler(el, '.SDSItineraryHidePriceDetails');
+                                });
                             }
 
                             if (!scope.flightDetailsAlwaysShown) {
                                 domUtils.addToggleOnClickHandler(el, '.SDSItineraryToggleFlightDetails', '.SDSItineraryFlightDetails');
                                 domUtils.addShowOnClickHandler(el, '.SDSItineraryShowFlightDetails', '.SDSItineraryFlightDetails', '.SDSItineraryHideWhenFlightDetailsShown');
                                 domUtils.addHideOnClickHandler(el, '.SDSItineraryHideFlightDetails', '.SDSItineraryFlightDetails', '.SDSItineraryHideWhenFlightDetailsShown');
+                                scope.$on('$destroy', () => {
+                                    domUtils.removeOnClickHandler(el, '.SDSItineraryToggleFlightDetails');
+                                    domUtils.removeOnClickHandler(el, '.SDSItineraryShowFlightDetails');
+                                    domUtils.removeOnClickHandler(el, '.SDSItineraryHideFlightDetails');
+                                });
                             }
 
                             domUtils.addToggleOnClickHandler(el, '.SDSItineraryToggleBrandDetails', '.SDSItineraryBrandDetails');
+                            scope.$on('$destroy', () => {
+                                domUtils.removeOnClickHandler(el, '.SDSItineraryToggleBrandDetails');
+                            });
                         }
 
                         addClickEventHandlers(element);
+
                         if (scope.standaloneWidget === "true") {
                         // WidgetGlobalCallbacks linkComplete must be called only for standalone widgets, not for partials. Most often this directive is used as partial that is why by default it is not called.
-                            WidgetGlobalCallbacks.linkComplete();
+                            WidgetGlobalCallbacks.linkComplete(scope, element);
                         }
 
                     }
