@@ -42,10 +42,11 @@
                                                 </div>
                                                 <div class="clearfix"></div>
                                                 <a class="pull-right" href=""
-                                                   popover-template="'DestinationPricerDetailsPopover'"
-                                                   popover-trigger="mouseenter"
-                                                   popover-placement="bottom"
-                                                   popover-append-to-body="true">Details
+                                                   ns-popover
+                                                   ns-popover-template="DestinationPricerDetailsPopover"
+                                                   ns-popover-trigger="mouseenter"
+                                                   ns-popover-placement="bottom"
+                                                   ns-popover-timeout="0.2">Details
                                                 </a>
                                             </div>
                                         </div>
@@ -61,7 +62,9 @@
 </div>
 
 <script type="text/ng-template" id="DestinationPricerDetailsPopover">
-    <ul class="list-inline list-unstyled">
+    <div class="SDSDestinationPricerDetailsPopover">
+    <span class="triangle"></span>
+    <ul class="list-unstyled">
         <li>
             <small>Departure {{offerItem.DepartureDateTime | makeMomentAndFormat:'ddd, DD MMM'}} from {{offerItem.OriginLocation | cityAndAirportFullName:ctrl.lastRequestPosCountryOverride}}</small><!-- format: Sun, 05 Dec-->
         </li>

@@ -15,6 +15,7 @@ define([
       , 'angular-rangeslider'
       , 'angular_iso_currency'
       , 'angular-touch'
+      , 'nsPopover'
     ],
     function (
           NG
@@ -33,6 +34,7 @@ define([
         , angular_rangeslider
         , angular_iso_currency
         , angular_touch
+        , nsPopover
     ) {
         'use strict';
 
@@ -51,6 +53,7 @@ define([
                 , 'ui-rangeSlider'
                 , 'isoCurrency'
                 , 'ngTouch'
+                , 'nsPopover'
             ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .constant('newInspirationalSearchCriteriaEvent', 'newInspirationalSearchCriteriaEvent')

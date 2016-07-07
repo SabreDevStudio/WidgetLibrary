@@ -18,10 +18,11 @@
                     </li>
                 </ul>
                 <ul class="SDS-col-element-lg-3 SDS-visible-lg list-inline list-unstyled text-right"
-                    popover-template="'ItineraryIconsLegendTemplate'"
-                    popover-trigger="mouseenter"
-                    popover-placement="bottom"
-                    popover-append-to-body="true">
+                    ns-popover
+                    ns-popover-template="ItineraryIconsLegendTemplate"
+                    ns-popover-trigger="mouseenter"
+                    ns-popover-placement="top|right"
+                    ns-popover-timeout="0.2">
                     <li ng-if="itinerary.hasRedEyeFlight()" class="SDSIconRedEye"></li>
                     <li ng-if="itinerary.hasShortConnection()" class="SDSIconHurryUpShortConnection"></li>
                     <li ng-if="itinerary.hasLongConnection()" class="SDSIconLongConnection"></li>
@@ -192,14 +193,17 @@
 </div>
 
 <script type="text/ng-template" id="ItineraryIconsLegendTemplate">
-    <dl>
-        <dt ng-if="itinerary.hasRedEyeFlight()"><span class="SDSIconRedEye"></span></dt>
-        <dd ng-if="itinerary.hasRedEyeFlight()">Red-eye flight</dd>
-        <dt ng-if="itinerary.hasShortConnection()"><span class="SDSIconHurryUpShortConnection"></span></dt>
-        <dd ng-if="itinerary.hasShortConnection()">Short connection, hurry up</dd>
-        <dt ng-if="itinerary.hasLongConnection()"><span class="SDSIconLongConnection"></span></dt>
-        <dd ng-if="itinerary.hasLongConnection()">Long connection, long wait time at airport</dd>
-        <dt ng-if="itinerary.hasLowSeatsRemaining()"><span class="SDSIconFewSeatsLeft"></span></dt>
-        <dd ng-if="itinerary.hasLowSeatsRemaining()">Few seats left</dd>
-    </dl>
+    <div class="SDSItineraryIconsLegendTemplate">
+        <div class="triangle"></div>
+        <dl>
+            <dt ng-if="itinerary.hasRedEyeFlight()"><span class="SDSIconRedEye"></span></dt>
+            <dd ng-if="itinerary.hasRedEyeFlight()">Red-eye flight</dd>
+            <dt ng-if="itinerary.hasShortConnection()"><span class="SDSIconHurryUpShortConnection"></span></dt>
+            <dd ng-if="itinerary.hasShortConnection()">Short connection, hurry up</dd>
+            <dt ng-if="itinerary.hasLongConnection()"><span class="SDSIconLongConnection"></span></dt>
+            <dd ng-if="itinerary.hasLongConnection()">Long connection, long wait time at airport</dd>
+            <dt ng-if="itinerary.hasLowSeatsRemaining()"><span class="SDSIconFewSeatsLeft"></span></dt>
+            <dd ng-if="itinerary.hasLowSeatsRemaining()">Few seats left</dd>
+        </dl>
+    </div>
 </script>

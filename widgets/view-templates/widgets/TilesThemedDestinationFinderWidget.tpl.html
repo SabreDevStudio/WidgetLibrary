@@ -17,7 +17,11 @@
                         <div class="clearfix"></div>
                         <span class="pull-right"
                               ng-init="parameter=offersForOneDestination"><!-- ng-init is needed to set 'parameter' model value for the included, shared template. And specific model value name is required because that template is also used (DRY) by other directive which enforces that particular name (ui-gmap-windowm and it is not overrideable)-->
-                            <a href="" popover-template="'../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html'">
+                            <a href=""
+                               ns-popover
+                               ns-popover-template="../widgets/view-templates/partials/DestinationFinderOfferDetailsInfoView.tpl.html"
+                               ns-popover-placement="top"
+                               ns-popover-timeout="0.2">
                                 Show flights
                             </a>
                         </span>

@@ -20,6 +20,7 @@ require.config({
         , 'ResizeSensor': '../../bower_components/css-element-queries/src/ResizeSensor'
         , 'angular_google_maps': '../../bower_components/angular-google-maps/dist/angular-google-maps'
         , 'angular-simple-logger': '../../bower_components/angular-simple-logger/dist/angular-simple-logger'
+        , 'nsPopover': '../../bower_components/nsPopover/src/nsPopover'
     },
     map: {
         '*': {
@@ -73,6 +74,9 @@ require.config({
         },
         'elementQuery': {
             deps: ['ResizeSensor']
+        },
+        'nsPopover': {
+            deps: ['angular']
         }
     },
     config: {
