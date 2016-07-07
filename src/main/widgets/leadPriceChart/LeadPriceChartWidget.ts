@@ -237,6 +237,10 @@ define([
 
                         controller.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
                         WidgetGlobalCallbacks.linkComplete(scope, element);
+
+                        scope.$on('$destroy', function() {
+                            chartInstance.destroy();
+                        });
                     }
                 };
             }]);

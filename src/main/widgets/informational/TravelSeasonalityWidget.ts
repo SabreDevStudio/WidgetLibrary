@@ -161,6 +161,10 @@ define([
                             controller.processSearchCriteria(searchCriteria);
                         }
                         WidgetGlobalCallbacks.linkComplete(scope, element);
+
+                        scope.$on('$destroy', function() {
+                            chartInstance.destroy();
+                        });
                     }
                 }
             }]);
