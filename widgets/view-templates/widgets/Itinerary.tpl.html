@@ -4,16 +4,16 @@
             <div class="SDS-row">
                 <ul class="SDS-col-element-xxs-12 SDS-hidden-xs list-inline list-unstyled">
                     <li>
-                        <airline-logo airline-code="{{itin.allMarketingAirlines[0]}}"></airline-logo>
-                        <small>{{itin.allMarketingAirlines[0] | airlineFullName}}</small>
+                        <airline-logo airline-code="{{::itin.allMarketingAirlines[0]}}"></airline-logo>
+                        <small>{{::itin.allMarketingAirlines[0] | airlineFullName}}</small>
                         <small>and other airlines</small>
                     </li>
                 </ul>
                 <ul class="SDS-col-element-xxs-9 SDS-visible-xs list-inline list-unstyled">
                     <li ng-repeat="marketingAirline in itin.allMarketingAirlines">
                         <ul class="list-unstyled list-inline">
-                            <li><airline-logo airline-code="{{marketingAirline}}"></airline-logo></li>
-                            <li><small>{{marketingAirline | airlineFullName}}</small></li>
+                            <li><airline-logo airline-code="{{::marketingAirline}}"></airline-logo></li>
+                            <li><small>{{::marketingAirline | airlineFullName}}</small></li>
                         </ul>
                     </li>
                 </ul>
@@ -34,30 +34,30 @@
         <li ng-repeat="leg in itin.legs" ng-init="legIndex = $index">
             <div class="SDSLegSummary SDS-row">
                 <div class="SDS-col-element-xxs-4 SDS-col-element-md-4 SDS-col-element-lg-5">
-                    <span class="SDS-visible-xl-inline-block SDSTravelDateLong">{{leg.departureDateTime.format('ddd, DD MMM')}}</span><!-- format: Sun, 05 Dec -->
-                    <span class="SDSTravelTime">{{leg.departureDateTime.format('HH:mm')}}</span><!-- format: 14:34 -->
+                    <span class="SDS-visible-xl-inline-block SDSTravelDateLong">{{::leg.departureDateTime.format('ddd, DD MMM')}}</span><!-- format: Sun, 05 Dec -->
+                    <span class="SDSTravelTime">{{::leg.departureDateTime.format('HH:mm')}}</span><!-- format: 14:34 -->
                                     <span ng-class="{'bg-warning':leg.hasAirportChangeAtDeparture}">
-                                        <span class="badge SDSBadgeInfo">{{leg.departureAirport}}</span><span class="SDS-visible-xl-inline-block SDSFullAirportName">{{leg.departureAirport | cityAndAirportFullName}}</span>
+                                        <span class="badge SDSBadgeInfo">{{::leg.departureAirport}}</span><span class="SDS-visible-xl-inline-block SDSFullAirportName">{{::leg.departureAirport | cityAndAirportFullName}}</span>
                                     </span>
                 </div>
                 <div class="SDS-col-element-xxs-1">
                     <div class="SDSIconAirplaneArrow"></div>
                 </div>
                 <div class="SDS-col-element-xxs-4 SDS-col-element-md-4 SDS-col-element-lg-4">
-                    <span class="SDSTravelTime">{{leg.arrivalDateTime.format('HH:mm')}}</span>
+                    <span class="SDSTravelTime">{{::leg.arrivalDateTime.format('HH:mm')}}</span>
                                     <span ng-class="{'bg-warning':leg.hasAirportChangeAtArrival}">
-                                        <span class="badge SDSBadgeInfo">{{leg.arrivalAirport}}</span><span class="SDS-visible-xl-inline-block SDSFullAirportName">{{leg.arrivalAirport | cityAndAirportFullName}}</span>
+                                        <span class="badge SDSBadgeInfo">{{::leg.arrivalAirport}}</span><span class="SDS-visible-xl-inline-block SDSFullAirportName">{{::leg.arrivalAirport | cityAndAirportFullName}}</span>
                                     </span>
                 </div>
                 <div class="SDS-col-element-xxs-3 SDS-col-element-md-3 SDS-col-element-lg-2">
-                    <span>{{leg.getDuration() | humanizeMinutes }}</span>
+                    <span>{{::leg.getDuration() | humanizeMinutes }}</span>
                                     <span class="SDS-visible-md-inline-block"><ng-pluralize count="leg.getNumberOfStops()" when="
                                             {'0': 'Non-stop',
                                              '1': '1 stop',
                                              'other': '{} stops'}
                                             "></ng-pluralize>
                                     </span>
-                    <span ng-if="leg.hasConnection()">{{leg.getConnectionAirports() | stringJoiner:',':'(':')'}}</span>
+                    <span ng-if="leg.hasConnection()">{{::leg.getConnectionAirports() | stringJoiner:',':'(':')'}}</span>
                 </div>
             </div>
 
@@ -73,13 +73,13 @@
                 <li class="list-group-item" ng-repeat-start="flight in leg.segments" ng-init="segmentIndex = $index">
                     <ul class="list-unstyled">
                         <!--<li>-->
-                        <!--{{flight.duration | humanizeMinutes}}-->
+                        <!--{{::flight.duration | humanizeMinutes}}-->
                         <!--</li>-->
                         <li>
                             <div class="SDS-row">
                                 <strong>
-                                    <airline-logo airline-code="{{flight.marketingAirline}}"></airline-logo>
-                                    {{flight.marketingAirline}} {{flight.marketingFlightNumber}} {{flight.marketingAirline | airlineFullName}}
+                                    <airline-logo airline-code="{{::flight.marketingAirline}}"></airline-logo>
+                                    {{::flight.marketingAirline}} {{::flight.marketingFlightNumber}} {{::flight.marketingAirline | airlineFullName}}
                                 </strong>
                             </div>
                         </li>
@@ -87,11 +87,11 @@
                             <div class="SDS-row SDSFlightDepartureOrArrival">
                                 <div class="SDS-col-element-sm-4">
                                     <span class="SDSLabelForTravelDate">Depart:</span>
-                                    {{flight.departureDateTime.format('ddd, DD MMM HH:mm')}}
+                                    {{::flight.departureDateTime.format('ddd, DD MMM HH:mm')}}
                                 </div>
                                 <div class="SDS-col-element-sm-8">
-                                    <span class="SDSAirport badge SDSBadgeInfo">{{flight.departureAirport}}</span>
-                                    <span class="SDSFullAirportName">{{flight.departureAirport | cityAndAirportFullName}}, {{flight.departureAirport | airportCountry}}</span>
+                                    <span class="SDSAirport badge SDSBadgeInfo">{{::flight.departureAirport}}</span>
+                                    <span class="SDSFullAirportName">{{::flight.departureAirport | cityAndAirportFullName}}, {{::flight.departureAirport | airportCountry}}</span>
                                 </div>
                             </div>
                         </li>
@@ -99,33 +99,33 @@
                             <div class="SDS-row SDSFlightDepartureOrArrival">
                                 <div class="SDS-col-element-sm-4">
                                     <span class="SDSLabelForTravelDate">Arrive:</span>
-                                    {{flight.arrivalDateTime.format('ddd, DD MMM HH:mm')}}
+                                    {{::flight.arrivalDateTime.format('ddd, DD MMM HH:mm')}}
                                 </div>
                                 <div class="SDS-col-element-sm-8">
-                                    <span class="SDSAirport badge SDSBadgeInfo">{{flight.arrivalAirport}}</span>
-                                    <span class="SDSFullAirportName">{{flight.arrivalAirport | cityAndAirportFullName}}, {{flight.arrivalAirport | airportCountry}}</span>
+                                    <span class="SDSAirport badge SDSBadgeInfo">{{::flight.arrivalAirport}}</span>
+                                    <span class="SDSFullAirportName">{{::flight.arrivalAirport | cityAndAirportFullName}}, {{::flight.arrivalAirport | airportCountry}}</span>
                                 </div>
                             </div>
                         </li>
                         <li>
                             <div class="SDS-row">
                                 <div class="SDS-col-element-lg-2">
-                                    <small>{{flight.equipment | aircraftName}}</small>
+                                    <small>{{::flight.equipment | aircraftName}}</small>
                                 </div>
                                 <div class="SDS-col-element-lg-2 SDS-col-element-xl-1">
-                                    <small>{{itin.getSeatsRemaining(legIndex, segmentIndex)}} seats left</small>
+                                    <small>{{::itin.getSeatsRemaining(legIndex, segmentIndex)}} seats left</small>
                                 </div>
                                 <div class="SDS-col-element-lg-1 SDS-col-element-xl-1">
-                                    <small>{{itin.getCabin(legIndex, segmentIndex) | cabin}}</small>
+                                    <small>{{::itin.getCabin(legIndex, segmentIndex) | cabin}}</small>
                                 </div>
                                 <div class="SDS-col-element-lg-2 SDS-col-element-xl-1" ng-if="itin.getMeals(legIndex, segmentIndex)">
-                                    <small>Meal: {{itin.getMeals(legIndex, segmentIndex) | meal}}</small>
+                                    <small>Meal: {{::itin.getMeals(legIndex, segmentIndex) | meal}}</small>
                                 </div>
                                 <div class="SDS-col-element-lg-3 SDS-col-element-xl-2" ng-if="itin.getBaggageAllowance(legIndex, segmentIndex)">
-                                    <small>Baggage allowance: {{itin.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}}</small>
+                                    <small>Baggage allowance: {{::itin.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}}</small>
                                 </div>
                                 <div class="SDS-col-element-lg-2 SDS-col-element-xl-2" ng-if="itin.getBrandsMatchedToFlight(legIndex, segmentIndex).length > 0">
-                                    <small>Brands matched: {{itin.getBrandsMatchedToFlight(legIndex, segmentIndex) | stringJoiner}}
+                                    <small>Brands matched: {{::itin.getBrandsMatchedToFlight(legIndex, segmentIndex) | stringJoiner}}
                                     </small>
                                 </div>
                             </div>
@@ -133,7 +133,7 @@
                     </ul>
                 </li>
                 <li ng-repeat-end ng-if="!$last" class="list-group-item">
-                    Connection {{leg.getConnectionTimeMinutes(segmentIndex) | humanizeMinutes}}
+                    Connection {{::leg.getConnectionTimeMinutes(segmentIndex) | humanizeMinutes}}
                 </li>
             </ul>
         </li>
@@ -158,18 +158,18 @@
         </div>
         <div>
             <ul class="list-unstyled pull-right">
-                <li>Total price: <strong >{{itin.totalFareAmountWithCurrency.amount | currency:itin.totalFareAmountWithCurrency.currency}}</strong></li>
+                <li>Total price: <strong >{{::itin.totalFareAmountWithCurrency.amount | currency:itin.totalFareAmountWithCurrency.currency}}</strong></li>
                 <li ng-show="!priceDetailsAlwaysShown">
                     <a href="" class="SDS-visible-lg ng-show SDSItineraryTogglePriceDetails">Price Details</a>
                 </li>
                 <li ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
-                    Base fare: {{itin.baseFareAmount | currency:itin.baseFareCurrency}}
+                    Base fare: {{::itin.baseFareAmount | currency:itin.baseFareCurrency}}
                 </li>
                 <li ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
-                    Taxes: {{itin.totalTaxAmount | currency:itin.totalTaxCurrency}}
+                    Taxes: {{::itin.totalTaxAmount | currency:itin.totalTaxCurrency}}
                 </li>
                 <li ng-if="itin.baggageCharges" ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
-                    Bag charges: {{itin.baggageCharges | currency:itin.totalTaxCurrency}}
+                    Bag charges: {{::itin.baggageCharges | currency:itin.totalTaxCurrency}}
                 </li>
             </ul>
         </div>
@@ -177,14 +177,14 @@
 
         <div ng-if="!hideItinerarySelectButton">
             <div ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDSItineraryFlightDetails SDSTopBuffer-xs SDS-hidden-md"></div>
-            <button type="button" ng-disabled="{{!enableItinerarySelectButton}}" ng-click="selectItineraryClicked(itin)"
+            <button type="button" ng-disabled="{{::!enableItinerarySelectButton}}" ng-click="selectItineraryClicked(itin)"
                     ng-class="{'ng-hide':!flightDetailsAlwaysShown}"
                     class="SDSItineraryFlightDetails SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-hidden-md">
                 Select
             </button>
 
             <div class="SDSTopBuffer-xs SDS-visible-md"></div>
-            <button type="button" ng-disabled="{{!enableItinerarySelectButton}}" ng-click="selectItineraryClicked(itin)"
+            <button type="button" ng-disabled="{{::!enableItinerarySelectButton}}" ng-click="selectItineraryClicked(itin)"
                     class="SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-visible-md">
                 Select
             </button>
