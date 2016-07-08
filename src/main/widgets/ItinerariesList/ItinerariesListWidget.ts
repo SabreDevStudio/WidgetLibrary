@@ -95,6 +95,7 @@ define([
 
                     var itineraries;
                     var permittedItineraries;
+                    var permittedItinerariesSorted;
 
                     function resetNavigationAndSortCriteria() {
                         sortCriteria.resetSortCriteria();
@@ -107,8 +108,7 @@ define([
 
                     $scope.onSortingCriteriaChanged = function () {
                         sortCriteria.setSortCriteria($scope.selectedFirstCriterion.selected);
-                        // filtering in controller, not in view filter for performance reasons
-                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, sortCriteria.getCurrentSortCriteria());
+                        updateAllItinListsExportedToView(permittedItineraries);
 
                         // when changing sorting criteria, which will trigger resorting of itineraries list, reset current page to 1.
                         // The customer expectation upon changing sort criteria, is to see, at the very top of the list,
@@ -116,6 +116,25 @@ define([
                         // However in case customer was already on any results page other than one, then it will not be displayed at the top (we are on the other page and we would need to manually go to page 1).
                         $scope.paginationSettings.currentPage = 1;
                     };
+
+                    $scope.$watch('paginationSettings.currentPage', function (newPage, oldPage) {
+                        if (newPage === oldPage) {
+                            return;
+                        }
+                        $scope.permittedItinerariesSortedCurrentPageView = updateItinListForCurrentPage();
+                    });
+
+                    function updateAllItinListsExportedToView(permittedItins) {
+                        // filtering in controller, not in view filter for performance reasons
+                        permittedItinerariesSorted = $filter('sortByCriteria')(permittedItins, sortCriteria.getCurrentSortCriteria());
+                        $scope.permittedItinerariesSortedCurrentPageView = updateItinListForCurrentPage();
+                    }
+
+                    function updateItinListForCurrentPage() {
+                        var startIdx = ($scope.paginationSettings.currentPage - 1) * $scope.itemsPerPage;
+                        var endIdx = startIdx + $scope.itemsPerPage;
+                        return permittedItinerariesSorted.slice(startIdx, endIdx);
+                    }
 
                     /**
                      * Recalculates itinerary list summaries:
@@ -125,10 +144,10 @@ define([
                     function recalculateSummaries() {
                         $scope.bestItinerariesSummary = {
                             cheapest: itineraries.getCheapestItinerary(),
-                            best: _.last($scope.permittedItinerariesSorted.slice().sort(DiversitySwapper.comparator)),// have to sort on copy, not original, not to mutate original array which is the source for displaying the itineraries list
+                            best: _.last(permittedItinerariesSorted.slice().sort(DiversitySwapper.comparator)),// have to sort on copy, not original, not to mutate original array which is the source for displaying the itineraries list
                             shortest: itineraries.getShortestItinerary()
                         };
-                        $scope.summaryPerStopsPerAirline = (new ItinerariesListSummaryByAirlineAndNumberOfStops($scope.permittedItinerariesSorted)).getSummaries();
+                        $scope.summaryPerStopsPerAirline = (new ItinerariesListSummaryByAirlineAndNumberOfStops(permittedItinerariesSorted)).getSummaries();
                     }
 
                     function processNewItineraries(newSearchCriteria, itins) {
@@ -152,7 +171,8 @@ define([
 
                     function processItinerariesUpdate(newSearchCriteria) {
                         permittedItineraries = itineraries.getPermittedItineraries();
-                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, sortCriteria.getCurrentSortCriteria());
+                        $scope.permittedItinerariesCount = permittedItineraries.length;
+                        updateAllItinListsExportedToView(permittedItineraries);
                         recalculateAndBroadcastStatistics();
                         recalculateSummaries();
                         updateSearchAirports(newSearchCriteria);
@@ -161,7 +181,8 @@ define([
                     function clearModel() {
                         itineraries = undefined;
                         permittedItineraries = undefined;
-                        $scope.permittedItinerariesSorted = undefined;
+                        permittedItinerariesSorted = undefined;
+                        $scope.permittedItinerariesSortedCurrentPageView = undefined;
                         $scope.bestItinerariesSummary = undefined;
                         $scope.summaryPerStopsPerAirline = undefined;
                     }
@@ -227,7 +248,8 @@ define([
                         var currentFilteringFunctions = FilteringCriteriaChangedBroadcastingService.filteringFunctions;
                         itineraries.applyFilters(currentFilteringFunctions);
                         permittedItineraries = itineraries.getPermittedItineraries();
-                        $scope.permittedItinerariesSorted = $filter('sortByCriteria')(permittedItineraries, sortCriteria.getCurrentSortCriteria());
+                        $scope.permittedItinerariesCount = permittedItineraries.length;
+                        updateAllItinListsExportedToView(permittedItineraries);
                         recalculateSummaries();
                         $scope.$evalAsync();
                         // We need to call the digest cycle manually, as we changed the model outside of Angular (we have read the state of filters UI controls (sliders), sent new filtering functions thru event and applied to the itineraries domain model).
@@ -281,7 +303,7 @@ define([
                         if (_.isUndefined(itineraries)) {
                             return false;
                         }
-                        return ($scope.permittedItinerariesSorted.length > 0);
+                        return ($scope.permittedItinerariesCount > 0);
                     };
 
                     $scope.summaryItemClickedCallback = function (itineraryId) {
@@ -296,7 +318,7 @@ define([
                     }
 
                     function getItineraryPage(itineraryId) {
-                        var itinerarySequentialPosition = 1 + _.findIndex($scope.permittedItinerariesSorted, itin => (itin.id === itineraryId));
+                        var itinerarySequentialPosition = 1 + _.findIndex(permittedItinerariesSorted, itin => (itin.id === itineraryId));
                         return Math.ceil(itinerarySequentialPosition / $scope.itemsPerPage);
                     }
 
