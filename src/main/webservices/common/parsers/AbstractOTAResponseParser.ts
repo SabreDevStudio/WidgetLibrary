@@ -105,6 +105,7 @@ define([
 
             itinerary.pricingSource = this.parsePricingSource(responseItin);
             itinerary.id = responseItin.SequenceNumber;
+            itinerary.build();
             return itinerary;
         };
 
@@ -202,6 +203,7 @@ define([
                     operatingAirline: segment.OperatingAirline.Code
                 });
             });
+            leg.build();
             return leg;
         };
 

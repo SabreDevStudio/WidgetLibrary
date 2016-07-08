@@ -27,6 +27,7 @@ define([
                     itin.itineraryPricingInfo = deserializeItineraryPricingInfo(itinJsonObj.itineraryPricingInfo);
                     itin.pricingSource = itinJsonObj.pricingSource;
                     itin.id = itinJsonObj.id;
+                    itin.build();
                     return itin;
                 }
             };
@@ -38,6 +39,7 @@ define([
                     leg.duration = legObj.duration;
                     leg.hasAirportChangeAtDeparture = legObj.hasAirportChangeAtDeparture;
                     leg.hasAirportChangeAtArrival = legObj.hasAirportChangeAtArrival;
+                    leg.build();
                     return leg;
                 });
             }

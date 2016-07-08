@@ -26,7 +26,7 @@ define([
                 return {
                     restrict: 'E',
                     scope: {
-                          itinerary: '=itin'
+                          itin: '='
                         , itinerarySelectedCallback: '&?'
                         , enableItinerarySelectButton: '@?'
                         , flightDetailsAlwaysShown: '@?'

@@ -33,27 +33,35 @@ define([
             this.segments.push(segment);
         };
 
+        // after calling build we assume Leg is immutable
+        Leg.prototype.build = function() {
+            calculateDepartureAirport(this);
+            calculateArrivalAirport(this);
+            calculateDepartureDateTime(this);
+            calculateArrivalDateTime(this);
+        };
+
         /**
          * returns departure (origin) for the whole leg: that is the departure airport of the first segment of the leg
          */
-        Leg.prototype.getLegDepartureAirport = function() {
-            return _.first(this.segments).departureAirport;
-        };
+        function calculateDepartureAirport(leg) {
+            leg.departureAirport = _.first(leg.segments).departureAirport;
+        }
 
         /**
          * returns arrival (destination) airport for the whole leg: the arrival airport of the last segment of the leg
          */
-        Leg.prototype.getLegArrivalAirport = function() {
-            return _.last(this.segments).arrivalAirport;
-        };
+        function calculateArrivalAirport(leg) {
+            leg.arrivalAirport = _.last(leg.segments).arrivalAirport;
+        }
 
-        Leg.prototype.getLegDepartureDateTime = function () {
-            return _.first(this.segments).departureDateTime;
-        };
+        function calculateDepartureDateTime(leg) {
+            leg.departureDateTime = _.first(leg.segments).departureDateTime;
+        }
 
-        Leg.prototype.getLegArrivalDateTime = function () {
-            return _.last(this.segments).arrivalDateTime;
-        };
+        function calculateArrivalDateTime(leg) {
+            leg.arrivalDateTime = _.last(leg.segments).arrivalDateTime;
+        }
 
         /**
          * Returns number of connections (stops) in this leg
