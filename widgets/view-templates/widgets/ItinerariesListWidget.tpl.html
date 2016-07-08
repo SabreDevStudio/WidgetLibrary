@@ -63,7 +63,7 @@
         <ul class="list-unstyled SDSTopLevelList">
             <li class="SDS-row" ng-repeat="itinerary in permittedItinerariesSorted
                                             | startFrom: (paginationSettings.currentPage - 1)*itemsPerPage | limitTo: itemsPerPage"><!-- warn: cannot have track by $index here, as then itineraries CSS classes controlling visibility will stay the same after changing page or sort criteria (for example Brand Details section would be still open, for other itinerary). -->
-                <itinerary id="{{getItinAnchorId(itinerary.id)}}" itin="itinerary" itinerary-selected-callback="selectedItineraryCallback({itinerary: itinerary})" enable-itinerary-select-button="{{enableItinerarySelectButton}}"></itinerary>
+                <itinerary id="{{::getItinAnchorId(itinerary.id)}}" itin="::itinerary" itinerary-selected-callback="selectedItineraryCallback({itinerary: itinerary})" enable-itinerary-select-button="{{::enableItinerarySelectButton}}"></itinerary>
             </li>
         </ul>
     </div>

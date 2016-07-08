@@ -10,33 +10,33 @@
                     </li>
                 </ul>
                 <ul class="SDS-col-element-xxs-9 SDS-visible-xs list-inline list-unstyled">
-                    <li ng-repeat="marketingAirline in itin.allMarketingAirlines">
+                    <li ng-repeat="marketingAirline in ::itin.allMarketingAirlines">
                         <ul class="list-unstyled list-inline">
                             <li><airline-logo airline-code="{{::marketingAirline}}"></airline-logo></li>
                             <li><small>{{::marketingAirline | airlineFullName}}</small></li>
                         </ul>
                     </li>
                 </ul>
-                <ul class="SDS-col-element-lg-3 SDS-visible-lg list-inline list-unstyled text-right" ng-if="itin.hasRedEyeFlight || itin.hasShortConnection || itin.hasLongConnection || itin.hasLowSeatsRemaining"
+                <ul class="SDS-col-element-lg-3 SDS-visible-lg list-inline list-unstyled text-right" ng-if="::itin.hasRedEyeFlight || itin.hasShortConnection || itin.hasLongConnection || itin.hasLowSeatsRemaining"
                     ns-popover
                     ns-popover-template="ItineraryIconsLegendTemplate"
                     ns-popover-trigger="mouseenter"
                     ns-popover-placement="top|right"
                     ns-popover-timeout="0.2">
-                    <li ng-if="itin.hasRedEyeFlight" class="SDSIconRedEye"></li>
-                    <li ng-if="itin.hasShortConnection" class="SDSIconHurryUpShortConnection"></li>
-                    <li ng-if="itin.hasLongConnection" class="SDSIconLongConnection"></li>
-                    <li ng-if="itin.hasLowSeatsRemaining" class="SDSIconFewSeatsLeft"></li>
+                    <li ng-if="::itin.hasRedEyeFlight" class="SDSIconRedEye"></li>
+                    <li ng-if="::itin.hasShortConnection" class="SDSIconHurryUpShortConnection"></li>
+                    <li ng-if="::itin.hasLongConnection" class="SDSIconLongConnection"></li>
+                    <li ng-if="::itin.hasLowSeatsRemaining" class="SDSIconFewSeatsLeft"></li>
                 </ul>
                 <!--<div class="clearfix"></div>-->
             </div>
         </li>
-        <li ng-repeat="leg in itin.legs" ng-init="legIndex = $index">
+        <li ng-repeat="leg in ::itin.legs" ng-init="legIndex = $index">
             <div class="SDSLegSummary SDS-row">
                 <div class="SDS-col-element-xxs-4 SDS-col-element-md-4 SDS-col-element-lg-5">
                     <span class="SDS-visible-xl-inline-block SDSTravelDateLong">{{::leg.departureDateTime.format('ddd, DD MMM')}}</span><!-- format: Sun, 05 Dec -->
                     <span class="SDSTravelTime">{{::leg.departureDateTime.format('HH:mm')}}</span><!-- format: 14:34 -->
-                                    <span ng-class="{'bg-warning':leg.hasAirportChangeAtDeparture}">
+                                    <span ng-class="::{'bg-warning':leg.hasAirportChangeAtDeparture}">
                                         <span class="badge SDSBadgeInfo">{{::leg.departureAirport}}</span><span class="SDS-visible-xl-inline-block SDSFullAirportName">{{::leg.departureAirport | cityAndAirportFullName}}</span>
                                     </span>
                 </div>
@@ -45,32 +45,32 @@
                 </div>
                 <div class="SDS-col-element-xxs-4 SDS-col-element-md-4 SDS-col-element-lg-4">
                     <span class="SDSTravelTime">{{::leg.arrivalDateTime.format('HH:mm')}}</span>
-                                    <span ng-class="{'bg-warning':leg.hasAirportChangeAtArrival}">
+                                    <span ng-class="::{'bg-warning':leg.hasAirportChangeAtArrival}">
                                         <span class="badge SDSBadgeInfo">{{::leg.arrivalAirport}}</span><span class="SDS-visible-xl-inline-block SDSFullAirportName">{{::leg.arrivalAirport | cityAndAirportFullName}}</span>
                                     </span>
                 </div>
                 <div class="SDS-col-element-xxs-3 SDS-col-element-md-3 SDS-col-element-lg-2">
                     <span>{{::leg.getDuration() | humanizeMinutes }}</span>
-                                    <span class="SDS-visible-md-inline-block"><ng-pluralize count="leg.getNumberOfStops()" when="
+                                    <span class="SDS-visible-md-inline-block"><ng-pluralize count="::leg.getNumberOfStops()" when="
                                             {'0': 'Non-stop',
                                              '1': '1 stop',
                                              'other': '{} stops'}
                                             "></ng-pluralize>
                                     </span>
-                    <span ng-if="leg.hasConnection()">{{::leg.getConnectionAirports() | stringJoiner:',':'(':')'}}</span>
+                    <span ng-if="::leg.hasConnection()">{{::leg.getConnectionAirports() | stringJoiner:',':'(':')'}}</span>
                 </div>
             </div>
 
             <!-- on smaller screens show this when flight details are opened, after first leg -->
-            <span ng-if="itin.hasChangeOfAirportsAtAnyStopover() && $first" ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDS-hidden-lg SDSItineraryFlightDetails text-warning">
+            <span ng-if="::itin.hasChangeOfAirportsAtAnyStopover() && $first" ng-class="::{'ng-hide':!flightDetailsAlwaysShown}" class="SDS-hidden-lg SDSItineraryFlightDetails text-warning">
                 Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
             </span>
-            <span ng-if="itin.departureAndArrivalDifferentForComplexTravel() && $first" ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDS-hidden-lg SDSItineraryFlightDetails text-warning">
+            <span ng-if="::itin.departureAndArrivalDifferentForComplexTravel() && $first" ng-class="::{'ng-hide':!flightDetailsAlwaysShown}" class="SDS-hidden-lg SDSItineraryFlightDetails text-warning">
                 Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
             </span>
 
-            <ul ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="list-group SDSItineraryFlightDetails">
-                <li class="list-group-item" ng-repeat-start="flight in leg.segments" ng-init="segmentIndex = $index">
+            <ul ng-class="::{'ng-hide':!flightDetailsAlwaysShown}" class="list-group SDSItineraryFlightDetails">
+                <li class="list-group-item" ng-repeat-start="flight in ::leg.segments" ng-init="segmentIndex = $index">
                     <ul class="list-unstyled">
                         <!--<li>-->
                         <!--{{::flight.duration | humanizeMinutes}}-->
@@ -118,13 +118,13 @@
                                 <div class="SDS-col-element-lg-1 SDS-col-element-xl-1">
                                     <small>{{::itin.getCabin(legIndex, segmentIndex) | cabin}}</small>
                                 </div>
-                                <div class="SDS-col-element-lg-2 SDS-col-element-xl-1" ng-if="itin.getMeals(legIndex, segmentIndex)">
+                                <div class="SDS-col-element-lg-2 SDS-col-element-xl-1" ng-if="::itin.getMeals(legIndex, segmentIndex)">
                                     <small>Meal: {{::itin.getMeals(legIndex, segmentIndex) | meal}}</small>
                                 </div>
-                                <div class="SDS-col-element-lg-3 SDS-col-element-xl-2" ng-if="itin.getBaggageAllowance(legIndex, segmentIndex)">
+                                <div class="SDS-col-element-lg-3 SDS-col-element-xl-2" ng-if="::itin.getBaggageAllowance(legIndex, segmentIndex)">
                                     <small>Baggage allowance: {{::itin.getBaggageAllowance(legIndex, segmentIndex) | baggageAllowance}}</small>
                                 </div>
-                                <div class="SDS-col-element-lg-2 SDS-col-element-xl-2" ng-if="itin.getBrandsMatchedToFlight(legIndex, segmentIndex).length > 0">
+                                <div class="SDS-col-element-lg-2 SDS-col-element-xl-2" ng-if="::itin.getBrandsMatchedToFlight(legIndex, segmentIndex).length > 0">
                                     <small>Brands matched: {{::itin.getBrandsMatchedToFlight(legIndex, segmentIndex) | stringJoiner}}
                                     </small>
                                 </div>
@@ -132,53 +132,53 @@
                         </li>
                     </ul>
                 </li>
-                <li ng-repeat-end ng-if="!$last" class="list-group-item">
+                <li ng-repeat-end ng-if="::!$last" class="list-group-item">
                     Connection {{::leg.getConnectionTimeMinutes(segmentIndex) | humanizeMinutes}}
                 </li>
             </ul>
         </li>
         <li>
-            <div ng-if="itin.hasAnyBrands()" class="ng-hide SDSItineraryBrandDetails">
+            <div ng-if="::itin.hasAnyBrands()" class="ng-hide SDSItineraryBrandDetails">
                <ng-include src="'../widgets/view-templates/widgets/ItineraryBrandDetails.tpl.html'"></ng-include>
             </div>
         </li>
-        <span ng-if="itin.hasChangeOfAirportsAtAnyStopover()" class="SDS-visible-lg text-warning">
+        <span ng-if="::itin.hasChangeOfAirportsAtAnyStopover()" class="SDS-visible-lg text-warning">
             Please note: Trip has change of airports at stopover. Please inspect the airports carefully.
         </span>
-        <span ng-if="itin.departureAndArrivalDifferentForComplexTravel()" class="SDS-visible-lg text-warning">
+        <span ng-if="::itin.departureAndArrivalDifferentForComplexTravel()" class="SDS-visible-lg text-warning">
             Please note: Trip departure and return airports are not the same. Please inspect the airports carefully.
         </span>
     </ul>
     <div class="SDSPriceSummary">
         <div class="pull-left">
-            <a ng-show="!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg SDSItineraryShowPriceDetails SDSItineraryShowFlightDetails SDSItineraryHideWhenFlightDetailsShown">Show Details</a>
-            <a ng-show="!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg ng-hide SDSItineraryHidePriceDetails SDSItineraryHideFlightDetails SDSItineraryFlightDetails">Hide Details</a>
-            <a ng-show="!flightDetailsAlwaysShown" href="" class="SDS-visible-lg SDSItineraryToggleFlightDetails">Flight Details</a>
-            <a href="" class="SDS-visible-lg SDSItineraryToggleBrandDetails" ng-show="itin.hasAnyBrands()">Brand Details</a>
+            <a ng-show="::!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg SDSItineraryShowPriceDetails SDSItineraryShowFlightDetails SDSItineraryHideWhenFlightDetailsShown">Show Details</a>
+            <a ng-show="::!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg ng-hide SDSItineraryHidePriceDetails SDSItineraryHideFlightDetails SDSItineraryFlightDetails">Hide Details</a>
+            <a ng-show="::!flightDetailsAlwaysShown" href="" class="SDS-visible-lg SDSItineraryToggleFlightDetails">Flight Details</a>
+            <a href="" class="SDS-visible-lg SDSItineraryToggleBrandDetails" ng-show="::itin.hasAnyBrands()">Brand Details</a>
         </div>
         <div>
             <ul class="list-unstyled pull-right">
                 <li>Total price: <strong >{{::itin.totalFareAmountWithCurrency.amount | currency:itin.totalFareAmountWithCurrency.currency}}</strong></li>
-                <li ng-show="!priceDetailsAlwaysShown">
+                <li ng-show="::!priceDetailsAlwaysShown">
                     <a href="" class="SDS-visible-lg ng-show SDSItineraryTogglePriceDetails">Price Details</a>
                 </li>
-                <li ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
+                <li ng-class="::{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
                     Base fare: {{::itin.baseFareAmount | currency:itin.baseFareCurrency}}
                 </li>
-                <li ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
+                <li ng-class="::{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
                     Taxes: {{::itin.totalTaxAmount | currency:itin.totalTaxCurrency}}
                 </li>
-                <li ng-if="itin.baggageCharges" ng-class="{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
+                <li ng-if="::itin.baggageCharges" ng-class="::{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
                     Bag charges: {{::itin.baggageCharges | currency:itin.totalTaxCurrency}}
                 </li>
             </ul>
         </div>
         <div class="clearfix"></div>
 
-        <div ng-if="!hideItinerarySelectButton">
-            <div ng-class="{'ng-hide':!flightDetailsAlwaysShown}" class="SDSItineraryFlightDetails SDSTopBuffer-xs SDS-hidden-md"></div>
+        <div ng-if="::!hideItinerarySelectButton">
+            <div ng-class="::{'ng-hide':!flightDetailsAlwaysShown}" class="SDSItineraryFlightDetails SDSTopBuffer-xs SDS-hidden-md"></div>
             <button type="button" ng-disabled="{{::!enableItinerarySelectButton}}" ng-click="selectItineraryClicked(itin)"
-                    ng-class="{'ng-hide':!flightDetailsAlwaysShown}"
+                    ng-class="::{'ng-hide':!flightDetailsAlwaysShown}"
                     class="SDSItineraryFlightDetails SDSCheckoutButton btn btn-primary btn-sm pull-right SDS-hidden-md">
                 Select
             </button>
@@ -196,14 +196,14 @@
     <div class="SDSItineraryIconsLegendTemplate">
         <div class="triangle"></div>
         <dl>
-            <dt ng-if="itin.hasRedEyeFlight"><span class="SDSIconRedEye"></span></dt>
-            <dd ng-if="itin.hasRedEyeFlight">Red-eye flight</dd>
-            <dt ng-if="itin.hasShortConnection"><span class="SDSIconHurryUpShortConnection"></span></dt>
-            <dd ng-if="itin.hasShortConnection">Short connection, hurry up</dd>
-            <dt ng-if="itin.hasLongConnection"><span class="SDSIconLongConnection"></span></dt>
-            <dd ng-if="itin.hasLongConnection">Long connection, long wait time at airport</dd>
-            <dt ng-if="itin.hasLowSeatsRemaining"><span class="SDSIconFewSeatsLeft"></span></dt>
-            <dd ng-if="itin.hasLowSeatsRemaining">Few seats left</dd>
+            <dt ng-if="::itin.hasRedEyeFlight"><span class="SDSIconRedEye"></span></dt>
+            <dd ng-if="::itin.hasRedEyeFlight">Red-eye flight</dd>
+            <dt ng-if="::itin.hasShortConnection"><span class="SDSIconHurryUpShortConnection"></span></dt>
+            <dd ng-if="::itin.hasShortConnection">Short connection, hurry up</dd>
+            <dt ng-if="::itin.hasLongConnection"><span class="SDSIconLongConnection"></span></dt>
+            <dd ng-if="::itin.hasLongConnection">Long connection, long wait time at airport</dd>
+            <dt ng-if="::itin.hasLowSeatsRemaining"><span class="SDSIconFewSeatsLeft"></span></dt>
+            <dd ng-if="::itin.hasLowSeatsRemaining">Few seats left</dd>
         </dl>
     </div>
 </script>
