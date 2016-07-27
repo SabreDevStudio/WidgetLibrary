@@ -66,18 +66,24 @@ define([
                         preferredCabin: jsonObj.preferredCabin,
                         preferredAirlines: jsonObj.preferredAirlines
                     };
+                    if (_.isUndefined(jsonObj.inboundDepartureDateTime)) {
+                        return SearchCriteriaFactory.buildOneWayTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, searchCriteriaOptions);
+                    }
                     return SearchCriteriaFactory.buildRoundTripTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, jsonObj.inboundDepartureDateTime, searchCriteriaOptions);
                 },
 				serialize: function (searchCriteria) {
-                    const jsonObj = {
-                        origin: searchCriteria.getFirstLeg().origin,
-                        destination: searchCriteria.getFirstLeg().destination,
-                        outboundDepartureDateTime: searchCriteria.getFirstLeg().departureDateTime.format(),
-                        inboundDepartureDateTime: searchCriteria.getSecondLeg().departureDateTime.format(),
+                    const firstLeg = searchCriteria.getFirstLeg();
+                    var jsonObj: any = {
+                        origin: firstLeg.origin,
+                        destination: firstLeg.destination,
+                        outboundDepartureDateTime: firstLeg.departureDateTime.format(),
                         totalPassengerCount: searchCriteria.getTotalPassengerCount(),
                         preferredCabin: searchCriteria.preferredCabin.name,
                         preferredAirlines: searchCriteria.getPreferredAirlines()
                     };
+                    if (searchCriteria.isRoundTripTravel()) {
+                        jsonObj.inboundDepartureDateTime = searchCriteria.getSecondLeg().departureDateTime.format();
+                    }
                     return jsonObj;
 				}
             };

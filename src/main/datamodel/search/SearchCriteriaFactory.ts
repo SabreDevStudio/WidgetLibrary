@@ -13,6 +13,22 @@ define([
     ) {
     "use strict";
 
+    function buildSearchCriteriaSkeleton(searchCriteriaOptions) {
+        var searchCriteria = new SearchCriteria();
+
+        const totalPassengerCount = (searchCriteriaOptions && searchCriteriaOptions.searchCriteriaOptions) || 1;
+        searchCriteria.addPassenger('ADT', totalPassengerCount);
+
+        if (searchCriteriaOptions && searchCriteriaOptions.preferredCabin) {
+            searchCriteria.preferredCabin = searchCriteriaOptions.preferredCabin
+        }
+
+        if (searchCriteriaOptions && !_.isEmpty(searchCriteriaOptions.preferredAirlines)) {
+            searchCriteria.preferredAirlines = searchCriteriaOptions.preferredAirlines
+        }
+        return searchCriteria;
+    }
+
     /**
      * Static factory producing simple, minimal SearchCriteria for round trip travel  
      * @param origin 3 letter alphanumeric IATA airport or city code
@@ -37,21 +53,24 @@ define([
             , departureDateTime: returnDateTime
             , returnDateTime: departureDateTime
         });
-
-        var searchCriteria = new SearchCriteria();
+        var searchCriteria = buildSearchCriteriaSkeleton(searchCriteriaOptions);
         searchCriteria.addLeg(firstLeg);
         searchCriteria.addLeg(secondLeg);
 
-        const totalPassengerCount = (searchCriteriaOptions && searchCriteriaOptions.searchCriteriaOptions) || 1;
-        searchCriteria.addPassenger('ADT', totalPassengerCount);
+        return searchCriteria;
+    }
 
-        if (searchCriteriaOptions && searchCriteriaOptions.preferredCabin) {
-            searchCriteria.preferredCabin = searchCriteriaOptions.preferredCabin
-        }
+    function buildOneWayTravelSearchCriteria(origin, destination, departureDateString, searchCriteriaOptions) {
+        var departureDateTime = moment(departureDateString, moment.ISO_8601);
 
-        if (searchCriteriaOptions && !_.isEmpty(searchCriteriaOptions.preferredAirlines)) {
-            searchCriteria.preferredAirlines = searchCriteriaOptions.preferredAirlines
-        }
+        var firstLeg = new SearchCriteriaLeg({
+            origin: origin
+            , destination: destination
+            , departureDateTime: departureDateTime
+        });
+
+        var searchCriteria = buildSearchCriteriaSkeleton(searchCriteriaOptions);
+        searchCriteria.addLeg(firstLeg);
 
         return searchCriteria;
     }
@@ -84,6 +103,7 @@ define([
 
     return {
         buildRoundTripTravelSearchCriteria: buildRoundTripTravelSearchCriteria,
+        buildOneWayTravelSearchCriteria: buildOneWayTravelSearchCriteria,
         buildRoundTripTravelSearchCriteriaWithDateFlexibility: buildRoundTripTravelSearchCriteriaWithDateFlexibility,
         buildMultidestinationSearchCriteria: buildMultidestinationSearchCriteria
     };
