@@ -112,6 +112,7 @@ define([
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
         , 'widgets/ErrorDisplayWidget'
+        , 'widgets/ValidationErrorDisplayWidget'
         , 'widgets/AboutWidget'
         , 'Configuration'
         , 'elementQuery'
@@ -143,6 +144,7 @@ define([
         , FiltersPanelWidget
         , DiscreteFilterWidget
         , ErrorDisplayWidget
+        , ValidationErrorDisplayWidget
         , AboutWidget
         , Configuration
         , elementQuery
