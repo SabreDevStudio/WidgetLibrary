@@ -4,12 +4,14 @@ define([
         , 'moment'
         , 'datamodel/search/SearchCriteria'
         , 'datamodel/search/SearchCriteriaLeg'
+        , 'datamodel/search/alternateDates/PlusMinusDaysTravelDatesFlexibility'
     ], function (
           _
         , __
         , moment
         , SearchCriteria
         , SearchCriteriaLeg
+        , PlusMinusDaysTravelDatesFlexibility
     ) {
     "use strict";
 
@@ -77,7 +79,7 @@ define([
 
     function buildRoundTripTravelSearchCriteriaWithDateFlexibility(origin, destination, departureDateString, returnDateString, dateFlexibilityDays, searchCriteriaOptions) {
         var searchCriteria = buildRoundTripTravelSearchCriteria(origin, destination, departureDateString, returnDateString, searchCriteriaOptions);
-        searchCriteria.dateFlexibilityDays = dateFlexibilityDays;
+        searchCriteria.dateFlexibilityDays = PlusMinusDaysTravelDatesFlexibility.prototype.buildConstantDaysFlexibility(dateFlexibilityDays);
         return searchCriteria;
     }
 
