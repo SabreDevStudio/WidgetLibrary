@@ -226,6 +226,7 @@ define([
                     scope: {
                           numberOfWeeksToDisplay: '@'
                         , activeSearchWebService: '@'
+                        , searchCriteria: '=?'
                     },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LeadPriceChartWidget.tpl.html',
@@ -235,7 +236,12 @@ define([
 
                         chartInstance = chartsFactory.createBarChart(element, chartData);
 
-                        controller.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
+                        if (scope.searchCriteria) {
+                            controller.processSearchCriteria(scope.searchCriteria);
+                        } else {
+                            controller.executeLifeSearchOnPredefinedCriteriaIfPresent(attrs.origin, attrs.destination, attrs.departureDate, attrs.returnDate);
+                        }
+
                         WidgetGlobalCallbacks.linkComplete(scope, element);
 
                         scope.$on('$destroy', function() {
