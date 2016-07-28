@@ -74,7 +74,10 @@ define([
                 ) {
                 return {
                     restrict: 'EA',
-                    scope: true,
+                    scope: {
+                        searchLinkEnabled: '@?',
+                        offerClicked: '&?'
+                    },
                     templateUrl: '../widgets/view-templates/widgets/DestinationPricer.tpl.html',
                     controller: 'DestinationPricerCtrl',
                     controllerAs: 'ctrl',

@@ -41,13 +41,27 @@
                                                     <small class="SDSPaddingSmall">from </small><strong>{{offerItem.LowestFare.Fare | currency:offerItem.CurrencyCode}}</strong>
                                                 </div>
                                                 <div class="clearfix"></div>
-                                                <a class="pull-right" href=""
-                                                   ns-popover
-                                                   ns-popover-template="DestinationPricerDetailsPopover"
-                                                   ns-popover-trigger="mouseenter"
-                                                   ns-popover-placement="bottom"
-                                                   ns-popover-timeout="0.2">Details
-                                                </a>
+
+                                                <div class="pull-right">
+                                                        <a href=""
+                                                           ns-popover
+                                                           ns-popover-template="DestinationPricerDetailsPopover"
+                                                           ns-popover-trigger="mouseenter"
+                                                           ns-popover-placement="bottom"
+                                                           ns-popover-timeout="0.2">Details
+                                                        </a>
+                                                        <button class="btn-link" ng-if="::searchLinkEnabled"
+                                                           ng-click="offerClicked(
+                                                            {
+                                                                searchCriteria: {
+                                                                    origin: offerItem.OriginLocation,
+                                                                    destination: ctrl.modelPricesToDestination.DestinationLocation,
+                                                                    departureDateTime: offerItem.DepartureDateTime,
+                                                                    returnDateTime: offerItem.ReturnDateTime
+                                                                }
+                                                            })">Search
+                                                        </button>
+                                                </div>
                                             </div>
                                         </div>
                                 </div>
