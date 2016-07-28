@@ -66,6 +66,9 @@ define([
                         preferredCabin: jsonObj.preferredCabin,
                         preferredAirlines: jsonObj.preferredAirlines
                     };
+                    if (jsonObj.altDatesPlusMinus) {
+                        return SearchCriteriaFactory.buildRoundTripTravelSearchCriteriaWithDateFlexibility(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, jsonObj.inboundDepartureDateTime, jsonObj.altDatesPlusMinus, searchCriteriaOptions);
+                    }
                     if (_.isUndefined(jsonObj.inboundDepartureDateTime)) {
                         return SearchCriteriaFactory.buildOneWayTravelSearchCriteria(jsonObj.origin, jsonObj.destination, jsonObj.outboundDepartureDateTime, searchCriteriaOptions);
                     }
@@ -83,6 +86,9 @@ define([
                     };
                     if (searchCriteria.isRoundTripTravel()) {
                         jsonObj.inboundDepartureDateTime = searchCriteria.getSecondLeg().departureDateTime.format();
+                    }
+                    if (searchCriteria.isPlusMinusDaysDateFlexibilityRequest()) {
+                        jsonObj.dateFlexibilityDays = searchCriteria.dateFlexibilityDays;
                     }
                     return jsonObj;
 				}
