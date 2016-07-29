@@ -76,6 +76,17 @@ define([
                                     }
                                 };
                             }
+                            case 'first-advancedCalendar-on-errors-bfm': {
+                                return {
+                                    search: function (searchCriteria, successCallback, failureCallback, updateCallback) {
+                                        AdvancedCalendarDataService.getItineraries(searchCriteria).then(
+                                            successCallback
+                                            , function () {
+                                                BargainFinderMaxDataService.getItineraries(searchCriteria).then(successCallback, failureCallback);
+                                            });
+                                    }
+                                };
+                            }
                             default: {
                                 throw new Error('unrecognized search web service: ' + activeSearchWebService);
                             }
