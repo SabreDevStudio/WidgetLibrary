@@ -1,5 +1,13 @@
 @import "SDSCommon";
 
+@mixin backgroundIcon($url, $size) {
+  background: url($url) no-repeat;
+  width: $size;
+  height: $size;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
 .SDSLegList {
   border-right: $itemsSeparatingLineStyle;
   box-sizing: border-box;
@@ -27,19 +35,19 @@
 }
 
 .SDSIconRedEye {
-  content:url("../img/icons/moon_16_16.png");
+  @include backgroundIcon("../img/icons/moon_16_16.png", 16px);
 }
 
 .SDSIconHurryUpShortConnection {
-  content:url("../img/icons/running_16_16.png");
+  @include backgroundIcon("../img/icons/running_16_16.png", 16px);
 }
 
 .SDSIconLongConnection {
-  content:url("../img/icons/clock_16_16.png");
+  @include backgroundIcon("../img/icons/clock_16_16.png", 16px);
 }
 
 .SDSIconFewSeatsLeft {
-  content:url("../img/icons/attention_16_16.png");
+  @include backgroundIcon("../img/icons/attention_16_16.png", 16px);
 }
 
 .SDSLegSummary {

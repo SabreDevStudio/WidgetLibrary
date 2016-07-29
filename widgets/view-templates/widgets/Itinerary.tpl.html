@@ -196,13 +196,13 @@
     <div class="SDSItineraryIconsLegendTemplate">
         <div class="triangle"></div>
         <dl>
-            <dt ng-if="::itin.hasRedEyeFlight"><span class="SDSIconRedEye"></span></dt>
+            <dt ng-if="::itin.hasRedEyeFlight" class="SDSIconRedEye"></dt>
             <dd ng-if="::itin.hasRedEyeFlight">Red-eye flight</dd>
-            <dt ng-if="::itin.hasShortConnection"><span class="SDSIconHurryUpShortConnection"></span></dt>
+            <dt ng-if="::itin.hasShortConnection" class="SDSIconHurryUpShortConnection"></dt>
             <dd ng-if="::itin.hasShortConnection">Short connection, hurry up</dd>
-            <dt ng-if="::itin.hasLongConnection"><span class="SDSIconLongConnection"></span></dt>
+            <dt ng-if="::itin.hasLongConnection" class="SDSIconLongConnection"></dt>
             <dd ng-if="::itin.hasLongConnection">Long connection, long wait time at airport</dd>
-            <dt ng-if="::itin.hasLowSeatsRemaining"><span class="SDSIconFewSeatsLeft"></span></dt>
+            <dt ng-if="::itin.hasLowSeatsRemaining" class="SDSIconFewSeatsLeft"></dt>
             <dd ng-if="::itin.hasLowSeatsRemaining">Few seats left</dd>
         </dl>
     </div>
