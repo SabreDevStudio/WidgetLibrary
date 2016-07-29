@@ -202,46 +202,42 @@ define([
                         $scope.processSearchCriteria(newSearchCriteria);
                     });
 
+                    var searchSuccessCallback = function (searchCriteria, newItins) {
+                        $scope.searchCompletedSuccessCallback({
+                            itineraries: newItins,
+                            searchCriteria: searchCriteria
+                        });
+                        processNewItineraries(searchCriteria, newItins);
+                    };
+
+                    var searchErrorCallback = function (searchCriteria, errorMessages) {
+                        $scope.searchCompletedErrorCallback({
+                            errorMessages: errorMessages,
+                            searchCriteria: searchCriteria
+                        });
+                        processServiceErrorMessages(searchCriteria, errorMessages);
+                    };
+
+                    var searchUpdateCallback = function (searchCriteria, newItins) {
+                        $scope.searchCompletedSuccessCallback({
+                            itineraries: newItins,
+                            searchCriteria: searchCriteria
+                        });
+                        updateWithNewItineraries(searchCriteria, newItins);
+                    };
+
                     $scope.processSearchCriteria = function(searchCriteria) {
-                        if (__.isDefined($scope.searchStartedCallback)) {
-                            $scope.searchStartedCallback({searchCriteria: searchCriteria});
-                        }
+                        $scope.searchStartedCallback({searchCriteria: searchCriteria});
 
                         if (!$scope.activeSearch) { //active search disabled
                             return;
                         }
 
-                        var successCallback = function (newItins) {
-                            if (__.isDefined($scope.searchCompletedSuccessCallback)) {
-                                $scope.searchCompletedSuccessCallback({
-                                    itineraries: newItins,
-                                    searchCriteria: searchCriteria
-                                });
-                            }
-                            processNewItineraries(searchCriteria, newItins);
-                        };
-
-                        var errorCallback = function (errorMessages) {
-                            if (__.isDefined($scope.searchCompletedErrorCallback)) {
-                                $scope.searchCompletedErrorCallback({
-                                    errorMessages: errorMessages,
-                                    searchCriteria: searchCriteria
-                                });
-                            }
-                            processServiceErrorMessages(searchCriteria, errorMessages);
-                        };
-
-                        var updateCallback = function (newItins) {
-                            if (__.isDefined($scope.searchCompletedSuccessCallback)) {
-                                $scope.searchCompletedSuccessCallback({
-                                    itineraries: newItins,
-                                    searchCriteria: searchCriteria
-                                });
-                            }
-                            updateWithNewItineraries(searchCriteria, newItins);
-                        };
-
-                        searchStrategy.search(searchCriteria, successCallback, errorCallback, updateCallback);
+                        searchStrategy.search(searchCriteria,
+                            _.partial(searchSuccessCallback, searchCriteria),
+                            _.partial(searchErrorCallback, searchCriteria),
+                            _.partial(searchUpdateCallback, searchCriteria)
+                        );
                     };
 
                     $scope.$on(filteringCriteriaChangedEvent, function () {
@@ -262,9 +258,11 @@ define([
                         // the web service which produced the data, from which the particular date was selected
                         var webService = selectItinerariesListProducingService(DateSelectedBroadcastingService.originalDataSourceWebService);
 
+                        $scope.searchStartedCallback({searchCriteria: newSearchCriteria});
                         webService.getItineraries(newSearchCriteria).then(
-                              _.partial(processNewItineraries, newSearchCriteria)
-                            , _.partial(processServiceErrorMessages, newSearchCriteria)
+                              _.partial(searchSuccessCallback, newSearchCriteria)
+                            , _.partial(searchErrorCallback, newSearchCriteria)
+                            , _.partial(searchUpdateCallback, newSearchCriteria)
                         );
                         $scope.$evalAsync();
                     });
