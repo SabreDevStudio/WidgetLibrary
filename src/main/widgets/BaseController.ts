@@ -13,6 +13,10 @@ define([
             this.searchService = args.searchService;
             this.noResultsFoundBroadcastingService = args.noResultsFoundBroadcastingService || { broadcast: _.noop };
 
+            this.scope.searchStartedCallback = this.scope.searchStartedCallback || _.noop;
+            this.scope.searchCompletedSuccessCallback = this.scope.searchCompletedSuccessCallback || _.noop;
+            this.scope.searchCompletedErrorCallback = this.scope.searchCompletedErrorCallback || _.noop;
+
             this.lastSearchCriteriaAirports = {};
 
             var that = this;
@@ -31,15 +35,24 @@ define([
 
         BaseController.prototype.processSearchCriteria = function (searchCriteria) {
             var that = this;
+            this.scope.searchStartedCallback({searchCriteria: searchCriteria});
             this.searchService.executeSearch(searchCriteria).then(
                 function (searchResults) {
                     that.saveLastSearchCriteria(searchCriteria);
                     that.processSearchResults(searchResults);
+                    that.scope.searchCompletedSuccessCallback({
+                        searchResults: searchResults,
+                        searchCriteria: searchCriteria
+                    });
                 }, function (errors) {
                     that.saveLastSearchCriteria(searchCriteria);
                     // clear model from previous search
                     that.clearModel();
                     that.noResultsFoundBroadcastingService.broadcast();
+                    that.scope.searchCompletedErrorCallback({
+                        errorMessages: errors,
+                        searchCriteria: searchCriteria
+                    });
                 }
             );
         };

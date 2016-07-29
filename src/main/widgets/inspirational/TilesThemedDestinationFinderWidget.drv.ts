@@ -10,7 +10,10 @@ define([
             return {
                 scope: {
                     closestAirport: '@?',
-                    searchOfferClicked: '&?'
+                    searchOfferClicked: '&?',
+                    searchStartedCallback: '&?',
+                    searchCompletedSuccessCallback: '&?',
+                    searchCompletedErrorCallback: '&?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/TilesThemedDestinationFinderWidget.tpl.html',
                 controller: 'TilesThemedDestinationFinderWidgetController',

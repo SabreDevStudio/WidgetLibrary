@@ -72,13 +72,25 @@ define([
                 var themedSearchCriteria = _.extend(searchCriteria, {
                     theme: theme
                 });
+                $scope.searchStartedCallback({searchCriteria: searchCriteria});
                 DestinationFinderSummaryDataService.getOffersOrderedSummary(themedSearchCriteria)
                     .then(function (orderedSummary) {
                         orderedSummary.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped.map(addClickHandlerToOfferForDestination);
                         $scope.model.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped;
                         $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
                         $scope.model.priceTiersStatistics = orderedSummary.priceTiersStatistics;
-                    }, (reason) => {clearModel()})
+
+                        $scope.searchCompletedSuccessCallback({
+                            searchResults: orderedSummary,
+                            searchCriteria: searchCriteria
+                        });
+                    }, (reason) => {
+                        clearModel();
+                        $scope.searchCompletedErrorCallback({
+                            errorMessages: reason,
+                            searchCriteria: searchCriteria
+                        });
+                    })
                     .finally(searchCompleteCallback);
             }
 

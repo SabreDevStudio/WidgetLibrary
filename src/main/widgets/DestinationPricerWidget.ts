@@ -34,10 +34,10 @@ define([
             };
 
             BaseController.call(this, {
-                scope: $scope
-                , searchService: searchService
-                , newSearchCriteriaEvent: newInspirationalSearchCriteriaEvent
-                , searchCriteriaBroadcastingService: searchCriteriaBroadcastingService
+                scope: $scope,
+                searchService: searchService,
+                newSearchCriteriaEvent: newInspirationalSearchCriteriaEvent,
+                searchCriteriaBroadcastingService: searchCriteriaBroadcastingService
             });
 
             this.saveLastSearchCriteria = function (searchCriteria) {
@@ -76,7 +76,10 @@ define([
                     restrict: 'EA',
                     scope: {
                         searchLinkEnabled: '@?',
-                        offerClicked: '&?'
+                        offerClicked: '&?',
+                        searchStartedCallback: '&?',
+                        searchCompletedSuccessCallback: '&?',
+                        searchCompletedErrorCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/DestinationPricer.tpl.html',
                     controller: 'DestinationPricerCtrl',

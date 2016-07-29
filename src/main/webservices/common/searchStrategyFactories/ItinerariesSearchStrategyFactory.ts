@@ -22,7 +22,7 @@ define([
             ) {
 
                 return {
-                    /*jshint maxcomplexity:7*/
+                    /*jshint maxcomplexity:8*/
                     createSearchStrategy: function (activeSearchWebService) {
                         activeSearchWebService = activeSearchWebService || 'instaflights';
 

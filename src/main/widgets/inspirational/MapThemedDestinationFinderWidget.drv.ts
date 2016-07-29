@@ -14,7 +14,10 @@ define([
                 scope: {
                     closestAirport: '@?',
                     searchOfferClicked: '&?',
-                    initialZoom: '@?'
+                    initialZoom: '@?',
+                    searchStartedCallback: '&?',
+                    searchCompletedSuccessCallback: '&?',
+                    searchCompletedErrorCallback: '&?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/MapThemedDestinationFinderWidget.tpl.html',
                 controller: 'MapThemedDestinationFinderWidgetController',
