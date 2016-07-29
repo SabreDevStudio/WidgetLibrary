@@ -128,9 +128,14 @@ define([
                     return;
                 }
                 var date = barClicked.label;
-                DateSelectedBroadcastingService.newSearchCriteria = this.lastSearchCriteria.cloneWithDatesAdjustedToOtherDepartureDate(date);
+                var newSearchCriteria = this.lastSearchCriteria.cloneWithDatesAdjustedToOtherDepartureDate(date);
+                DateSelectedBroadcastingService.newSearchCriteria = newSearchCriteria;
                 DateSelectedBroadcastingService.originalDataSourceWebService = searchService;
                 DateSelectedBroadcastingService.broadcast();
+                $scope.barClickedCallback({
+                    searchCriteria: newSearchCriteria,
+                    originalDataSourceWebService: searchService
+                });
             };
 
             function updateModelWithLeadPrices(leadPricesAndDateStrings) {
@@ -224,9 +229,10 @@ define([
                 return {
                     restrict: 'AE',
                     scope: {
-                          numberOfWeeksToDisplay: '@'
-                        , activeSearchWebService: '@'
-                        , searchCriteria: '=?'
+                        numberOfWeeksToDisplay: '@',
+                        activeSearchWebService: '@',
+                        searchCriteria: '=?',
+                        barClickedCallback: '&?'
                     },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LeadPriceChartWidget.tpl.html',

@@ -111,9 +111,14 @@ define([
                         if (day.isBefore(new Date(), 'day')) { // no point to search for past dates
                             return;
                         }
-                        DateSelectedBroadcastingService.newSearchCriteria = lastSearchCriteria.cloneWithDatesAdjustedToOtherDepartureDate(day);
+                        var newSearchCriteria = lastSearchCriteria.cloneWithDatesAdjustedToOtherDepartureDate(day);
+                        DateSelectedBroadcastingService.newSearchCriteria = newSearchCriteria;
                         DateSelectedBroadcastingService.originalDataSourceWebService = searchService;
                         DateSelectedBroadcastingService.broadcast();
+                        $scope.cellClickedCallback({
+                            searchCriteria: newSearchCriteria,
+                            originalDataSourceWebService: searchService
+                        });
                     };
                 }
             ])
@@ -121,9 +126,10 @@ define([
                 return {
                     restrict: 'EA',
                     scope: {
-                          numberOfMonths: '@tabsShown'
-                        , activeSearchWebService: '@'
-                        , doNotShowPrevNextMonthDays: '@'
+                        numberOfMonths: '@tabsShown',
+                        activeSearchWebService: '@',
+                        doNotShowPrevNextMonthDays: '@',
+                        cellClickedCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/CalendarWidgetTabs.tpl.html',
                     controller: 'CalendarWidgetCtrl',
@@ -138,10 +144,11 @@ define([
                 return {
                     restrict: 'EA',
                     scope: {
-                          numberOfMonths: '@?totalNumberOfMonths'
-                        , numberOfMonthsShownAtOnce: '@?'
-                        , activeSearchWebService: '@'
-                        , doNotShowPrevNextMonthDays: '@'
+                        numberOfMonths: '@?totalNumberOfMonths',
+                        numberOfMonthsShownAtOnce: '@?',
+                        activeSearchWebService: '@',
+                        doNotShowPrevNextMonthDays: '@',
+                        cellClickedCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/CalendarWidgetNavigable.tpl.html',
                     controller: 'CalendarWidgetCtrl',
