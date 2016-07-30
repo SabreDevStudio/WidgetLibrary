@@ -6,6 +6,7 @@ define([
     'datamodel/Leg',
     'datamodel/Segment',
     'datamodel/ItineraryPricingInfo',
+    'datamodel/SegmentBaggageAllowance',
     'datamodel/search/SearchCriteriaFactory'
 ], function (
     angular,
@@ -15,6 +16,7 @@ define([
     Leg,
     Segment,
     ItineraryPricingInfo,
+    SegmentBaggageAllowance,
     SearchCriteriaFactory
 ) {
     'use strict';
@@ -54,7 +56,9 @@ define([
 
             function deserializeItineraryPricingInfo(pricingInfoJsonObj) {
                 var pricingInfo = new ItineraryPricingInfo();
-                return _.extend(pricingInfo, pricingInfoJsonObj);
+                pricingInfo = _.extend(pricingInfo, pricingInfoJsonObj);
+                pricingInfo.baggageAllowance = new SegmentBaggageAllowance(pricingInfoJsonObj.baggageAllowance.legSegmentBaggageAllowance);
+                return pricingInfo;
             }
 
         })
