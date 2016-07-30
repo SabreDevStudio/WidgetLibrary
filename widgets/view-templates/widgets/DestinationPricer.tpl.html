@@ -42,15 +42,15 @@
                                                 </div>
                                                 <div class="clearfix"></div>
 
-                                                <div class="pull-right">
-                                                        <a href=""
+                                                <div>
+                                                        <button type="button" class="btn-link pull-right"
                                                            ns-popover
                                                            ns-popover-template="DestinationPricerDetailsPopover"
                                                            ns-popover-trigger="mouseenter"
                                                            ns-popover-placement="bottom"
                                                            ns-popover-timeout="0.2">Details
-                                                        </a>
-                                                        <button type="button" class="btn-link" ng-if="::searchLinkEnabled"
+                                                        </button>
+                                                        <button type="button" class="btn-link pull-right" ng-if="::searchLinkEnabled"
                                                            ng-click="offerClicked(
                                                             {
                                                                 searchCriteria: {
@@ -62,6 +62,7 @@
                                                             })">Search
                                                         </button>
                                                 </div>
+                                                <div class="clearfix"></div>
                                             </div>
                                         </div>
                                 </div>
