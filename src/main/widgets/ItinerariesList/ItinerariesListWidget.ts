@@ -202,29 +202,29 @@ define([
                         $scope.processSearchCriteria(newSearchCriteria);
                     });
 
-                    var searchSuccessCallback = function (searchCriteria, newItins) {
+                    var searchSuccessCallback = __.cancellable(function (searchCriteria, newItins) {
                         $scope.searchCompletedSuccessCallback({
                             itineraries: newItins,
                             searchCriteria: searchCriteria
                         });
                         processNewItineraries(searchCriteria, newItins);
-                    };
+                    });
 
-                    var searchErrorCallback = function (searchCriteria, errorMessages) {
+                    var searchErrorCallback = __.cancellable(function (searchCriteria, errorMessages) {
                         $scope.searchCompletedErrorCallback({
                             errorMessages: errorMessages,
                             searchCriteria: searchCriteria
                         });
                         processServiceErrorMessages(searchCriteria, errorMessages);
-                    };
+                    });
 
-                    var searchUpdateCallback = function (searchCriteria, newItins) {
+                    var searchUpdateCallback = __.cancellable(function (searchCriteria, newItins) {
                         $scope.searchCompletedSuccessCallback({
                             itineraries: newItins,
                             searchCriteria: searchCriteria
                         });
                         updateWithNewItineraries(searchCriteria, newItins);
-                    };
+                    });
 
                     $scope.processSearchCriteria = function(searchCriteria) {
                         $scope.searchStartedCallback({searchCriteria: searchCriteria});
@@ -328,8 +328,18 @@ define([
                         delete $scope.itemsPerPage;
                         searchStrategyFactory = undefined;
                         searchStrategy = undefined;
+
+                        // on destroying scope we have to clear also the callbacks that we passed to promises that may resolve after the scope is cleared (for example client navigated out of the view containing this directive (directive destroy), but still there are long http requests in progress).
+                        // BTW: these callbacks may still keep reference to objects on scope  (like in our case), thus also preventing the scope from being destroyed (mem leak) - not fixed yet.
+                        clearSearchCallbacks();
                         clearScopeFunctionsExportedToView();
                     });
+
+                    function clearSearchCallbacks() {
+                        searchSuccessCallback.cancel();
+                        searchUpdateCallback.cancel();
+                        searchErrorCallback.cancel();
+                    }
 
                     function clearScopeFunctionsExportedToView() {
                         delete $scope.isAnyDataToDisplayAvailable;

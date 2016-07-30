@@ -54,4 +54,26 @@ define([
             expect(result.sort()).toEqual(['val11', 'val12', 'val21', 'val22'].sort());
         });
     })
+
+    describe('cancellable', function () {
+        it('cancelled not called yet, function calls with arguments forwarded', function () {
+            //given
+            var baseFn = jasmine.createSpy('baseFn');
+            var cancellable = __.cancellable(baseFn);
+            //when
+            var arg1 = {};
+            var arg2 = {};
+            cancellable(arg1, arg2);
+            expect(baseFn).toHaveBeenCalledWith(arg1, arg2);
+        })
+        it('cancelled called, no more calls forwarding', function () {
+            //given
+            var baseFn = jasmine.createSpy('baseFn');
+            var cancellable = __.cancellable(baseFn);
+            cancellable.cancel();
+            //when
+            cancellable();
+            expect(baseFn).not.toHaveBeenCalled();
+        })
+    })
 });
