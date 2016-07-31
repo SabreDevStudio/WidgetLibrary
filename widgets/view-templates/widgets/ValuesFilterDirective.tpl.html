@@ -1,7 +1,7 @@
-<div ng-show="filterInstance.filterInitialized">
+<div ng-show="filterInstance.filterInitialized" class="SDSValuesFilter">
 
     <div class="panel panel-default">
-        <div class="panel-heading">
+        <div class="panel-heading SDS-responsive-panel-heading">
             <div ng-click="filterContentCollapsed =! filterContentCollapsed">
                 <span ng-if="filterContentCollapsed" class="glyphicon glyphicon-collapse-up"></span>
                 <span ng-if="!filterContentCollapsed" class="glyphicon glyphicon-collapse-down"></span>
@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div class="panel-body" ng-hide="filterContentCollapsed">
+        <div class="panel-body SDS-responsive-panel-body" ng-hide="filterContentCollapsed">
 
             <div ng-if="filterType === 'discrete' || filterType === 'discreteList'">
                 <div class="checkbox" ng-repeat="i in filterInstance.selectableValues">
@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <div ng-if="filterType === 'range' || filterType === 'rangeDateTime' || filterType === 'rangeMonetaryAmount'">
+            <div ng-if="filterType === 'range' || filterType === 'rangeDateTime' || filterType === 'rangeMonetaryAmount'" class="SDSRangeFilter">
                 <span class="top-left">
                     <span ng-if="filterType === 'range' || filterType === 'rangeDateTime'">
                         {{filterInstance.minConstraint | applyFilter:valuesDisplayFilter:valuesDisplayFilterOptions}}

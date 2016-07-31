@@ -1,11 +1,11 @@
 <div class="SDSWidget SDSResponsiveElement SDSInspirationalList">
         <div class="panel panel-default" ng-show="ctrl.isAnyDataToDisplayAvailable()">
 
-            <div class="panel-heading text-center">
+            <div class="panel-heading text-center SDS-responsive-panel-heading">
                 <h4 class="panel-title">Cheapest Flights To Destination</h4>
             </div>
 
-            <div class="panel-body">
+            <div class="panel-body SDS-responsive-panel-body">
 
                 <ul class="list-unstyled SDSTopLevelList">
                     <div class="SDS-row">
@@ -26,13 +26,13 @@
                                             <div class="SDS-col-element-xs-5">
                                                 <ul class="list-inline list-unstyled">
                                                     <li>
-                                                        <div><strong>{{offerItem.OriginLocation | cityAndAirportFullName:ctrl.lastRequestPosCountryOverride}}</strong></div>
+                                                        <div><strong>{{offerItem.OriginLocation | cityFullName:ctrl.lastRequestPosCountryOverride}}</strong></div>
                                                     </li>
                                                     <li>
                                                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                                                     </li>
                                                     <li>
-                                                        <strong>{{ctrl.modelPricesToDestination.DestinationLocation | cityAndAirportFullName:ctrl.lastRequestPosCountryOverride}}</strong>
+                                                        <strong>{{ctrl.modelPricesToDestination.DestinationLocation | cityFullName:ctrl.lastRequestPosCountryOverride}}</strong>
                                                     </li>
                                                 </ul>
                                             </div>

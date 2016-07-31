@@ -1,4 +1,4 @@
-@import "SDSCommon";
+@import "SDSConstants";
 
 @mixin backgroundIcon($url, $size) {
   background: url($url) no-repeat;
@@ -55,7 +55,7 @@
 }
 
 .SDSLegShortSummary {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .SDSFlightDepartureOrArrival {
@@ -92,6 +92,10 @@
 
 .SDSPriceSummary .SDSCheckoutButton {
   margin-bottom: 0.4rem;
+}
+
+.SDSPricePerStopsPerAirlineSummaryTable {
+  margin-bottom: 4px;
 }
 
 .SDSPricePerStopsPerAirlineSummaryTable td {

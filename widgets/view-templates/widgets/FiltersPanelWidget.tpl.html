@@ -1,9 +1,9 @@
-<div class="panel panel-default" ng-show="isAnyDataToDisplayAvailable()">
-    <div class="panel-heading">
+<div class="SDSResponsiveElement panel panel-default" ng-show="isAnyDataToDisplayAvailable()">
+    <div class="panel-heading text-center SDS-responsive-panel-heading">
         <h4 class="panel-title">Filter options</h4>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body SDS-responsive-panel-body">
         <values-filter type="discrete" label="Number of stops" filterable-property-name="getNumberOfStops" values-display-filter="humanizeNumberOfStops"></values-filter>
 
         <values-filter type="discreteList" label="Layover airports" filterable-property-name="getConnectionAirports" values-display-filter="cityAndAirportFullNameNoAirportWord"></values-filter>

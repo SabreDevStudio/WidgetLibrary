@@ -9,8 +9,8 @@
 
     <div class="panel-heading">
         <div class="SDS-row">
-            <div class="SDS-col-element-xxl-3">
-                <strong>{{permittedItinerariesCount}} options found for {{searchCriteriaDepartureAirport | cityAndAirportFullName}} to {{searchCriteriaArrivalAirport | cityAndAirportFullName}}</strong>
+            <div class="SDS-col-element-xxl-3 SDS-lead">
+                {{permittedItinerariesCount}} options found for {{searchCriteriaDepartureAirport | cityAndAirportFullName}} to {{searchCriteriaArrivalAirport | cityAndAirportFullName}}
             </div>
 
             <div class="SDS-col-element-xxl-7">
@@ -18,19 +18,28 @@
                 <accordion class="SDS-hidden-lg" close-others="false">
                     <accordion-group is-open="true">
                         <accordion-heading>
-                            <span class="text-info">Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount.currency}}</span>
+                            <span class="text-info">Cheapest:
+                                <div class="pull-right">{{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}</div>
+                                <div class="clearfix"></div>
+                            </span>
                         </accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.cheapest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </accordion-group>
                     <accordion-group>
                         <accordion-heading>
-                            <span class="text-info">Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}</span>
+                            <span class="text-info">Best:
+                                <div class="pull-right">{{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}</div>
+                                <div class="clearfix"></div>
+                            </span>
                         </accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.best" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </accordion-group>
                     <accordion-group>
                         <accordion-heading>
-                            <span class="text-info">Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}</span>
+                            <span class="text-info">Shortest:
+                                <div class="pull-right">{{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}</div>
+                                <div class="clearfix"></div>
+                            </span>
                         </accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.shortest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </accordion-group>
