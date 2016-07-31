@@ -408,12 +408,12 @@ module.exports = function (grunt) {
             cssbundle: {
                 files: {
                     'dist/widgets/css/SDS.min.css': [
-                          'widgets/stylesheets/**/*.css'
-                        , 'www/css/**/*.css'
-                        , 'bower_components/bootstrap/dist/css/bootstrap.css'
+                          'bower_components/bootstrap/dist/css/bootstrap.css'
                         , 'bower_components/angular-ui-select/dist/select.css'
                         , 'bower_components/angular-rangeslider/angular.rangeSlider.css'
                         , 'bower_components/titatoggle/dist/titatoggle-dist.css'
+                        , 'widgets/stylesheets/**/*.css'
+                        , 'www/css/**/*.css'
                     ]
                 }
             }
