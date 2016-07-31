@@ -67,3 +67,17 @@
   font-weight: 200;
   line-height: 1.4;
 }
+
+$SDSPanelLeftRightPadding: 8px;
+
+.SDS-panel-body {
+  padding: $SDSPanelLeftRightPadding;
+}
+
+.SDS-panel-heading {
+  padding: 5px $SDSPanelLeftRightPadding;
+}
+
+.SDS-panel-footer {
+  padding: 5px $SDSPanelLeftRightPadding;
+}

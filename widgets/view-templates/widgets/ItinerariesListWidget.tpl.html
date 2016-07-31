@@ -7,7 +7,7 @@
 
 <div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
-    <div class="panel-heading">
+    <div class="panel-heading SDS-panel-heading">
         <div class="SDS-row">
             <div class="SDS-col-element-xxl-3 SDS-lead">
                 {{permittedItinerariesCount}} options found for {{searchCriteriaDepartureAirport | cityAndAirportFullName}} to {{searchCriteriaArrivalAirport | cityAndAirportFullName}}
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body SDS-panel-body">
         <ul class="list-unstyled SDSTopLevelList">
             <li class="SDS-row" ng-repeat="itinerary in permittedItinerariesSortedCurrentPageView"><!-- warn: cannot have track by $index here, as then itineraries CSS classes controlling visibility will stay the same after changing page or sort criteria (for example Brand Details section would be still open, for other itinerary). -->
                 <itinerary id="{{::getItinAnchorId(itinerary.id)}}" itin="::itinerary" itinerary-selected-callback="selectedItineraryCallback({itinerary: itinerary})" enable-itinerary-select-button="{{::enableItinerarySelectButton}}"></itinerary>
@@ -76,7 +76,7 @@
         </ul>
     </div>
 
-    <div class="panel-footer">
+    <div class="panel-footer SDS-panel-footer">
         <pagination class="pagination-sm pull-right" total-items="permittedItinerariesCount" items-per-page="itemsPerPage" ng-model="paginationSettings.currentPage" boundary-links="true" rotate="false"></pagination>
         <div class="clearfix"></div>
     </div>
