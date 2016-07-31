@@ -96,14 +96,19 @@ define([
                         }
                         perPosEntry = globalEntry;
                     }
-                    if (perPosEntry.AirportName !== perPosEntry.CityName) {
-                        return perPosEntry.AirportName + ', ' + perPosEntry.CityName;
-                    } else {
+                    if ((perPosEntry.AirportName === perPosEntry.CityName) || perPosEntry.AirportName.toUpperCase().includes(perPosEntry.CityName.toUpperCase())) {
                         return perPosEntry.AirportName;
                     }
+                    return perPosEntry.AirportName + ', ' + perPosEntry.CityName;
                 };
                 createCityAndAirportNameFilterDecorator.$stateful = true; // protectively setting true, as filters are selected at runtime (getFilterInstance), and we do now know if stateful or stateless filters will be used (BTW currently filters produced are stateful).
                 return createCityAndAirportNameFilterDecorator;
+            }])
+            .filter('cityAndAirportFullNameNoAirportWord', ['$filter', function ($filter) {
+                return function (airportCode) {
+                    var cityAndAirportFullNameFilter = $filter('cityAndAirportFullName');
+                    return cityAndAirportFullNameFilter(airportCode).replace('Airport', '');
+                }
             }])
             /**
              * Given airport/city code, returns the country name (for example Germany) this airport/city is located.
