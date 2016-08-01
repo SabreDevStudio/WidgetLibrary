@@ -46,10 +46,10 @@ define([
                     createSearchStrategy: function (activeSearchWebService) {
                         var delegateStrategy = delegate.createSearchStrategy(activeSearchWebService);
                         return {
-                            search: function (searchCriteria, originalSuccessCallback, failureCallback, updateCallback) {
+                            search: function (searchCriteria, callbacks) {
                                 const bagsRequested = searchCriteria.bagsRequested;
                                 if (_.isUndefined(bagsRequested)) {
-                                    return delegateStrategy.search(searchCriteria, originalSuccessCallback, failureCallback, updateCallback);
+                                    return delegateStrategy.search(searchCriteria, callbacks);
                                 }
 
                                 //function bagsFilteringStrategy(originalItineraryList) {
@@ -63,7 +63,7 @@ define([
                                 //        ErrorReportingService.reportError(`Could not find itineraries with ${bagsRequested} bags requested`, searchCriteria);
                                 //        failureCallback();
                                 //    } else {
-                                //        originalSuccessCallback(filteredItinList);
+                                //        successCallback(filteredItinList);
                                 //    }
                                 //}
 
@@ -72,7 +72,7 @@ define([
                                         var baggageChargesSupplementedItinList = addBaggageChargesForInsufficientAllowance(originalItineraryList);
                                         if (baggageChargesSupplementedItinList.size() === 0) {
                                             ErrorReportingService.reportError(`Could not find itineraries with ${bagsRequested} bags requested`, searchCriteria);
-                                            failureCallback();
+                                            callbacks.failureCallback();
                                         } else {
                                             originalCallback(baggageChargesSupplementedItinList);
                                         }
@@ -128,7 +128,12 @@ define([
                                     return filteredItinList;
                                 }
 
-                                return delegateStrategy.search(searchCriteria, decorateWithBagsFilteringAndBaggageChargesSupplementingStrategy(originalSuccessCallback), failureCallback, decorateWithBagsFilteringAndBaggageChargesSupplementingStrategy(updateCallback));
+                                return delegateStrategy.search(searchCriteria, {
+                                    successCallback: decorateWithBagsFilteringAndBaggageChargesSupplementingStrategy(callbacks.successCallback),
+                                    failureCallback: callbacks.failureCallback,
+                                    updateCallback: decorateWithBagsFilteringAndBaggageChargesSupplementingStrategy(callbacks.updateCallback),
+                                    streamEndCallback: callbacks.streamEndCallback
+                                });
                             }
                         };
                     }

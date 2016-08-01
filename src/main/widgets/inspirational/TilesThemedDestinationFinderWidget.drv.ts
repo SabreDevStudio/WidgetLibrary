@@ -12,8 +12,8 @@ define([
                     closestAirport: '@?',
                     searchOfferClicked: '&?',
                     searchStartedCallback: '&?',
-                    searchCompletedSuccessCallback: '&?',
-                    searchCompletedErrorCallback: '&?'
+                    searchSuccessCallback: '&?',
+                    searchErrorCallback: '&?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/TilesThemedDestinationFinderWidget.tpl.html',
                 controller: 'TilesThemedDestinationFinderWidgetController',

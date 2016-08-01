@@ -72,8 +72,8 @@ define([
                 return {
                     scope: { // TODO params to your widget
                         searchStartedCallback: '&?',
-                        searchCompletedSuccessCallback: '&?',
-                        searchCompletedErrorCallback: '&?'
+                        searchSuccessCallback: '&?',
+                        searchErrorCallback: '&?'
                     },
                     replace: true,
                     templateUrl: '../widgets/view-templates/widgets/WidgetTemplate.tpl.html', //TODO rename

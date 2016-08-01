@@ -23,8 +23,11 @@ define([
                         switch (activeSearchWebService) {
                             case 'bfm': {
                                 return {
-                                    search: function (searchCriteria, successCallback, failureCallback, updateCallback) {
-                                        BargainFinderMaxDataService.getBrandedItineraries(searchCriteria).then(successCallback, failureCallback);
+                                    search: function (searchCriteria, callbacks) {
+                                        BargainFinderMaxDataService
+                                            .getBrandedItineraries(searchCriteria)
+                                            .then(callbacks.successCallback, callbacks.failureCallback)
+                                            .finally(callbacks.streamEndCallback);
                                     }
                                 };
                             }

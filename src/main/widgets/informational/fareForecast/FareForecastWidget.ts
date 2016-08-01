@@ -78,8 +78,8 @@ define([
                         showWaitRecommendation: '@',
                         showUnknownRecommendation: '@',
                         searchStartedCallback: '&?',
-                        searchCompletedSuccessCallback: '&?',
-                        searchCompletedErrorCallback: '&?'
+                        searchSuccessCallback: '&?',
+                        searchErrorCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/FareForecastWidget.tpl.html',
                     controller: 'FareForecastController',

@@ -234,8 +234,8 @@ define([
                         searchCriteria: '=?',
                         barClickedCallback: '&?',
                         searchStartedCallback: '&?',
-                        searchCompletedSuccessCallback: '&?',
-                        searchCompletedErrorCallback: '&?'
+                        searchSuccessCallback: '&?',
+                        searchErrorCallback: '&?'
                     },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LeadPriceChartWidget.tpl.html',

@@ -16,8 +16,8 @@ define([
                     searchOfferClicked: '&?',
                     initialZoom: '@?',
                     searchStartedCallback: '&?',
-                    searchCompletedSuccessCallback: '&?',
-                    searchCompletedErrorCallback: '&?'
+                    searchSuccessCallback: '&?',
+                    searchErrorCallback: '&?'
                 },
                 templateUrl: '../widgets/view-templates/widgets/MapThemedDestinationFinderWidget.tpl.html',
                 controller: 'MapThemedDestinationFinderWidgetController',

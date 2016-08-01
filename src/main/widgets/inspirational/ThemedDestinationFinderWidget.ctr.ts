@@ -80,13 +80,13 @@ define([
                         $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
                         $scope.model.priceTiersStatistics = orderedSummary.priceTiersStatistics;
 
-                        $scope.searchCompletedSuccessCallback({
+                        $scope.searchSuccessCallback({
                             searchResults: orderedSummary,
                             searchCriteria: searchCriteria
                         });
                     }, (reason) => {
                         clearModel();
-                        $scope.searchCompletedErrorCallback({
+                        $scope.searchErrorCallback({
                             errorMessages: reason,
                             searchCriteria: searchCriteria
                         });

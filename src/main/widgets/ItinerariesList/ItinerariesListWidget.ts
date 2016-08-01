@@ -203,7 +203,7 @@ define([
                     });
 
                     var searchSuccessCallback = __.cancellable(function (searchCriteria, newItins) {
-                        $scope.searchCompletedSuccessCallback({
+                        $scope.searchSuccessCallback({
                             itineraries: newItins,
                             searchCriteria: searchCriteria
                         });
@@ -211,7 +211,7 @@ define([
                     });
 
                     var searchErrorCallback = __.cancellable(function (searchCriteria, errorMessages) {
-                        $scope.searchCompletedErrorCallback({
+                        $scope.searchErrorCallback({
                             errorMessages: errorMessages,
                             searchCriteria: searchCriteria
                         });
@@ -219,12 +219,14 @@ define([
                     });
 
                     var searchUpdateCallback = __.cancellable(function (searchCriteria, newItins) {
-                        $scope.searchCompletedSuccessCallback({
+                        $scope.searchSuccessCallback({
                             itineraries: newItins,
                             searchCriteria: searchCriteria
                         });
                         updateWithNewItineraries(searchCriteria, newItins);
                     });
+
+                    var resultsStreamEndCallback = __.cancellable(() => $scope.allSearchesComplete());
 
                     $scope.processSearchCriteria = function(searchCriteria) {
                         $scope.searchStartedCallback({searchCriteria: searchCriteria});
@@ -233,10 +235,12 @@ define([
                             return;
                         }
 
-                        searchStrategy.search(searchCriteria,
-                            _.partial(searchSuccessCallback, searchCriteria),
-                            _.partial(searchErrorCallback, searchCriteria),
-                            _.partial(searchUpdateCallback, searchCriteria)
+                        searchStrategy.search(searchCriteria, {
+                                successCallback: _.partial(searchSuccessCallback, searchCriteria),
+                                failureCallback: _.partial(searchErrorCallback, searchCriteria),
+                                updateCallback: _.partial(searchUpdateCallback, searchCriteria),
+                                streamEndCallback: resultsStreamEndCallback
+                            }
                         );
                     };
 
@@ -339,6 +343,7 @@ define([
                         searchSuccessCallback.cancel();
                         searchUpdateCallback.cancel();
                         searchErrorCallback.cancel();
+                        resultsStreamEndCallback.cancel();
                     }
 
                     function clearScopeFunctionsExportedToView() {
@@ -360,8 +365,9 @@ define([
                         , selectedItineraryCallback: '&?'
                         , enableItinerarySelectButton: '@?'
                         , searchStartedCallback: '&?'
-                        , searchCompletedSuccessCallback: '&?'
-                        , searchCompletedErrorCallback: '&?'
+                        , searchSuccessCallback: '&?'
+                        , searchErrorCallback: '&?'
+                        , allSearchesComplete: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/ItinerariesListWidget.tpl.html',
                     controller: 'ItineraryListCtrl',

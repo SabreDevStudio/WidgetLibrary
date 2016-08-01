@@ -14,8 +14,8 @@ define([
             this.noResultsFoundBroadcastingService = args.noResultsFoundBroadcastingService || { broadcast: _.noop };
 
             this.scope.searchStartedCallback = this.scope.searchStartedCallback || _.noop;
-            this.scope.searchCompletedSuccessCallback = this.scope.searchCompletedSuccessCallback || _.noop;
-            this.scope.searchCompletedErrorCallback = this.scope.searchCompletedErrorCallback || _.noop;
+            this.scope.searchSuccessCallback = this.scope.searchSuccessCallback || _.noop;
+            this.scope.searchErrorCallback = this.scope.searchErrorCallback || _.noop;
 
             this.lastSearchCriteriaAirports = {};
 
@@ -40,7 +40,7 @@ define([
                 function (searchResults) {
                     that.saveLastSearchCriteria(searchCriteria);
                     that.processSearchResults(searchResults);
-                    that.scope.searchCompletedSuccessCallback({
+                    that.scope.searchSuccessCallback({
                         searchResults: searchResults,
                         searchCriteria: searchCriteria
                     });
@@ -49,7 +49,7 @@ define([
                     // clear model from previous search
                     that.clearModel();
                     that.noResultsFoundBroadcastingService.broadcast();
-                    that.scope.searchCompletedErrorCallback({
+                    that.scope.searchErrorCallback({
                         errorMessages: errors,
                         searchCriteria: searchCriteria
                     });

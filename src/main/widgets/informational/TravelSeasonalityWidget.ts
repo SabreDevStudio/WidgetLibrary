@@ -128,8 +128,8 @@ define([
                 return {
                     scope: {
                         searchStartedCallback: '&?',
-                        searchCompletedSuccessCallback: '&?',
-                        searchCompletedErrorCallback: '&?'
+                        searchSuccessCallback: '&?',
+                        searchErrorCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/TravelSeasonalityWidget.tpl.html',
                     controller: 'TravelSeasonalityCtrl',

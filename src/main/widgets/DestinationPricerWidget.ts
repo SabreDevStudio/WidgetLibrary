@@ -78,8 +78,8 @@ define([
                         searchLinkEnabled: '@?',
                         offerClicked: '&?',
                         searchStartedCallback: '&?',
-                        searchCompletedSuccessCallback: '&?',
-                        searchCompletedErrorCallback: '&?'
+                        searchSuccessCallback: '&?',
+                        searchErrorCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/DestinationPricer.tpl.html',
                     controller: 'DestinationPricerCtrl',

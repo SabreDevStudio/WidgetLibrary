@@ -109,8 +109,8 @@ define([
                         hideHeader: '@?',
                         minDaysDataRequired: '@?',
                         searchStartedCallback: '&?',
-                        searchCompletedSuccessCallback: '&?',
-                        searchCompletedErrorCallback: '&?'
+                        searchSuccessCallback: '&?',
+                        searchErrorCallback: '&?'
                     },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LowFareHistory.tpl.html',
