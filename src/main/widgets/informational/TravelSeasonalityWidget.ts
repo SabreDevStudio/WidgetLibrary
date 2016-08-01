@@ -126,7 +126,11 @@ define([
                     chartsFactory
                 ) {
                 return {
-                    scope: true,
+                    scope: {
+                        searchStartedCallback: '&?',
+                        searchCompletedSuccessCallback: '&?',
+                        searchCompletedErrorCallback: '&?'
+                    },
                     templateUrl: '../widgets/view-templates/widgets/TravelSeasonalityWidget.tpl.html',
                     controller: 'TravelSeasonalityCtrl',
                     controllerAs: 'ctrl',

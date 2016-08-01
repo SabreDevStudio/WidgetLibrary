@@ -232,7 +232,10 @@ define([
                         numberOfWeeksToDisplay: '@',
                         activeSearchWebService: '@',
                         searchCriteria: '=?',
-                        barClickedCallback: '&?'
+                        barClickedCallback: '&?',
+                        searchStartedCallback: '&?',
+                        searchCompletedSuccessCallback: '&?',
+                        searchCompletedErrorCallback: '&?'
                     },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LeadPriceChartWidget.tpl.html',

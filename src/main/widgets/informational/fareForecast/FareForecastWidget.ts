@@ -75,8 +75,11 @@ define([
                 return {
                     restrict: 'AE',
                     scope: {
-                          showWaitRecommendation: '@'
-                        , showUnknownRecommendation: '@'
+                        showWaitRecommendation: '@',
+                        showUnknownRecommendation: '@',
+                        searchStartedCallback: '&?',
+                        searchCompletedSuccessCallback: '&?',
+                        searchCompletedErrorCallback: '&?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/FareForecastWidget.tpl.html',
                     controller: 'FareForecastController',

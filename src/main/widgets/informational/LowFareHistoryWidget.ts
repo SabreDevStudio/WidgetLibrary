@@ -107,7 +107,10 @@ define([
                     scope: {
                         hideChartLabels: '@?',
                         hideHeader: '@?',
-                        minDaysDataRequired: '@?'
+                        minDaysDataRequired: '@?',
+                        searchStartedCallback: '&?',
+                        searchCompletedSuccessCallback: '&?',
+                        searchCompletedErrorCallback: '&?'
                     },
                     replace: false,
                     templateUrl: '../widgets/view-templates/widgets/LowFareHistory.tpl.html',
