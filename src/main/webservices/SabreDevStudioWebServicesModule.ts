@@ -18,6 +18,7 @@ define([
             .constant('dateTimeFormat', 'YYYY-MM-DDTHH:mm:ss')
             .constant('dateFormat', 'YYYY-MM-DD')
             .constant('errorEvent', 'errorEvent')
+            .constant('networkErrorEvent', 'networkErrorEvent')
             .constant('validationErrorEvent', 'validationErrorEvent')
             .constant('resetErrorsEvent', 'resetErrorsEvent')
             .factory('businessMessagesErrorHandler', ['ErrorReportingService', function (ErrorReportingService) {
@@ -42,6 +43,13 @@ define([
                     },
                     reportErrors: function (errorsArray, searchCriteria) {
                         $rootScope.$broadcast(errorEvent, errorsArray, searchCriteria);
+                    }
+                };
+            }])
+            .service('NetworkErrorReportingService', ['$rootScope', 'networkErrorEvent', function ($rootScope, errorEvent) {
+                return {
+                    reportError: function (error) {
+                        $rootScope.$broadcast(errorEvent, [error], 'Network error');
                     }
                 };
             }])

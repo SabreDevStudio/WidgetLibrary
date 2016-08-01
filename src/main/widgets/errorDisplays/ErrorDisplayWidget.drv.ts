@@ -1,30 +1,16 @@
 define([
-          'moment'
-        , 'angular'
-        , 'lodash'
+          'lodash'
         , 'util/LodashExtensions'
-        , 'angular_bootstrap'
-        , 'widgets/SDSWidgets'
         , 'widgets/WidgetGlobalCallbacks'
     ],
     function (
-        moment
-        , angular
-        , _
+          _
         , __
-        , angular_bootstrap
-        , SDSWidgets
         , WidgetGlobalCallbacks
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets')
-            .directive('errorDisplay', [
-                      'errorEvent'
-                    , 'resetErrorsEvent'
-                    , 'newSearchCriteriaEvent'
-                    , 'newInspirationalSearchCriteriaEvent'
-                , function (
+        return function ErrorDisplayWidget(
                         errorEvent
                       , resetErrorsEvent
                       , newSearchCriteriaEvent
@@ -64,5 +50,5 @@ define([
                         WidgetGlobalCallbacks.linkComplete(scope, element);
                     }
                 }
-            }]);
+            };
     });

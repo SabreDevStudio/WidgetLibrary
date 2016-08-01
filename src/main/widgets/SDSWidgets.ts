@@ -42,6 +42,7 @@ define([
                   'baseServices'
                 , 'sabreDevStudioWebServices'
                 , 'sdsWidgets.inspirationalWidgets'
+                , 'sdsWidgets.errorDisplays'
                 , 'commonDirectives'
                 , 'commonFilters'
                 , 'ui.bootstrap'

@@ -15,7 +15,7 @@ define([
         }
 
         return angular.module('sabreDevStudioWebServices')
-            .factory('NetworkConnectivityErrorInterceptor', ['$q', 'ErrorReportingService', 'apiURL', function ($q, ErrorReportingService, apiURL) {
+            .factory('NetworkConnectivityErrorInterceptor', ['$q', 'NetworkErrorReportingService', 'apiURL', function ($q, ErrorReportingService, apiURL) {
                 var COMMUNICATION_GENERIC_ERROR_MSG = _.template('Unable to communicate with <%= endpoint %>');
                 var COMMUNICATION_TIMEOUT_ERROR_MSG = _.template('Timeout calling <%= endpoint %>'); //
 

@@ -111,8 +111,7 @@ define([
         , 'widgets/ItinerariesList/ItinerariesListWidget'
         , 'widgets/filters/FiltersPanelWidget'
         , 'widgets/filters/ValuesFilterDirective'
-        , 'widgets/ErrorDisplayWidget'
-        , 'widgets/ValidationErrorDisplayWidget'
+        , 'widgets/errorDisplays/ErrorDisplays.mod'
         , 'widgets/AboutWidget'
         , 'Configuration'
         , 'elementQuery'
@@ -143,8 +142,7 @@ define([
         , ItinerariesListWidget
         , FiltersPanelWidget
         , DiscreteFilterWidget
-        , ErrorDisplayWidget
-        , ValidationErrorDisplayWidget
+        , ErrorDisplaysModule
         , AboutWidget
         , Configuration
         , elementQuery
