@@ -60,14 +60,6 @@
   cursor: pointer;
 }
 
-// nearly same as Bootstrap .lead, but we do not want Bootstrap responsive (viewport responsive) styling for it.
-.SDS-lead {
-  margin-bottom: 8px;
-  font-size: 16px;
-  font-weight: 200;
-  line-height: 1.4;
-}
-
 $SDSPanelLeftRightPadding: 8px;
 
 .SDS-panel-body {

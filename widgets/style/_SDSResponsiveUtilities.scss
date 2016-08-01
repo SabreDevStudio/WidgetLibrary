@@ -104,3 +104,20 @@
     padding: 10px 15px;
   }
 }
+
+.SDSResponsiveElement {
+  .SDS-lead {
+    //font size decrease for mobile
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 200;
+    line-height: 1.2;
+  }
+  &[min-width~="60em"] .SDS-lead {
+    // nearly same as Bootstrap .lead, but we do not want Bootstrap responsive (viewport responsive) styling for it.
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 1.4;
+  }
+}
