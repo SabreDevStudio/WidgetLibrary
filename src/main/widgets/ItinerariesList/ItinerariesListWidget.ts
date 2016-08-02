@@ -263,11 +263,13 @@ define([
                         var webService = selectItinerariesListProducingService(DateSelectedBroadcastingService.originalDataSourceWebService);
 
                         $scope.searchStartedCallback({searchCriteria: newSearchCriteria});
-                        webService.getItineraries(newSearchCriteria).then(
+                        webService
+                            .getItineraries(newSearchCriteria)
+                            .then(
                               _.partial(searchSuccessCallback, newSearchCriteria)
                             , _.partial(searchErrorCallback, newSearchCriteria)
-                            , _.partial(searchUpdateCallback, newSearchCriteria)
-                        );
+                            )
+                            .finally(resultsStreamEndCallback);
                         $scope.$evalAsync();
                     });
 
