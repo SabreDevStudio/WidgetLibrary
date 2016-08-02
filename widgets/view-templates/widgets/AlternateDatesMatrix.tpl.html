@@ -1,10 +1,10 @@
-<div class="SDSAlternateDatesMatrixWidget panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
+<div class="SDSAlternateDatesMatrixWidget panel panel-default SDS-panel" ng-if="isAnyDataToDisplayAvailable()">
 
-    <div class="panel-heading text-center">
+    <div class="panel-heading SDS-panel-heading text-center">
         <h4 class="panel-title">Alternate Dates Lead Fares</h4>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body SDS-panel-body">
 
         <div class="table-responsive">
             <table class="SDSTable table table-bordered table-condensed" ng-if="isRoundTripTravel">
@@ -28,7 +28,8 @@
                         <td ng-repeat="requestedReturnDate in requestedReturnDates"
                             ng-init="leadFareForDates = altDatesPriceMatrix.getLeadFareForTravelDates(requestedDepartureDate, requestedReturnDate)"
                             class='SDSCalendarCell'
-                            ng-class="{'bg-info': isCentralRequestedDate(requestedDepartureDate, requestedReturnDate)}">
+                            ng-class="{'bg-info': isCentralRequestedDate(requestedDepartureDate, requestedReturnDate)}"
+                            ng-click="cellClicked(requestedDepartureDate, requestedReturnDate)">
                                 <div class='SDSCalendarCellPrice SDSPriceTier-{{day.priceTier}}'>
                                     {{leadFareForDates.price | currency:leadFareForDates.currency}}
                                 </div>
@@ -57,7 +58,8 @@
                         <td ng-repeat="requestedDepartureDate in requestedDepartureDates"
                             ng-init="leadFareForDate = altDatesPriceMatrix.getLeadFareForTravelDate(requestedDepartureDate)"
                             class='SDSCalendarCell'
-                            ng-class="{'bg-info': isCentralRequestedDate(requestedDepartureDate)}">
+                            ng-class="{'bg-info': isCentralRequestedDate(requestedDepartureDate)}"
+                            ng-click="cellClicked(requestedDepartureDate)">
                                 <div class='SDSCalendarCellPrice SDSPriceTier-{{day.priceTier}}'>
                                     {{leadFareForDate.price | currency:leadFareForDate.currency}}
                                 </div>

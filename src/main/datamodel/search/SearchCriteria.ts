@@ -190,12 +190,15 @@ define([
         }
     });
 
-    SearchCriteria.prototype.cloneWithDatesAdjustedToOtherDepartureDate = function(date) {
+    SearchCriteria.prototype.cloneWithDatesAdjustedToOtherDepartureDate = function(departureDate, returnDateOverride) {
         var newCriteria = _.extend(Object.create(SearchCriteria.prototype), this);
-        var daysOffset = date.diff(this.getFirstLeg().departureDateTime, 'days');
+        var daysOffset = departureDate.diff(this.getFirstLeg().departureDateTime, 'days');
         newCriteria.legs.forEach(function (leg) {
             leg.addDaysToDepartureDate(daysOffset);
         });
+        if (returnDateOverride) {
+            newCriteria.legs[1].departureDateTime = returnDateOverride;
+        }
         return newCriteria;
     };
 
