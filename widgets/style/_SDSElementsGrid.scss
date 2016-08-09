@@ -73,9 +73,6 @@ $numberOfGridColumns: 12 !default;
 
 @mixin createGridRow {
     .SDS-row {
-      margin-right: -5px;
-      margin-left: -5px;
-
       &:before, &:after {
         display: table;
         content: " ";

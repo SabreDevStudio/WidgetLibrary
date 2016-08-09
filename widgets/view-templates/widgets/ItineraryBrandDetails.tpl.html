@@ -19,9 +19,9 @@
             <tbody>
             <tr>
                 <td class="text-center">Total fare</td>
-                <td class="text-center"><strong>{{itin.totalFareAmountWithCurrency.amount | currency:itin.totalFareAmountWithCurrency.currency}}</strong></td>
+                <td class="text-center"><strong>{{itin.totalFareAmountWithCurrency.amount | isoCurrency:itin.totalFareAmountWithCurrency.currency}}</strong></td>
                 <td class="text-center" ng-repeat="brand in itin.additionalFaresPricingInfos">
-                    <strong>{{brand.fareAmounts.totalFare.amount | currency: brand.fareAmounts.totalFare.currency}}</strong>
+                    <strong>{{brand.fareAmounts.totalFare.amount | isoCurrency: brand.fareAmounts.totalFare.currency}}</strong>
                 </td>
             </tr>
 
@@ -46,10 +46,10 @@
             <tr>
                 <td class="text-center">OB Fees</td>
                 <td class="text-center">
-                    <span ng-repeat="obFee in itin.itineraryPricingInfo.OBFees">{{obFee.amount | currency: obFee.currency}}</span>
+                    <span ng-repeat="obFee in itin.itineraryPricingInfo.OBFees">{{obFee.amount | isoCurrency: obFee.currency}}</span>
                 </td>
                 <td class="text-center" ng-repeat="brand in itin.additionalFaresPricingInfos">
-                    <span ng-repeat="obFee in brand.OBFees">{{obFee.amount | currency: obFee.currency}}</span>
+                    <span ng-repeat="obFee in brand.OBFees">{{obFee.amount | isoCurrency: obFee.currency}}</span>
                 </td>
             </tr>
 

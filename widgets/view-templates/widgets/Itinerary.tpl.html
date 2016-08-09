@@ -70,7 +70,7 @@
             </span>
 
             <ul ng-class="::{'ng-hide':!flightDetailsAlwaysShown}" class="list-group SDSItineraryFlightDetails">
-                <li class="list-group-item" ng-repeat-start="flight in ::leg.segments" ng-init="segmentIndex = $index">
+                <li class="list-group-item SDSPaddingSmall" ng-repeat-start="flight in ::leg.segments" ng-init="segmentIndex = $index">
                     <ul class="list-unstyled">
                         <!--<li>-->
                         <!--{{::flight.duration | humanizeMinutes}}-->
@@ -158,18 +158,18 @@
         </div>
         <div>
             <ul class="list-unstyled pull-right">
-                <li>Total price: <strong >{{::itin.totalFareAmountWithCurrency.amount | currency:itin.totalFareAmountWithCurrency.currency}}</strong></li>
+                <li>Total price: <strong >{{::itin.totalFareAmountWithCurrency.amount | isoCurrency:itin.totalFareAmountWithCurrency.currency}}</strong></li>
                 <li ng-show="::!priceDetailsAlwaysShown">
                     <a href="" class="SDS-visible-lg ng-show SDSItineraryTogglePriceDetails">Price Details</a>
                 </li>
                 <li ng-class="::{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
-                    Base fare: {{::itin.baseFareAmount | currency:itin.baseFareCurrency}}
+                    Base fare: {{::itin.baseFareAmount | isoCurrency:itin.baseFareCurrency}}
                 </li>
                 <li ng-class="::{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
-                    Taxes: {{::itin.totalTaxAmount | currency:itin.totalTaxCurrency}}
+                    Taxes: {{::itin.totalTaxAmount | isoCurrency:itin.totalTaxCurrency}}
                 </li>
                 <li ng-if="::itin.baggageCharges" ng-class="::{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
-                    Bag charges: {{::itin.baggageCharges | currency:itin.totalTaxCurrency}}
+                    Bag charges: {{::itin.baggageCharges | isoCurrency:itin.totalTaxCurrency}}
                 </li>
             </ul>
         </div>

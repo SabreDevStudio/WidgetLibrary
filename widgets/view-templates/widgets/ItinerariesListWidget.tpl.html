@@ -7,7 +7,7 @@
 
 <div class="panel panel-default" ng-if="isAnyDataToDisplayAvailable()">
 
-    <div class="panel-heading SDS-panel-heading">
+    <div class="panel-heading SDSPaddingSmall">
         <div class="SDS-row">
             <div class="SDS-col-element-xxl-3 SDS-lead">
                 {{permittedItinerariesCount}} options found for {{searchCriteriaDepartureAirport | cityAndAirportFullName}} to {{searchCriteriaArrivalAirport | cityAndAirportFullName}}
@@ -19,7 +19,7 @@
                     <accordion-group is-open="true">
                         <accordion-heading>
                             <span class="text-info">Cheapest:
-                                <div class="pull-right">{{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}</div>
+                                <div class="pull-right">{{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}</div>
                                 <div class="clearfix"></div>
                             </span>
                         </accordion-heading>
@@ -28,7 +28,7 @@
                     <accordion-group>
                         <accordion-heading>
                             <span class="text-info">Best:
-                                <div class="pull-right">{{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}</div>
+                                <div class="pull-right">{{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}</div>
                                 <div class="clearfix"></div>
                             </span>
                         </accordion-heading>
@@ -37,7 +37,7 @@
                     <accordion-group>
                         <accordion-heading>
                             <span class="text-info">Shortest:
-                                <div class="pull-right">{{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}</div>
+                                <div class="pull-right">{{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}</div>
                                 <div class="clearfix"></div>
                             </span>
                         </accordion-heading>
@@ -45,13 +45,13 @@
                     </accordion-group>
                 </accordion>
                 <tabset class="SDS-visible-lg">
-                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}">
+                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.cheapest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </tab>
-                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}">
+                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.best" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </tab>
-                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | currency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}">
+                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.shortest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
                     </tab>
                 </tabset>
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <div class="panel-body SDS-panel-body">
+    <div class="panel-body SDS-no-paddings">
         <ul class="list-unstyled SDSTopLevelList">
             <li class="SDS-row" ng-repeat="itinerary in permittedItinerariesSortedCurrentPageView"><!-- warn: cannot have track by $index here, as then itineraries CSS classes controlling visibility will stay the same after changing page or sort criteria (for example Brand Details section would be still open, for other itinerary). -->
                 <itinerary id="{{::getItinAnchorId(itinerary.id)}}" itin="::itinerary" itinerary-selected-callback="selectedItineraryCallback({itinerary: itinerary})" enable-itinerary-select-button="{{::enableItinerarySelectButton}}"></itinerary>

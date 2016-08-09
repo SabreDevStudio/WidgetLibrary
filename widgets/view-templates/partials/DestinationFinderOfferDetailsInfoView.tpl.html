@@ -5,7 +5,7 @@
     Therefore if this template is reused also in for other directives, the other directive has to expose model at 'parameter' model variable -->
     <h6 class="text-center">
         <strong>{{parameter.destination | cityFullName}}</strong>
-        from <strong>{{parameter.lowestFare.amount | currency:parameter.lowestFare.currency}}</strong>
+        from <strong>{{parameter.lowestFare.amount | isoCurrency:parameter.lowestFare.currency}}</strong>
     </h6>
     <ul class="SDSTopLevelList list-unstyled">
         <li class="SDS-simple-row" ng-repeat="offer in parameter.offers | orderBy:['LowestFare.Fare', 'departureDateTime', 'returnDateTime']">
@@ -26,7 +26,7 @@
             </div>
             <div class="SDS-simple-col-4-20">
                 <small>
-                    {{offer.LowestFare.Fare | currency:offer.CurrencyCode:0}}
+                    {{offer.LowestFare.Fare | isoCurrency:offer.CurrencyCode:0}}
                     <!-- WARN: below we assume that the controller of the parent view where this very view is included, exports such searchOfferClicked callback.
                     Or that callback is exported on parameter object (if we are within isolate scope).
                     Not creating separate directive with isolated scope from this view, as this view is passed into popover, google map info view, which only way to communicate with this template is still only thru (parent) scope.-->

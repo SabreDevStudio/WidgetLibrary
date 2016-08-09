@@ -18,28 +18,28 @@
                     <tr ng-if="summary.totalSummary.nonStopLowestPrice">
                         <td>Non-stop</td>
                         <td class="success" ng-click="itemClicked(summary.totalSummary.nonStopLowestPriceItineraryId)">
-                            <a>{{summary.totalSummary.nonStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</a>
+                            <a>{{summary.totalSummary.nonStopLowestPrice | isoCurrency:summary.totalSummary.totalFareCurrency}}</a>
                         </td>
                         <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestNonStop}" ng-click="itemClicked(item.nonStopLowestPriceItineraryId)">
-                            <a>{{item.nonStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</a>
+                            <a>{{item.nonStopLowestPrice | isoCurrency:summary.totalSummary.totalFareCurrency}}</a>
                         </td>
                     </tr>
                     <tr ng-if="summary.totalSummary.oneStopLowestPrice">
                         <td>1 Stop</td>
                         <td class="success" ng-click="itemClicked(summary.totalSummary.oneStopLowestPriceItineraryId)">
-                            <a>{{summary.totalSummary.oneStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</a>
+                            <a>{{summary.totalSummary.oneStopLowestPrice | isoCurrency:summary.totalSummary.totalFareCurrency}}</a>
                         </td>
                         <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestOneStopLowestPrice}" ng-click="itemClicked(item.oneStopLowestPriceItineraryId)">
-                            <a>{{item.oneStopLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</a>
+                            <a>{{item.oneStopLowestPrice | isoCurrency:summary.totalSummary.totalFareCurrency}}</a>
                         </td>
                     </tr>
                     <tr ng-if="summary.totalSummary.twoAndMoreStopsLowestPrice">
                         <td>2+ Stops</td>
                         <td class="success" ng-click="itemClicked(summary.totalSummary.twoAndMoreStopsLowestPriceItineraryId)">
-                            <a>{{summary.totalSummary.twoAndMoreStopsLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</a>
+                            <a>{{summary.totalSummary.twoAndMoreStopsLowestPrice | isoCurrency:summary.totalSummary.totalFareCurrency}}</a>
                         </td>
                         <td ng-repeat="item in summary.airlineSummaries" ng-class="{success: item.isCheapestTowOrMoreStopsLowestPrice}" ng-click="itemClicked(item.twoAndMoreStopsLowestPriceItineraryId)">
-                            <a>{{item.twoAndMoreStopsLowestPrice | currency:summary.totalSummary.totalFareCurrency}}</a>
+                            <a>{{item.twoAndMoreStopsLowestPrice | isoCurrency:summary.totalSummary.totalFareCurrency}}</a>
                         </td>
                     </tr>
                 </tbody>

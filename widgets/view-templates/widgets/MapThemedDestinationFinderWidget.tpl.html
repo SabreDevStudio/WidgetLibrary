@@ -7,7 +7,7 @@
     <div class="SDSMapTopLegend">
         <span class="SDSMapTopLegendElement" ng-repeat="(tier, tierPriceFrom) in model.priceTiersStatistics.tiersPricesFrom">
             <img ng-src="{{getTierIcon(tier)}}">
-            from {{tierPriceFrom | currency:model.priceTiersStatistics.tiersPriceCurrency:0}}
+            from {{tierPriceFrom | isoCurrency:model.priceTiersStatistics.tiersPriceCurrency:0}}
         </span>
     </div>
 

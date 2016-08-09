@@ -31,7 +31,7 @@
                             ng-class="{'bg-info': isCentralRequestedDate(requestedDepartureDate, requestedReturnDate)}"
                             ng-click="cellClicked(requestedDepartureDate, requestedReturnDate)">
                                 <div class='SDSCalendarCellPrice SDSPriceTier-{{day.priceTier}}'>
-                                    {{leadFareForDates.price | currency:leadFareForDates.currency}}
+                                    {{leadFareForDates.price | isoCurrency:leadFareForDates.currency}}
                                 </div>
                         </td>
                     </tr>
@@ -61,7 +61,7 @@
                             ng-class="{'bg-info': isCentralRequestedDate(requestedDepartureDate)}"
                             ng-click="cellClicked(requestedDepartureDate)">
                                 <div class='SDSCalendarCellPrice SDSPriceTier-{{day.priceTier}}'>
-                                    {{leadFareForDate.price | currency:leadFareForDate.currency}}
+                                    {{leadFareForDate.price | isoCurrency:leadFareForDate.currency}}
                                 </div>
                         </td>
                     </tr>
