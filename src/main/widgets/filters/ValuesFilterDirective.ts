@@ -1,9 +1,6 @@
 define([
           'lodash'
         , 'moment'
-        , 'angular'
-        , 'angular_bootstrap'
-        , 'widgets/SDSWidgets'
         , 'widgets/filters/DiscreteValuesFilter'
         , 'widgets/filters/DiscreteValuesListFilter'
         , 'widgets/filters/RangeFilter'
@@ -14,9 +11,6 @@ define([
     function (
            _
         ,  moment
-        , angular
-        , angular_bootstrap
-        , SDSWidgets
         , DiscreteValuesFilter
         , DiscreteValuesListFilter
         , RangeFilter
@@ -26,22 +20,7 @@ define([
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets')
-            .service('FilterIdGeneratorService', function () {
-                var seqNumber = 0;
-                return {
-                    next: function () {
-                        return seqNumber++;
-                    }
-                };
-            })
-            .directive('valuesFilter', [
-                      'StatisticsGatheringRequestsRegistryService'
-                    , 'itinerariesStatisticsUpdateNotification'
-                    , 'ItineraryStatisticsBroadcastingService'
-                    , 'FilterIdGeneratorService'
-                    , 'resetAllFiltersEvent'
-                , function (
+        return function (
                       StatisticsGatheringRequestsRegistryService
                     , itinerariesStatisticsUpdateNotification
                     , ItineraryStatisticsBroadcastingService
@@ -51,7 +30,7 @@ define([
 
                 return {
                     restrict: 'E',
-                    require: '^filtersPanel',
+                    require: '^filterPanel',
                     replace: true,
                     scope: {
                           canFilterOnlyOnMaxValue: '@'
@@ -108,5 +87,5 @@ define([
 
                     }
                 }
-            }]);
+            };
     });

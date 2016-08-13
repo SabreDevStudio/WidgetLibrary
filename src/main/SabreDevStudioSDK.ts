@@ -109,8 +109,7 @@ define([
         , 'widgets/DestinationPricerWidget'
         , 'widgets/inspirational/InspirationalWidgets.mod'
         , 'widgets/ItinerariesList/ItinerariesListWidget'
-        , 'widgets/filters/FiltersPanelWidget'
-        , 'widgets/filters/ValuesFilterDirective'
+        , 'widgets/ItinerariesFilterPanel.drv'
         , 'widgets/errorDisplays/ErrorDisplays.mod'
         , 'widgets/AboutWidget'
         , 'Configuration'
@@ -140,8 +139,7 @@ define([
         , DestinationPricerWidget
         , InspirationalWidgetsModule
         , ItinerariesListWidget
-        , FiltersPanelWidget
-        , DiscreteFilterWidget
+        , ItinerariesFilterPanelDirective
         , ErrorDisplaysModule
         , AboutWidget
         , Configuration

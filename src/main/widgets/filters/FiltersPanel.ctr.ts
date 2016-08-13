@@ -1,28 +1,13 @@
 define([
-          'moment'
-        , 'angular'
-        , 'lodash'
-        , 'angular_bootstrap'
-        , 'widgets/SDSWidgets'
-        , 'widgets/WidgetGlobalCallbacks'
+    'lodash'
     ],
     function (
-          moment
-        , angular
-        , _
-        , angular_bootstrap
-        , SDSWidgets
-        , WidgetGlobalCallbacks
+    _
     ) {
         'use strict';
 
-        return angular.module('sdsWidgets')
-            .controller('FiltersPanelCtrl', [
-                      '$scope'
-                    , 'FilteringCriteriaChangedBroadcastingService'
-                    , 'resetAllFiltersEvent'
-                , function(
-                      $scope
+        return function(
+                    $scope
                     , FilteringCriteriaChangedBroadcastingService
                     , resetAllFiltersEvent
                 ) {
@@ -52,17 +37,4 @@ define([
                         return anyStatisticsToCreateFiltersSent;
                     };
                 }
-            ])
-            .directive('filtersPanel', function () {
-                return {
-                    restrict: 'EA',
-                    replace: true,
-                    scope: true,
-                    templateUrl: '../widgets/view-templates/widgets/FiltersPanelWidget.tpl.html',
-                    controller: 'FiltersPanelCtrl',
-                    link: function (scope, element) {
-                        WidgetGlobalCallbacks.linkComplete(scope, element);
-                    }
-                }
-            });
     });
