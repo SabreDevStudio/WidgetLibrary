@@ -92,15 +92,13 @@ define([
     };
 
     /**
-     * Applies the array of filtering functions (filters) to the itineraries.
+     * Applies the filtering function to the itineraries.
      * So that itinerary is NOT marked as filteredOut (not permitted), it must pass all the filters.
-     * @param filteringFunctions
+     * @param filteringFn
      */
-    ItinerariesList.prototype.applyFilters = function (filteringFunctions) {
+    ItinerariesList.prototype.applyFilters = function (filteringFn) {
         this.getItineraries().forEach(function (itin) {
-            itin.filteredOut = !filteringFunctions.every(function (filteringFunction) {
-                return filteringFunction(itin);
-            });
+            itin.filteredOut = !filteringFn(itin);
         });
     };
 

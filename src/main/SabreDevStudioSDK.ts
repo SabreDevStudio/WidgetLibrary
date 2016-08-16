@@ -21,6 +21,7 @@ require.config({
         , 'angular_google_maps': '../../bower_components/angular-google-maps/dist/angular-google-maps'
         , 'angular-simple-logger': '../../bower_components/angular-simple-logger/dist/angular-simple-logger'
         , 'nsPopover': '../../bower_components/nsPopover/src/nsPopover'
+        , 'WidgetsFilterPanel': '../../bower_components/WidgetsFilterPanel/dist/WidgetsFilterPanel'
     },
     map: {
         '*': {
@@ -76,6 +77,9 @@ require.config({
             deps: ['ResizeSensor']
         },
         'nsPopover': {
+            deps: ['angular']
+        },
+        'WidgetsFilterPanel': {
             deps: ['angular']
         }
     },

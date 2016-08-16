@@ -6,7 +6,6 @@ define([
       , 'util/CommonDisplayFilters'
       , 'webservices/SabreDevStudioWebServicesModule'
       , 'widgets/inspirational/InspirationalWidgets.mod'
-      , 'widgets/filters/filterPanel.mod'
       , 'webservices/Interceptors'
       , 'angular-ui-select'
       , 'angular-sanitize'
@@ -17,6 +16,7 @@ define([
       , 'angular_iso_currency'
       , 'angular-touch'
       , 'nsPopover'
+      , 'WidgetsFilterPanel'
     ],
     function (
           NG
@@ -26,7 +26,6 @@ define([
         , CommonDisplayFilters
         , SabreDevStudioWebServicesModule
         , InspirationalWidgetsModule
-        , FilterPanelWidgetsModule
         , Interceptors
         , angular_ui_select
         , angular_sanitize
@@ -37,6 +36,8 @@ define([
         , angular_iso_currency
         , angular_touch
         , nsPopover
+        , WidgetsFilterPanelModule
+
     ) {
         'use strict';
 
@@ -45,7 +46,6 @@ define([
                 , 'sabreDevStudioWebServices'
                 , 'sdsWidgets.inspirationalWidgets'
                 , 'sdsWidgets.errorDisplays'
-                , 'sdsWidgets.filterPanel'
                 , 'commonDirectives'
                 , 'commonFilters'
                 , 'ui.bootstrap'
@@ -58,11 +58,10 @@ define([
                 , 'isoCurrency'
                 , 'ngTouch'
                 , 'nsPopover'
+                , 'WidgetsFilterPanel'
             ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .constant('newInspirationalSearchCriteriaEvent', 'newInspirationalSearchCriteriaEvent')
-            .constant('filteringCriteriaChangedEvent', 'filteringCriteriaChangedEvent')
-            .constant('itinerariesStatisticsUpdateNotification', 'itinerariesStatisticsUpdateNotification')
             .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
             .constant('dateSelectedEvent', 'dateSelectedEvent')
             .constant('noResultsFoundEvent', 'noResultsFoundEvent')
@@ -129,39 +128,4 @@ define([
                     };
                     return service;
                 }])
-            .service('ItineraryStatisticsBroadcastingService', [
-                '$rootScope'
-                , 'itinerariesStatisticsUpdateNotification'
-                , function ($rootScope, itinerariesStatisticsUpdateNotification) {
-                    var service = {
-                        statistics: undefined,
-                        broadcast: function () {
-                            $rootScope.$broadcast(itinerariesStatisticsUpdateNotification);
-                        }
-                    };
-                    return service;
-            }])
-            .service('FilteringCriteriaChangedBroadcastingService', [
-                '$rootScope'
-                , 'filteringCriteriaChangedEvent'
-                , function ($rootScope, filteringCriteriaChangedEvent) {
-                    var service = {
-                          filteringFunctions: undefined
-                        , broadcast: function () {
-                            $rootScope.$broadcast(filteringCriteriaChangedEvent);
-                          }
-                    };
-                    return service;
-            }])
-            .factory('StatisticsGatheringRequestsRegistryService', function () {
-                var registry = [];
-                return {
-                    register: function (statisticDescription) {
-                        registry.push(statisticDescription);
-                    },
-                    getAll: function () {
-                        return registry;
-                    }
-                };
-            })
     });

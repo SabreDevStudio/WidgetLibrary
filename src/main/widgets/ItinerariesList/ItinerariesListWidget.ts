@@ -6,7 +6,6 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'datamodel/ItinerariesList'
-        , 'util/ItinerariesStatisticsCalculator'
         , 'webservices/bargainFinderMax/BargainFinderMaxWebServices'
         , 'webservices/instaflights/InstaflightsDataService'
         , 'datamodel/DiversitySwapper'
@@ -29,7 +28,6 @@ define([
         , angular_bootstrap
         , SDSWidgets
         , ItinerariesList
-        , ItinerariesStatisticsCalculator
         , BargainFinderMaxWebServices
         , InstaflightsDataService
         , DiversitySwapper
@@ -56,14 +54,11 @@ define([
                     , 'BrandedItinerariesSearchStrategyFactory'
                     , 'SearchCriteriaBroadcastingService'
                     , 'newSearchCriteriaEvent'
-                    , 'StatisticsGatheringRequestsRegistryService'
-                    , 'ItineraryStatisticsBroadcastingService'
-                    , 'filteringCriteriaChangedEvent'
-                    , 'FilteringCriteriaChangedBroadcastingService'
                     , 'DateSelectedBroadcastingService'
                     , 'dateSelectedEvent'
                     , 'BargainFinderMaxDataService'
                     , 'noResultsFoundEvent'
+                    , 'filterService'
                 , function (
                       $scope
                     , $filter
@@ -73,14 +68,11 @@ define([
                     , brandedItinerariesSearchStrategyFactory
                     , SearchCriteriaBroadcastingService
                     , newSearchCriteriaEvent
-                    , StatisticsGatheringRequestsRegistryService
-                    , ItineraryStatisticsBroadcastingService
-                    , filteringCriteriaChangedEvent
-                    , FilteringCriteriaChangedBroadcastingService
                     , DateSelectedBroadcastingService
                     , dateSelectedEvent
                     , BargainFinderMaxDataService
                     , noResultsFoundEvent
+                    , filterService
                 ) {
 
                     var sortCriteria = new ItinerariesListSortCriteria();
@@ -173,7 +165,7 @@ define([
                         permittedItineraries = itineraries.getPermittedItineraries();
                         $scope.permittedItinerariesCount = permittedItineraries.length;
                         updateAllItinListsExportedToView(permittedItineraries);
-                        recalculateAndBroadcastStatistics();
+                        filterService.updateFiltersState(itineraries.getPermittedItineraries());
                         recalculateSummaries();
                         updateSearchAirports(newSearchCriteria);
                     }
@@ -244,17 +236,12 @@ define([
                         );
                     };
 
-                    $scope.$on(filteringCriteriaChangedEvent, function () {
-                        var currentFilteringFunctions = FilteringCriteriaChangedBroadcastingService.filteringFunctions;
-                        itineraries.applyFilters(currentFilteringFunctions);
+                    filterService.onFilterChange(function (filteringFn) {
+                        itineraries.applyFilters(filteringFn);
                         permittedItineraries = itineraries.getPermittedItineraries();
                         $scope.permittedItinerariesCount = permittedItineraries.length;
                         updateAllItinListsExportedToView(permittedItineraries);
                         recalculateSummaries();
-                        $scope.$evalAsync();
-                        // We need to call the digest cycle manually, as we changed the model outside of Angular (we have read the state of filters UI controls (sliders), sent new filtering functions thru event and applied to the itineraries domain model).
-                        // In case of discrete filters (checkboxes), the digest cycle is already triggered by Angular (checkboxes with ng-model), while range sliders are component totally outside of Angular: that is why we have to call digest after change from these components.
-                        // It is evalAsync, not just digest(), because in case of discrete values filters, the digest cycle is already in progress.
                     });
 
                     $scope.$on(dateSelectedEvent, function () {
@@ -289,13 +276,6 @@ define([
 
                     function isItinerariesListProducingService(originalWebService) {
                         return _.isFunction(originalWebService.getItineraries);
-                    }
-
-                    function recalculateAndBroadcastStatistics() {
-                        var requestedStatisticsDescriptions = StatisticsGatheringRequestsRegistryService.getAll();
-                        var statisticsCalculator = new ItinerariesStatisticsCalculator(itineraries.getPermittedItineraries());
-                        ItineraryStatisticsBroadcastingService.statistics = statisticsCalculator.getCurrentValuesBounds(requestedStatisticsDescriptions);
-                        ItineraryStatisticsBroadcastingService.broadcast();
                     }
 
                     function updateSearchAirports(newSearchCriteria) {
