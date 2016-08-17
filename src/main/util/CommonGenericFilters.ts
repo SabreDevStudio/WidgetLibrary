@@ -50,22 +50,6 @@ define([
                     return value.format(momentFormat);
                 };
             })
-            .filter('makeMomentAndFormat', function () {
-                return function (value, momentFormat) {
-                    if (_.isUndefined(value) || value === null) {
-                        return '';
-                    }
-                    return moment(value).format(momentFormat);
-                };
-            })
-            .filter('makeMomentDurationAndFormat', function () {
-                return function (value, momentFormat, suffix) {
-                    if (_.isUndefined(value) || value === null) {
-                        return '';
-                    }
-                    return moment.duration(value, momentFormat).humanize(suffix);
-                };
-            })
             .filter('passAllFilter', function () {
                 return function (input) {
                     return input;
