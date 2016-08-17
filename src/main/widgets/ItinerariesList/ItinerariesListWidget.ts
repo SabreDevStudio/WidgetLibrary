@@ -98,6 +98,12 @@ define([
                         $scope.paginationSettings.currentPage = 1;
                     }
 
+                    filterService.configure({
+                        pricePropertyAmountAccessor: 'amount',
+                        pricePropertyAmountForPriceFrom: 'totalFareAmount',
+                        pricePropertyCurrencyForPriceFrom: 'totalFareCurrency'
+                    });
+
                     $scope.onSortingCriteriaChanged = function () {
                         sortCriteria.setSortCriteria($scope.selectedFirstCriterion.selected);
                         updateAllItinListsExportedToView(permittedItineraries);
