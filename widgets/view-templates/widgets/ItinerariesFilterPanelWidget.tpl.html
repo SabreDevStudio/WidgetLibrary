@@ -1,17 +1,17 @@
 <filter-panel>
-    <values-filter type="discrete" label="Number of stops" filterable-property-name="getNumberOfStops" values-display-filter="humanizeNumberOfStops"></values-filter>
+    <values-filter type="discrete" label="Number of stops" filterable-property-name="getNumberOfStops" values-display-filter="humanizeNumberOfStops" custom-currency-filter="isoCurrency"></values-filter>
 
-    <values-filter type="discreteListAllRequired" label="Layover airports" filterable-property-name="getConnectionAirports" values-display-filter="cityAndAirportFullNameNoAirportWord"></values-filter>
+    <values-filter type="discreteListAllRequired" label="Layover airports" filterable-property-name="getConnectionAirports" values-display-filter="cityAndAirportFullNameNoAirportWord" custom-currency-filter="isoCurrency"></values-filter>
 
-    <values-filter type="discrete" label="Departure airports" filterable-property-name="getTripDepartureAirport" values-display-filter="cityAndAirportFullNameNoAirportWord"></values-filter>
+    <values-filter type="discrete" label="Departure airports" filterable-property-name="getTripDepartureAirport" values-display-filter="cityAndAirportFullNameNoAirportWord" custom-currency-filter="isoCurrency"></values-filter>
 
-    <values-filter type="discrete" label="Arrival airports" filterable-property-name="getFirstLegArrivalAirport" values-display-filter="cityAndAirportFullNameNoAirportWord"></values-filter>
+    <values-filter type="discrete" label="Arrival airports" filterable-property-name="getFirstLegArrivalAirport" values-display-filter="cityAndAirportFullNameNoAirportWord" custom-currency-filter="isoCurrency"></values-filter>
 
     <values-filter type="boolean" label="Depart/Return same" filterable-property-name="isDepartureAndReturnSameAirport"></values-filter>
 
-    <values-filter type="discrete" label="Airline" filterable-property-name="getFirstMarketingAirline" values-display-filter="airlineFullName"></values-filter>
+    <values-filter type="discrete" label="Airline" filterable-property-name="getFirstMarketingAirline" values-display-filter="airlineFullName" custom-currency-filter="isoCurrency"></values-filter>
 
-    <values-filter type="rangeMonetaryAmount" label="Price" filterable-property-name="totalFareAmountWithCurrency" can-filter-only-on-max-value="true"></values-filter>
+    <values-filter type="rangeMonetaryAmount" label="Price" filterable-property-name="totalFareAmountWithCurrency" can-filter-only-on-max-value="true" custom-currency-filter="isoCurrency"></values-filter>
 
     <values-filter type="rangeDateTime" label="Outbound flight departure" filterable-property-name="getOutboundDepartureDateTime" values-display-filter="makeMomentAndFormat" values-display-filter-options="hh:mm a"></values-filter>
 
