@@ -26,6 +26,9 @@ define([
                 var minimalCommunicationTimeMillisToDetectTimeout = 300;
                 return {
                     responseError: function (reason) {
+                        if (!isAPIrequest(reason.config.url, apiURL)) {
+                            return $q.reject(reason);
+                        }
                         if (reason.status !== 0) {
                             return $q.reject(reason);
                         }
@@ -71,11 +74,13 @@ define([
                 };
                 }])
             .constant('defaultTimeoutMillis', 5000)
-            .factory('AddTimeoutOnHttpCommunicationInterceptor', ['defaultTimeoutMillis', function (defaultTimeoutMillis) {
+            .factory('AddTimeoutOnHttpCommunicationInterceptor', ['defaultTimeoutMillis', 'apiURL', function (defaultTimeoutMillis, apiURL) {
                 return {
                     request: function(config) {
-                        config.timeout = config.timeout || defaultTimeoutMillis;
-                        config.timeoutClockStart = performance.now();
+                        if (isAPIrequest(config.url, apiURL)) {
+                            config.timeout = config.timeout || defaultTimeoutMillis;
+                            config.timeoutClockStart = performance.now();
+                        }
                         return config;
                     }
                 }
