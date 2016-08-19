@@ -58,7 +58,7 @@ define([
                     , 'dateSelectedEvent'
                     , 'BargainFinderMaxDataService'
                     , 'noResultsFoundEvent'
-                    , 'filterService'
+                    , 'filterServiceFactory'
                 , function (
                       $scope
                     , $filter
@@ -72,7 +72,7 @@ define([
                     , dateSelectedEvent
                     , BargainFinderMaxDataService
                     , noResultsFoundEvent
-                    , filterService
+                    , filterServiceFactory
                 ) {
 
                     var sortCriteria = new ItinerariesListSortCriteria();
@@ -97,6 +97,8 @@ define([
                         // have to explicitly set the current page for pagination (startFrom filter), otherwise undefined and filter getting NaN parameter.
                         $scope.paginationSettings.currentPage = 1;
                     }
+
+                    var filterService = filterServiceFactory.newInstance("itineraries-list");
 
                     filterService.configure({
                         pricePropertyAmountAccessor: 'amount',
