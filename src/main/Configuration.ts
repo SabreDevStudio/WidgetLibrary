@@ -21,7 +21,7 @@ define([
             .value('fareNabberRegistrationPCC', 'E8KE')
 
             //.value('bfmRequestPcc', 'E8KE')
-            .value('bfmRequestPcc', '')
+            .value('bfmRequestPcc', 'E8KE')
 
         return configurationModule;
     });

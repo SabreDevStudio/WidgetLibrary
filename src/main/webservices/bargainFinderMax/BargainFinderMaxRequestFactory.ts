@@ -24,10 +24,6 @@ define([
 
         BargainFinderMaxRequestFactory.prototype.requestBrandedFares = false;
 
-        BargainFinderMaxRequestFactory.prototype.configOverrideDefined = function(overrideKey) {
-            return this.configOverrides && __.isDefined(this.configOverrides[overrideKey]) && this.configOverrides[overrideKey].length > 0;
-        }
-
         BargainFinderMaxRequestFactory.prototype.createOriginDestinationInfos = function(searchCriteria) {
             var that = this;
             return searchCriteria.legs.map(function (leg, legIdx) {
@@ -102,7 +98,7 @@ define([
         };
 
         BargainFinderMaxRequestFactory.prototype.createPOS  = function() {
-            var posElement: any = {
+            return {
                 "Source": [
                     {
                         "RequestorID": {
@@ -111,14 +107,11 @@ define([
                             },
                             "ID": "REQ.ID",
                             "Type": "0.AAA.X"
-                        }
+                        },
+                        "PseudoCityCode": this.configOverrides.bfmRequestPcc
                     }
                 ]
             };
-            if (this.configOverrideDefined('bfmRequestPcc')) {
-                posElement.Source[0].PseudoCityCode = this.configOverrides.bfmRequestPcc;
-            }
-            return posElement;
         };
 
         return BargainFinderMaxRequestFactory;
