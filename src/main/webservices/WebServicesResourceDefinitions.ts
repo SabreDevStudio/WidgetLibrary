@@ -122,7 +122,7 @@ define([
 					, requestHeadersFactory
                     , CachingDecorator
                 ) {
-                    var endpointURL = apiURL + '/v1.9.0/shop/flights?mode=live';
+                    var endpointURL = apiURL + '/v1.9.5/shop/flights?mode=live';
 
                     var resource = $resource(endpointURL, null, {
                         sendRequest: {
