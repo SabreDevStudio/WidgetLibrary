@@ -327,6 +327,7 @@ define([
                         // BTW: these callbacks may still keep reference to objects on scope  (like in our case), thus also preventing the scope from being destroyed (mem leak) - not fixed yet.
                         clearSearchCallbacks();
                         clearScopeFunctionsExportedToView();
+                        filterService.destroy();
                     });
 
                     function clearSearchCallbacks() {
