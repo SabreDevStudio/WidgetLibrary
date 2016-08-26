@@ -1,14 +1,17 @@
 define([
           'lodash'
+        , 'util/LodashExtensions'
         , 'webservices/common/OTARequestFactory'
     ],
     function (
           _
+        , __
         , OTARequestFactory
     ) {
         'use strict';
 
-        function BargainFinderMaxRequestFactory() {
+        function BargainFinderMaxRequestFactory(configOverrides) {
+            this.configOverrides = configOverrides;
         }
 
         /**
@@ -20,6 +23,10 @@ define([
         BargainFinderMaxRequestFactory.prototype.constructor = BargainFinderMaxRequestFactory;
 
         BargainFinderMaxRequestFactory.prototype.requestBrandedFares = false;
+
+        BargainFinderMaxRequestFactory.prototype.configOverrideDefined = function(overrideKey) {
+            return this.configOverrides && __.isDefined(this.configOverrides[overrideKey]) && this.configOverrides[overrideKey].length > 0;
+        }
 
         BargainFinderMaxRequestFactory.prototype.createOriginDestinationInfos = function(searchCriteria) {
             var that = this;
@@ -92,6 +99,26 @@ define([
             } else {
                 return OTARequestFactory.prototype.createPriceRequestInformation.call(this);
             }
+        };
+
+        BargainFinderMaxRequestFactory.prototype.createPOS  = function() {
+            var posElement: any = {
+                "Source": [
+                    {
+                        "RequestorID": {
+                            "CompanyName": {
+                                "Code": "TN"
+                            },
+                            "ID": "REQ.ID",
+                            "Type": "0.AAA.X"
+                        }
+                    }
+                ]
+            };
+            if (this.configOverrideDefined('bfmRequestPcc')) {
+                posElement.Source[0].PseudoCityCode = this.configOverrides.bfmRequestPcc;
+            }
+            return posElement;
         };
 
         return BargainFinderMaxRequestFactory;

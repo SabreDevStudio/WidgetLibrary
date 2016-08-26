@@ -18,7 +18,10 @@ define([
             //.value('pointOfSaleCountry', 'US')
             .value('fareNabberApiURL', 'http://pifhli101:51000/v1/AirShopping/FNB_Subscriptions') // address of resource to create Fare Nabber subscriptions DAILY
             //.value('fareNabberApiURL', 'http://ttfhli502:51000/v1/AirShopping/FNB_Subscriptions') // address of resource to create Fare Nabber subscriptions INT
-            .value('fareNabberRegistrationPCC', 'E8KE');
+            .value('fareNabberRegistrationPCC', 'E8KE')
+
+            //.value('bfmRequestPcc', 'E8KE')
+            .value('bfmRequestPcc', '')
 
         return configurationModule;
     });

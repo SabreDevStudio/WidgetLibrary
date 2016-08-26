@@ -33,12 +33,14 @@ define([
                     , 'BargainFinderMaxAlternateDateWebService'
                     , 'ErrorReportingService'
                     , 'businessMessagesErrorHandler'
+                    , 'bfmRequestPcc'
                 , function (
                       $q
                     , bfmWebService
                     , bfmAltDatesWebService
                     , ErrorReportingService
                     , businessMessagesErrorHandler
+                    , bfmRequestPcc
                 ) {
 
                     /**
@@ -63,11 +65,15 @@ define([
                         }
                     }
 
-                    var bfmRequestFactory = new BargainFinderMaxRequestFactory();
+                    var bfmRequestFactory = new BargainFinderMaxRequestFactory({
+                        bfmRequestPcc: bfmRequestPcc
+                    });
 
                     var parser = new BFMResponseParser();
 
-                    var bfmBrandedRequestFactory = new BargainFinderMaxRequestFactory();
+                    var bfmBrandedRequestFactory = new BargainFinderMaxRequestFactory({
+                        bfmRequestPcc: bfmRequestPcc
+                    });
                     bfmBrandedRequestFactory.requestBrandedFares = true;
 
                     var brandedItinerariesParser = new BrandedBFMResponseParser();
