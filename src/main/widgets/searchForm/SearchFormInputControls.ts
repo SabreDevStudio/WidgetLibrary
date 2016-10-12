@@ -92,14 +92,15 @@ define([
             .directive('inputDate', [
                 function () {
                     return {
+                        require: 'ngModel',
                         replace: true,
                         scope: {
                               isDisabled: '@'
                             , required: '@'
                             , dateFormat: '@'
-                            , minDate: '@'
-                            , date: '='
+                            , minDate: '='
                             , onDateChange: '&'
+                            , ngModel: '='
                         },
                         templateUrl: '../widgets/view-templates/partials/InputDate.tpl.html',
                         link: function (scope) {

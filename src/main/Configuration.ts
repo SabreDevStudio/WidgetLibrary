@@ -31,7 +31,7 @@ define([
             .value('pointOfSaleCountry', selectedConfig.pointOfSaleCountry)
             .value('bfmRequestPcc', selectedConfig.bfmRequestPcc)
 
-            .value('fareNabberApiURL', 'http://pifhli101:51000/v1/AirShopping/FNB_Subscriptions') // address of resource to create Fare Nabber subscriptions DAILY
+            .value('fareNabberApiURL', 'http://farenabber.prod.ha.sabre.com/v1/AirShopping/FNB_Subscriptions') // address of resource to create Fare Nabber subscriptions DAILY
             //.value('fareNabberApiURL', 'http://ttfhli502:51000/v1/AirShopping/FNB_Subscriptions') // address of resource to create Fare Nabber subscriptions INT
             .value('fareNabberRegistrationPCC', 'E8KE')
 

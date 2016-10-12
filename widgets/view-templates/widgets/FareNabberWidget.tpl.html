@@ -15,7 +15,7 @@
             <form class="form-horizontal" name="fareNabberForm" novalidate ng-submit="fareNabberForm.$valid && subscribe()">
                 <div class="modal-body">
 
-                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.subscriberEmail.$invalid}" ng-if="!hideEmailField">
+                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.subscriberEmail.$invalid}" ng-if="showEmailField">
                         <label for="SDSFareNabberForm_SubscriberEmail" class="input-sm col-sm-3 control-label">Email</label>
                         <div class="col-sm-9">
                             <input type="email" id="SDSFareNabberForm_SubscriberEmail" name="subscriberEmail" class="form-control input-sm col-sm-10" placeholder="Type your email" autofocus required ng-model="subscriberEmail">
@@ -26,22 +26,28 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.origin.$invalid}">
                         <label for="SDSFareNabberForm_Origin" class="input-sm col-sm-3 control-label">Trip departure airport or city</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control input-sm" id="SDSFareNabberForm_Origin" name="origin" placeholder="Trip departure airport or city" required autocomplete="off" ng-model="origin">
                             <!--<input-airport class="form-control input-sm" id="SDSFareNabberForm_Origin" name="origin" required airport="origin" preselected-airport="origin"></input-airport>-->
                             <!--<input type="text" id="SDSFareNabberForm_Origin" name="origin" class="form-control input-sm" placeholder="Trip departure airport or city" required autocomplete="off" ng-model="origin"-->
                             <!--typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">-->
+                            <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.origin.$invalid">
+                                <small ng-show="fareNabberForm.origin.$error.required">Type departure airport or city</small>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.destination.$invalid}">
                         <label for="SDSFareNabberForm_Destination" class="input-sm col-sm-3 control-label">Trip arrival airport or city</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control input-sm" id="SDSFareNabberForm_Destination" name="destination" placeholder="Trip arrival airport or city" required autocomplete="off" ng-model="destination">
                             <!--<input type="text" id="SDSFareNabberForm_Destination" name="destination" class="form-control input-sm" placeholder="Trip arrival airport or city" required autocomplete="off" ng-model="destination"-->
                                <!--typeahead="airport as (airport | airportNameWithIATACode) for airport in airports | filter:$viewValue | airportNameBestSuggestionComparator:$viewValue | limitTo:30" typeahead-min-length="2" typeahead-wait-ms="50">-->
+                            <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.destination.$invalid">
+                                <small ng-show="fareNabberForm.destination.$error.required">Type arrival airport or city</small>
+                            </div>
                         </div>
                     </div>
 
@@ -54,15 +60,56 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="SDSFareNabberForm_DepartureDate" class="input-sm col-sm-3 control-label">Leaving on</label>
-                        <div class="col-sm-3">
-                            <input-date class="input-group" id="SDSFareNabberForm_DepartureDate" name="departureDate" class="form-control input-sm" required="true" date="departureDate" min-date="{{::defaultOptions.earliestTravelStart}}"></input-date>
+                        <div class="col-lg-9 col-lg-offset-3">
+                            <div class="checkbox">
+                                <label for="SDSFareNabberForm_FlexibleDepartureDate">
+                                    <input type="checkbox" name="FlexibleDepartureDate" id="SDSFareNabberForm_FlexibleDepartureDate" ng-model="flexibleDepartureDate">
+                                    Flexible departure date
+                                </label>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="SDSFareNabberForm_DepartureDaysOfWeek" class="input-sm control-label col-sm-3">Departure days of week</label>
-                        <select-days-of-week class="col-sm-9" id="SDSFareNabberForm_DepartureDaysOfWeek" days-of-week="daysOfTravelPreference.outbound"></select-days-of-week>
+                    <div class="form-group" ng-show="!flexibleDepartureDate" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.departureDate.$invalid}">
+                        <label for="SDSFareNabberForm_DepartureDate" class="input-sm col-sm-3 control-label">Leaving on</label>
+                        <div class="col-sm-3">
+                            <input-date class="input-group" id="SDSFareNabberForm_DepartureDate" name="departureDate"
+                                        class="form-control input-sm" required="true" ng-model="departureDate" min-date="defaultOptions.earliestTravelStart"></input-date>
+                            <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.departureDate.$invalid">
+                                <small ng-show="fareNabberForm.departureDate.$error.required">Choose departure date</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="flexibleDepartureDate">
+                        <div class="form-group">
+                           <div ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.departureDateFrom.$invalid}">
+                                <label for="SDSFareNabberForm_DepartureDateFrom" class="input-sm col-sm-3 control-label">Leaving From</label>
+                                <div class="col-sm-3">
+                                    <input-date class="input-group" id="SDSFareNabberForm_DepartureDateFrom" name="departureDateFrom"
+                                                class="form-control input-sm" required="true" ng-model="departureDateFrom"
+                                                min-date="defaultOptions.earliestTravelStart"></input-date>
+                                    <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.departureDateFrom.$invalid">
+                                        <small ng-show="fareNabberForm.departureDateFrom.$error.required">Choose departure date from</small>
+                                    </div>
+                                </div>
+                           </div>
+                           <div ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.departureDateTo.$invalid}">
+                                <label for="SDSFareNabberForm_DepartureDateTo" class="input-sm col-sm-2 control-label">Leaving To</label>
+                                <div class="col-sm-3">
+                                    <input-date class="input-group" id="SDSFareNabberForm_DepartureDateTo" name="departureDateTo"
+                                                class="form-control input-sm" required="true" ng-model="departureDateTo"
+                                                min-date="defaultOptions.earliestTravelStart"></input-date>
+                                    <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.departureDateTo.$invalid">
+                                        <small ng-show="fareNabberForm.departureDateTo.$error.required">Choose departure date to</small>
+                                    </div>
+                                </div>
+                           </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="SDSFareNabberForm_DepartureDaysOfWeek" class="input-sm control-label col-sm-3">Departure days of week</label>
+                            <select-days-of-week class="col-sm-9" id="SDSFareNabberForm_DepartureDaysOfWeek" days-of-week="daysOfTravelPreference.outbound"></select-days-of-week>
+                        </div>
                     </div>
 
                     <div class="col-lg-9 col-lg-offset-3">
@@ -86,42 +133,86 @@
                         <div class="row SDSBottomBuffer-xs"></div>
                     </div>
 
-                    <div ng-if="returnDate">
+                    <div class="form-group">
+                        <div class="col-lg-9 col-lg-offset-3">
+                            <div class="checkbox">
+                                <label for="SDSFareNabberForm_FlexibleReturnDate">
+                                    <input type="checkbox" name="FlexibleDepartureDate" id="SDSFareNabberForm_FlexibleReturnDate" ng-model="flexibleReturnDate">
+                                    Flexible return date
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-if="returnDate" ng-show="!flexibleReturnDate" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.returnDate.$invalid}">
                         <div class="form-group">
                             <label for="SDSFareNabberForm_ReturnDate" class="input-sm col-sm-3 control-label">Returning on</label>
                             <div class="col-sm-3">
                                 <input-date class="input-group" id="SDSFareNabberForm_ReturnDate" name="returnDate" class="form-control input-sm"
-                                            required="(returnDate)? true: false" date="returnDate" min-date="{{::defaultOptions.earliestTravelStart}}"></input-date>
+                                            required="(returnDate)? true: false" ng-model="returnDate" min-date="defaultOptions.earliestTravelStart"></input-date>
+                                <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.returnDate.$invalid">
+                                    <small ng-show="fareNabberForm.returnDate.$error.required">Choose return date</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="flexibleReturnDate">
+                        <div class="form-group">
+                            <div ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.returnDateFrom.$invalid}">
+                                <label for="SDSFareNabberForm_ReturnDateFrom" class="input-sm col-sm-3 control-label">Returning From</label>
+                                <div class="col-sm-3">
+                                    <input-date class="input-group" id="SDSFareNabberForm_ReturnDateFrom" name="returnDateFrom"
+                                                class="form-control input-sm" required="true" ng-model="returnDateFrom"
+                                                min-date="defaultOptions.earliestTravelStart"></input-date>
+                                    <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.returnDateFrom.$invalid">
+                                        <small ng-show="fareNabberForm.returnDateFrom.$error.required">Choose return date from</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.returnDateTo.$invalid}">
+                                <label for="SDSFareNabberForm_ReturnDateTo" class="input-sm col-sm-2 control-label">Returning To</label>
+                                <div class="col-sm-3">
+                                    <input-date class="input-group" id="SDSFareNabberForm_ReturnDateTo" name="returnDateTo"
+                                                class="form-control input-sm" required="true" ng-model="returnDateTo"
+                                                min-date="returnDateFrom"></input-date>
+                                    <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.returnDateTo.$invalid">
+                                        <small ng-show="fareNabberForm.returnDateTo.$error.required">Choose return date to</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group">
+                            <!-- </div>-->
+                            <!--<div class="form-group">-->
                             <label for="SDSFareNabberForm_ReturnDaysOfWeek" class="input-sm control-label col-sm-3">Return days of week</label>
                             <select-days-of-week class="col-sm-9"id="SDSFareNabberForm_ReturnDaysOfWeek" days-of-week="daysOfTravelPreference.inbound"></select-days-of-week>
+                            <!--   </div>-->
                         </div>
-
-                        <div class="col-lg-9 col-lg-offset-3">
-                            <div>
-                                <a href="" ng-click="showInboundFlightsTimeOfDaySelection = !showInboundFlightsTimeOfDaySelection">Set specific hours for return flights</a>
-                            </div>
-                            <div class="well well-lg form-group col-sm-6" collapse="!showInboundFlightsTimeOfDaySelection">
-                                <label class="input-sm control-label">
-                                    Flight departure time of day
-                                </label>
-                                <div>
-                                    <input-time-of-day-range class="form-control input-sm" range="inboundTravelTimeRange.departure"></input-time-of-day-range>
-                                </div>
-                                <label class="input-sm control-label">
-                                    Flight arrival time of day
-                                </label>
-                                <div>
-                                    <input-time-of-day-range class="form-control input-sm" range="inboundTravelTimeRange.arrival"></input-time-of-day-range>
-                                </div>
-                            </div>
-                            <div class="row SDSBottomBuffer-xs"></div>
-                        </div>
-
                     </div>
+
+                    <div class="col-lg-9 col-lg-offset-3">
+                        <div>
+                            <a href="" ng-click="showInboundFlightsTimeOfDaySelection = !showInboundFlightsTimeOfDaySelection">Set specific hours for return flights</a>
+                        </div>
+                        <div class="well well-lg form-group col-sm-6" collapse="!showInboundFlightsTimeOfDaySelection">
+                            <label class="input-sm control-label">
+                                Flight departure time of day
+                            </label>
+                            <div>
+                                <input-time-of-day-range class="form-control input-sm" range="inboundTravelTimeRange.departure"></input-time-of-day-range>
+                            </div>
+                            <label class="input-sm control-label">
+                                Flight arrival time of day
+                            </label>
+                            <div>
+                                <input-time-of-day-range class="form-control input-sm" range="inboundTravelTimeRange.arrival"></input-time-of-day-range>
+                            </div>
+                        </div>
+                        <div class="row SDSBottomBuffer-xs"></div>
+                    </div>
+
 
                     <div class="form-group">
                         <div class="col-lg-9 col-lg-offset-3">
@@ -153,23 +244,32 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="SDSFareNabberForm_MaximumAcceptablePrice" class="input-sm col-sm-3 control-label">Maximum acceptable price</label>
+                        <div ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.maximumAcceptablePrice.$invalid}">
+                            <label for="SDSFareNabberForm_MaximumAcceptablePrice" class="input-sm col-sm-3 control-label">Maximum acceptable price</label>
 
-                        <div class="col-sm-3">
-                            <input type="number" step="50" id="SDSFareNabberForm_MaximumAcceptablePrice" name="maximumAcceptablePrice" class="form-control input-sm" placeholder="Max price" min="0" required string-to-number ng-model="maximumAcceptablePrice">
+                            <div class="col-sm-3">
+                                <input type="number" step="50" id="SDSFareNabberForm_MaximumAcceptablePrice" name="maximumAcceptablePrice"
+                                       class="form-control input-sm" placeholder="Max price" min="0" required string-to-number ng-model="maximumAcceptablePrice">
+                                <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.maximumAcceptablePrice.$invalid">
+                                    <small ng-show="fareNabberForm.maximumAcceptablePrice.$error.required">Type maximum acceptable price</small>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-3">
                                 <input type="text" id="SDSFareNabberForm_MaximumAcceptablePriceCurrency" name="maximumAcceptablePriceCurrency" class="form-control input-sm" placeholder="currency" ng-value="USD" required ng-model="maximumAcceptablePriceCurrency" readonly>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="SDSFareNabberForm_SubscriptionExpiryDate" class="input-sm col-sm-3 control-label">Expire subscription after <em>(optional)</em></label>
+                    <div class="form-group" ng-class="{'has-error':fareNabberForm.$submitted && fareNabberForm.subscriptionExpiryDate.$invalid}">
+                        <label for="SDSFareNabberForm_SubscriptionExpiryDate" class="input-sm col-sm-3 control-label">Expire subscription after</label>
                         <div class="col-sm-3">
-                            <input-date class="input-group" id="SDSFareNabberForm_SubscriptionExpiryDate" name="subscriptionExpiryDate" class="form-control input-sm" date="subscriptionExpiryDate"></input-date>
+                            <input-date class="input-group" id="SDSFareNabberForm_SubscriptionExpiryDate"
+                                        name="subscriptionExpiryDate" class="form-control input-sm" ng-model="subscriptionExpiryDate" required="true"></input-date>
+                            <div class="help-block" ng-show="fareNabberForm.$submitted && fareNabberForm.subscriptionExpiryDate.$invalid">
+                                <small ng-show="fareNabberForm.subscriptionExpiryDate.$error.required">Choose expiration date</small>
+                            </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="modal-footer">

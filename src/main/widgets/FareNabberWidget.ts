@@ -1,6 +1,7 @@
 define([
-          'angular'
+        'angular'
         , 'moment'
+        , 'util/LodashExtensions'
         , 'widgets/SDSWidgets'
         , 'webservices/fareNabber/FareNabberSubscriptionService'
         , 'widgets/searchForm/InputTimeOfDayRange'
@@ -9,6 +10,7 @@ define([
     function (
           angular
         , moment
+        , __
         , SDSWidgets
         , FareNabberSubscriptionServiceSrc
         , InputTimeOfDayRange
@@ -44,14 +46,23 @@ define([
                     selected: []
                 };
 
+                $scope.flexibleDepartureDate = false;
+                $scope.flexibleReturnDate = false;
+
                 $scope.subscribe = function () {
 
                     var allProps = [
                           'subscriberEmail'
                         , 'origin'
                         , 'destination'
+                        , 'flexibleDepartureDate'
                         , 'departureDate'
+                        , 'departureDateFrom'
+                        , 'departureDateTo'
+                        , 'flexibleReturnDate'
                         , 'returnDate'
+                        , 'returnDateFrom'
+                        , 'returnDateTo'
                         , 'passengerType'
                         , 'passengerCount'
                         , 'directFlightsOnly'
@@ -65,7 +76,7 @@ define([
                         , 'preferredAirlines'
                     ];
                     var fareNabberSubscriptionRequest = allProps.reduce(function (acc, curr) {
-                        if ($scope[curr]) {
+                        if (__.isDefined($scope[curr])) {
                             acc[curr] = $scope[curr];
                         }
                         return acc;
@@ -101,7 +112,7 @@ define([
                         , passengerCount: '@'
                         , maximumAcceptablePrice: '@'
                         , maximumAcceptablePriceCurrency: '@'
-                        , hideEmailField: '@?'
+                        , showEmailField: '@?'
                     },
                     templateUrl: '../widgets/view-templates/widgets/FareNabberWidget.tpl.html',
                     transclude: true,
@@ -117,7 +128,11 @@ define([
                         function parseDirectiveAttributes() {
                             const directiveAttributesDateFormat = moment.ISO_8601;
                             scope.departureDate = moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).toDate();
+                            scope.departureDateFrom = moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).subtract(1, 'M').toDate();
+                            scope.departureDateTo = moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).add(1, 'M').toDate();
                             scope.returnDate = moment(scope.predefinedReturnDate, directiveAttributesDateFormat).toDate();
+                            scope.returnDateFrom = moment(scope.predefinedReturnDate, directiveAttributesDateFormat).subtract(1, 'M').toDate();
+                            scope.returnDateTo = moment(scope.predefinedReturnDate, directiveAttributesDateFormat).add(1, 'M').toDate();
                         }
 
                         function runSubscriptionWorkflow() {

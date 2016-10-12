@@ -45,7 +45,7 @@ define([
                                 , numberOfPassengers: parseInt(formSubscriptionData.passengerCount)
                             }
                         ]
-                        , SubscriptionLegs: undefined
+                        , SubscriptionLegs: []
                     };
                     if(formSubscriptionData.directFlightsOnly) {
                         fareNabberRequest.nonstop = formSubscriptionData.directFlightsOnly;
@@ -58,20 +58,30 @@ define([
                 }
 
                 function addLegs(fareNabberRequest, formSubscriptionData) {
-                    fareNabberRequest.SubscriptionLegs = [
-                        {
-                            origin: formSubscriptionData.origin
-                            , destination: formSubscriptionData.destination
-                            , departureDateFrom: moment(formSubscriptionData.departureDate).format(dateFormat)
-                            , departureTimeFrom: moment(formSubscriptionData.departureDate).format(timeFormat)
-                        },
-                        {
-                            origin: formSubscriptionData.destination
-                            , destination: formSubscriptionData.origin
-                            , departureDateFrom: moment(formSubscriptionData.returnDate).format(dateFormat)
-                            , departureTimeFrom: moment(formSubscriptionData.returnDate).format(timeFormat)
-                        }
-                    ]
+
+                    var outboundLeg:any = {};
+                    outboundLeg.origin = formSubscriptionData.origin;
+                    outboundLeg.destination = formSubscriptionData.destination;
+                    if(formSubscriptionData.flexibleDepartureDate === false){
+                        outboundLeg.departureDateFrom = moment(formSubscriptionData.departureDate).format(dateFormat);
+                    } else {
+                        outboundLeg.departureDateFrom = moment(formSubscriptionData.departureDateFrom).format(dateFormat);
+                        outboundLeg.departureDateTo = moment(formSubscriptionData.departureDateTo).format(dateFormat);
+                    }
+                    outboundLeg.departureTimeFrom = moment(formSubscriptionData.departureDate).format(timeFormat)
+                    fareNabberRequest.SubscriptionLegs[0] = outboundLeg;
+
+                    var inboundLeg:any = {};
+                    inboundLeg.origin = formSubscriptionData.destination;
+                    inboundLeg.destination = formSubscriptionData.origin;
+                    if(formSubscriptionData.flexibleReturnDate === false){
+                        inboundLeg.departureDateFrom = moment(formSubscriptionData.returnDate).format(dateFormat);
+                    } else {
+                        inboundLeg.departureDateFrom = moment(formSubscriptionData.returnDateFrom).format(dateFormat);
+                        inboundLeg.departureDateTo = moment(formSubscriptionData.returnDateTo).format(dateFormat);
+                    }
+                    inboundLeg.departureTimeFrom = moment(formSubscriptionData.departureDate).format(timeFormat)
+                    fareNabberRequest.SubscriptionLegs[1] = inboundLeg;
 
                 }
 
