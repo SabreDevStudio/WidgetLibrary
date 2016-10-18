@@ -11,7 +11,7 @@ define([
         'use strict';
 
         function BargainFinderMaxRequestFactory(configOverrides) {
-            this.configOverrides = configOverrides;
+            OTARequestFactory.apply(this, [configOverrides]);
         }
 
         /**
@@ -95,23 +95,6 @@ define([
             } else {
                 return OTARequestFactory.prototype.createPriceRequestInformation.call(this);
             }
-        };
-
-        BargainFinderMaxRequestFactory.prototype.createPOS  = function() {
-            return {
-                "Source": [
-                    {
-                        "RequestorID": {
-                            "CompanyName": {
-                                "Code": "TN"
-                            },
-                            "ID": "REQ.ID",
-                            "Type": "0.AAA.X"
-                        },
-                        "PseudoCityCode": this.configOverrides.bfmRequestPcc
-                    }
-                ]
-            };
         };
 
         return BargainFinderMaxRequestFactory;
