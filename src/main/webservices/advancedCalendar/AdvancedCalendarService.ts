@@ -34,6 +34,7 @@ define([
                 , 'ErrorReportingService'
                 , 'ValidationErrorReportingService'
                 , 'businessMessagesErrorHandler'
+                , 'bfmRequestPcc'
                 , function (
                     $q
                     , AdvancedCalendarSearchService
@@ -41,10 +42,14 @@ define([
                     , ErrorReportingService
                     , ValidationErrorReportingService
                     , businessMessagesErrorHandler
+                    , bfmRequestPcc
                 ) {
 
                     var requestDatesExpander = new AdvancedCalendarRequestDatesExpander();
-                    var requestBuilderForDateRanges = new AdvancedCalendarRequestFactory(requestDatesExpander);
+                    var configOverrides = {
+                        bfmRequestPcc: bfmRequestPcc
+                    }
+                    var requestBuilderForDateRanges = new AdvancedCalendarRequestFactory(requestDatesExpander, configOverrides);
 
                     var requestBuilder = new AdvancedCalendarRequestFactory();
 

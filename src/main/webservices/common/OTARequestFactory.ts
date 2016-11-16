@@ -2,7 +2,8 @@ define([],
     function () {
         'use strict';
 
-        function OTARequestFactory() {
+        function OTARequestFactory(configOverrides) {
+            this.configOverrides = configOverrides;
         }
 
         OTARequestFactory.prototype.createRequest = function(searchCriteria) {
@@ -38,7 +39,8 @@ define([],
                             },
                             "ID": "REQ.ID",
                             "Type": "0.AAA.X"
-                        }
+                        },
+                        "PseudoCityCode": this.configOverrides.bfmRequestPcc
                     }
                 ]
             };
