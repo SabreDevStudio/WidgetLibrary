@@ -20,6 +20,8 @@ define([
 
         this.itineraryPricingInfo = undefined;
 
+        this.weightedPriceAmount = undefined;
+
         // convenience property-style getters, used for filtering and sorting of itineraries list
         /**
          * Returns the sum of trip durations for all legs, in minutes.

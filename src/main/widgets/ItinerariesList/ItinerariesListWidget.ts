@@ -15,6 +15,7 @@ define([
         , 'datamodel/ItinerariesListSummaryByAirlineAndNumberOfStops'
         , 'datamodel/search/SearchCriteriaFactory'
         , 'widgets/ItinerariesList/ItinerariesListSortCriteria'
+        , 'widgets/ItinerariesList/ItinerariesListDiversitySwapperSortCriteria'
         , 'webservices/common/searchStrategyFactories/ItinerariesSearchStrategyFactoryBagsFilteringDecorator'
         , 'webservices/common/searchStrategyFactories/BrandedItinerariesSearchStrategyFactory'
         , 'util/CommonDisplayDirectives'
@@ -37,6 +38,7 @@ define([
         , ItinerariesListSummaryByAirlineAndNumberOfStops
         , SearchCriteriaFactory
         , ItinerariesListSortCriteria
+        , ItinerariesListDiversitySwapperSortCriteria
         , ItinerariesSearchStrategyFactory
         , BrandedItinerariesSearchStrategyFactory
         , CommonDisplayDirectives
@@ -75,7 +77,15 @@ define([
                     , filterServiceFactory
                 ) {
 
-                    var sortCriteria = new ItinerariesListSortCriteria();
+                    var sortCriteria;
+                    if(__.isDefined($scope.activeSearchWebService)){
+                        if($scope.activeSearchWebService === "bfm-diversity-swapper"){
+                            sortCriteria = new ItinerariesListDiversitySwapperSortCriteria();
+                        } else {
+                            sortCriteria = new ItinerariesListSortCriteria();
+                        }
+                    }
+
                     $scope.availableSortCriteria = sortCriteria.availableSortCriteria;
 
                     $scope.selectedFirstCriterion = { // must be object so that the scope of inputSelectDropdown can update the parent scope object, not its copy (like when it was a scalar)
@@ -98,7 +108,7 @@ define([
                         $scope.paginationSettings.currentPage = 1;
                     }
 
-                    var filterService = filterServiceFactory.newInstance("itineraries-list");
+                    var filterService = filterServiceFactory.newInstance($scope.itinerariesListId);
 
                     filterService.configure({
                         pricePropertyAmountAccessor: 'amount',
@@ -359,6 +369,7 @@ define([
                         , searchSuccessCallback: '&?'
                         , searchErrorCallback: '&?'
                         , allSearchesComplete: '&?'
+                        , itinerariesListId: '@'
                     },
                     templateUrl: '../widgets/view-templates/widgets/ItinerariesListWidget.tpl.html',
                     controller: 'ItineraryListCtrl',

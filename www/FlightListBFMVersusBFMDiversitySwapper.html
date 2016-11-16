@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flight List</title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css">
+    <link rel="stylesheet" href="../bower_components/angular-rangeslider/angular.rangeSlider.css">
+    <link rel="stylesheet" type="text/css" href="../widgets/stylesheets/SDSMain.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <partial command="include('partials/navigation-includes.html')"></partial>
+</head>
+<body>
+    <div id="mainPageContainer">
+        <partial command="include('partials/navigation.html')"></partial>
+            <div>
+                <search-form show-diversity-options="true"></search-form>
+            </div>
+        <error-display class="embeddedWidget"></error-display>
+        <network-error-display></network-error-display>
+		<validation-error-display></validation-error-display>
+            <div class="row">
+                <div class="col-xs-6">
+                    <itineraries-filter-panel id="ItineraryListFilterPaneBFM" owner-id="bfm-itin-list"></itineraries-filter-panel>
+                </div>
+                <div class="col-xs-6">
+                    <itineraries-filter-panel id="ItineraryListFilterPaneBFMDS" owner-id="bfm-ds-itin-list"></itineraries-filter-panel>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <h3 class="text-center">Bargain Finder Max</h3>
+                    <itinerary-list itineraries-list-id="bfm-itin-list" active-search="true" active-search-web-service="bfm-disable-diversity-swapper"></itinerary-list>
+                </div>
+                <div class="col-xs-6">
+                    <h3 class="text-center">Bargain Finder Max - Diversity Swapper</h3>
+                    <itinerary-list itineraries-list-id="bfm-ds-itin-list" active-search="true" active-search-web-service="bfm"></itinerary-list>
+                </div>
+            </div>
+    </div>
+    <!--<script async src="../dist/SDSWidgets.dist.js"></script>-->
+    <script async data-main="../build-js/main/SabreDevStudioSDK" src="../node_modules/requirejs/require.js"></script>
+</body>
+</html>

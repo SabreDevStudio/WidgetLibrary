@@ -93,6 +93,16 @@ define([
                 label: 'Arrival (Latest)',
                 propertyName: 'outboundArrivalDateTime',
                 reverse: true
+            },
+            byWeightedPriceAmountAsc: {
+                label: 'Weighted Price (Lowest)',
+                propertyName: 'weightedPriceAmount',
+                reverse: false
+            },
+            byWeightedPriceAmountDesc: {
+                label: 'Weighted Price (Highest)',
+                propertyName: 'weightedPriceAmount',
+                reverse: true
             }
         };
 

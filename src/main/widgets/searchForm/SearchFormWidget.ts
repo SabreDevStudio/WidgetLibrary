@@ -1,6 +1,7 @@
 define([
          'lodash'
         , 'util/LodashExtensions'
+        , 'util/validator'
         , 'moment'
         , 'angular'
         , 'angular_bootstrap'
@@ -11,6 +12,7 @@ define([
         , 'datamodel/search/alternateDates/DaysOfWeekAtDestination'
         , 'datamodel/search/alternateDates/PlusMinusDaysTravelDatesFlexibility'
         , 'datamodel/search/alternateDates/EarliestDepartureLatestReturnTravelDatesFlexibility'
+        , 'datamodel/search/DiversityModelOptions'
         , 'util/DOMManipulationUtils'
         , 'util/BaseServices'
         , 'widgets/WidgetGlobalCallbacks'
@@ -18,6 +20,7 @@ define([
     function (
           _
         , __
+        , SDSValidator
         , moment
         , angular
         , angular_bootstrap
@@ -28,6 +31,7 @@ define([
         , DaysOfWeekAtDestination
         , PlusMinusDaysTravelDatesFlexibility
         , EarliestDepartureLatestReturnTravelDatesFlexibility
+        , DiversityModelOptions
         , domUtils
         , BaseServicesSrc
         , WidgetGlobalCallbacks
@@ -47,6 +51,10 @@ define([
                 ) {
 
                 $scope.widgetId = widgetIdGenerator.next();
+
+                $scope.SDSValidator = SDSValidator;
+
+                $scope.diversityModelOptions = new DiversityModelOptions();
 
                 $scope.detailsVisibility = {};
 
@@ -177,6 +185,10 @@ define([
                         searchCriteria.optionsPerDay = $scope.optionsPerDay;
                     }
 
+                    if($scope.detailsVisibility.useDiversityModelOptions){
+                        searchCriteria.diversityModelOptions = $scope.diversityModelOptions;
+                    }
+
                     SearchCriteriaBroadcastingService.searchCriteria = searchCriteria;
                     SearchCriteriaBroadcastingService.broadcast();
 
@@ -213,6 +225,7 @@ define([
                        selectableAirportsForThisPosOnly: '@'
                        , selectableAirportsDictionary: '@'
                        , newSearchCriteriaCallback: '&?'
+                       , showDiversityOptions: '@?'
                    },
                    link: function (scope, element) {
 

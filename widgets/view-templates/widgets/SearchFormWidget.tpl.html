@@ -86,7 +86,8 @@
 
                     <div>
                         <label>
-                            <input type="radio" name="advancedFlexibilityLoSSpecificationType" ng-model="flexDatesMode.activeMode" value="earliestDepartureLatestReturn.daysOfWeekAtDestination" class="">
+                            <input type="radio" name="advancedFlexibilityLoSSpecificationType" ng-model="flexDatesMode.activeMode"
+                                   value="earliestDepartureLatestReturn.daysOfWeekAtDestination">
                             Specify days of week to stay at destination
                         </label>
                         <div ng-if="flexDatesMode.activeMode === 'earliestDepartureLatestReturn.daysOfWeekAtDestination'">
@@ -113,23 +114,432 @@
         </div>
     </div>
 
-        <div ng-if="detailsVisibility.areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer-xs">
-            <div class="SDS-row">
-                <div class="SDS-col-element-xs-6 SDS-col-element-lg-3" ng-if="isVisible('PreferredAirline')">
-                    <div class="form-group SDS-form-inline-exclude">
-                        <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label SDS-form-inline-exclude">Preferred Airline</label>
-                        <select-preferred-airlines class="input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredAirline" name="PreferredAirline" preferred-airlines="preferredAirlines"></select-preferred-airlines>
-                        <!-- WARN: Lack of 'form-control' class is intentional. The component used in select preferred airline directive - the angular ui-select, is already styled as bootstrap button. Wrapping it in form-control here breaks the style (we get unnecessary wrapping. This issue is reported to ui-select and recognized as issue. No fix yet.  -->
-                    </div>
+    <div ng-if="detailsVisibility.areAdvancedSearchOptionsCollapsed" class="SDSBottomBuffer-xs">
+        <div class="SDS-row">
+            <div class="SDS-col-element-xs-6 SDS-col-element-lg-3" ng-if="isVisible('PreferredAirline')">
+                <div class="form-group SDS-form-inline-exclude">
+                    <label for="SDSSearchForm_PreferredAirline" class="input-sm control-label SDS-form-inline-exclude">Preferred Airline</label>
+                    <select-multiple-airlines class="input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredAirline"
+                                               name="PreferredAirline" airlines="preferredAirlines"></select-multiple-airlines>
+                    <!-- WARN: Lack of 'form-control' class is intentional. The component used in select preferred airline directive
+                    - the angular ui-select, is already styled as bootstrap button. Wrapping it in form-control here breaks the style
+                    (we get unnecessary wrapping. This issue is reported to ui-select and recognized as issue. No fix yet.  -->
                 </div>
-                <div class="SDS-col-element-xs-6 SDS-col-element-lg-3" ng-if="isVisible('PreferredCabin')">
-                    <div class="form-group SDS-form-inline-exclude">
-                        <label for="SDSSearchForm_PreferredCabin" class="input-sm control-label SDS-form-inline-exclude">Cabin</label>
-                        <select-preferred-cabin name="PreferredCabin" class="form-control input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
+            </div>
+            <div class="SDS-col-element-xs-6 SDS-col-element-lg-3" ng-if="isVisible('PreferredCabin')">
+                <div class="form-group SDS-form-inline-exclude">
+                    <label for="SDSSearchForm_PreferredCabin" class="input-sm control-label SDS-form-inline-exclude">Cabin</label>
+                    <select-preferred-cabin name="PreferredCabin" class="form-control input-sm SDS-form-inline-exclude" id="SDSSearchForm_PreferredCabin" cabin-selected="generalSearchCriteria.preferredCabin"></select-preferred-cabin>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="SDS-row">
+        <div class="SDS-col-element-xxs-12 SDSTopBuffer-xs">
+            <a href="" ng-if="showDiversityOptions"
+               ng-click="detailsVisibility.useDiversityModelOptions = !detailsVisibility.useDiversityModelOptions"
+               class="input-sm SDSToggleLink">{{detailsVisibility.useDiversityModelOptions ? "Disable Diversity Swapper" : "Enable Diversity Swapper" }}</a>
+        </div>
+    </div>
+
+    <div ng-if="showDiversityOptions && detailsVisibility.useDiversityModelOptions" class="SDSBottomBuffer-xs">
+        <div class="SDSBottomBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Low Fare Bucket</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.lowFareBucket.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_LowFareBucket" class="input-sm control-label">Options</label>
+                                </div>
+                                <div class="input-group SDS-col-element-lg-6">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="lowFareBucketModeInput" ng-model="diversityModelOptions.lowFareBucketMode"
+                                               value="{{diversityModelOptions.LowFareBucketModeEnum.OPTION}}">
+                                    </span>
+                                    <input id="SDSSearchForm_Diversity_LowFareBucket" class="input-sm form-control"
+                                           name="lowFareBucket" ng-model="diversityModelOptions.lowFareBucket" ng-pattern="SDSValidator.NON_ZERO_POSITIVE_INTEGER_REGEX"
+                                           ng-disabled="diversityModelOptions.lowFareBucketMode == diversityModelOptions.LowFareBucketModeEnum.FARE_CUT_OFF">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.fareCutOff.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_LowFareBucket" class="input-sm control-label">Fare Cut Off</label>
+                                </div>
+                                <div class="input-group SDS-col-element-lg-6">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="lowFareBucketModeInput" ng-model="diversityModelOptions.lowFareBucketMode"
+                                               value="{{diversityModelOptions.LowFareBucketModeEnum.FARE_CUT_OFF}}">
+                                    </span>
+                                    <input id="SDSSearchForm_Diversity_FareCutOff" type="number" ng-min="1" ng-max="100" class="input-sm form-control"
+                                           name="fareCutOff" ng-model="diversityModelOptions.fareCutOff" ng-pattern="SDSValidator.PERCENTAGE_VALUE_REGEX"
+                                           ng-disabled="diversityModelOptions.lowFareBucketMode == diversityModelOptions.LowFareBucketModeEnum.OPTION" aria-describedby="options-addon-fare-cut-off">
+                                    <span class="input-group-addon" id="options-addon-fare-cut-off">%</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="SDSBottomBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Price Options</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.priceWeight.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_PriceWeight" class="input-sm control-label">Weight</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_PriceWeight" type="number" class="input-sm form-control"
+                                           name="priceWeight" ng-model="diversityModelOptions.priceWeight" min="0" max="10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="SDSBottomBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Travel Time Options</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.travelTimeWeight.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_TravelTimeWeight" class="input-sm control-label">Weight</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_TravelTimeWeight" type="number" min="0" max="10" class="input-sm form-control"
+                                           name="travelTimeWeight" ng-model="diversityModelOptions.travelTimeWeight">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="SDSBottomBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Carrier Options</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.carrierWeight.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_CarrierWeight" class="input-sm control-label">Weight</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_CarrierWeight" type="number" min="0" max="10" class="input-sm form-control"
+                                           name="carrierWeight" ng-model="diversityModelOptions.carrier.weight">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="checkbox input-sm">
+                                <div class="SDS-col-element-lg-12">
+                                    <label for="SDSSearchForm_DIversity_CarrierOnlineIndicator">
+                                        <input id="SDSSearchForm_DIversity_CarrierOnlineIndicator" type="checkbox" name="carrierOnlineIndicator"
+                                               ng-model="diversityModelOptions.carrier.onlineIndicator">
+                                        Online Indicator
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="SDS-col-element-lg-3">
+                        <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.carrierOption.$invalid}">
+                            <label for="SDSSearchForm_Diversity_CarrierOption" class="input-sm control-label">Options</label>
+                            <input id="SDSSearchForm_Diversity_CarrierOption" type="number" min="1" class="input-sm form-control"
+                                   name="carrierOption" ng-model="diversityModelOptions.carrier.default.options">
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="i in diversityModelOptions.carrier.override">
+                    <div class="SDSBottomBuffer-xs"></div>
+                    <div class="SDS-row">
+                        <div class="SDS-col-element-lg-3">
+                            <div class="SDS-row">
+                                <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.overrideCarrierCode_{{$index}}.$invalid}">
+                                    <div class="SDS-col-element-lg-6">
+                                        <label for="SDSSearchForm_Diversity_OverrideCarrierCode_{{$index}}" class="input-sm control-label">Override Carrier Code</label>
+                                    </div>
+                                    <div class="SDS-col-element-lg-6">
+                                        <select-airline id="SDSSearchForm_Diversity_OverrideCarrierCode_{{$index}}"
+                                            name="overrideCarrierCode_{{$index}}" airline="diversityModelOptions.carrier.override[$index].code">
+                                            class="input-sm">
+                                        </select-airline>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="SDS-col-element-lg-3">
+                            <div class="SDS-row">
+                                <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.overrideCarrierOption_{{$index}}.$invalid}">
+                                    <div class="SDS-col-element-lg-6">
+                                        <label for="SDSSearchForm_Diversity_OverrideCarrierOption_{{$index}}" class="input-sm control-label">Override Carrier Option</label>
+                                    </div>
+                                    <div class="SDS-col-element-lg-6">
+                                        <input id="SDSSearchForm_Diversity_OverrideCarrierOption_{{$index}}" type="number" min="1" class="input-sm form-control"
+                                               name="overrideCarrierOption_{{$index}}" ng-model="diversityModelOptions.carrier.override[$index].options">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="SDS-col-element-xs-6 SDS-col-element-sm-3 SDS-col-element-lg-3" ng-show="$last">
+                            <a href="" ng-click="diversityModelOptions.removeCarrierOverriding()" class="input-sm"><i class="glyphicon glyphicon-minus-sign"></i> Remove</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="SDSBottomBuffer-xs"></div>
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <a href="" ng-click="diversityModelOptions.addCarrierOverriding()" class="input-sm"><i class="glyphicon glyphicon-plus-sign"></i> Add carrier overriding</a>
+                    </div>
+                </div>
+                <div class="SDSTopBuffer-xs"></div>
+            </div>
+        </div>
+        <div class="SDSBottomBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Operating Duplicate Options</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.operatingDuplicateWeight.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_OperatingDuplicateWeight" class="input-sm control-label">Weight</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_OperatingDuplicateWeight" type="number" min="0" max="10" class="input-sm form-control"
+                                           name="operatingDuplicateWeight" ng-model="diversityModelOptions.operatingDuplicate.weight">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="SDS-col-element-lg-6">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.operatingDuplicatePreference.$invalid}">
+                                <div class="SDS-col-element-lg-3">
+                                    <label for="SDSSearchForm_Diversity_OperatingDuplicatePreference" class="input-sm control-label">Preference</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <select-multiple-airlines is-multiple-selection="true" id="SDSSearchForm_Diversity_OperatingDuplicatePreference"
+                                                               name="operatingDuplicatePreference" airlines="diversityModelOptions.operatingDuplicate.preferredCarriers">
+                                    </select-multiple-airlines>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="SDSBottomBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Inbound Outbound Pairing Options</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.inboundOutboundPairingWeight.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_InboundOutboundPairingWeight" class="input-sm control-label">Weight</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_InboundOutboundPairingWeight" type="number" min="0" max="10" class="input-sm form-control"
+                                           name="inboundOutboundPairingWeight" ng-model="diversityModelOptions.inboundOutboundPairing.weight">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.inboundOutboundPairingDuplicates.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_InboundOutboundPairingDuplicates" class="input-sm control-label">Duplicates</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_InboundOutboundPairingDuplicates" type="number" min="1" class="input-sm form-control"
+                                           name="inboundOutboundPairingDuplicates" ng-model="diversityModelOptions.inboundOutboundPairing.duplicates">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="SDSBottomBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Time of Day options</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.timeOfDay.weight.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_TimeOfDayWeight" class="input-sm control-label">Weight</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_TimeOfDayWeight" type="number" min="1" max="10" class="input-sm form-control"
+                                           name="timeOfDayWeight" ng-model="diversityModelOptions.timeOfDay.weight">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="SDSBottomBuffer-xs"></div>
+                <div ng-repeat="i in diversityModelOptions.timeOfDay.distribution" ng-init="outerIndex = $index">
+                    <div class="SDS-row">
+                        <div class="SDS-col-element-lg-3">
+                            <div class="SDS-row">
+                                <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.timeOfDayDirection.$invalid}">
+                                    <div class="SDS-col-element-lg-6">
+                                        <label for="SDSSearchForm_Diversity_TimeOfDayDirection" class="input-sm control-label">Direction</label>
+                                    </div>
+                                    <div class="SDS-col-element-lg-6">
+                                        <select id="SDSSearchForm_Diversity_TimeOfDayDirection" name="timeOfDayDirection"
+                                                class="input-sm form-control" name="timeOfDayDirection" ng-model="diversityModelOptions.timeOfDay.distribution[outerIndex].direction"
+                                                ng-options="option.description for option in diversityModelOptions.AvailableDirectionsEnum.values() track by option.id">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="SDS-col-element-lg-3">
+                            <div class="SDS-row">
+                                <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.timeOfDayEndpoint.$invalid}">
+                                    <div class="SDS-col-element-lg-6">
+                                        <label for="SDSSearchForm_Diversity_TimeOfDayEndpoint" class="input-sm control-label">Endpoint</label>
+                                    </div>
+                                    <div class="SDS-col-element-lg-6">
+                                        <select id="SDSSearchForm_Diversity_TimeOfDayEndpoint" name="timeOfDayEndpoint"
+                                                class="input-sm form-control" name="timeOfDayEndpoint" ng-model="diversityModelOptions.timeOfDay.distribution[outerIndex].endpoint"
+                                                ng-options="option.description for option in diversityModelOptions.AvailableEndpointsEnum.values() track by option.id">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-repeat="j in diversityModelOptions.timeOfDay.distribution[outerIndex].range" ng-init="innerIndex = $index">
+                        <div class="SDSBottomBuffer-xs"></div>
+                        <div class="SDS-row">
+                            <div class="SDS-col-element-lg-3">
+                                <div class="SDS-row">
+                                    <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.timeOfDayRangeBegin_{{outerIndex}}_{{innerIndex}}.$invalid}">
+                                        <div class="SDS-col-element-lg-6">
+                                            <label for="SDSSearchForm_Diversity_TimeOfDayRangeBegin_{{outerIndex}}_{{innerIndex}}" class="input-sm control-label">Range Begin</label>
+                                        </div>
+                                        <div class="SDS-col-element-lg-6">
+                                            <timepicker-pop input-time="diversityModelOptions.timeOfDay.distribution[outerIndex].range[innerIndex].begin"
+                                                            id="SDSSearchForm_Diversity_TimeOfDayRangeBegin_{{outerIndex}}_{{innerIndex}}"
+                                                            name="timeOfDayRangeBegin_{{outerIndex}}_{{innerIndex}}" minute-step="30" show-meridian="false"
+                                                            class="input-group" ng-model="diversityModelOptions.timeOfDay.distribution[outerIndex].range[innerIndex].begin">
+                                            </timepicker-pop>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="SDS-col-element-lg-3">
+                                <div class="SDS-row">
+                                    <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.timeOfDayRangeEnd_{{outerIndex}}_{{innerIndex}}.$invalid}">
+                                        <div class="SDS-col-element-lg-6">
+                                            <label for="SDSSearchForm_Diversity_TimeOfDayRangeEnd__{{outerIndex}}_{{innerIndex}}" class="input-sm control-label">Range End</label>
+                                        </div>
+                                        <div class="SDS-col-element-lg-6">
+                                            <timepicker-pop input-time="diversityModelOptions.timeOfDay.distribution[outerIndex].range[innerIndex].end"
+                                                            id="SDSSearchForm_Diversity_TimeOfDayRangeEnd__{{outerIndex}}_{{innerIndex}}"
+                                                            name="timeOfDayRangeEnd_{{outerIndex}}_{{innerIndex}}" minute-step="30" show-meridian="false"
+                                                            class="input-group" ng-model="diversityModelOptions.timeOfDay.distribution[outerIndex].range[innerIndex].end">
+                                            </timepicker-pop>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="SDS-col-element-lg-3">
+                                <div class="SDS-row">
+                                    <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.timeOfDayRangeOptions_{{outerIndex}}_{{innerIndex}}.$invalid}">
+                                        <div class="SDS-col-element-lg-6">
+                                            <label for="SDSSearchForm_Diversity_TimeOfDayOptions_{{outerIndex}}_{{innerIndex}}" class="input-sm control-label">Range Options</label>
+                                        </div>
+                                        <div class="SDS-col-element-lg-6">
+                                            <div class="input-group">
+                                                <input id="SDSSearchForm_Diversity_TimeOfDayOptions_{{outerIndex}}_{{innerIndex}}" type="number" min="1" max="100" class="input-sm form-control"
+                                                       name="timeOfDayOptions__{{outerIndex}}_{{innerIndex}}" ng-model="diversityModelOptions.timeOfDay.distribution[outerIndex].range[innerIndex].options"
+                                                       pattern="^[1-9][0-9]?$|^100$" aria-describedby="options-addon_{{outerIndex}}_{{innerIndex}}">
+                                                <span class="input-group-addon" id="options-addon_{{outerIndex}}_{{innerIndex}}">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="SDS-col-element-xs-6 SDS-col-element-sm-3 SDS-col-element-lg-3" ng-show="$last && innerIndex > 0">
+                                <a href="" ng-click="diversityModelOptions.removeLastRangeFromDistribution(outerIndex)" class="input-sm"><i class="glyphicon glyphicon-minus-sign"></i> Remove range</a>
+                            </div>
+                        </div>
+                        <div class="SDSTopBuffer-xs"></div>
+                        <div class="SDS-row" ng-if="$last && innerIndex < 3">
+                            <div class="SDS-col-element-lg-3">
+                                <a href="" ng-click="diversityModelOptions.addRangeToDistribution(outerIndex)" class="input-sm"><i class="glyphicon glyphicon-plus-sign"></i> Add more ranges</a>
+                            </div>
+                        </div>
+                        <div class="SDSTopBuffer-xs"></div>
+                    </div>
+                    <div class="SDS-row" ng-if="$last">
+                        <div class="SDS-col-element-lg-12">
+                            <a href="" ng-click="diversityModelOptions.removeDistribution()" class="input-sm"><i class="glyphicon glyphicon-minus-sign"></i> Remove distribution</a>
+                        </div>
+                    </div>
+                    <hr class="divider">
+                </div>
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <!-- <hr class="divider">-->
+                        <a href="" ng-click="diversityModelOptions.addDistribution()" class="input-sm"><i class="glyphicon glyphicon-plus-sign"></i> Add distribution</a>
+                        <div class="SDSTopBuffer-xs"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="SDSTopBuffer-xs"></div>
+        <div class="panel panel-default SDS-panel">
+            <div class="panel-heading SDS-panel-heading">Number of Stops Options</div>
+            <div class="panel-body SDS-panel-body">
+                <div class="SDS-row">
+                    <div class="SDS-col-element-lg-3">
+                        <div class="SDS-row">
+                            <div class="form-group SDS-form-inline-exclude" ng-class="{'has-error':searchForm.$submitted && searchForm.numberOfStopsWeight.$invalid}">
+                                <div class="SDS-col-element-lg-6">
+                                    <label for="SDSSearchForm_Diversity_NumberOfStopsWeight" class="input-sm control-label">Weight</label>
+                                </div>
+                                <div class="SDS-col-element-lg-6">
+                                    <input id="SDSSearchForm_Diversity_NumberOfStopsWeight" type="number" min="1" max="10" class="input-sm form-control"
+                                           name="numberOfStopsWeight" ng-model="diversityModelOptions.numberOfStopsWeight">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="text-center SDSTopBuffer-xs">
         <button type="submit" class="SDS-hidden-sm btn btn-primary btn-lg btn-block">Search</button>
@@ -137,7 +547,6 @@
     </div>
 
 </script>
-
 
 <div class="panel panel-default SDSWidget SDSResponsiveElement SDSSearchFormWidget" id="SDSSearchFormWidget_{{::widgetId}}">
     <div class="panel-body">

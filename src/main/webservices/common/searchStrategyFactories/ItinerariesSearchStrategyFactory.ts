@@ -1,10 +1,12 @@
 define([
           'util/LodashExtensions'
+        , 'lodash'
         , 'angular'
         , 'webservices/SabreDevStudioWebServicesModule'
     ],
     function (
           __
+        , _
         , angular
         , SDSWebServices
     ) {
@@ -22,7 +24,7 @@ define([
             ) {
 
                 return {
-                    /*jshint maxcomplexity:8*/
+                    /*jshint maxcomplexity:9*/
                     createSearchStrategy: function (activeSearchWebService) {
                         activeSearchWebService = activeSearchWebService || 'instaflights';
 
@@ -32,6 +34,18 @@ define([
                                     search: function (searchCriteria, callbacks) {
                                         BargainFinderMaxDataService
                                             .getItineraries(searchCriteria)
+                                            .then(callbacks.successCallback, callbacks.failureCallback)
+                                            .finally(callbacks.streamEndCallback);
+                                    }
+                                };
+                            }
+                            case 'bfm-disable-diversity-swapper': {
+                                return {
+                                    search: function (searchCriteria, callbacks) {
+                                        var searchCriteriaClone =  _.create(Object.getPrototypeOf(searchCriteria), searchCriteria)
+                                        searchCriteriaClone.diversityModelOptions = undefined;
+                                        BargainFinderMaxDataService
+                                            .getItineraries(searchCriteriaClone)
                                             .then(callbacks.successCallback, callbacks.failureCallback)
                                             .finally(callbacks.streamEndCallback);
                                     }
