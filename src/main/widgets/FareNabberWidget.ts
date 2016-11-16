@@ -23,31 +23,14 @@ define([
 
                 $scope.defaultOptions = {
                       earliestTravelStart: new Date()
-                    , subscriptionExpiry: moment().add(1, 'years').toDate()
+                    , subscriptionExpiry: moment().add(1, 'month').toDate()
                     , allowInterline: true
                 };
                 $scope.subscriptionExpiryDate = $scope.defaultOptions.subscriptionExpiry;
 
-                $scope.outboundTravelTimeRange = {
-                    departure: undefined,
-                    arrival: undefined
-                };
-                $scope.inboundTravelTimeRange = {
-                    departure: undefined,
-                    arrival: undefined
-                };
-
-                $scope.daysOfTravelPreference = {
-                    outbound: undefined,
-                    inbound: undefined
-                };
-
                 $scope.preferredAirlines = {
                     selected: []
                 };
-
-                $scope.flexibleDepartureDate = false;
-                $scope.flexibleReturnDate = false;
 
                 $scope.subscribe = function () {
 
@@ -55,24 +38,14 @@ define([
                           'subscriberEmail'
                         , 'origin'
                         , 'destination'
-                        , 'flexibleDepartureDate'
-                        , 'departureDate'
-                        , 'departureDateFrom'
-                        , 'departureDateTo'
-                        , 'flexibleReturnDate'
-                        , 'returnDate'
-                        , 'returnDateFrom'
-                        , 'returnDateTo'
                         , 'passengerType'
                         , 'passengerCount'
+                        , 'preferences'
                         , 'directFlightsOnly'
                         , 'allowInterline'
                         , 'maximumAcceptablePrice'
                         , 'maximumAcceptablePriceCurrency'
                         , 'subscriptionExpiryDate'
-                        , 'outboundTravelTimeRange'
-                        , 'inboundTravelTimeRange'
-                        , 'daysOfTravelPreference'
                         , 'preferredAirlines'
                     ];
                     var fareNabberSubscriptionRequest = allProps.reduce(function (acc, curr) {
@@ -127,12 +100,35 @@ define([
 
                         function parseDirectiveAttributes() {
                             const directiveAttributesDateFormat = moment.ISO_8601;
-                            scope.departureDate = moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).toDate();
-                            scope.departureDateFrom = moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).subtract(1, 'M').toDate();
-                            scope.departureDateTo = moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).add(1, 'M').toDate();
-                            scope.returnDate = moment(scope.predefinedReturnDate, directiveAttributesDateFormat).toDate();
-                            scope.returnDateFrom = moment(scope.predefinedReturnDate, directiveAttributesDateFormat).subtract(1, 'M').toDate();
-                            scope.returnDateTo = moment(scope.predefinedReturnDate, directiveAttributesDateFormat).add(1, 'M').toDate();
+
+                            scope.preferences ={
+                                dates: {
+                                    departureDate: moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).toDate(),
+                                    returnDate: moment(scope.predefinedReturnDate, directiveAttributesDateFormat).toDate(),
+                                    isFlexibleDepartureDate: false,
+                                    isFlexibleReturnDate: false,
+                                    flexibleDepartureDate: {
+                                        from: moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).subtract(1, 'M').toDate(),
+                                        to: moment(scope.predefinedDepartureDate, directiveAttributesDateFormat).add(1, 'M').toDate(),
+                                    },
+                                    flexibleReturnDate: {
+                                        from: moment(scope.predefinedReturnDate, directiveAttributesDateFormat).subtract(1, 'M').toDate(),
+                                        to: moment(scope.predefinedReturnDate, directiveAttributesDateFormat).add(1, 'M').toDate(),
+                                    }
+                                },
+                                daysOfTravelPreference: {
+                                    outbound: undefined,
+                                    inbound: undefined
+                                },
+                                outboundTravelTimeRange: {
+                                    departure: undefined,
+                                    arrival: undefined
+                                },
+                                inboundTravelTimeRange: {
+                                    departure: undefined,
+                                    arrival: undefined
+                                }
+                            };
                         }
 
                         function runSubscriptionWorkflow() {
@@ -170,7 +166,6 @@ define([
                                 , scope: scope
                             });
                         }
-
 
                         WidgetGlobalCallbacks.linkComplete(scope, element);
 

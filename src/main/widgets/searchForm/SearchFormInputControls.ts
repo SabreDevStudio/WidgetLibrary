@@ -146,6 +146,170 @@ define([
                     };
                 }
             ])
+            .directive('flexibleDepartureReturnDates', [
+                function () {
+                    return {
+                        require: 'ngModel',
+                        replace: true,
+                        scope: {
+                            required: '@'
+                            , dateFormat: '@'
+                            , minDate: '='
+                            , onAnyDateChange: '&'
+                            , ngModel: '='
+                            , internalFormName: '='
+                        },
+                        templateUrl: '../widgets/view-templates/partials/FlexibleDepartureReturnDates.tpl.html',
+                        link: function (scope, elm, attrs, ctrl) {
+
+                            /*From Angular documentation:
+                                 By default, ngModel watches the model by reference, not value. This is important to know when
+                                 binding inputs to models that are objects (e.g. Date) or collections (e.g. arrays).
+                                 If only properties of the object or collection change, ngModel will not be notified and so the input will not be re-rendered.
+                                 The model must be assigned an entirely new object or collection before a re-rendering will occur.
+
+                             Here we are not exactly interested in re-rendering as it will be handled by internal directives
+                             used in our template, but we want Angular to automatically run validators when dates change.
+                            */
+                            scope.$watch("ngModel.dates", function (newVal, oldVal, scope) {
+                                if(!_.isEqual(newVal, oldVal)){
+                                   scope.ngModel = _.clone(scope.ngModel);
+                                }
+                            }, true);
+
+                            ctrl.$validators.invalidDepartureDate = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(preferences.isFlexibleDepartureDate) {
+                                    return true;
+                                }
+                                if (preferences.isFlexibleReturnDate) {
+                                    result = preferences.departureDate <= preferences.flexibleReturnDate.from;
+                                }
+                                else {
+                                    result = preferences.departureDate <= preferences.returnDate;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidReturnDate = function (modelValue, viewValue) {
+
+                                 var result = true;
+                                 var preferences = modelValue.dates;
+                                 if(preferences.isFlexibleReturnDate) {
+                                     return true;
+                                 }
+                                 if (preferences.isFlexibleDepartureDate) {
+
+                                     result = preferences.returnDate >= preferences.flexibleDepartureDate.from;
+                                 }
+                                 else {
+
+                                     result = preferences.returnDate >= preferences.departureDate;
+                                 }
+                                 return result;
+                             };
+
+                            ctrl.$validators.invalidDepartureDateFrom = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(!preferences.isFlexibleDepartureDate) {
+                                    return true;
+                                }
+                                if (preferences.isFlexibleReturnDate) {
+
+                                    result = preferences.flexibleDepartureDate.from  <= preferences.flexibleReturnDate.from;
+                                }
+                                else {
+
+                                    result = preferences.flexibleDepartureDate.from <= preferences.returnDate;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidDepartureDateFromTo = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(preferences.isFlexibleDepartureDate) {
+                                    result = preferences.flexibleDepartureDate.from  < preferences.flexibleDepartureDate.to;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidDepartureDateToFrom = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(preferences.isFlexibleDepartureDate) {
+                                    result = preferences.flexibleDepartureDate.to > preferences.flexibleDepartureDate.from;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidDepartureDateToReturnDateTo = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(preferences.isFlexibleDepartureDate && preferences.isFlexibleReturnDate) {
+                                    result = preferences.flexibleDepartureDate.to <= preferences.flexibleReturnDate.to ;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidReturnDateFrom = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(!preferences.isFlexibleReturnDate) {
+                                    return true;
+                                }
+                                if (preferences.isFlexibleDepartureDate) {
+
+                                    result = preferences.flexibleReturnDate.from >= preferences.flexibleDepartureDate.from;
+                                }
+                                else {
+
+                                    result = preferences.flexibleReturnDate.from >= preferences.departureDate;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidReturnDatesFromTo = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(preferences.isFlexibleReturnDate) {
+                                    result = preferences.flexibleReturnDate.from  < preferences.flexibleReturnDate.to;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidReturnDatesToFrom = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(preferences.isFlexibleReturnDate) {
+                                    result = preferences.flexibleReturnDate.to > preferences.flexibleReturnDate.from;
+                                }
+                                return result;
+                            };
+
+                            ctrl.$validators.invalidReturnDateToDepartureDateTo = function (modelValue, viewValue) {
+
+                                var result = true;
+                                var preferences = modelValue.dates;
+                                if(preferences.isFlexibleReturnDate && preferences.isFlexibleDepartureDate) {
+                                    result = preferences.flexibleReturnDate.to >= preferences.flexibleDepartureDate.to;
+                                }
+                                return result;
+                            };
+                        }
+                    };
+                }
+            ])
             .directive('selectMonths', ['$locale', function ($locale) {
                 return {
                     replace: true,
@@ -308,6 +472,157 @@ define([
                 }
 
             })
+            .factory('timepickerState', function() {
+                var pickers = [];
+                return {
+                    addPicker: function(picker) {
+                        pickers.push(picker);
+                    },
+                    closeAll: function() {
+                        for (var i=0; i<pickers.length; i++) {
+                            pickers[i].close();
+                        }
+                    }
+                };
+            })
+            /* jshint ignore:start */
+            .directive("timeFormat", ['$filter', function($filter) {
+                return {
+                    restrict : 'A',
+                    require : 'ngModel',
+                    scope : {
+                        showMeridian : '=',
+                    },
+                    link : function(scope, element, attrs, ngModel) {
+                        var parseTime = function(viewValue) {
+
+                            if (!viewValue) {
+                                ngModel.$setValidity('time', true);
+                                return null;
+                            } else if (angular.isDate(viewValue) && !isNaN(viewValue)) {
+                                ngModel.$setValidity('time', true);
+                                return viewValue;
+                            } else if (angular.isString(viewValue)) {
+                                var timeRegex = /^(0?[0-9]|1[0-2]):[0-5][0-9] ?[a|p]m$/i;
+                                if (!scope.showMeridian) {
+                                    timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+                                }
+                                if (!timeRegex.test(viewValue)) {
+                                    ngModel.$setValidity('time', false);
+                                    return undefined;
+                                } else {
+                                    ngModel.$setValidity('time', true);
+                                    var date = new Date();
+                                    var sp = viewValue.split(":");
+                                    var apm = sp[1].match(/[a|p]m/i);
+                                    if (apm) {
+                                        sp[1] = sp[1].replace(/[a|p]m/i, '');
+                                        if (apm[0].toLowerCase() === 'pm') {
+                                            sp[0] = sp[0] + 12;
+                                        }
+                                    }
+                                    date.setHours(sp[0], sp[1]);
+                                    return date;
+                                };
+                            } else {
+                                ngModel.$setValidity('time', false);
+                                return undefined;
+                            };
+                        };
+
+                        ngModel.$parsers.push(parseTime);
+
+                        var showTime = function(data) {
+                            parseTime(data);
+                            var timeFormat = (!scope.showMeridian) ? "HH:mm" : "hh:mm a";
+                            return $filter('date')(data, timeFormat);
+                        };
+                        ngModel.$formatters.push(showTime);
+                        scope.$watch('showMeridian', function(value) {
+                            var myTime = ngModel.$modelValue;
+                            if (myTime) {
+                                element.val(showTime(myTime));
+                            }
+
+                        });
+                    }
+                };
+            }])
+
+            .directive('timepickerPop', ['$document', 'timepickerState', function($document, timepickerState) {
+                return {
+                    restrict : 'E',
+                    transclude : false,
+                    scope : {
+                        inputTime : "=",
+                        showMeridian : "=",
+                        minuteStep: "=",
+                        disabled : "="
+                    },
+                    controller : ['$scope', '$element', function($scope, $element) {
+                        $scope.isOpen = false;
+
+                        $scope.disabledInt = angular.isUndefined($scope.disabled)? false : $scope.disabled;
+
+                        $scope.toggle = function() {
+                            if ($scope.isOpen) {
+                                $scope.close();
+                            } else {
+                                $scope.open();
+                            }
+                        };
+                    }],
+                    link : function(scope, element, attrs) {
+                        var picker = {
+                            open : function () {
+                                timepickerState.closeAll();
+                                scope.isOpen = true;
+                            },
+                            close: function () {
+                                scope.isOpen = false;
+                            }
+
+                        }
+                        timepickerState.addPicker(picker);
+
+                        scope.open = picker.open;
+                        scope.close = picker.close;
+
+                        scope.$watch("disabled", function(value) {
+                            scope.disabledInt = angular.isUndefined(scope.disabled)? false : scope.disabled;
+                        });
+
+                        scope.$watch("inputTime", function(value) {
+                            if (!scope.inputTime) {
+                                element.addClass('has-error');
+                            } else {
+                                element.removeClass('has-error');
+                            }
+
+                        });
+
+                        element.bind('click', function(event) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        });
+
+                        $document.bind('click', function(event) {
+                            scope.$apply(function() {
+                                scope.isOpen = false;
+                            });
+                        });
+
+                    },
+                    template : "<input type='text' class='form-control input-sm' ng-model='inputTime' ng-disabled='disabledInt' time-format show-meridian='showMeridian' ng-focus='open()' />"
+                    + "  <div class='input-group-btn' ng-class='{open:isOpen}'> "
+                    + "    <button type='button' ng-disabled='disabledInt' class='btn btn-default input-sm' ng-class=\"{'btn-primary':isOpen}\" data-toggle='dropdown' ng-click='toggle()'> "
+                    + "        <i class='glyphicon glyphicon-time'></i></button> "
+                    + "          <div class='dropdown-menu pull-right'> "
+                    + "            <timepicker ng-model='inputTime' show-meridian='showMeridian' minute-step='minuteStep'></timepicker>"
+                    + "           </div> " + "  </div>"
+                };
+            }])
+            /* jshint ignore:end */
             .filter('minutesInDayToTimeOfDay', function () {
                 return function (minutesInDay, useAmPmFormat) {
                     var timeOfDay = convertMinutesInDayToTimeOfDay(minutesInDay);
