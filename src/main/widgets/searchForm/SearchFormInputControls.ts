@@ -157,7 +157,7 @@ define([
                             , minDate: '='
                             , onAnyDateChange: '&'
                             , ngModel: '='
-                            , internalFormName: '='
+                            , internalFormName: '@'
                         },
                         templateUrl: '../widgets/view-templates/partials/FlexibleDepartureReturnDates.tpl.html',
                         link: function (scope, elm, attrs, ctrl) {
@@ -171,7 +171,7 @@ define([
                              Here we are not exactly interested in re-rendering as it will be handled by internal directives
                              used in our template, but we want Angular to automatically run validators when dates change.
                             */
-                            scope.$watch("ngModel.dates", function (newVal, oldVal, scope) {
+                            scope.$watch("ngModel.dates", function (newVal, oldVal) {
                                 if(!_.isEqual(newVal, oldVal)){
                                    scope.ngModel = _.clone(scope.ngModel);
                                 }
@@ -485,7 +485,6 @@ define([
                     }
                 };
             })
-            /* jshint ignore:start */
             .directive("timeFormat", ['$filter', function($filter) {
                 return {
                     restrict : 'A',
@@ -494,8 +493,8 @@ define([
                         showMeridian : '=',
                     },
                     link : function(scope, element, attrs, ngModel) {
+                        /* jshint maxcomplexity:8 */
                         var parseTime = function(viewValue) {
-
                             if (!viewValue) {
                                 ngModel.$setValidity('time', true);
                                 return null;
@@ -517,17 +516,18 @@ define([
                                     var apm = sp[1].match(/[a|p]m/i);
                                     if (apm) {
                                         sp[1] = sp[1].replace(/[a|p]m/i, '');
+                                        // jshint maxdepth:4
                                         if (apm[0].toLowerCase() === 'pm') {
                                             sp[0] = sp[0] + 12;
                                         }
                                     }
                                     date.setHours(sp[0], sp[1]);
                                     return date;
-                                };
+                                }
                             } else {
                                 ngModel.$setValidity('time', false);
                                 return undefined;
-                            };
+                            }
                         };
 
                         ngModel.$parsers.push(parseTime);
@@ -548,7 +548,6 @@ define([
                     }
                 };
             }])
-
             .directive('timepickerPop', ['$document', 'timepickerState', function($document, timepickerState) {
                 return {
                     restrict : 'E',
@@ -622,7 +621,6 @@ define([
                     + "           </div> " + "  </div>"
                 };
             }])
-            /* jshint ignore:end */
             .filter('minutesInDayToTimeOfDay', function () {
                 return function (minutesInDay, useAmPmFormat) {
                     var timeOfDay = convertMinutesInDayToTimeOfDay(minutesInDay);
