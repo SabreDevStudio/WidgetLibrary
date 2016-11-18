@@ -243,37 +243,43 @@ define([
         };
 
         BargainFinderMaxRequestFactory.prototype.createTimeOfDayOptions = function(diversityModelOptions) {
-            var timeOfDay = {
+            var timeOfDay:any = {
                 "TimeOfDay": {
                     "Weight": diversityModelOptions.timeOfDay.weight,
                 }
             };
-            if(diversityModelOptions.timeOfDay.distribution.length > 0){
-                var distributionObj = {
-                    "Distribution": []
-                };
-                diversityModelOptions.timeOfDay.distribution.forEach(function (distribution, distributionIndex) {
-                    distributionObj.Distribution.push({
-                        "Direction": distribution.direction.description,
-                        "Endpoint": distribution.endpoint.description
-                    });
-                    if(distribution.range.length > 0){
-                        distributionObj.Distribution[distributionIndex].Range = [];
-                        distribution.range.forEach(function (range) {
-                            distributionObj.Distribution[distributionIndex].Range.push({
-                                "Begin": moment(range.begin).format("HH:mm"),
-                                "End": moment(range.end).format("HH:mm"),
-                                "Options": range.options + "%"
-                            });
-                        });
-                    }
-                });
-                _.extend(timeOfDay.TimeOfDay, distributionObj);
+            if(diversityModelOptions.getDistributions().length > 0){
+                timeOfDay.TimeOfDay.Distribution = createDistributionsOutput(diversityModelOptions.getDistributions());
             }
             return timeOfDay;
         };
 
+        function createDistributionsOutput(distributions){
+
+            return distributions.map(distribution => {
+                var distributionObj: any = {
+                    "Direction": distribution.direction.description,
+                    "Endpoint": distribution.endpoint.description
+                };
+                if(distribution.ranges.length > 0) {
+                    distributionObj.Range = createRangesOutput(distribution.ranges);
+                }
+                return distributionObj;
+            });
+        }
+
+        function createRangesOutput(ranges){
+            return ranges.map(range => {
+                return {
+                    "Begin": moment(range.begin).format("HH:mm"),
+                    "End": moment(range.end).format("HH:mm"),
+                    "Options": range.options + "%"
+                };
+            });
+        }
+
         BargainFinderMaxRequestFactory.prototype.createNonStopWeight = function(nonStopWeight) {
+
             return {
                 "StopsNumber": {
                     "Weight": nonStopWeight

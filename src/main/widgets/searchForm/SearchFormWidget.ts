@@ -1,7 +1,6 @@
 define([
          'lodash'
         , 'util/LodashExtensions'
-        , 'util/validator'
         , 'moment'
         , 'angular'
         , 'angular_bootstrap'
@@ -20,7 +19,6 @@ define([
     function (
           _
         , __
-        , SDSValidator
         , moment
         , angular
         , angular_bootstrap
@@ -52,11 +50,9 @@ define([
 
                 $scope.widgetId = widgetIdGenerator.next();
 
-                $scope.SDSValidator = SDSValidator;
-
                 $scope.diversityModelOptions = new DiversityModelOptions();
 
-                $scope.detailsVisibility = {};
+                $scope.detailsVisibility = {useDiversityModelOptions: false};
 
                 $scope.tripType = 'returnTrip';
 

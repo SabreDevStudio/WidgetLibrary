@@ -106,6 +106,7 @@ define([
         , 'widgets/searchForm/SearchFormInspirationalWidget'
         , 'widgets/searchForm/SearchFormInputControls'
         , 'widgets/searchForm/InputAirport'
+        , 'widgets/searchForm/DiversitySwapper'
         , 'widgets/ItinerariesList/InputSortBy'
         , 'widgets/informational/fareForecast/FareForecastWidget'
         , 'widgets/informational/fareRange/FareRangeWidget'
@@ -136,6 +137,7 @@ define([
         , SearchFormInspirationalWidget
         , SearchFormInputControls
         , InputAirport
+        , DiversitySwapper
         , InputSortBy
         , FareForecastWidget
         , FareRangeWidget

@@ -38,7 +38,7 @@ define([
 
         this.timeOfDay = {
             weight: undefined,
-            distribution: []
+            distributions: []
         };
 
         this.numberOfStopsWeight = undefined;
@@ -46,6 +46,9 @@ define([
 
     DiversityModelOptions.prototype.PRICE_WEIGHT_DEFAULT_VALUE = 10;
     DiversityModelOptions.prototype.INBOUND_OUTBOUND_PAIRING_DUPLICATES_DEFAULT_VALUE = 1;
+    DiversityModelOptions.prototype.TIME_RANGE_BEGIN = "6:00";
+    DiversityModelOptions.prototype.TIME_RANGE_END = "12:00";
+    DiversityModelOptions.prototype.TIME_RANGE_FORMAT = "HH:mm";
 
     DiversityModelOptions.prototype.addCarrierOverriding = function () {
         this.carrier.override.push({
@@ -58,32 +61,36 @@ define([
         this.carrier.override.pop();
     };
 
+    DiversityModelOptions.prototype.getDistributions = function () {
+        return this.timeOfDay.distributions;
+    }
+
     DiversityModelOptions.prototype.addDistribution = function () {
-        this.timeOfDay.distribution.push({
+        this.getDistributions().push({
             direction: undefined,
             endpoint: undefined,
-            range: [{
-                begin: moment("6:00", "HH:mm").toDate(),
-                end: moment("12:00", "HH:mm").toDate(),
+            ranges: [{
+                begin: moment(this.TIME_RANGE_BEGIN, this.TIME_RANGE_FORMAT).toDate(),
+                end: moment(this.TIME_RANGE_END, this.TIME_RANGE_FORMAT).toDate(),
                 options: undefined
             }]
         });
     };
 
     DiversityModelOptions.prototype.removeDistribution = function () {
-        this.timeOfDay.distribution.pop();
+        this.getDistributions().pop();
     };
 
     DiversityModelOptions.prototype.addRangeToDistribution = function (distributionIndex) {
-        this.timeOfDay.distribution[distributionIndex].range.push({
-            begin: moment("6:00", "HH:mm").toDate(),
-            end: moment("12:00", "HH:mm").toDate(),
+        this.getDistributions()[distributionIndex].ranges.push({
+            begin: moment(this.TIME_RANGE_BEGIN, this.TIME_RANGE_FORMAT).toDate(),
+            end: moment(this.TIME_RANGE_END, this.TIME_RANGE_FORMAT).toDate(),
             option: undefined
         });
     };
 
     DiversityModelOptions.prototype.removeLastRangeFromDistribution = function (distributionIndex) {
-        this.timeOfDay.distribution[distributionIndex].range.pop();
+        this.getDistributions()[distributionIndex].ranges.pop();
     };
 
     DiversityModelOptions.prototype.LowFareBucketModeEnum = Object.freeze({
