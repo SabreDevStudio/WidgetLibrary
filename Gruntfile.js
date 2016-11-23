@@ -117,10 +117,7 @@ module.exports = function (grunt) {
         },
 
         bootlint: {
-            options: {
-                stoponerror: false,
-                relaxerror: ['W001', 'W002', 'W003', 'W005', 'E001', 'W012']
-            },
+            options: grunt.file.readJSON('bootlintOptions.json'),
             files: ['widgets/view-templates/**/*.tpl.html']
         },
 
