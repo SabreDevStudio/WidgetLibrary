@@ -83,12 +83,12 @@ define([
         };
     };
 
-    ItinerariesList.prototype.getCheapestItinerary = function () {
-        return _.min(this.getPermittedItineraries(), 'totalFareAmount');
+    ItinerariesList.prototype.getCheapestItinerary = function (sortCriteriaArray) {
+        return _.first(_.sortByAll(this.getPermittedItineraries(), _.union(['totalFareAmount'], sortCriteriaArray)));
     };
 
-    ItinerariesList.prototype.getShortestItinerary = function () {
-        return _.min(this.getPermittedItineraries(), 'duration');
+    ItinerariesList.prototype.getShortestItinerary = function (sortCriteriaArray) {
+        return _.first(_.sortByAll(this.getPermittedItineraries(), _.union(['duration'], sortCriteriaArray)));
     };
 
     /**
