@@ -17,7 +17,12 @@ define([
                 return {
                     templateUrl: '../widgets/view-templates/partials/AirlineLogo.tpl.html',
                     scope: {
-                        airlineCode: '@' // previously it was just getting directive attribute value and exporting it to directive view as scope param. But, as views using this directive may get other data (their scope may be updated, which results in presenting different itineraries with different airlines), then we need to watch this attribute here as well. It might have negative performance impact, test it.
+
+                    // Previously it was just getting directive attribute value and exporting it to directive view as scope param.
+                    // But as views using this directive may get other data (their scope may be updated, which results in presenting different itineraries with different airlines),
+                    // then we need to watch this attribute here as well. It might have negative performance impact, test it.
+
+                    airlineCode: '@'
                     }
                 };
             });
