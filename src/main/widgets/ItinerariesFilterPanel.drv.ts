@@ -14,6 +14,7 @@ define([
                     scope: true,
                     templateUrl: '../widgets/view-templates/widgets/ItinerariesFilterPanelWidget.tpl.html',
                     link: function (scope, element) {
+                        scope.id = element.attr('id');
                         scope.ownerId = element.attr('owner-id');
                     }
                 };
