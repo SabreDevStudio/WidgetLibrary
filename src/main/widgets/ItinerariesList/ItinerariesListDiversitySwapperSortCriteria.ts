@@ -22,23 +22,25 @@ define([
         ItinerariesListDiversitySwapperSortCriteria.prototype = Object.create(ItinerariesListSortCriteria.prototype);
         ItinerariesListDiversitySwapperSortCriteria.prototype.constructor = ItinerariesListDiversitySwapperSortCriteria;
 
-        /* may be overwritten by class clients */
+       ItinerariesListDiversitySwapperSortCriteria.prototype.diversitySwapperSortCriteriaDefinitions = {
+
+            byWeightedPriceAmountAsc: {
+                label: 'Weighted Price (Lowest)',
+                propertyName: 'weightedPriceAmount',
+                reverse: false
+            },
+            byWeightedPriceAmountDesc: {
+                label: 'Weighted Price (Highest)',
+                propertyName: 'weightedPriceAmount',
+                reverse: true
+            }
+        };
+
+        /* overwriting super class */
         ItinerariesListDiversitySwapperSortCriteria.prototype.configureAvailableSortCriteria = function () {
 
-            return [
-                  this.sortCriteriaDefinitions.byPriceAsc
-                , this.sortCriteriaDefinitions.byPriceDesc
-                , this.sortCriteriaDefinitions.byDurationAsc
-                , this.sortCriteriaDefinitions.byDurationDesc
-                , this.sortCriteriaDefinitions.byNumberOfStopsAsc
-                , this.sortCriteriaDefinitions.byNumberOfStopsDesc
-                , this.sortCriteriaDefinitions.byDepartureTimeAsc
-                , this.sortCriteriaDefinitions.byDepartureTimeDesc
-                , this.sortCriteriaDefinitions.byArrivalTimeAsc
-                , this.sortCriteriaDefinitions.byArrivalTimeDesc
-                , this.sortCriteriaDefinitions.byWeightedPriceAmountAsc
-                , this.sortCriteriaDefinitions.byWeightedPriceAmountDesc
-            ];
+            return _.union(ItinerariesListSortCriteria.prototype.configureAvailableSortCriteria.call(this),
+                [this.diversitySwapperSortCriteriaDefinitions.byWeightedPriceAmountAsc, this.diversitySwapperSortCriteriaDefinitions.byWeightedPriceAmountDesc]);
         };
 
         return ItinerariesListDiversitySwapperSortCriteria;

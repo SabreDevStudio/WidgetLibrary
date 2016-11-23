@@ -79,7 +79,7 @@ define([
 
                     var sortCriteria;
                     if(__.isDefined($scope.activeSearchWebService)){
-                        if($scope.activeSearchWebService === "bfm-diversity-swapper"){
+                        if($scope.activeSearchWebService === "bfm"){
                             sortCriteria = new ItinerariesListDiversitySwapperSortCriteria();
                         } else {
                             sortCriteria = new ItinerariesListSortCriteria();
@@ -152,10 +152,13 @@ define([
                      * 2. summary per stops per airline, which is the lowest price for every airline returned, for every stop count
                      */
                     function recalculateSummaries() {
+
+                        var sortCriteriaArray = sortCriteria.sortCriteriaNaturalOrder.map(criteria => criteria.propertyName);
+
                         $scope.bestItinerariesSummary = {
-                            cheapest: itineraries.getCheapestItinerary(),
+                            cheapest: itineraries.getCheapestItinerary(sortCriteriaArray),
                             best: _.last(permittedItinerariesSorted.slice().sort(DiversitySwapper.comparator)),// have to sort on copy, not original, not to mutate original array which is the source for displaying the itineraries list
-                            shortest: itineraries.getShortestItinerary()
+                            shortest: itineraries.getShortestItinerary(sortCriteriaArray)
                         };
                         $scope.summaryPerStopsPerAirline = (new ItinerariesListSummaryByAirlineAndNumberOfStops(permittedItinerariesSorted)).getSummaries();
                     }
