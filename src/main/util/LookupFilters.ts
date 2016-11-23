@@ -96,7 +96,9 @@ define([
                         }
                         perPosEntry = globalEntry;
                     }
-                    if ((perPosEntry.AirportName === perPosEntry.CityName) || perPosEntry.AirportName.toUpperCase().includes(perPosEntry.CityName.toUpperCase())) {
+                    //Using lodash _.includes() method instead of String.prototype.includes() as the later is not supported by IE and Opera
+                    if ((perPosEntry.AirportName === perPosEntry.CityName)
+                        || _.includes(perPosEntry.AirportName.toUpperCase(), perPosEntry.CityName.toUpperCase()) ) {
                         return perPosEntry.AirportName;
                     }
                     return perPosEntry.AirportName + ', ' + perPosEntry.CityName;
