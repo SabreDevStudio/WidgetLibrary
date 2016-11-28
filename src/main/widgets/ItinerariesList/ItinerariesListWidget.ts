@@ -8,7 +8,7 @@ define([
         , 'datamodel/ItinerariesList'
         , 'webservices/bargainFinderMax/BargainFinderMaxWebServices'
         , 'webservices/instaflights/InstaflightsDataService'
-        , 'datamodel/DiversitySwapper'
+        , 'datamodel/BestItineraryComparator'
         , 'widgets/ItinerariesList/ItineraryShortSummary'
         , 'widgets/ItinerariesList/ItineraryPricePerStopsPerAirlineSummary'
         , 'widgets/ItinerariesList/ItineraryDirective'
@@ -31,7 +31,7 @@ define([
         , ItinerariesList
         , BargainFinderMaxWebServices
         , InstaflightsDataService
-        , DiversitySwapper
+        , BestItineraryComparator
         , ItineraryShortSummary
         , ItineraryPricePerStopsPerAirlineSummary
         , ItineraryDirective
@@ -157,7 +157,7 @@ define([
 
                         $scope.bestItinerariesSummary = {
                             cheapest: itineraries.getCheapestItinerary(sortCriteriaArray),
-                            best: _.last(permittedItinerariesSorted.slice().sort(DiversitySwapper.comparator)),// have to sort on copy, not original, not to mutate original array which is the source for displaying the itineraries list
+                            best: _.last(permittedItinerariesSorted.slice().sort(BestItineraryComparator.comparator)),// have to sort on copy, not original, not to mutate original array which is the source for displaying the itineraries list
                             shortest: itineraries.getShortestItinerary(sortCriteriaArray)
                         };
                         $scope.summaryPerStopsPerAirline = (new ItinerariesListSummaryByAirlineAndNumberOfStops(permittedItinerariesSorted)).getSummaries();
