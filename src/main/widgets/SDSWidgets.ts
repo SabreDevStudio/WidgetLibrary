@@ -17,6 +17,7 @@ define([
       , 'angular-touch'
       , 'nsPopover'
       , 'WidgetsFilterPanel'
+      , 'usSpinnerService'
     ],
     function (
           NG
@@ -37,6 +38,7 @@ define([
         , angular_touch
         , nsPopover
         , WidgetsFilterPanelModule
+        , usSpinnerServiceModule
 
     ) {
         'use strict';
@@ -59,6 +61,7 @@ define([
                 , 'ngTouch'
                 , 'nsPopover'
                 , 'WidgetsFilterPanel'
+                , 'angularSpinner'
             ])
             .constant('newSearchCriteriaEvent', 'newSearchCriteria')
             .constant('newInspirationalSearchCriteriaEvent', 'newInspirationalSearchCriteriaEvent')

@@ -22,6 +22,8 @@ require.config({
         , 'angular-simple-logger': '../../bower_components/angular-simple-logger/dist/angular-simple-logger'
         , 'nsPopover': '../../bower_components/nsPopover/src/nsPopover'
         , 'WidgetsFilterPanel': '../../bower_components/WidgetsFilterPanel/dist/WidgetsFilterPanel'
+        , 'usSpinnerService': '../../bower_components/angular-spinner/angular-spinner'
+        , 'spin': '../../bower_components/spin.js/spin'
     },
     map: {
         '*': {
@@ -81,6 +83,9 @@ require.config({
         },
         'WidgetsFilterPanel': {
             deps: ['angular']
+        },
+        'usSpinnerService': {
+            deps: ['angular', 'spin']
         }
     },
     config: {
@@ -117,6 +122,8 @@ define([
         , 'widgets/ItinerariesFilterPanel.drv'
         , 'widgets/errorDisplays/ErrorDisplays.mod'
         , 'widgets/AboutWidget'
+        , 'widgets/SpinnerContainer'
+        , 'widgets/util/TranscludeWithInheritedScope'
         , 'Configuration'
         , 'elementQuery'
         , 'widgets/templateCacheCharger'
@@ -148,6 +155,8 @@ define([
         , ItinerariesFilterPanelDirective
         , ErrorDisplaysModule
         , AboutWidget
+        , SpinnerContainer
+        , TranscludeWithInheritedScope
         , Configuration
         , elementQuery
         , templateCacheCharger
