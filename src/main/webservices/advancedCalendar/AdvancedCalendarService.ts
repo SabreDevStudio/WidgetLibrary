@@ -51,7 +51,7 @@ define([
                     }
                     var requestBuilderForDateRanges = new AdvancedCalendarRequestFactory(requestDatesExpander, configOverrides);
 
-                    var requestBuilder = new AdvancedCalendarRequestFactory();
+                    var requestBuilder = new AdvancedCalendarRequestFactory(undefined, configOverrides);
 
                     var responseParser = new OTAResponseParser();
 
