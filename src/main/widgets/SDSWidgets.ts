@@ -6,6 +6,8 @@ define([
       , 'util/CommonDisplayFilters'
       , 'webservices/SabreDevStudioWebServicesModule'
       , 'widgets/inspirational/InspirationalWidgets.mod'
+      , 'widgets/basicSearch/basicSearch.mod'
+      , 'widgets/searchForm/timePickerPopup/timePickerPop.mod'
       , 'webservices/Interceptors'
       , 'angular-ui-select'
       , 'angular-sanitize'
@@ -27,6 +29,8 @@ define([
         , CommonDisplayFilters
         , SabreDevStudioWebServicesModule
         , InspirationalWidgetsModule
+        , BasicSearchModule
+        , TimePickerPopModule
         , Interceptors
         , angular_ui_select
         , angular_sanitize
@@ -48,6 +52,8 @@ define([
                 , 'sabreDevStudioWebServices'
                 , 'sdsWidgets.inspirationalWidgets'
                 , 'sdsWidgets.errorDisplays'
+                , 'sdsWidgets.basicSearch'
+                , 'sdsWidgets.timePickerPop'
                 , 'commonDirectives'
                 , 'commonFilters'
                 , 'ui.bootstrap'
