@@ -79,7 +79,7 @@ define([
 
                     var sortCriteria;
                     if(__.isDefined($scope.activeSearchWebService)){
-                        if($scope.activeSearchWebService === "bfm"){
+                        if($scope.activeSearchWebService === "bfm-enable-diversity-swapper"){
                             sortCriteria = new ItinerariesListDiversitySwapperSortCriteria();
                         } else {
                             sortCriteria = new ItinerariesListSortCriteria();

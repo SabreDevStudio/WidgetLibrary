@@ -29,7 +29,7 @@ define([
                         activeSearchWebService = activeSearchWebService || 'instaflights';
 
                         switch (activeSearchWebService) {
-                            case 'bfm': {
+                            case 'bfm-enable-diversity-swapper': {
                                 return {
                                     search: function (searchCriteria, callbacks) {
                                         BargainFinderMaxDataService
@@ -39,7 +39,7 @@ define([
                                     }
                                 };
                             }
-                            case 'bfm-disable-diversity-swapper': {
+                            case 'bfm': {
                                 return {
                                     search: function (searchCriteria, callbacks) {
                                         var searchCriteriaClone =  _.create(Object.getPrototypeOf(searchCriteria), searchCriteria)
