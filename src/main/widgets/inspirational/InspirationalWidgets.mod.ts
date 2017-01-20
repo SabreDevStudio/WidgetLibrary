@@ -8,6 +8,9 @@ define([
         'widgets/inspirational/ThemedInspirationalSearchCriteriaBroadcastingService.srv',
         'widgets/inspirational/ThemedInspirationalSearchCompleteBroadcastingService.srv',
         'widgets/inspirational/TripOriginChangedBroadcastingService.srv',
+        'widgets/inspirational/TripOriginChangedLocalStorageService.srv',
+        'widgets/inspirational/TripOriginChangedCompositeService.srv',
+        'widgets/inspirational/TripOriginLocalStorageProvider.srv',
         'widgets/inspirational/TravelThemesSelectionBar.drv',
         'angular_google_maps',
         'webservices/inspirational/DestinationFinderSummaryServicePriceClassifierDecorator',
@@ -26,6 +29,9 @@ define([
         ThemedInspirationalSearchCriteriaBroadcastingService,
         ThemedInspirationalSearchCompleteBroadcastingService,
         TripOriginChangedBroadcastingService,
+        TripOriginChangedLocalStorageService,
+        TripOriginChangedCompositeService,
+        TripOriginLocalStorageProvider,
         TravelThemesSelectionBarDirective,
         angularGoogleMapsModule,
         DestinationFinderSummaryServicePriceClassifierDecoratorSrc,
@@ -39,7 +45,8 @@ define([
         return angular.module('sdsWidgets.inspirationalWidgets', [
             'sabreDevStudioWebServices',
             'commonFilters',
-            'uiGmapgoogle-maps'
+            'uiGmapgoogle-maps',
+            'ngStorage'
         ])
             .config(['uiGmapGoogleMapApiProvider', function(uiGmapGoogleMapApiProvider) {
                 uiGmapGoogleMapApiProvider.configure({
@@ -48,14 +55,44 @@ define([
                 });
             }])
             .constant('newThemedInspirationalSearchCriteriaEvent', 'newThemedInspirationalSearchCriteriaEvent')
+
             .constant('themedInspirationalSearchCompleteEvent', 'themedInspirationalSearchCompleteEvent')
+
             .constant('tripOriginChangedEvent', 'tripOriginChangedEvent')
-            .service('ThemedInspirationalSearchCriteriaBroadcastingService', ThemedInspirationalSearchCriteriaBroadcastingService)
-            .service('ThemedInspirationalSearchCompleteBroadcastingService', ThemedInspirationalSearchCompleteBroadcastingService)
-            .service('TripOriginChangedBroadcastingService', TripOriginChangedBroadcastingService)
-            .directive('travelThemesSelectionBar', TravelThemesSelectionBarDirective)
-            .factory('DestinationFinderSummaryDataServiceCached', ['DestinationFinderSummaryDataService', DestinationFinderCachedSummaryServiceSrc])
-            .factory('DestinationFinderSummaryServicePriceClassifierDecoratorCached', ['DestinationFinderSummaryServicePriceClassifierDecorator', DestinationFinderCachedSummaryServiceSrc])
+
+            .service('ThemedInspirationalSearchCriteriaBroadcastingService',
+                ThemedInspirationalSearchCriteriaBroadcastingService)
+
+            .service('ThemedInspirationalSearchCompleteBroadcastingService',
+                ThemedInspirationalSearchCompleteBroadcastingService)
+
+            .service('TripOriginChangedBroadcastingService',
+                TripOriginChangedBroadcastingService)
+
+            .service('TripOriginChangedLocalStorageService', [
+                '$localStorage',
+                TripOriginChangedLocalStorageService])
+
+            .service('TripOriginChangedLocalStorageBroadcastService', [
+                'TripOriginChangedLocalStorageService',
+                'TripOriginChangedBroadcastingService'
+                , TripOriginChangedCompositeService])
+
+            .service('TripOriginLocalStorageProvider', [
+                '$localStorage',
+                TripOriginLocalStorageProvider])
+
+            .directive('travelThemesSelectionBar',
+                TravelThemesSelectionBarDirective)
+
+            .factory('DestinationFinderSummaryDataServiceCached', [
+                'DestinationFinderSummaryDataService',
+                DestinationFinderCachedSummaryServiceSrc])
+
+            .factory('DestinationFinderSummaryServicePriceClassifierDecoratorCached', [
+                'DestinationFinderSummaryServicePriceClassifierDecorator',
+                DestinationFinderCachedSummaryServiceSrc])
+
             .controller('TilesThemedDestinationFinderWidgetController', [
                 '$scope',
                 'ClosestAirportGeoService',
@@ -65,6 +102,7 @@ define([
                 'ThemedInspirationalSearchCompleteBroadcastingService',
                 'TripOriginChangedBroadcastingService',
                 ThemedDestinationFinderWidgetController])
+
             .controller('MapThemedDestinationFinderWidgetController', [
                 '$scope',
                 'ClosestAirportGeoService',
@@ -74,8 +112,16 @@ define([
                 'ThemedInspirationalSearchCompleteBroadcastingService',
                 'TripOriginChangedBroadcastingService',
                 ThemedDestinationFinderWidgetController])
-            .directive('tilesThemedDestinationFinder', TilesThemedDestinationFinderWidgetDirective)
-            .directive('mapThemedDestinationFinder', MapThemedDestinationFinderWidgetDirective)
-            .directive('changeOriginSelect', ChangeOriginSelectDirective)
+
+            .directive('tilesThemedDestinationFinder',
+                TilesThemedDestinationFinderWidgetDirective)
+
+            .directive('mapThemedDestinationFinder',
+                MapThemedDestinationFinderWidgetDirective)
+
+            .directive('changeOriginSelect', [
+                'TripOriginLocalStorageProvider',
+                'TripOriginChangedLocalStorageBroadcastService',
+                ChangeOriginSelectDirective])
     }
 );

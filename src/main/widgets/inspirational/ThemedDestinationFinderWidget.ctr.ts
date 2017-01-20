@@ -61,8 +61,8 @@ define([
                 searchDestinationsForTheme(themeSearched, searchCompleteCallback);
             });
 
-            $scope.$on('tripOriginChangedEvent', function () {
-                var newOrigin = TripOriginChangedBroadcastingService.origin;
+            $scope.$on('tripOriginChangedEvent', function (event, origin) {
+                var newOrigin = origin;
                 updateSearchCriteriaWithClosestAirport(newOrigin, () => {
                     searchDestinationsForTheme(searchCriteria.theme, _.noop);
                 });
