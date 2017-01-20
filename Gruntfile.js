@@ -62,31 +62,27 @@ module.exports = function (grunt) {
             }
         },
 
-        typescript: {
+        ts: {
             app: {
                 src: ['src/**/*.ts'],
-                dest: 'build-js',
+                outDir: 'build-js',
                 options: grunt.file.readJSON('tsconfig.json').compilerOptions
             },
             'watch-src': {
                 src: ['src/main/**/*.ts'],
-                dest: 'build-js/main',
+                outDir: 'build-js/main',
+                watch: 'src/main/**/*.ts',
                 options: (function () {
                     var optionsFromConfigFile = grunt.file.readJSON('tsconfig.json').compilerOptions;
-                    optionsFromConfigFile.watch = true;
-                    optionsFromConfigFile.atBegin = true;
-                    optionsFromConfigFile.references = ["typings/tsd.d.ts"];
                     return optionsFromConfigFile;
                 })()
             },
             'watch-all': {
                 src: ['src/**/*.ts'],
-                dest: 'build-js',
+                outDir: 'build-js',
+                watch: 'src/**/*.ts',
                 options: (function () {
                     var optionsFromConfigFile = grunt.file.readJSON('tsconfig.json').compilerOptions;
-                    optionsFromConfigFile.watch = true;
-                    optionsFromConfigFile.atBegin = true;
-                    optionsFromConfigFile.references = ["typings/tsd.d.ts"];
                     return optionsFromConfigFile;
                 })()
             }
@@ -159,7 +155,7 @@ module.exports = function (grunt) {
             },
             'cdnify-inline-style-images-urls': { // cannot use grunt-cdnify because it does not support inline css styles which we use
                 expand: true,
-                src: 'widgets/view-templates/**/*.html',
+                src: ['widgets/view-templates/**/*.html', 'src/main/**/*.html'],
                 dest: 'build/templates_cdnified/',
                 options: {
                     nonull: true,
@@ -351,7 +347,7 @@ module.exports = function (grunt) {
         ngtemplates: {
             sdsWidgets: {
                 cwd: 'build/templates_cdnified/src',
-                src: '../widgets/view-templates/**/*.html',
+                src: ['../widgets/view-templates/**/*.html', '../src/main/**/*.html'],
                 dest: 'build/ngtemplates/templateCacheCharger.js',
                 options: {
                     bootstrap:  function(module, templateCacheChargingScript) {
@@ -548,7 +544,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('unit-test', 'karma:unit-Chrome');
 
-    grunt.registerTask('typescript-pipeline', ['tslint', 'typescript:app', 'jshint']);
+    grunt.registerTask('typescript-pipeline', ['tslint', 'ts:app', 'jshint']);
 
     grunt.registerTask('css-pipeline', ['compass', 'bootlint', 'csslint', 'autoprefixer', 'cdnify:icons', 'cssmin:cssbundle']);
 
