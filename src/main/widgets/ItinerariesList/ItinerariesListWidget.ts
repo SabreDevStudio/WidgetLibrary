@@ -78,12 +78,10 @@ define([
                 ) {
 
                     var sortCriteria;
-                    if(__.isDefined($scope.activeSearchWebService)){
-                        if($scope.activeSearchWebService === "bfm-enable-diversity-swapper"){
-                            sortCriteria = new ItinerariesListDiversitySwapperSortCriteria();
-                        } else {
-                            sortCriteria = new ItinerariesListSortCriteria();
-                        }
+                    if($scope.activeSearchWebService === "bfm-enable-diversity-swapper") {
+                        sortCriteria = new ItinerariesListDiversitySwapperSortCriteria();
+                    }else {
+                        sortCriteria = new ItinerariesListSortCriteria();
                     }
 
                     $scope.availableSortCriteria = sortCriteria.availableSortCriteria;
