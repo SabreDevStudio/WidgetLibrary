@@ -79,7 +79,8 @@ define([
                     var brandedItinerariesParser = new BrandedBFMResponseParser();
 
                     /**
-                     * Returns ItinerariesList with branded itineraries (BrandedItinerary objects).
+                     * Returns itineraries with brand information if this information is available.
+                     * So it may return only branded itineraries, mix of branded and non-branded or only non-branded itineraries
                      * @param searchCriteria
                      * @returns {*}
                      */
