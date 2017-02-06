@@ -317,6 +317,10 @@ define([
         return (this.legs.length === 1);
     };
 
+    Itinerary.prototype.isNonRefundableIndicatorDefined = function () {
+        return __.isDefined(this.itineraryPricingInfo.nonRefundableIndicator)
+    };
+
     /**
      * Definition of the stopover:
      * For the typical round trip travel a stopover means the destination airport.

@@ -151,6 +151,9 @@
     </ul>
     <div class="SDSPriceSummary">
         <div class="pull-left">
+            <span ng-if="::itin.isNonRefundableIndicatorDefined()" ng-class="::{'ng-hide':!priceDetailsAlwaysShown}" class="SDSItineraryPriceDetails SDSItineraryTogglePriceDetails">
+                {{::itin.itineraryPricingInfo.nonRefundableIndicator | ticketRefundability}}
+            </span>
             <a ng-show="::!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg SDSItineraryShowPriceDetails SDSItineraryShowFlightDetails SDSItineraryHideWhenFlightDetailsShown">Show Details</a>
             <a ng-show="::!flightDetailsAlwaysShown" href="" class="SDS-hidden-lg ng-hide SDSItineraryHidePriceDetails SDSItineraryHideFlightDetails SDSItineraryFlightDetails">Hide Details</a>
             <a ng-show="::!flightDetailsAlwaysShown" href="" class="SDS-visible-lg SDSItineraryToggleFlightDetails">Flight Details</a>
