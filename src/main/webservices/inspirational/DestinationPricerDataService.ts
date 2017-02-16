@@ -1,16 +1,12 @@
 define([
           'angular'
-        , 'moment'
         , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/WebServicesResourceDefinitions'
     ],
     function (
           angular
-        , moment
         , _
         , SabreDevStudioWebServicesModule
-        , WebServicesResourceDefinitions
     ) {
         'use strict';
 
@@ -18,18 +14,20 @@ define([
             .factory('DestinationPricerDataService', [
                   '$q'
                 , 'DestinationPricerWebService'
-                , 'pointOfSaleCountry'
+                , 'selectedCountryConfigs'
                 , 'ErrorReportingService'
                 , 'businessMessagesErrorHandler'
                 , function (
                       $q
                     , DestinationPricerWebService
-                    , pointOfSaleCountry
+                    , selectedCountryConfigs
                     , ErrorReportingService
                     , businessMessagesErrorHandler
                 ) {
                     function translateSearchCriteriaIntoRequestParams(searchCriteria) {
-                        var requestedPointOfSaleCountry = (searchCriteria.pointOfSaleCountry) && searchCriteria.pointOfSaleCountry || (pointOfSaleCountry.length > 0) && pointOfSaleCountry;
+                        var requestedPointOfSaleCountry = (searchCriteria.pointOfSaleCountry) && searchCriteria.pointOfSaleCountry
+                            || (selectedCountryConfigs.pointOfSaleCountry.length > 0) && selectedCountryConfigs.pointOfSaleCountry;
+
                         var requestOptions = {
                             destination: searchCriteria.destination
                         };

@@ -12,8 +12,8 @@ define([
     ) {
         'use strict';
 
-        function BargainFinderMaxRequestFactory(configOverrides) {
-            OTARequestFactory.apply(this, [configOverrides]);
+        function BargainFinderMaxRequestFactory() {
+            OTARequestFactory.apply(this);
         }
 
         /**

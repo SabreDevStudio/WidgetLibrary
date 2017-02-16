@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts" />
 
 interface Window {
     __karma__?: any;

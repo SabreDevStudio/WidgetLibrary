@@ -3,7 +3,6 @@ define([
         , 'moment'
         , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/WebServicesResourceDefinitions'
         , 'webservices/common/validators/TravelInsightEngineSearchCriteriaValidator'
     ],
     function (
@@ -11,7 +10,6 @@ define([
         , moment
         , _
         , SabreDevStudioWebServicesModule
-        , WebServicesResourceDefinitions
         , TravelInsightEngineSearchCriteriaValidator
     ) {
         'use strict';

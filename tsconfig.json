@@ -6,7 +6,10 @@
     "declaration": true,
     "sourceMap": true,
     "strictNullChecks": false,
-    "removeComments": false
+    "removeComments": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "moduleResolution": "Classic"
   },
     "exclude": [
         ".idea"

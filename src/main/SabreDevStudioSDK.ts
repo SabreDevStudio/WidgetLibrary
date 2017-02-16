@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts" />
 require.config({
     paths: {
           moment: '../../bower_components/moment/moment'
@@ -96,12 +95,23 @@ require.config({
 });
 
 define([
-          'moment'
+         'angular'
+        , 'moment'
+        , 'lodash'
+        , 'ngStorage'
+        , 'angular_resource'
+        , 'ngPromiseExtras'
+        , 'Configuration'
+        , 'webservices/advancedCalendar/advancedCalendar.mod'
+        , 'webservices/bargainFinderMax/bargainFinderMax.mod'
+        , 'webservices/leadPriceCalendar/leadPriceCalendar.mod'
+        , 'webservices/informational/informational.mod'
+        , 'webservices/SabreDevStudioWebServicesModule'
+        , 'widgets/SDSWidgets'
+        , 'webservices/common/PromiseUtils'
         , 'datamodel/ItinerariesList'
         , 'webservices/common/validators/BasicSearchCriteriaValidator'
         , 'webservices/instaflights/InstaflightSearchCriteriaValidator'
-        , 'lodash'
-        , 'angular'
         , 'widgets/calendar/CalendarWidget'
         , 'widgets/AlternateDatesMatrixWidget'
         , 'widgets/leadPriceChart/LeadPriceChartWidget'
@@ -124,17 +134,27 @@ define([
         , 'widgets/AboutWidget'
         , 'widgets/SpinnerContainer'
         , 'widgets/util/TranscludeWithInheritedScope'
-        , 'Configuration'
         , 'elementQuery'
         , 'widgets/templateCacheCharger'
         , 'widgets/version'
     ], function (
-          moment
+        angular
+        ,  moment
+        , _
+        , ngStorage
+        , angular_resource
+        , ngPromiseExtras
+        , Configuration
+        , AdvancedCalendarMod
+        , BargainFinderMaxMod
+        , LeadPriceCalendarMod
+        , InformationalMod
+        , SabreDevStudioWebServicesModule
+        , SDSWidgets
+        , PromiseUtils
         , ItinerariesList
         , BasicSearchCriteriaValidator
         , InstaflightSearchCriteriaValidator
-        , _
-        , angular
         , CalendarWidget
         , AlternateDatesMatrixWidget
         , LeadPriceChartWidget
@@ -157,7 +177,6 @@ define([
         , AboutWidget
         , SpinnerContainer
         , TranscludeWithInheritedScope
-        , Configuration
         , elementQuery
         , templateCacheCharger
         , version

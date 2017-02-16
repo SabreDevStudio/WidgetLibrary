@@ -1,15 +1,12 @@
-/// <reference path="../../../../typings/tsd.d.ts" />
 define([
     'angular',
     'lodash',
-    'webservices/SabreDevStudioWebServicesModule',
     'webservices/inspirational/DestinationFinderSummaryServiceGeoCoordsDecorator',
     'util/TiersPriceClassifier'
     ],
     function (
     angular,
     _,
-    SabreDevStudioWebServicesModule,
     DestinationFinderSummaryServiceGeoCoordsDecorator,
     TiersPriceClassifier
     ) {

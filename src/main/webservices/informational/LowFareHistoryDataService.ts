@@ -3,7 +3,6 @@ define([
         , 'moment'
         , 'lodash'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/WebServicesResourceDefinitions'
         , 'webservices/common/validators/TravelInsightEngineSearchCriteriaValidator'
     ],
     function (
@@ -11,7 +10,6 @@ define([
         , moment
         , _
         , SabreDevStudioWebServicesModule
-        , WebServicesResourceDefinitions
         , TravelInsightEngineSearchCriteriaValidator
     ) {
         'use strict';
@@ -22,14 +20,14 @@ define([
             .factory('LowFareHistoryDataService', [
                   '$q'
                 , 'LowFareHistoryWebService'
-                , 'pointOfSaleCountry'
+                , 'selectedCountryConfigs'
                 , 'ErrorReportingService'
                 , 'ValidationErrorReportingService'
                 , 'businessMessagesErrorHandler'
                 , function (
                       $q
                     , LowFareHistoryWebService
-                    , pointOfSaleCountry
+                    , selectedCountryConfigs
                     , ErrorReportingService
                     , ValidationErrorReportingService
                     , businessMessagesErrorHandler
@@ -42,9 +40,9 @@ define([
                             , departuredate: searchCriteria.getTripDepartureDateTime().format('YYYY-MM-DD')
                             , returndate: searchCriteria.getTripReturnDateTime().format('YYYY-MM-DD')
                         };
-                        if (pointOfSaleCountry.length > 0) {
+                        if (selectedCountryConfigs.pointOfSaleCountry.length > 0) {
                             _.extend(requestOptions, {
-                                pointofsalecountry: pointOfSaleCountry
+                                pointofsalecountry: selectedCountryConfigs.pointOfSaleCountry
                             });
                         }
                         return requestOptions;

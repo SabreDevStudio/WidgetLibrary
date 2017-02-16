@@ -1,15 +1,12 @@
-/// <reference path="../../../../typings/tsd.d.ts" />
 define([
           'angular'
         , 'lodash'
-        , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/inspirational/DestinationFinderSummaryDataService'
         , 'webservices/geo/CachedGeoCodeDataService'
     ],
     function (
           angular
         , _
-        , SabreDevStudioWebServicesModule
         , DestinationFinderSummaryDataServiceSrv
         , CachedGeoCodeDataServiceSrc
     ) {

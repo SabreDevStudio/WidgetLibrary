@@ -2,26 +2,18 @@ define([
           'angular'
         , 'lodash'
         , 'util/LodashExtensions'
-        , 'moment'
-        , 'moment_range'
         , 'webservices/instaflights/InstaflightResponseParser'
         , 'webservices/common/parsers/OTAResponseParser'
         , 'util/BaseServices'
-        , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/WebServicesResourceDefinitions'
         , 'webservices/instaflights/InstaflightSearchCriteriaValidator'
     ],
     function (
           angular
         , _
         , __
-        , moment
-        , moment_range
         , InstaflightsResponseParser
         , OTAResponseParser
         , BaseServices
-        , SabreDevStudioWebServicesModule
-        , WebServicesResourceDefinitions
         , InstaflightSearchCriteriaValidator
     ) {
         'use strict';
@@ -31,7 +23,7 @@ define([
                       '$q'
                     , 'InstaFlightsWebService'
                     , 'dateFormat'
-                    , 'pointOfSaleCountry'
+                    , 'selectedCountryConfigs'
                     , 'ErrorReportingService'
                     , 'ValidationErrorReportingService'
                     , 'businessMessagesErrorHandler'
@@ -39,7 +31,7 @@ define([
                       $q
                     , InstaFlightsWebService
                     , dateFormat
-                    , pointOfSaleCountry
+                    , selectedCountryConfigs
                     , ErrorReportingService
                     , ValidationErrorReportingService
                     , businessMessagesErrorHandler
@@ -78,9 +70,9 @@ define([
                                 passengercount: searchCriteria.getTotalPassengerCount()
                             });
                         }
-                        if (pointOfSaleCountry.length > 0) {
+                        if (selectedCountryConfigs.pointOfSaleCountry.length > 0) {
                             _.extend(requestOptions, {
-                                pointofsalecountry: pointOfSaleCountry
+                                pointofsalecountry: selectedCountryConfigs.pointOfSaleCountry
                             });
                         }
                         return requestOptions;

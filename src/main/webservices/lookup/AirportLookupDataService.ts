@@ -3,14 +3,12 @@ define([
         , 'lodash'
         , 'util/LodashExtensions'
         , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/common/PromiseUtils'
     ],
     function (
           angular
         , _
         , __
         , SabreDevStudioWebServicesModule
-        , PromiseUtilsSrc
     ) {
         'use strict';
 
@@ -24,7 +22,7 @@ define([
                     , 'ErrorReportingService'
                     , 'businessMessagesErrorHandler'
                     , 'PromiseUtils'
-                    , 'pointOfSaleCountry'
+                    , 'selectedCountryConfigs'
                 , function (
                       $q
                     , ShoppingAirportsAndCitiesLookupWebService
@@ -34,7 +32,7 @@ define([
                     , ErrorReportingService
                     , businessMessagesErrorHandler
                     , PromiseUtils
-                    , pointOfSaleCountry
+                    , selectedCountryConfigs
                 ) {
 
                 const GLOBAL_DICTIONARY_KEY = 'SUM_OF_ALL_DICTIONARIES';
@@ -70,7 +68,7 @@ define([
                     }, {});
                 }
 
-                function getAirportsDictionary(dictionaryName, webServiceResource, posCountry = pointOfSaleCountry, updateGlobalDictionaryEnabled = false) {
+                function getAirportsDictionary(dictionaryName, webServiceResource, posCountry = selectedCountryConfigs.pointOfSaleCountry, updateGlobalDictionaryEnabled = false) {
 
                     return $q(function (resolve, reject) {
                         if ($localStorage[dictionaryName][posCountry]) {
@@ -96,15 +94,15 @@ define([
                     });
                 }
 
-                function getShoppingAirportsDictionary(posCountry = pointOfSaleCountry) {
+                function getShoppingAirportsDictionary(posCountry = selectedCountryConfigs.pointOfSaleCountry) {
                     return getAirportsDictionary(SHOPPING_DICTIONARY_NAME, ShoppingAirportsAndCitiesLookupWebService, posCountry);
                 }
 
-                function getFareRangeAirportsDictionary(posCountry = pointOfSaleCountry) {
+                function getFareRangeAirportsDictionary(posCountry = selectedCountryConfigs.pointOfSaleCountry) {
                     return getAirportsDictionary(FARE_RANGE_DICTIONARY_NAME, FareRangeAirportsAndCitiesLookupWebService, posCountry);
                 }
 
-                function getLowFareForecastAirportsDictionary(posCountry = pointOfSaleCountry) {
+                function getLowFareForecastAirportsDictionary(posCountry = selectedCountryConfigs.pointOfSaleCountry) {
                     return getAirportsDictionary(LOW_FARE_FORECAST_DICTIONARY_NAME, LowFareForecastAirportsAndCitiesLookupWebService, posCountry);
                 }
 

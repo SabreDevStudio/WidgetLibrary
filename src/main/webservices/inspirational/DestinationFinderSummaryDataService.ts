@@ -1,9 +1,7 @@
-/// <reference path="../../../../typings/tsd.d.ts" />
 define([
           'angular'
         , 'lodash'
         , 'datamodel/MonetaryAmount'
-        , 'webservices/SabreDevStudioWebServicesModule'
         , 'webservices/inspirational/DestinationFinderDataService'
         , 'webservices/lookup/AirportLookupDataService'
         , 'webservices/common/PromiseUtils'
@@ -12,7 +10,6 @@ define([
           angular
         , _
         , MonetaryAmount
-        , SabreDevStudioWebServicesModule
         , DestinationFinderDataServiceSrc
         , AirportLookupDataServiceSrc
         , PromiseUtilsSrc

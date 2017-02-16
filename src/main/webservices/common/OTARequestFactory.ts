@@ -2,16 +2,15 @@ define([],
     function () {
         'use strict';
 
-        function OTARequestFactory(configOverrides) {
-            this.configOverrides = configOverrides;
+        function OTARequestFactory() {
         }
 
-        OTARequestFactory.prototype.createRequest = function(searchCriteria) {
+        OTARequestFactory.prototype.createRequest = function(searchCriteria, configOverrides) {
             var requestedItinsCount = searchCriteria.optionsPerDay || 100;
             return {
                 'OTA_AirLowFareSearchRQ': {
                       'OriginDestinationInformation': this.createOriginDestinationInfos(searchCriteria)
-                    , 'POS': this.createPOS()
+                    , 'POS': this.createPOS(configOverrides)
                     , 'TPA_Extensions': this.createRequestTPAExtensions(requestedItinsCount, searchCriteria)
                     , 'TravelPreferences': this.createTravelPreferences(requestedItinsCount, searchCriteria.preferredCabin, searchCriteria.maxStops)
                     , 'TravelerInfoSummary': this.createTravelerInfoSummary(searchCriteria.passengerSpecifications)
@@ -29,7 +28,7 @@ define([],
             };
         };
 
-        OTARequestFactory.prototype.createPOS  = function() {
+        OTARequestFactory.prototype.createPOS  = function(configOverrides) {
             return {
                 "Source": [
                     {
@@ -40,7 +39,7 @@ define([],
                             "ID": "REQ.ID",
                             "Type": "0.AAA.X"
                         },
-                        "PseudoCityCode": this.configOverrides.bfmRequestPcc
+                        "PseudoCityCode": configOverrides.bfmRequestPcc
                     }
                 ]
             };

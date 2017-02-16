@@ -10,9 +10,9 @@ define([
     ) {
         'use strict';
 
-        function AdvancedCalendarRequestFactory(requestDatesExpander, configOverrides) {
+        function AdvancedCalendarRequestFactory(requestDatesExpander) {
             this.requestDatesExpander = requestDatesExpander;
-            OTARequestFactory.apply(this, [configOverrides]);
+            OTARequestFactory.apply(this);
         }
 
         AdvancedCalendarRequestFactory.prototype = Object.create(OTARequestFactory.prototype);
@@ -104,4 +104,5 @@ define([
         };
 
         return AdvancedCalendarRequestFactory;
-    });
+    }
+);

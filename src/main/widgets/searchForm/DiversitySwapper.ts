@@ -5,7 +5,7 @@ define([
 
     ],
     function (
-        agular
+        angular
     , SDSValidator
     , SDSWidgets
     ) {

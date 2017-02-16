@@ -1,10 +1,5 @@
-define([
-        'angular'
-    ],
-    function (
-        angular
-    ) {
-        'use strict';
+import _ = require('lodash')
+import angular = require('angular')
 
         const configs = {
             US: {
@@ -19,21 +14,18 @@ define([
                 apiURL: 'http://10.14.54.160:8088/sabreapibridge/api',
                 apiSpecificHeaders: {},
                 pointOfSaleCountry: 'DE',
-                bfmRequestPcc: 'E8KE'
+                bfmRequestPcc: 'F8SE'
             }
         };
 
-        const selectedConfig = configs.DE;
+        const selectedConfig = _.cloneDeep(configs.DE);
 
         var configurationModule = angular.module('configuration', [])
-            .value('apiURL', selectedConfig.apiURL)
-            .value('apiSpecificHeaders', selectedConfig.apiSpecificHeaders)
-            .value('pointOfSaleCountry', selectedConfig.pointOfSaleCountry)
-            .value('bfmRequestPcc', selectedConfig.bfmRequestPcc)
+            .value('selectedCountryConfigs', selectedConfig)
+            .constant('countryConfigs', configs)
 
             .value('fareNabberApiURL', 'http://farenabber.prod.ha.sabre.com/v1/AirShopping/FNB_Subscriptions') // address of resource to create Fare Nabber subscriptions DAILY
             //.value('fareNabberApiURL', 'http://ttfhli502:51000/v1/AirShopping/FNB_Subscriptions') // address of resource to create Fare Nabber subscriptions INT
             .value('fareNabberRegistrationPCC', 'E8KE')
 
-        return configurationModule;
-    });
+export let Configuration = configurationModule;

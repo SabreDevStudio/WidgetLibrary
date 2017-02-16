@@ -75,10 +75,10 @@ $timeout(function () {
    The responsibility of data services is to provide higher level business abstraction (domain objects) of data available in Sabre REST APIs.
    For example to return Air Shopping itineraries for given day or return lowest fares per given date range.
    Data Services and all layers below constitute the model in MVC. More on data service in [next section](#DataServicesFlowDetails).
-5. Sabre Dev Studio REST web services themselves (called by the data services) are represented by angular resources. The resources definitions, for all web services, are in the `WebServicesResourceDefinitions.js` file.
+5. Sabre Dev Studio REST web services themselves (called by the data services) are represented by angular resources. The resources definitions, for all web services, are in the respective feature folder under webservices.
     Most of the resources are of GET type (as the Sabre Dev Studio web services).
     All Sabre REST web services responses are cached, either by Angular caching mechanism available in resource or by a custom mechanism.
-    Custom caching mechanism (for details see the `CachingDecorator` in ``WebServicesResourceDefinitions.js`) is needed because some Sabre Dev Studio services have quite complex request schema
+    Custom caching mechanism (for details see the `CachingDecorator`) is needed because some Sabre Dev Studio services have quite complex request schema
     and are so exposed as POST (not GET) webservices. And Angular does not offer caching of POST web services.
     Those POST webservices are wrapped in the resource and exposed thru custom `sendRequest` method.
 
@@ -178,7 +178,7 @@ The widget, on getting data service promise rejected may do nothing (its previou
 Currently there are no unit test and no integration tests.
 
 ### Implementing new widget
-1. Make sure the web service you are going to consume is defined in the `WebServicesResourceDefinitions.js` file.
+1. Make sure the web service you are going to consume is defined in the respective feature folder under webservice.
 2. Check data services using given web service, if they already offer the business abstractions you need. Extend existing data service (or multiple data services if you want to consume same data abstraction from multiple services), or create new data service.
    Data service will typically offer some getSomeBusinessAbstraction/getSomeDomainObjects method, which will be passed the `SearchCriteria` object. The `SearchCriteria` object is created by the Search form widget or build internally by the widget when the search criteria elements (departure airport, arrival airport, travel times) are provided as the widget directive attributes.
    You will also typically add new domain objects to represent the business abstraction: add new classes to the `datamodel` directory.

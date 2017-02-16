@@ -4,7 +4,6 @@ define([
       , 'util/CommonDirectives'
       , 'util/CommonGenericFilters'
       , 'util/CommonDisplayFilters'
-      , 'webservices/SabreDevStudioWebServicesModule'
       , 'widgets/inspirational/InspirationalWidgets.mod'
       , 'widgets/basicSearch/basicSearch.mod'
       , 'widgets/searchForm/timePickerPopup/timePickerPop.mod'
@@ -22,12 +21,11 @@ define([
       , 'usSpinnerService'
     ],
     function (
-          NG
+          angular
         , BaseServices
         , CommonDirectives
         , CommonGenericFilters
         , CommonDisplayFilters
-        , SabreDevStudioWebServicesModule
         , InspirationalWidgetsModule
         , BasicSearchModule
         , TimePickerPopModule

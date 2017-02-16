@@ -2,15 +2,11 @@ define([
         'angular'
         , 'lodash'
         , 'util/LodashExtensions'
-        , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/WebServicesResourceDefinitions'
     ],
     function (
         angular
         , _
         , __
-        , SabreDevStudioWebServicesModule
-        , WebServicesResourceDefinitions
     ) {
         'use strict';
 
@@ -19,14 +15,14 @@ define([
                 '$q'
                 , 'dateFormat'
                 , 'DestinationFinderWebService'
-                , 'pointOfSaleCountry'
+                , 'selectedCountryConfigs'
                 , 'ErrorReportingService'
                 , 'businessMessagesErrorHandler'
                 , function (
                     $q
                     , dateFormat
                     , DestinationFinderWebService
-                    , pointOfSaleCountry
+                    , selectedCountryConfigs
                     , ErrorReportingService
                     , businessMessagesErrorHandler
                 ) {
@@ -35,7 +31,9 @@ define([
 
                         requestParams.origin = searchCriteria.origin;
 
-                        var requestedPointOfSaleCountry = (searchCriteria.pointOfSaleCountry) && searchCriteria.pointOfSaleCountry || (pointOfSaleCountry.length > 0) && pointOfSaleCountry;
+                        var requestedPointOfSaleCountry = (searchCriteria.pointOfSaleCountry) && searchCriteria.pointOfSaleCountry
+                            || (selectedCountryConfigs.pointOfSaleCountry.length > 0) && selectedCountryConfigs.pointOfSaleCountry;
+
                         if (requestedPointOfSaleCountry) {
                             requestParams.pointofsalecountry = requestedPointOfSaleCountry;
                         }

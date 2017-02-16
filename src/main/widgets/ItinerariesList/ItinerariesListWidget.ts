@@ -6,7 +6,6 @@ define([
         , 'angular_bootstrap'
         , 'widgets/SDSWidgets'
         , 'datamodel/ItinerariesList'
-        , 'webservices/bargainFinderMax/BargainFinderMaxWebServices'
         , 'webservices/instaflights/InstaflightsDataService'
         , 'datamodel/BestItineraryComparator'
         , 'widgets/ItinerariesList/ItineraryShortSummary'
@@ -29,7 +28,6 @@ define([
         , angular_bootstrap
         , SDSWidgets
         , ItinerariesList
-        , BargainFinderMaxWebServices
         , InstaflightsDataService
         , BestItineraryComparator
         , ItineraryShortSummary

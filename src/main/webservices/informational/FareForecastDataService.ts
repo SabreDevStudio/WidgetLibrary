@@ -1,18 +1,10 @@
 define([
           'angular'
-        , 'moment'
-        , 'lodash'
-        , 'webservices/SabreDevStudioWebServicesModule'
-        , 'webservices/WebServicesResourceDefinitions'
         , 'datamodel/FareForecast'
         , 'webservices/common/validators/TravelInsightEngineSearchCriteriaValidator'
     ],
     function (
           angular
-        , moment
-        , _
-        , SabreDevStudioWebServicesModule
-        , WebServicesResourceDefinitions
         , FareForecast
         , TravelInsightEngineSearchCriteriaValidator
     ) {
