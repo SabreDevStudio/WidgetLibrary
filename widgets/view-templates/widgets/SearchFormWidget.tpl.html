@@ -164,7 +164,9 @@
                         <div class="SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchForm.$submitted && searchForm.Origin.$invalid}">
                                 <label for="SDSSearchForm_Origin" class="input-sm control-label">Leaving from</label>
-                                <input-airport id="SDSSearchForm_Origin" name="Origin" class="form-control input-sm" autofocus required airport="simpleTrip.Origin" selectable-airports-for-this-pos-only="{{selectableAirportsForThisPosOnly}}" selectable-airports-dictionary="{{selectableAirportsDictionary}}"></input-airport>
+                                <input-airport id="SDSSearchForm_Origin" name="Origin" class="form-control input-sm"
+                                               autofocus required airport="simpleTrip.Origin" selectable-airports-for-this-pos-only="{{selectableAirportsForThisPosOnly}}"
+                                               selectable-airports-dictionary="{{selectableAirportsDictionary}}"></input-airport>
                             </div>
                             <div ng-show="searchForm.$submitted && searchForm.Origin.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.Origin.$error.required">Type origin airport or city</small>
@@ -248,7 +250,10 @@
                         <div class="SDS-col-element-xs-6 SDS-col-element-sm-3">
                             <div class="form-group" ng-class="{'has-error':searchFormMultiDestination.$submitted && searchFormMultiDestination.Origin_{{$index}}.$invalid}">
                                 <label for="SDSSearchForm_Origin_{{$index}}" class="input-sm control-label">Leaving from</label>
-                                <input-airport id="SDSSearchForm_Origin_{{$index}}" name="Origin_{{$index}}" class="form-control input-sm" ng-focus="$first" required airport="multiDestinationLegs[$index].Origin" selectable-airports-for-this-pos-only="{{selectableAirportsForThisPosOnly}}" selectable-airports-dictionary="{{selectableAirportsDictionary}}"></input-airport>
+                                <input-airport id="SDSSearchForm_Origin_{{$index}}" name="Origin_{{$index}}" class="form-control input-sm"
+                                               ng-focus="$first" required airport="multiDestinationLegs[$index].Origin"
+                                               selectable-airports-for-this-pos-only="{{selectableAirportsForThisPosOnly}}"
+                                               selectable-airports-dictionary="{{selectableAirportsDictionary}}"></input-airport>
                             </div>
                             <div ng-show="searchFormMultiDestination.$submitted && searchFormMultiDestination.Origin_{{$index}}.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchFormMultiDestination.Origin_{{$index}}.$error.required">Type origin airport or city</small>

@@ -117,7 +117,6 @@ define([
         , 'widgets/leadPriceChart/LeadPriceChartWidget'
         , 'widgets/informational/LowFareHistoryWidget'
         , 'widgets/informational/TravelSeasonalityWidget'
-        , 'widgets/searchForm/SearchFormWidget'
         , 'widgets/searchForm/SearchFormInspirationalWidget'
         , 'widgets/searchForm/SearchFormInputControls'
         , 'widgets/searchForm/InputAirport'
@@ -160,7 +159,6 @@ define([
         , LeadPriceChartWidget
         , LowFareHistoryWidget
         , TravelSeasonalityWidget
-        , SearchFormWidget
         , SearchFormInspirationalWidget
         , SearchFormInputControls
         , InputAirport
