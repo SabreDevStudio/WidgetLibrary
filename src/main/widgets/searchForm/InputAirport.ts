@@ -20,6 +20,7 @@ define([
                         airport: '='
                         , selectableAirportsForThisPosOnly: '@'
                         , selectableAirportsDictionary: '@'
+                        , onSelect: '&'
                     },
                     templateUrl: '../widgets/view-templates/partials/AirportInput.tpl.html',
                     link: function (scope) {

@@ -37,11 +37,16 @@ define([
             $scope.tripType = 'returnTrip';
 
             $scope.multiDestinationLegs = [{}, {}, {}];
-            $scope.simpleTrip = {
-                Origin:{
-                    airportCode: undefined
+            $scope.simpleTrip = {};
+
+            if($scope.originAirportCode){
+                $scope.simpleTrip.Origin = {
+                    airportCode: $scope.originAirportCode
                 }
-            };
+                $scope.multiDestinationLegs[0].Origin = {
+                    airportCode: $scope.originAirportCode
+                }
+            }
 
             var DEFAULT_PAX_COUNT = 1;
 

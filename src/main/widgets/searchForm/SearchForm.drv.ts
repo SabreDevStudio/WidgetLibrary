@@ -23,6 +23,7 @@ define([
                     , selectableAirportsDictionary: '@'
                     , newSearchCriteriaCallback: '&?'
                     , showDiversityOptions: '@?'
+                    , originAirportCode: '@?'
                 },
                 link: function (scope, element) {
 

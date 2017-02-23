@@ -157,7 +157,7 @@
             </div>
         </form>
 
-        <div ng-if="tripType === 'oneWay' || tripType === 'returnTrip'">
+        <div ng-show="tripType === 'oneWay' || tripType === 'returnTrip'">
             <div class="SDSTopBuffer-xs"></div>
             <form class="SDS-form-xl-inline" name="searchForm" class="SDSTopBuffer-xs" novalidate ng-submit="searchForm.$valid && createNewSearchCriteria()">
                     <div class="SDS-row">
@@ -241,7 +241,7 @@
         </div>
 
 
-        <div ng-if="tripType === 'multiDestination'">
+        <div ng-show="tripType === 'multiDestination'">
             <div class="SDSTopBuffer-xs"></div>
             <form class="SDS-form-xl-inline" name="searchFormMultiDestination" class="SDSTopBuffer-xs" novalidate ng-submit="searchFormMultiDestination.$valid && createNewSearchCriteria()">
 
