@@ -72,11 +72,11 @@ define([
             .constant('resetAllFiltersEvent', 'resetAllFiltersEvent')
             .constant('dateSelectedEvent', 'dateSelectedEvent')
             .constant('noResultsFoundEvent', 'noResultsFoundEvent')
-            .config(['datepickerConfig', function (datepickerConfig) {
-                datepickerConfig.showWeeks = false;
-                datepickerConfig.startingDay = 1;
-                datepickerConfig.yearRange = 2;
-                datepickerConfig.showButtonBar = false;
+            .config(['uibDatepickerConfig', function (uibDatepickerConfig) {
+                uibDatepickerConfig.showWeeks = false;
+                uibDatepickerConfig.startingDay = 1;
+                uibDatepickerConfig.yearRange = 2;
+                uibDatepickerConfig.showButtonBar = false;
             }])
             .config(['$compileProvider', function($compileProvider) {
                 // we need debug enabled effectively to true for development, as these information is needed for the tools (Protractor, Batarang)

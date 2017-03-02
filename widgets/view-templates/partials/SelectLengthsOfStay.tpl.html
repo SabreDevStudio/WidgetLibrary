@@ -3,7 +3,7 @@
         <ng-transclude></ng-transclude>
     </span>
     <div class="btn-group btn-group-sm">
-        <label class="btn btn-primary" ng-repeat="los in predefinedLengthOfStayDays" ng-model="selectedPredefinedLengthOfStayDays.value" btn-radio="{{los}}">
+        <label class="btn btn-primary" ng-repeat="los in predefinedLengthOfStayDays" ng-model="selectedPredefinedLengthOfStayDays.value" uib-btn-radio="{{los}}">
             {{los | humanizeDurationDays}}
         </label>
     </div>

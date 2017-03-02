@@ -88,18 +88,18 @@
 
 // default padding for bootstrap accordion is too big for small displays
 .SDSResponsiveElement {
-  accordion .panel .panel-body {
+  uib-accordion .panel .panel-body {
     padding: 4px;
   }
-  &[min-width~="60em"] accordion .panel .panel-body {
+  &[min-width~="60em"] uib-accordion .panel .panel-body {
     // reset to bootstrap panel-body value
     padding: 15px;
   }
 
-  accordion .panel .panel-heading {
+  uib-accordion .panel .panel-heading {
     padding: 5px 8px;
   }
-  &[min-width~="60em"] accordion .panel .panel-heading {
+  &[min-width~="60em"] uib-accordion .panel .panel-heading {
     // reset to bootstrap panel-body value
     padding: 10px 15px;
   }

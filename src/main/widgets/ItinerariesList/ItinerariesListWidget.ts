@@ -212,33 +212,41 @@ define([
                     });
 
                     var searchSuccessCallback = __.cancellable(function (searchCriteria, newItins) {
-                        $scope.searchSuccessCallback({
-                            itineraries: newItins,
-                            searchCriteria: searchCriteria
-                        });
+                        if($scope.searchSuccessCallback) {
+                            $scope.searchSuccessCallback({
+                                itineraries: newItins,
+                                searchCriteria: searchCriteria
+                            });
+                        }
                         processNewItineraries(searchCriteria, newItins);
                     });
 
                     var searchErrorCallback = __.cancellable(function (searchCriteria, errorMessages) {
-                        $scope.searchErrorCallback({
-                            errorMessages: errorMessages,
-                            searchCriteria: searchCriteria
-                        });
+                        if($scope.searchErrorCallback) {
+                            $scope.searchErrorCallback({
+                                errorMessages: errorMessages,
+                                searchCriteria: searchCriteria
+                            });
+                        }
                         processServiceErrorMessages(searchCriteria, errorMessages);
                     });
 
                     var searchUpdateCallback = __.cancellable(function (searchCriteria, newItins) {
-                        $scope.searchSuccessCallback({
-                            itineraries: newItins,
-                            searchCriteria: searchCriteria
-                        });
+                        if($scope.searchSuccessCallback) {
+                            $scope.searchSuccessCallback({
+                                itineraries: newItins,
+                                searchCriteria: searchCriteria
+                            });
+                        }
                         updateWithNewItineraries(searchCriteria, newItins);
                     });
 
                     var resultsStreamEndCallback = __.cancellable(() => $scope.allSearchesComplete());
 
                     $scope.processSearchCriteria = function(searchCriteria) {
-                        $scope.searchStartedCallback({searchCriteria: searchCriteria});
+                        if($scope.searchStartedCallback){
+                            $scope.searchStartedCallback({searchCriteria: searchCriteria});
+                        }
 
                         if (!$scope.activeSearch) { //active search disabled
                             return;

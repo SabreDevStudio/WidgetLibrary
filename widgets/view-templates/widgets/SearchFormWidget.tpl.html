@@ -151,9 +151,9 @@
     <div class="panel-body">
         <form>
             <div class="btn-group">
-                <label class="btn btn-primary" ng-model="tripType" btn-radio="'returnTrip'">Return</label>
-                <label class="btn btn-primary" ng-model="tripType" btn-radio="'oneWay'">One-way</label>
-                <label class="btn btn-primary" ng-model="tripType" btn-radio="'multiDestination'">Multi-stop</label>
+                <label class="btn btn-primary" ng-model="tripType" uib-btn-radio="'returnTrip'">Return</label>
+                <label class="btn btn-primary" ng-model="tripType" uib-btn-radio="'oneWay'">One-way</label>
+                <label class="btn btn-primary" ng-model="tripType" uib-btn-radio="'multiDestination'">Multi-stop</label>
             </div>
         </form>
 
@@ -170,7 +170,7 @@
                             </div>
                             <div ng-show="searchForm.$submitted && searchForm.Origin.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.Origin.$error.required">Type origin airport or city</small>
-                                <small class="help-block" ng-show="searchForm.Origin.$error.pattern">Please select airport or city from the suggested matchings</small>
+                                <small class="help-block" ng-show="searchForm.Origin.$error.invalidAirport">Please select airport or city from the suggested matchings</small>
                             </div>
                         </div>
                         <div class="SDS-col-element-sm-3">
@@ -180,7 +180,7 @@
                             </div>
                             <div  ng-show="searchForm.$submitted && searchForm.Destination.$invalid" class="has-error">
                                 <small class="help-block" ng-show="searchForm.Destination.$error.required">Type destination airport or city</small>
-                                <small class="help-block" ng-show="searchForm.Destination.$error.pattern">Please select airport or city from the suggested matchings</small>
+                                <small class="help-block" ng-show="searchForm.Destination.$error.invalidAirport">Please select airport or city from the suggested matchings</small>
                             </div>
                         </div>
                         <div class="SDS-col-element-sm-3">

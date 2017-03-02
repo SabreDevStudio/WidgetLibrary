@@ -19,7 +19,7 @@ define([
         'use strict';
 
         return angular.module('sdsWidgets')
-            .controller('FareNabberFormModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+            .controller('FareNabberFormModalInstanceCtrl', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
 
                 $scope.defaultOptions = {
                       earliestTravelStart: new Date()
@@ -55,21 +55,21 @@ define([
                         return acc;
                     }, {});
 
-                    $modalInstance.close(fareNabberSubscriptionRequest);
+                    $uibModalInstance.close(fareNabberSubscriptionRequest);
                 };
 
                 $scope.cancel = function () {
-                    $modalInstance.dismiss('cancelled');
+                    $uibModalInstance.dismiss('cancelled');
                 };
 
             }])
             .directive('fareNabber', [
-                      '$modal'
+                      '$uibModal'
                     , 'FareNabberSubscriptionService'
                     , 'resetErrorsEvent'
                     , '$rootScope'
                 , function (
-                      $modal
+                    $uibModal
                     , FareNabberSubscriptionService
                     , resetErrorsEvent
                     , $rootScope
@@ -138,7 +138,7 @@ define([
                         }
 
                         function showSubscriptionForm () {
-                            var modalInstance = $modal.open({
+                            var modalInstance = $uibModal.open({
                                 animation: true
                                 , templateUrl: 'FareNabberSubscriptionFormModal.html.tpl'
                                 , controller: 'FareNabberFormModalInstanceCtrl'
@@ -154,12 +154,12 @@ define([
                         }
 
                         function showSuccessfulSubscriptionMessage() {
-                            $modal.open({
+                            $uibModal.open({
                                 animation: true
                                 , templateUrl: 'FareNabberSubscriptionSuccessful.html.tpl'
-                                , controller: ['$scope', '$modalInstance', function (modalInstanceScope, $modalInstance) {
+                                , controller: ['$scope', '$uibModalInstance', function (modalInstanceScope, $uibModalInstance) {
                                     modalInstanceScope.ok = function () {
-                                        $modalInstance.close();
+                                        $uibModalInstance.close();
                                     };
                                 }]
                                 , size: 'md'

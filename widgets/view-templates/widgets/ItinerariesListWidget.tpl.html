@@ -15,46 +15,44 @@
 
             <div class="SDS-col-element-xxl-7">
                 <!-- using show and hide and not the tabset tat is already responsive as the available responsive tabs components require jQuery -->
-                <accordion class="SDS-hidden-lg" close-others="false">
-                    <accordion-group is-open="true">
-                        <accordion-heading>
-                            <span class="text-info">Cheapest:
-                                <div class="pull-right">{{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}</div>
-                                <div class="clearfix"></div>
+                <uib-accordion class="SDS-hidden-lg" close-others="false">
+                    <uib-accordion-group is-open="true">
+                        <uib-accordion-heading>
+                            <span class="text-info">Cheapest: <div class="pull-right">{{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}</div><div class="clearfix"></div>
                             </span>
-                        </accordion-heading>
+                        </uib-accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.cheapest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
-                    </accordion-group>
-                    <accordion-group>
-                        <accordion-heading>
+                    </uib-accordion-group>
+                    <uib-accordion-group>
+                        <uib-accordion-heading>
                             <span class="text-info">Best:
                                 <div class="pull-right">{{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}</div>
                                 <div class="clearfix"></div>
                             </span>
-                        </accordion-heading>
+                        </uib-accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.best" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
-                    </accordion-group>
-                    <accordion-group>
-                        <accordion-heading>
+                    </uib-accordion-group>
+                    <uib-accordion-group>
+                        <uib-accordion-heading>
                             <span class="text-info">Shortest:
                                 <div class="pull-right">{{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}</div>
                                 <div class="clearfix"></div>
                             </span>
-                        </accordion-heading>
+                        </uib-accordion-heading>
                         <itinerary-short-summary itin="bestItinerariesSummary.shortest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
-                    </accordion-group>
-                </accordion>
-                <tabset class="SDS-visible-lg">
-                    <tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}">
+                    </uib-accordion-group>
+                </uib-accordion>
+                <uib-tabset class="SDS-visible-lg">
+                    <uib-tab heading="Cheapest: {{bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.cheapest.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.cheapest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
-                    </tab>
-                    <tab heading="Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}">
+                    </uib-tab>
+                    <uib-tab heading="Best: {{bestItinerariesSummary.best.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.best.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.best" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
-                    </tab>
-                    <tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}">
+                    </uib-tab>
+                    <uib-tab heading="Shortest: {{bestItinerariesSummary.shortest.totalFareAmountWithCurrency.amount | isoCurrency:bestItinerariesSummary.shortest.totalFareAmountWithCurrency.currency}}">
                         <itinerary-short-summary itin="bestItinerariesSummary.shortest" itinerary-clicked-callback="summaryItemClickedCallback(itineraryId)"></itinerary-short-summary>
-                    </tab>
-                </tabset>
+                    </uib-tab>
+                </uib-tabset>
             </div>
 
             <div class="SDS-col-element-xxl-2">
@@ -77,7 +75,8 @@
     </div>
 
     <div class="panel-footer SDS-panel-footer">
-        <pagination class="pagination-sm pull-right" total-items="permittedItinerariesCount" items-per-page="itemsPerPage" ng-model="paginationSettings.currentPage" boundary-links="true" rotate="false"></pagination>
+        <uib-pagination class="pagination-sm pull-right" total-items="permittedItinerariesCount" items-per-page="itemsPerPage"
+                    ng-model="paginationSettings.currentPage" boundary-links="true" rotate="false"></uib-pagination>
         <div class="clearfix"></div>
     </div>
 

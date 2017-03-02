@@ -15,12 +15,12 @@ define([
         return angular.module('sdsWidgets.errorDisplays', [])
             .directive('validationErrorDisplay', [
                 'validationErrorEvent',
-                '$modal',
+                '$uibModal',
                 ModalErrorDisplayWidget
             ])
             .directive('networkErrorDisplay', [
                 'networkErrorEvent',
-                '$modal',
+                '$uibModal',
                 ModalErrorDisplayWidget
             ])
             .directive('errorDisplay', [

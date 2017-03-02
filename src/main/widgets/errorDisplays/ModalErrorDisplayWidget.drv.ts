@@ -5,7 +5,7 @@ define([],
 
         return function ModalErrorDisplayWidget (
                     errorEvent,
-                    $modal
+                    $uibModal
                 ) {
                 return {
                     link: function (scope, element, attrs) {
@@ -22,15 +22,15 @@ define([],
                                 }
                                 receivedMessagesRegistry[receivedMessagesKey] = true;
                             }
-                            $modal.open({
+                            $uibModal.open({
                                 animation: true,
                                 templateUrl: '../widgets/view-templates/partials/ErrorsModal.tpl.html',
-                                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                                controller: ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
                                     $scope.errorsList = errors;
                                     $scope.modalTitle = errorsCategory;
 
                                     $scope.ok = function () {
-                                        $modalInstance.close();
+                                        $uibModalInstance.close();
                                     };
                                 }]
                             });
