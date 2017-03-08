@@ -72,7 +72,11 @@ define([
                 var themedSearchCriteria = _.extend(searchCriteria, {
                     theme: theme
                 });
-                $scope.searchStartedCallback({searchCriteria: searchCriteria});
+
+                if($scope.searchStartedCallback) {
+                    $scope.searchStartedCallback({searchCriteria: searchCriteria});
+                }
+
                 DestinationFinderSummaryDataService.getOffersOrderedSummary(themedSearchCriteria)
                     .then(function (orderedSummary) {
                         orderedSummary.pricesForDestinationsGrouped = orderedSummary.pricesForDestinationsGrouped.map(addClickHandlerToOfferForDestination);
@@ -80,16 +84,22 @@ define([
                         $scope.model.originForPricesForDestinations = orderedSummary.originForPricesForDestinations;
                         $scope.model.priceTiersStatistics = orderedSummary.priceTiersStatistics;
 
-                        $scope.searchSuccessCallback({
-                            searchResults: orderedSummary,
-                            searchCriteria: searchCriteria
-                        });
+                        if($scope.searchSuccessCallback) {
+                            $scope.searchSuccessCallback({
+                                searchResults: orderedSummary,
+                                searchCriteria: searchCriteria
+                            });
+                        }
+
                     }, (reason) => {
                         clearModel();
-                        $scope.searchErrorCallback({
-                            errorMessages: reason,
-                            searchCriteria: searchCriteria
-                        });
+
+                        if($scope.searchErrorCallback) {
+                            $scope.searchErrorCallback({
+                                errorMessages: reason,
+                                searchCriteria: searchCriteria
+                            });
+                        }
                     })
                     .finally(searchCompleteCallback);
             }

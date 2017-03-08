@@ -27,11 +27,6 @@ define([
                     , PointOfSaleCountryLookupDataService
                 ) {
 
-                var noPointOfSaleCountryPreference = {
-                      countryCode: undefined
-                    , countryName: undefined
-                };
-
                 return {
                     replace: true,
                     scope: {
@@ -43,7 +38,7 @@ define([
                         var fieldsToHide = [];
 
                         scope.searchContext = {
-                            pointOfSaleCountry: undefined
+                            pointOfSaleCountry: ''
                         };
 
                         parseFieldsToHide();
@@ -55,9 +50,7 @@ define([
                         }
 
                         function setUpModel() {
-                            scope.pointOfSaleCountries = [
-                                noPointOfSaleCountryPreference
-                            ];
+                            scope.pointOfSaleCountries = [];
 
                             PointOfSaleCountryLookupDataService.getPointOfSaleCountries().then(function (pointOfSaleCountries) {
                                 __.pushAll(scope.pointOfSaleCountries, pointOfSaleCountries);
