@@ -36,15 +36,15 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "angular": "1.4.x",
-    "angular-mocks": "1.4.x",
-    "angular-sanitize": "1.4.x",
-    "angular-touch": "1.4.x",
+    "angular": "1.5.x",
+    "angular-mocks": "1.5.x",
+    "angular-sanitize": "1.5.x",
+    "angular-touch": "1.5.x",
     "lodash": "3.10.x",
     "moment": "2.10.x",
     "moment-range": "2.0.x",
     "jquery": "1.11.3",
-    "angular-resource": "1.4.x",
+    "angular-resource": "1.5.x",
     "angular-bootstrap": "1.2.0",
     "bootstrap": "~3.3.5",
     "angular-ui-select": "~0.12.0",
@@ -63,7 +63,7 @@
     "WidgetsFilterPanel": "https://git.sabre.com/scm/smp/widgetsfilterpanel.git"
   },
   "resolutions": {
-    "angular": "1.4.x",
+    "angular": "1.5.x",
     "bootstrap": "~3.3.5",
     "lodash": "3.10.x",
     "moment": "2.10.x"
