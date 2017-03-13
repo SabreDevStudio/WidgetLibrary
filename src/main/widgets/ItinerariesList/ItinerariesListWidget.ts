@@ -241,7 +241,11 @@ define([
                         updateWithNewItineraries(searchCriteria, newItins);
                     });
 
-                    var resultsStreamEndCallback = __.cancellable(() => $scope.allSearchesComplete());
+                    var resultsStreamEndCallback = __.cancellable(() => {
+                        if($scope.allSearchesComplete){
+                            $scope.allSearchesComplete()
+                        }
+                    });
 
                     $scope.processSearchCriteria = function(searchCriteria) {
                         if($scope.searchStartedCallback){
