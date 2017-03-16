@@ -60,7 +60,7 @@
     "angular-google-maps": "~2.3.3",
     "angular-simple-logger": "~0.1.7",
     "nsPopover": "~0.6.8",
-    "WidgetsFilterPanel": "https://git.sabre.com/scm/smp/widgetsfilterpanel.git"
+    "WidgetsFilterPanel": "https://git.sabre.com/scm/smp/widgetsfilterpanel.git#6baaeff9666a553136845f4de72197335bb22002"
   },
   "resolutions": {
     "angular": "1.6.x",
