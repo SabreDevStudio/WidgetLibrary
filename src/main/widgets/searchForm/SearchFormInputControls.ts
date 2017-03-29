@@ -141,6 +141,10 @@ define([
                         link: function (scope) {
                             scope.dateFormat = scope.dateFormat || 'dd-MMM-yyyy';
 
+                            scope.dateOptions = {
+                                minDate: scope.minDate
+                            }
+
                             scope.openDatePicker = function($event) {
                                 $event.preventDefault();
                                 $event.stopPropagation();

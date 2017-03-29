@@ -3,7 +3,7 @@
            ng-disabled="isDisabled == 'true'"
            ng-required="required"
            uib-datepicker-popup="{{::dateFormat}}"
-           min-date="minDate"
+           datepicker-options="dateOptions"
            is-open="isDatePickerOpened"
            ng-model="ngModel"
            ng-change="onDateChange({newDate: ngModel})"

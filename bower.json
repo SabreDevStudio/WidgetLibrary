@@ -45,7 +45,7 @@
     "moment-range": "2.0.x",
     "jquery": "1.11.3",
     "angular-resource": "1.6.x",
-    "angular-bootstrap": "1.2.0",
+    "angular-bootstrap": "2.5.x",
     "bootstrap": "~3.3.5",
     "angular-ui-select": "~0.19.6",
     "angular-img-fallback": "~0.1.3",

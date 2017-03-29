@@ -10,8 +10,7 @@
             <uib-tabset type="pills">
                 <uib-tab ng-repeat="month in calendar.months"
                      heading="{{month.monthStartDate.format('MMM')}} {{month.monthLeadPrice | isoCurrency:month.monthLeadPriceCurrency}}"
-                     disable="month.noPricesFound"
-                     active="monthsDisplayStates[month.monthStartDate]"><!-- Jan Feb ... Nov Dec --><!-- warn: this variable/array needs to be writable, as tabs directive will be reflecting in it the state of given tabs -->
+                     disable="month.noPricesFound">
                         <ng-include src="'../widgets/view-templates/widgets/CalendarWidgetOneMonth.tpl.html'"></ng-include>
                 </uib-tab>
             </uib-tabset>
