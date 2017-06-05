@@ -7,6 +7,7 @@ define([
       , 'widgets/inspirational/InspirationalWidgets.mod'
       , 'widgets/basicSearch/basicSearch.mod'
       , 'widgets/searchForm/searchForm.mod'
+      , 'services/services.mod'
       , 'webservices/Interceptors'
       , 'angular-ui-select'
       , 'angular-sanitize'
@@ -28,7 +29,8 @@ define([
         , CommonDisplayFilters
         , InspirationalWidgetsModule
         , BasicSearchModule
-        , TimePickerPopModule
+        , SearchFormModule
+        , ServicesModule
         , Interceptors
         , angular_ui_select
         , angular_sanitize
@@ -47,6 +49,7 @@ define([
 
         return angular.module('sdsWidgets', [
                   'baseServices'
+                , 'services'
                 , 'sabreDevStudioWebServices'
                 , 'sdsWidgets.inspirationalWidgets'
                 , 'sdsWidgets.errorDisplays'

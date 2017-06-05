@@ -20,6 +20,8 @@ define([
 
         this.diversityModelOptions = undefined;
 
+        this.additionalParameters = {}
+
         // Preferred cabin is defined on whole travel level, not on particular leg level. By default Economy
         var _preferredCabin = this.CabinEnum.Economy;
         Object.defineProperty(this, 'preferredCabin', {

@@ -47,6 +47,7 @@ define([
         return angular.module('sdsWidgets')
             .controller('ItineraryListCtrl', [
                       '$scope'
+                    , '$element'
                     , '$filter'
                     , '$location'
                     , '$anchorScroll'
@@ -59,8 +60,10 @@ define([
                     , 'BargainFinderMaxDataService'
                     , 'noResultsFoundEvent'
                     , 'filterServiceFactory'
+                    , 'ShoppingProfileService'
                 , function (
                       $scope
+                    , $element
                     , $filter
                     , $location
                     , $anchorScroll
@@ -73,9 +76,15 @@ define([
                     , BargainFinderMaxDataService
                     , noResultsFoundEvent
                     , filterServiceFactory
+                    , shoppingProfileService
                 ) {
 
+                    var searchStrategyFactory;
+                    var searchStrategy;
                     var sortCriteria;
+
+                    $scope.activeSearchWebService = $scope.activeSearchWebService || $element.attr('active-search-web-service');
+
                     if($scope.activeSearchWebService === "bfm-enable-diversity-swapper") {
                         sortCriteria = new ItinerariesListDiversitySwapperSortCriteria();
                     }else {
@@ -201,9 +210,7 @@ define([
                         clearModel();
                     }
 
-                    var searchStrategyFactory = ($scope.requestBrandedItineraries)? brandedItinerariesSearchStrategyFactory: itinerariesSearchStrategyFactory;
 
-                    var searchStrategy = searchStrategyFactory.createSearchStrategy($scope.activeSearchWebService);
 
                     // main controller function, acting on new search criteria sent to the widget
                     $scope.$on(newSearchCriteriaEvent, function () {
@@ -248,6 +255,13 @@ define([
                     });
 
                     $scope.processSearchCriteria = function(searchCriteria) {
+
+                        searchStrategyFactory = ($scope.requestBrandedItineraries)? brandedItinerariesSearchStrategyFactory: itinerariesSearchStrategyFactory;
+                        searchStrategy = searchStrategyFactory.createSearchStrategy($scope.activeSearchWebService);
+
+                        searchCriteria = shoppingProfileService.enhanceSearchCriteriaProcessingShoppingProfile(
+                            $scope.shoppingProfile, searchCriteria);
+
                         if($scope.searchStartedCallback){
                             $scope.searchStartedCallback({searchCriteria: searchCriteria});
                         }
@@ -371,9 +385,10 @@ define([
                     restrict: 'EA',
                     scope: {
                           activeSearch: '@?'
-                        , activeSearchWebService: '@?'
+                        , activeSearchWebService: '=?'
                         , requestBrandedItineraries: '=?'
                         , searchCriteria: '=?'
+                        , shoppingProfile: '=?'
                         , selectedItineraryCallback: '&?'
                         , enableItinerarySelectButton: '@?'
                         , searchStartedCallback: '&?'
@@ -385,6 +400,7 @@ define([
                     templateUrl: '../widgets/view-templates/widgets/ItinerariesListWidget.tpl.html',
                     controller: 'ItineraryListCtrl',
                     link: function (scope, element) {
+
                         var predefinedSearchCriteria = buildSearchCriteriaFromPredefinedParameters();
                         if (predefinedSearchCriteria) {
                             scope.processSearchCriteria(predefinedSearchCriteria);

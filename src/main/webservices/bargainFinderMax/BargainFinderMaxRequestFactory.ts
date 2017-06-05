@@ -100,21 +100,26 @@ define([
         };
 
         BargainFinderMaxRequestFactory.prototype.createRequestTPAExtensions = function(requestedItinsCount, searchCriteria) {
-            var tpaExtensions = this.createIntelliSellTransaction(requestedItinsCount, searchCriteria.dateFlexibilityDays);
+            var tpaExtensions = this.createIntelliSellTransaction(requestedItinsCount, searchCriteria);
             if(searchCriteria.diversityModelOptions){
                 _.extend(tpaExtensions, this.createDiversityControl(searchCriteria.diversityModelOptions));
             }
+
             return tpaExtensions;
         };
 
-        BargainFinderMaxRequestFactory.prototype.createIntelliSellTransaction = function(requestedItinsCount, dateFlexibilityDays) {
-            return {
+        BargainFinderMaxRequestFactory.prototype.createIntelliSellTransaction = function(requestedItinsCount, searchCriteria) {
+            var intelliSellTransaction:any = {
                 "IntelliSellTransaction": {
                     "RequestType": {
-                        "Name": this.getRequestType(requestedItinsCount, dateFlexibilityDays)
+                        "Name": this.getRequestType(requestedItinsCount, searchCriteria.dateFlexibilityDays)
                     }
                 }
             };
+            if( ! _.isEmpty(searchCriteria.additionalParameters)){
+                _.extend(intelliSellTransaction.IntelliSellTransaction, searchCriteria.additionalParameters);
+            }
+            return intelliSellTransaction;
         };
 
         /* jshint maxcomplexity:7 */
