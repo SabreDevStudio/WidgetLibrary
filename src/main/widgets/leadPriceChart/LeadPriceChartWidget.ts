@@ -132,10 +132,12 @@ define([
                 DateSelectedBroadcastingService.newSearchCriteria = newSearchCriteria;
                 DateSelectedBroadcastingService.originalDataSourceWebService = searchService;
                 DateSelectedBroadcastingService.broadcast();
-                $scope.barClickedCallback({
-                    searchCriteria: newSearchCriteria,
-                    originalDataSourceWebService: searchService
-                });
+                if($scope.barClickedCallback) {
+                    $scope.barClickedCallback({
+                        searchCriteria: newSearchCriteria,
+                        originalDataSourceWebService: searchService
+                    });
+                }
             };
 
             function updateModelWithLeadPrices(leadPricesAndDateStrings) {

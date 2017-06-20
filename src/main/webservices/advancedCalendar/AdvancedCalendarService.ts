@@ -29,9 +29,6 @@ define([
         ) {
 
             var requestDatesExpander = new AdvancedCalendarRequestDatesExpander();
-            var configOverrides = {
-                bfmRequestPcc: selectedCountryConfigs.bfmRequestPcc
-            }
             var requestBuilderForDateRanges = new AdvancedCalendarRequestFactory(requestDatesExpander);
 
             var requestBuilder = new AdvancedCalendarRequestFactory(undefined);
@@ -70,7 +67,10 @@ define([
                         if (_.size(optionsFromCache) > 0) {
                             return resolve(optionsFromCache);
                         }
-                        var advancedCalendarRequest = requestBuilderForDateRanges.createRequest(searchCriteria, configOverrides);
+                        var advancedCalendarRequest = requestBuilderForDateRanges.createRequest(searchCriteria, {
+                            bfmRequestPcc: selectedCountryConfigs.bfmRequestPcc
+                        });
+
                         AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
                             function (response) {
                                 var itinerariesList = responseParser.parse(response);
@@ -108,7 +108,9 @@ define([
                                 return resolve(optionsFromCache);
                             }
                         }
-                        var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria, configOverrides);
+                        var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria, {
+                            bfmRequestPcc: selectedCountryConfigs.bfmRequestPcc
+                        });
                         AdvancedCalendarSearchService.sendRequest(advancedCalendarRequest).then(
                             function (response) {
                                 var itinerariesList = responseParser.parse(response);
@@ -125,7 +127,9 @@ define([
                     if (!searchCriteria.isAlternateDatesRequest()) {
                         throw new Error('Calling Alternative Dates service for non alternative dates request');
                     }
-                    var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria, configOverrides);
+                    var advancedCalendarRequest = requestBuilder.createRequest(searchCriteria, {
+                        bfmRequestPcc: selectedCountryConfigs.bfmRequestPcc
+                    });
                     return $q(function(resolve, reject) {
                         var validationErrors = validator.validate(searchCriteria);
                         if (validationErrors.length > 0) {

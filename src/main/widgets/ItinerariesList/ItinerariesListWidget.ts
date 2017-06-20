@@ -292,7 +292,9 @@ define([
                         // the web service which produced the data, from which the particular date was selected
                         var webService = selectItinerariesListProducingService(DateSelectedBroadcastingService.originalDataSourceWebService);
 
-                        $scope.searchStartedCallback({searchCriteria: newSearchCriteria});
+                        if($scope.searchStartedCallback) {
+                            $scope.searchStartedCallback({searchCriteria: newSearchCriteria});
+                        }
                         webService
                             .getItineraries(newSearchCriteria)
                             .then(
