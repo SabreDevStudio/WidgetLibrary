@@ -11,10 +11,10 @@ import angular = require('angular')
                 bfmRequestPcc: 'E8KE'
             },
             DE: {
-                apiURL: 'http://10.14.54.160:8088/sabreapibridge/api',
+                apiURL: 'https://sabreapibridge.crt.aws.sabrenow.com/sabreapibridge/api',
                 apiSpecificHeaders: {},
                 pointOfSaleCountry: 'DE',
-                bfmRequestPcc: 'F8SE'
+                bfmRequestPcc: '1X8H'
             }
         };
 
