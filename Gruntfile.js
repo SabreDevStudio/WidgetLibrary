@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     var properties = {
-        cdnBase: 'http://analytics.sabre.com/sdsdemo/dslab/widgets/static'
+        cdnBase: 'https://d1xzms9o977hvd.cloudfront.net/widgets/static'
     };
 
     grunt.initConfig({
