@@ -6,6 +6,68 @@ Javascript widgets for Sabre Dev Studio REST APIs web services were created in o
 3. create reusable Javascript components that could be used by third party developers while integrating with Sabre REST APIs.
 4. provide demonstration code how Sabre Dev Studio REST APIs services may be consumed
 
+## Installation requirements
+- Nodejs 4.6.1
+- Python 2.7
+- .NET Framework 2.0 Software Development Kit and Microsoft visual studio 2005. 
+Here is useful command to install it in one line command
+
+>
+
+    npm install --global --production windows-build-tools 
+
+- it's **important** to add new environment **USER variable** if you are working on Windows environment
+
+>
+
+    no_proxy: git.sabre.com
+
+- Ruby 2.3.3
+- Compass 1.0.3, you can install it via command line below
+
+>
+
+    gem install compass --http-proxy http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
+
+where **sg0UserID** is your sabre user ID and **your_password** is password to you sabre account
+
+##Config files
+It's important to have configured files .bowerrc, .gitconfig, .npmrc with correct proxy data. Here is examples.
+
+- .bowerrc
+
+>
+
+    {
+        "proxy":"http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/",
+        "https-proxy":"http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/"
+    }
+- .gitconfig
+
+>
+
+    
+    [user]
+        name = yore first name and second name
+        email = your sabre email
+    [http]
+        proxy = http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
+        sslVerify = false
+    [https]
+        proxy = http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
+        sslVerify = false
+    [credential]
+        helper = wincred
+
+
+- .npmrc
+
+>
+
+   
+    proxy=http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
+    https-proxy=http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
+
 ## Dependencies
 Main dependencies
 
