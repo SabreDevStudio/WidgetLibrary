@@ -13,40 +13,35 @@ Javascript widgets for Sabre Dev Studio REST APIs web services were created in o
 Here is useful command to install it in one line command
 
 >
-
     npm install --global --production windows-build-tools 
 
 - it's **important** to add new environment **USER variable** if you are working on Windows environment
 
 >
-
     no_proxy: git.sabre.com
 
 - Ruby 2.3.3
 - Compass 1.0.3, you can install it via command line below
 
 >
-
     gem install compass --http-proxy http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
 
 where **sg0UserID** is your sabre user ID and **your_password** is password to you sabre account
 
-##Config files
+## Config files
 It's important to have configured files .bowerrc, .gitconfig, .npmrc with correct proxy data. Here is examples.
 
 - .bowerrc
 
 >
-
     {
         "proxy":"http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/",
         "https-proxy":"http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/"
     }
+
 - .gitconfig
 
 >
-
-    
     [user]
         name = yore first name and second name
         email = your sabre email
@@ -62,11 +57,10 @@ It's important to have configured files .bowerrc, .gitconfig, .npmrc with correc
 
 - .npmrc
 
->
-
-   
+> 
     proxy=http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
     https-proxy=http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
+
 
 ## Dependencies
 Main dependencies
