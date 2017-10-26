@@ -97,10 +97,13 @@ module.exports = function (grunt) {
             }
         },
 
-        compass: {
+        sass: {
+            options: {
+                sourceMap: true
+            },
             dist: {
-                options: {
-                    config: 'config.rb'
+                files: {
+                    'widgets/stylesheets/SDSMain.css': 'widgets/style/SDSMain.scss'
                 }
             }
         },
@@ -327,9 +330,9 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            compass: {
+            sass: {
                 files: ['widgets/style/*.scss'],
-                tasks: ['compass'],
+                tasks: ['sass'],
                 options: {
                     spawn: false
                 }
@@ -546,7 +549,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('typescript-pipeline', ['tslint', 'ts:app', 'jshint']);
 
-    grunt.registerTask('css-pipeline', ['compass', 'bootlint', 'csslint', 'autoprefixer', 'cdnify:icons', 'cssmin:cssbundle']);
+    grunt.registerTask('css-pipeline', ['sass', 'bootlint', 'csslint', 'autoprefixer', 'cdnify:icons', 'cssmin:cssbundle']);
 
     grunt.registerTask('prepare-sources-pipeline', ['ngtemplates', 'saveRevision', 'replace:cdnifyImgLinksInJS']);
 
@@ -558,6 +561,5 @@ module.exports = function (grunt) {
         , 'copy:page_img'
     ]);
 
-    grunt.registerTask('default', 'dist-all');
-
+    grunt.registerTask('default', 'dist-all');  
 };

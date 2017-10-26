@@ -1,6 +1,6 @@
 /* general class to add to all for all inactive/deactivated elements */
 .SDSInactive {
-  @include opacity(0.35);
+  opacity: 0.35;
   pointer-events: none;
 }
 

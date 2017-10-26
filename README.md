@@ -20,17 +20,9 @@ Here is useful command to install it in one line command
 >
     no_proxy: git.sabre.com
 
-- Ruby 2.3.3
-- Compass 1.0.3, you can install it via command line below
-
->
-    gem install compass --http-proxy http://sg0UserID:your_password@www-ad-proxy.sabre.com:80/
-
-where **sg0UserID** is your sabre user ID and **your_password** is password to you sabre account
-
 ## Config files
 It's important to have configured files .bowerrc, .gitconfig, .npmrc with correct proxy data. Here is examples.
-
+Where **sg0UserID** is your sabre user ID and **your_password** is password to you sabre account
 - .bowerrc
 
 >
@@ -229,7 +221,7 @@ The widget, on getting data service promise rejected may do nothing (its previou
 1. NPM for managing development dependencies
 2. Bower for managing application dependencies
 3. Grunt
-4. SASS and Compass
+4. SASS
 
 Currently there are no unit test and no integration tests.
 
@@ -255,7 +247,7 @@ Regarding the widget view templates, please you may reuse the patterns currently
 ### Styling
 All styling is based Twitter Bootstrap 3 classes. When Bootstrap classes were not sufficient, minimal custom styling was added.
 All custom styling classes have the prefix `SDS` to differentiate from Bootstrap or the user classes.
-All custom styling is authored in SASS and Compass and all SASS files are located in `widgets\style\*.scss` files.
+All custom styling is authored in SASS and all SASS files are located in `widgets\style\*.scss` files.
 You will notice that, apart from the `_SDSCommon.scss` file, there are only several custom classes defined per widget.
 
 ### RWD

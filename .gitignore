@@ -8,9 +8,14 @@ rqrs/
 stylesheets/
 target/
 tmp*/
-# *.iml
+*.iml
 TODO*
 doc/
 www-customer-page-downloaded
 typings/
 npm-debug.log
+/.tscache
+/.vscode
+.baseDir.ts
+dist/www/
+dist/index.html
