@@ -57,9 +57,15 @@ define([
         BrandedBFMResponseParser.prototype.parseItineraryPricingInfo = function (itineraryPricingInfoResponsePart, legsSegmentCounts) {
             // special case: FareReturned === false means that it was not possible to match fare to the itinerary. See BrandedItineraryPricingInfoNotReturnedFare
             if (itineraryPricingInfoResponsePart.FareReturned === false) {
+            
+                var brandToSegmentMatchingPart = [];
                 var itinPricingInfoNotReturnedFares = new BrandedItineraryPricingInfoNotReturnedFare(legsSegmentCounts);
                 itinPricingInfoNotReturnedFares.fareStatus = itineraryPricingInfoResponsePart.FareStatus;
-                var brandToSegmentMatchingPart = itineraryPricingInfoResponsePart.TPA_Extensions.Legs;
+                if (itineraryPricingInfoResponsePart.TPA_Extensions && itineraryPricingInfoResponsePart.TPA_Extensions.Legs){
+                    brandToSegmentMatchingPart = itineraryPricingInfoResponsePart.TPA_Extensions.Legs;
+                } else {
+                    brandToSegmentMatchingPart = legsSegmentCounts;
+                }
                 itinPricingInfoNotReturnedFares.brandToSegmentMatchings = this.parseBrandToSegmentMatchingForNotReturnedFare(brandToSegmentMatchingPart);
                 return itinPricingInfoNotReturnedFares;
             }
